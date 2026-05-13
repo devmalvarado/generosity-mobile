@@ -1,20 +1,70 @@
 schema: spec-driven
 
-# Project context (optional)
-# This is shown to AI when creating artifacts.
-# Add your tech stack, conventions, style guides, domain knowledge, etc.
-# Example:
-#   context: |
-#     Tech stack: TypeScript, React, Node.js
-#     We use conventional commits
-#     Domain: e-commerce platform
+context: |
+  Project: Generosity.
 
-# Per-artifact rules (optional)
-# Add custom rules for specific artifacts.
-# Example:
-#   rules:
-#     proposal:
-#       - Keep proposals under 500 words
-#       - Always include a "Non-goals" section
-#     tasks:
-#       - Break tasks into chunks of max 2 hours
+  Generosity is a cross-platform mobile app for iOS and Android that helps
+  people discover nearby Kindness Centers, understand their current needs, and
+  help through time, goods, or money.
+
+  All repository documentation, OpenSpec proposals, designs, specs, tasks, code
+  comments, and technical artifacts must be written in English, even when
+  product discussions happen in Spanish.
+
+  Technology stack:
+  - Kotlin Multiplatform for shared business logic, domain models, repository
+    contracts, validation, imported catalog handling, filtering, localization
+    fallback rules, notification eligibility, contribution rules, and visit
+    signal rules.
+  - SwiftUI for the native iOS user interface.
+  - Jetpack Compose / Kotlin Compose for the native Android user interface.
+  - Platform-specific adapters for maps, location permissions, notifications,
+    authentication, and future payment handoff.
+
+  Product constraints:
+  - Product name is "Generosity"; do not use "Generosity.Global" unless a
+    future approved change explicitly renames the product.
+  - Spanish and English are the initial supported app languages.
+  - Initial Kindness Center data comes from imported catalog data.
+  - Backend services, Kindness Center backoffice/portal workflows, official
+    organization verification, direct bank/payment processing, admin tooling,
+    tax receipts, moderation tooling, and data import automation are separate
+    systems or future changes unless explicitly brought into scope.
+  - User visit signals are evidence that a user explicitly reported visiting a
+    center; they must not automatically make a center officially verified.
+  - Money donation support must not store payment details or nonprofit bank
+    account details in the mobile app. Direct payment processing requires a
+    future backend/payment-provider integration.
+  - Generosity points are informational and must not be presented as cash,
+    credit, redeemable benefits, or financial value.
+
+rules:
+  proposal:
+    - Write in English.
+    - Keep the product name as "Generosity" unless the change is explicitly about renaming.
+    - State affected capabilities in kebab-case and ensure each new capability can become a spec.
+    - Make out-of-scope backend, backoffice, verification, and payment boundaries explicit when relevant.
+    - Call out localization impact when user-facing mobile behavior or content changes.
+
+  design:
+    - Write in English.
+    - Explain cross-platform boundaries between shared Kotlin Multiplatform logic and native iOS/Android UI.
+    - Prefer repository interfaces and platform service adapters over direct coupling to imported data, platform APIs, or future backend details.
+    - Include privacy, location, notification, verification, localization, and payment trade-offs when relevant.
+    - Treat backend, backoffice, official verification, and direct payment processing as separate systems unless the proposal explicitly scopes them in.
+
+  specs:
+    - Write in English.
+    - Use normative SHALL/MUST language for requirements.
+    - Every requirement must include at least one four-hash Scenario section.
+    - Keep behavior testable from a mobile product perspective.
+    - Use stable codes for app-controlled domain labels and require Spanish/English localization for user-facing text.
+    - Preserve the boundary that visit signals do not equal official verification.
+    - Preserve the boundary that the mobile app does not directly process bank payments or collect bank/payment details.
+
+  tasks:
+    - Write in English.
+    - Use checkbox tasks only, with the exact "- [ ]" or "- [x]" format.
+    - Keep tasks small enough to complete and verify in one focused session.
+    - Include validation or test tasks for shared logic, localization coverage, and platform UI behavior when relevant.
+    - Separate shared KMP work from Android Compose work and iOS SwiftUI work when implementation spans platforms.
