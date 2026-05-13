@@ -1,0 +1,42 @@
+<resources>
+    <string name="app_name">Generosity</string>
+    <string name="tab_map">Map</string>
+    <string name="tab_list">List</string>
+    <string name="tab_profile">Profile</string>
+    <string name="tab_settings">Settings</string>
+    <string name="language_english">English</string>
+    <string name="language_spanish">Spanish</string>
+    <string name="nearby_centers">Nearby Kindness Centers</string>
+    <string name="search_placeholder">Search centers</string>
+    <string name="empty_centers">No Kindness Centers found.</string>
+    <string name="current_needs">Current needs</string>
+    <string name="no_current_needs">No current needs are listed.</string>
+    <string name="urgent">Urgent</string>
+    <string name="help_with_time">Donate time</string>
+    <string name="help_with_goods">Donate goods</string>
+    <string name="help_with_money">Donate money</string>
+    <string name="money_boundary">Money donations require a verified payment handoff. This app does not collect bank or payment details.</string>
+    <string name="anonymous_profile">Anonymous browsing</string>
+    <string name="registered_profile">Registered profile</string>
+    <string name="contribution_history_empty">No contributions recorded yet.</string>
+    <string name="generosity_points">Generosity points are informational and not redeemable.</string>
+    <string name="nearby_notifications">Nearby center alerts</string>
+    <string name="urgent_notifications">Urgent need alerts</string>
+    <string name="reminder_notifications">Reminders</string>
+    <string name="visit_signal">I visited this center</string>
+    <string name="visit_signal_submitted">Visit signal saved. Official verification happens through a future center workflow.</string>
+    <string name="official_verification_boundary">Official verification requires a future backend and center backoffice workflow.</string>
+    <string name="category_children_support">Children support</string>
+    <string name="category_older_adults">Older adults</string>
+    <string name="category_disability_support">Disability support</string>
+    <string name="category_health">Health</string>
+    <string name="category_addiction_recovery">Addiction recovery</string>
+    <string name="category_community_kitchen">Community kitchen</string>
+    <string name="category_education">Education</string>
+    <string name="category_vulnerable_families">Vulnerable families</string>
+    <string name="category_organ_tissue_donation">Organ or tissue donation</string>
+    <string name="verification_imported">Imported</string>
+    <string name="verification_visit_signaled">Visited by user</string>
+    <string name="verification_officially_verified">Officially verified</string>
+</resources>
+

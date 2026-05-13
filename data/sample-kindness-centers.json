@@ -1,0 +1,140 @@
+{
+  "centers": [
+    {
+      "id": "kc-children-001",
+      "name": {
+        "en": "Bright Futures Home",
+        "es": "Hogar Futuros Brillantes"
+      },
+      "description": {
+        "en": "Support center for children and families.",
+        "es": "Centro de apoyo para ninos y familias."
+      },
+      "categories": ["children_support", "education"],
+      "coordinates": {
+        "latitude": 19.4326,
+        "longitude": -99.1332
+      },
+      "address": {
+        "en": "Historic Center, Mexico City",
+        "es": "Centro Historico, Ciudad de Mexico"
+      },
+      "contact": {
+        "phone": "+52 55 0000 0001",
+        "email": null,
+        "website": "https://example.org/bright-futures"
+      },
+      "verificationStatus": "imported",
+      "needs": [
+        {
+          "id": "need-school-supplies",
+          "title": {
+            "en": "School supplies",
+            "es": "Utiles escolares"
+          },
+          "description": {
+            "en": "Notebooks, pencils, backpacks, and art supplies.",
+            "es": "Cuadernos, lapices, mochilas y material de arte."
+          },
+          "helpMethods": ["goods", "money"],
+          "urgent": true,
+          "expiresOnIsoDate": "2026-12-31"
+        }
+      ],
+      "importedAtIsoDate": "2026-05-13"
+    },
+    {
+      "id": "kc-seniors-001",
+      "name": {
+        "en": "Golden Years Community Kitchen",
+        "es": "Comedor Comunitario Anos Dorados"
+      },
+      "description": {
+        "en": "Meals and social support for older adults.",
+        "es": "Alimentos y apoyo social para adultos mayores."
+      },
+      "categories": ["older_adults", "community_kitchen"],
+      "coordinates": {
+        "latitude": 19.4285,
+        "longitude": -99.1277
+      },
+      "address": {
+        "en": "Doctores, Mexico City",
+        "es": "Doctores, Ciudad de Mexico"
+      },
+      "contact": {
+        "phone": "+52 55 0000 0002",
+        "email": null,
+        "website": null
+      },
+      "verificationStatus": "visit_signaled",
+      "needs": [
+        {
+          "id": "need-volunteers-lunch",
+          "title": {
+            "en": "Lunch volunteers",
+            "es": "Voluntarios para comida"
+          },
+          "description": {
+            "en": "Two-hour shifts to serve lunch during weekdays.",
+            "es": "Turnos de dos horas para servir comida entre semana."
+          },
+          "helpMethods": ["time"],
+          "urgent": false,
+          "expiresOnIsoDate": null
+        }
+      ],
+      "importedAtIsoDate": "2026-05-13"
+    },
+    {
+      "id": "kc-health-001",
+      "name": {
+        "en": "Open Health Bridge",
+        "es": "Puente de Salud Abierta"
+      },
+      "description": {
+        "en": "Health, disability, recovery, and vulnerable-family support.",
+        "es": "Apoyo de salud, discapacidad, recuperacion y familias vulnerables."
+      },
+      "categories": [
+        "health",
+        "disability_support",
+        "addiction_recovery",
+        "vulnerable_families",
+        "organ_tissue_donation"
+      ],
+      "coordinates": {
+        "latitude": 19.4371,
+        "longitude": -99.1448
+      },
+      "address": {
+        "en": "Juarez, Mexico City",
+        "es": "Juarez, Ciudad de Mexico"
+      },
+      "contact": {
+        "phone": null,
+        "email": "contact@example.org",
+        "website": null
+      },
+      "verificationStatus": "officially_verified",
+      "needs": [
+        {
+          "id": "need-health-kits",
+          "title": {
+            "en": "Health kits",
+            "es": "Kits de salud"
+          },
+          "description": {
+            "en": "Basic hygiene and first-aid kits for families.",
+            "es": "Kits basicos de higiene y primeros auxilios para familias."
+          },
+          "helpMethods": ["goods", "money"],
+          "urgent": true,
+          "expiresOnIsoDate": "2026-08-31"
+        }
+      ],
+      "importedAtIsoDate": "2026-05-13"
+    }
+  ]
+}
+

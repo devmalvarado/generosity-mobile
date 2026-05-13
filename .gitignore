@@ -1,0 +1,56 @@
+# Operating system
+.DS_Store
+Thumbs.db
+
+# Editor and IDE state
+.idea/
+.vscode/
+*.iml
+*.swp
+*.swo
+
+# Local environment
+.env
+.env.*
+!.env.example
+local.properties
+
+# Gradle, Kotlin, and JVM build output
+.gradle/
+**/.gradle/
+.kotlin/
+**/.kotlin/
+build/
+**/build/
+out/
+*.class
+hs_err_pid*
+
+# Android generated artifacts
+captures/
+*.apk
+*.aab
+*.ap_
+*.dex
+
+# Xcode and Apple platform generated artifacts
+DerivedData/
+xcuserdata/
+*.xcuserstate
+*.xcworkspace/xcuserdata/
+*.xcodeproj/xcuserdata/
+*.xcodeproj/project.xcworkspace/xcuserdata/
+*.moved-aside
+*.hmap
+*.ipa
+*.dSYM
+*.dSYM.zip
+
+# Swift Package Manager local state
+.build/
+.swiftpm/
+
+# Logs and temporary files
+*.log
+*.tmp
+*.temp

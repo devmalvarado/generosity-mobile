@@ -1,0 +1,42 @@
+<resources>
+    <string name="app_name">Generosity</string>
+    <string name="tab_map">Mapa</string>
+    <string name="tab_list">Lista</string>
+    <string name="tab_profile">Perfil</string>
+    <string name="tab_settings">Ajustes</string>
+    <string name="language_english">Ingles</string>
+    <string name="language_spanish">Espanol</string>
+    <string name="nearby_centers">Centros de bondad cercanos</string>
+    <string name="search_placeholder">Buscar centros</string>
+    <string name="empty_centers">No se encontraron centros de bondad.</string>
+    <string name="current_needs">Necesidades actuales</string>
+    <string name="no_current_needs">No hay necesidades actuales publicadas.</string>
+    <string name="urgent">Urgente</string>
+    <string name="help_with_time">Donar tiempo</string>
+    <string name="help_with_goods">Donar bienes</string>
+    <string name="help_with_money">Donar dinero</string>
+    <string name="money_boundary">Las donaciones de dinero requieren una transferencia de pago verificada. Esta app no recopila datos bancarios ni de pago.</string>
+    <string name="anonymous_profile">Navegacion anonima</string>
+    <string name="registered_profile">Perfil registrado</string>
+    <string name="contribution_history_empty">Aun no hay contribuciones registradas.</string>
+    <string name="generosity_points">Los puntos de generosidad son informativos y no son canjeables.</string>
+    <string name="nearby_notifications">Alertas de centros cercanos</string>
+    <string name="urgent_notifications">Alertas de necesidades urgentes</string>
+    <string name="reminder_notifications">Recordatorios</string>
+    <string name="visit_signal">Visite este centro</string>
+    <string name="visit_signal_submitted">Senal de visita guardada. La verificacion oficial ocurre en un futuro flujo del centro.</string>
+    <string name="official_verification_boundary">La verificacion oficial requiere un futuro backend y portal para centros.</string>
+    <string name="category_children_support">Apoyo a ninos</string>
+    <string name="category_older_adults">Adultos mayores</string>
+    <string name="category_disability_support">Apoyo a discapacidad</string>
+    <string name="category_health">Salud</string>
+    <string name="category_addiction_recovery">Recuperacion de adicciones</string>
+    <string name="category_community_kitchen">Comedor comunitario</string>
+    <string name="category_education">Educacion</string>
+    <string name="category_vulnerable_families">Familias vulnerables</string>
+    <string name="category_organ_tissue_donation">Donacion de organos o tejidos</string>
+    <string name="verification_imported">Importado</string>
+    <string name="verification_visit_signaled">Visitado por usuario</string>
+    <string name="verification_officially_verified">Verificado oficialmente</string>
+</resources>
+
