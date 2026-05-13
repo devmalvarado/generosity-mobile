@@ -1,7 +1,8 @@
 # user-contribution-profile Specification
 
 ## Purpose
-TBD - created by archiving change define-generosity-mobile-app-foundation. Update Purpose after archive.
+Define anonymous and registered user behavior for discovery, contribution history, generosity points, user-defined helping activities, and contribution reminders.
+
 ## Requirements
 ### Requirement: Anonymous User Mode
 The mobile app SHALL support anonymous users for discovery and basic helping flows that do not require contribution history sync.
@@ -55,4 +56,3 @@ The mobile app SHALL allow registered users to create reminders for intended hel
 #### Scenario: User creates a reminder
 - **WHEN** a registered user schedules a reminder for a helping activity
 - **THEN** the app stores the reminder and schedules an eligible notification
-

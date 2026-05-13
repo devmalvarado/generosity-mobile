@@ -1,7 +1,8 @@
 # app-localization Specification
 
 ## Purpose
-TBD - created by archiving change define-generosity-mobile-app-foundation. Update Purpose after archive.
+Define the multilingual behavior for the Generosity mobile app, including Spanish and English support, locale selection, localized app-controlled text, localized imported content fallback, and notification localization.
+
 ## Requirements
 ### Requirement: Initial Supported Languages
 The mobile app SHALL support Spanish and English as the initial user-facing languages.
@@ -63,4 +64,3 @@ The mobile app SHALL NOT automatically machine-translate Kindness Center names, 
 #### Scenario: Content lacks translation
 - **WHEN** a Kindness Center description is only available in one language
 - **THEN** the app displays the available source content according to fallback rules rather than generating an automatic translation
-

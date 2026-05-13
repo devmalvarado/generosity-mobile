@@ -1,7 +1,8 @@
 # mobile-platform-architecture Specification
 
 ## Purpose
-TBD - created by archiving change define-generosity-mobile-app-foundation. Update Purpose after archive.
+Define the mobile architecture for Generosity across shared Kotlin Multiplatform logic and native iOS and Android user interfaces, including repository boundaries and platform service adapters.
+
 ## Requirements
 ### Requirement: Kotlin Multiplatform Shared Module
 The mobile app SHALL use Kotlin Multiplatform for shared business logic across iOS and Android.
@@ -51,4 +52,3 @@ The mobile app SHALL NOT implement backend services, Kindness Center backoffice 
 #### Scenario: Feature requires backoffice or payment infrastructure
 - **WHEN** a requested behavior depends on backend, center portal, verification, or payment infrastructure
 - **THEN** the mobile app treats that behavior as a future integration point
-

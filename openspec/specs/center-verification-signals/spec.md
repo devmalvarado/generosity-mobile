@@ -1,7 +1,8 @@
 # center-verification-signals Specification
 
 ## Purpose
-TBD - created by archiving change define-generosity-mobile-app-foundation. Update Purpose after archive.
+Define how the mobile app represents Kindness Center verification state and user-submitted visit signals while preserving the boundary that visit signals are evidence only and do not create official center verification.
+
 ## Requirements
 ### Requirement: Verification Status Display
 The mobile app SHALL display a Kindness Center verification status when that status is available from imported data or future backend data.
@@ -44,4 +45,3 @@ The mobile app SHALL collect only the minimum information needed for a visit sig
 #### Scenario: Visit signal includes location evidence
 - **WHEN** the app attaches location evidence to a visit signal
 - **THEN** the app does so only after explicit user action and applicable permission
-

@@ -1,7 +1,8 @@
 # kindness-center-needs Specification
 
 ## Purpose
-TBD - created by archiving change define-generosity-mobile-app-foundation. Update Purpose after archive.
+Define how the mobile app displays read-only Kindness Center needs, supported help methods, urgency, expiration, and the boundary around money donation handoff.
+
 ## Requirements
 ### Requirement: Current Needs Display
 The mobile app SHALL display current needs for a Kindness Center when those needs are available from imported data or future backend data.
@@ -52,4 +53,3 @@ The mobile app SHALL treat Kindness Center needs as read-only content in this ch
 #### Scenario: Center staff wants to publish a need
 - **WHEN** a center staff member needs to create or update a need
 - **THEN** the mobile app does not provide center-management controls
-

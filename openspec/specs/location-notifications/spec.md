@@ -1,7 +1,8 @@
 # location-notifications Specification
 
 ## Purpose
-TBD - created by archiving change define-generosity-mobile-app-foundation. Update Purpose after archive.
+Define notification behavior for nearby Kindness Centers, urgent needs, and user-created reminders, including opt-in requirements, permission boundaries, and user controls.
+
 ## Requirements
 ### Requirement: Notification Opt-In
 The mobile app SHALL require explicit user opt-in before sending push notifications or location-based notifications.
@@ -48,4 +49,3 @@ The mobile app SHALL provide controls for disabling notification categories incl
 #### Scenario: User disables urgent need alerts
 - **WHEN** the user disables urgent need notifications
 - **THEN** the app stops sending urgent need notifications to that user
-

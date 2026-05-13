@@ -1,7 +1,8 @@
 # kindness-center-discovery Specification
 
 ## Purpose
-TBD - created by archiving change define-generosity-mobile-app-foundation. Update Purpose after archive.
+Define how users discover imported Kindness Centers through map, list, search, category filtering, and detail views without requiring registration.
+
 ## Requirements
 ### Requirement: Imported Kindness Center Catalog
 The mobile app SHALL load Kindness Centers from an imported catalog source before requiring a live backend.
@@ -52,4 +53,3 @@ The mobile app SHALL allow users to discover, filter, and view Kindness Center d
 #### Scenario: Anonymous user browses centers
 - **WHEN** an anonymous user opens the discovery experience
 - **THEN** the user can browse the map, filter centers, and open center details
-
