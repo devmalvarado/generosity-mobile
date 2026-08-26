@@ -23,11 +23,11 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FilterChip
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.PrimaryTabRow
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Switch
 import androidx.compose.material3.Tab
-import androidx.compose.material3.TabRow
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
@@ -106,7 +106,7 @@ fun GenerosityApp() {
                             }
                         }
                     }
-                    TabRow(selectedTabIndex = tab.ordinal) {
+                    PrimaryTabRow(selectedTabIndex = tab.ordinal) {
                         AppTab.entries.forEach { appTab ->
                             Tab(
                                 selected = tab == appTab,

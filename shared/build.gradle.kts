@@ -1,10 +1,19 @@
 plugins {
     kotlin("multiplatform")
-    id("com.android.library")
+    id("com.android.kotlin.multiplatform.library")
 }
 
 kotlin {
-    androidTarget()
+    android {
+        namespace = "org.generosity.shared"
+        compileSdk = 36
+        minSdk = 26
+        withHostTest {}
+        compilerOptions {
+            jvmTarget.set(org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_17)
+        }
+    }
+    jvm()
 
     listOf(
         iosX64(),
@@ -23,13 +32,3 @@ kotlin {
         }
     }
 }
-
-android {
-    namespace = "org.generosity.shared"
-    compileSdk = 35
-
-    defaultConfig {
-        minSdk = 24
-    }
-}
-
