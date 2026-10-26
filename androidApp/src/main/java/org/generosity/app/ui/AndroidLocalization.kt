@@ -29,7 +29,14 @@ enum class TextKey {
     REMINDER_NOTIFICATIONS,
     VISIT_SIGNAL,
     VISIT_SIGNAL_SUBMITTED,
-    OFFICIAL_VERIFICATION_BOUNDARY
+    OFFICIAL_VERIFICATION_BOUNDARY,
+    OFFER_GOODS,
+    OFFER_TIME,
+    SIGN_IN,
+    CONTINUE_ANONYMOUSLY,
+    REGISTRATION_REQUIRED,
+    IMPACT_TITLE,
+    REMAINING
 }
 
 fun TextKey.label(locale: SupportedLocale): String = when (locale) {
@@ -57,6 +64,13 @@ fun TextKey.label(locale: SupportedLocale): String = when (locale) {
         TextKey.VISIT_SIGNAL -> "I visited this center"
         TextKey.VISIT_SIGNAL_SUBMITTED -> "Visit signal saved. Official verification happens through a future center workflow."
         TextKey.OFFICIAL_VERIFICATION_BOUNDARY -> "Official verification requires a future backend and center backoffice workflow."
+        TextKey.OFFER_GOODS -> "I can bring 5"
+        TextKey.OFFER_TIME -> "I can volunteer"
+        TextKey.SIGN_IN -> "Sign in"
+        TextKey.CONTINUE_ANONYMOUSLY -> "Continue without an account"
+        TextKey.REGISTRATION_REQUIRED -> "Sign in to record help. Browsing stays open without an account."
+        TextKey.IMPACT_TITLE -> "Your impact"
+        TextKey.REMAINING -> "still needed"
     }
     SupportedLocale.SPANISH -> when (this) {
         TextKey.TAB_MAP -> "Mapa"
@@ -82,6 +96,13 @@ fun TextKey.label(locale: SupportedLocale): String = when (locale) {
         TextKey.VISIT_SIGNAL -> "Visite este centro"
         TextKey.VISIT_SIGNAL_SUBMITTED -> "Senal de visita guardada. La verificacion oficial ocurre en un futuro flujo del centro."
         TextKey.OFFICIAL_VERIFICATION_BOUNDARY -> "La verificacion oficial requiere un futuro backend y portal para centros."
+        TextKey.OFFER_GOODS -> "Puedo llevar 5"
+        TextKey.OFFER_TIME -> "Puedo ser voluntario"
+        TextKey.SIGN_IN -> "Iniciar sesion"
+        TextKey.CONTINUE_ANONYMOUSLY -> "Continuar sin cuenta"
+        TextKey.REGISTRATION_REQUIRED -> "Inicia sesion para registrar ayuda. Puedes explorar sin cuenta."
+        TextKey.IMPACT_TITLE -> "Tu impacto"
+        TextKey.REMAINING -> "aun se necesitan"
     }
 }
 

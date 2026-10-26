@@ -1,7 +1,5 @@
 package org.generosity.usecase
 
-import kotlin.math.pow
-import kotlin.math.sqrt
 import org.generosity.domain.CenterCategory
 import org.generosity.domain.CenterNeed
 import org.generosity.domain.Contribution
@@ -17,6 +15,7 @@ import org.generosity.domain.UserMode
 import org.generosity.domain.UserProfile
 import org.generosity.domain.VerificationStatus
 import org.generosity.domain.VisitSignal
+import org.generosity.domain.distanceMetersTo
 
 data class DiscoveryQuery(
     val searchText: String = "",
@@ -40,14 +39,16 @@ class DiscoverKindnessCentersUseCase(
         }
 
         return query.location?.let { origin ->
-            filtered.sortedBy { it.coordinates.distanceScoreTo(origin) }
+            filtered.sortedBy { it.coordinates.distanceMetersTo(origin) }
         } ?: filtered.sortedBy { it.name.resolve(query.locale) }
     }
 }
 
 class CurrentNeedsUseCase {
     operator fun invoke(needs: List<CenterNeed>, referenceIsoDate: String): List<CenterNeed> =
-        needs.filterNot { it.isExpired(referenceIsoDate) }
+        needs
+            .filter { it.isCurrent(referenceIsoDate) }
+            .sortedWith(compareByDescending<CenterNeed> { it.priority.rank }.thenBy { it.publishedOnIsoDate ?: "" })
 }
 
 class MoneyDonationPolicy {
@@ -145,6 +146,3 @@ class LocalizedNotificationTextProvider {
         }
     }
 }
-
-private fun Coordinates.distanceScoreTo(other: Coordinates): Double =
-    sqrt((latitude - other.latitude).pow(2) + (longitude - other.longitude).pow(2))

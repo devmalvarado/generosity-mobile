@@ -34,7 +34,11 @@ object SampleImportedCatalog {
                     ),
                     helpMethods = setOf(HelpMethod.GOODS, HelpMethod.MONEY),
                     urgent = true,
-                    expiresOnIsoDate = "2026-12-31"
+                    expiresOnIsoDate = "2026-12-31",
+                    category = CenterCategory.EDUCATION,
+                    quantityRequired = 20,
+                    quantityCommitted = 5,
+                    publishedOnIsoDate = "2026-05-01"
                 )
             ),
             importedAtIsoDate = "2026-05-13"

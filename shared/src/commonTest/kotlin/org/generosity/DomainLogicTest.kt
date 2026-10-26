@@ -1,8 +1,6 @@
 package org.generosity
 
-import kotlin.coroutines.Continuation
-import kotlin.coroutines.EmptyCoroutineContext
-import kotlin.coroutines.startCoroutine
+import kotlinx.coroutines.test.runTest
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFalse
@@ -48,20 +46,20 @@ class DomainLogicTest {
     }
 
     @Test
-    fun importedCatalogRepositoryReturnsEmptyListWhenDataSourceFails() {
+    fun importedCatalogRepositoryReturnsEmptyListWhenDataSourceFails() = runTest {
         val repository = ImportedCatalogRepository(
             object : ImportedCatalogDataSource {
                 override fun loadCenters() = throw RuntimeException("Bad import")
             }
         )
 
-        val centers = runSuspend { repository.centers() }
+        val centers = repository.centers()
 
         assertTrue(centers.isEmpty())
     }
 
     @Test
-    fun discoveryFiltersByCategoryAndSearchText() {
+    fun discoveryFiltersByCategoryAndSearchText() = runTest {
         val repository = ImportedCatalogRepository(
             object : ImportedCatalogDataSource {
                 override fun loadCenters() = SampleImportedCatalog.centers()
@@ -69,15 +67,13 @@ class DomainLogicTest {
         )
         val useCase = DiscoverKindnessCentersUseCase(repository)
 
-        val centers = runSuspend {
-            useCase(
-                DiscoveryQuery(
-                    searchText = "health",
-                    categories = setOf(CenterCategory.HEALTH),
-                    locale = SupportedLocale.ENGLISH
-                )
+        val centers = useCase(
+            DiscoveryQuery(
+                searchText = "health",
+                categories = setOf(CenterCategory.HEALTH),
+                locale = SupportedLocale.ENGLISH
             )
-        }
+        )
 
         assertEquals(listOf("kc-health-001"), centers.map { it.id })
     }
@@ -182,20 +178,5 @@ class DomainLogicTest {
             policy.statusAfterSignal(VerificationStatus.OFFICIALLY_VERIFIED)
         )
     }
-}
-
-private fun <T> runSuspend(block: suspend () -> T): T {
-    var completed: Any? = null
-    block.startCoroutine(
-        object : Continuation<T> {
-            override val context = EmptyCoroutineContext
-
-            override fun resumeWith(result: Result<T>) {
-                completed = result
-            }
-        }
-    )
-    @Suppress("UNCHECKED_CAST")
-    return (completed as Result<T>).getOrThrow()
 }
 

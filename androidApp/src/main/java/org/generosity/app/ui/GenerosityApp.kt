@@ -23,36 +23,34 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FilterChip
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.PrimaryTabRow
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Switch
 import androidx.compose.material3.Tab
+import androidx.compose.material3.PrimaryTabRow
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import org.generosity.data.SampleImportedCatalog
+import org.generosity.app.GenerosityAppState
+import org.generosity.app.GenerosityUiState
 import org.generosity.domain.CenterCategory
 import org.generosity.domain.CenterNeed
+import org.generosity.domain.ContributionOffer
 import org.generosity.domain.HelpMethod
 import org.generosity.domain.KindnessCenter
 import org.generosity.domain.NotificationPreference
+import org.generosity.domain.RejectionReason
 import org.generosity.domain.SupportedLocale
-import org.generosity.domain.UserMode
-import org.generosity.domain.UserProfile
-import org.generosity.usecase.CurrentNeedsUseCase
-import org.generosity.usecase.DiscoveryQuery
-import org.generosity.usecase.MoneyDonationPolicy
 
 private enum class AppTab {
     MAP,
@@ -63,29 +61,10 @@ private enum class AppTab {
 
 @Composable
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalLayoutApi::class)
-fun GenerosityApp() {
-    var locale by remember { mutableStateOf(SupportedLocale.ENGLISH) }
-    var tab by remember { mutableStateOf(AppTab.MAP) }
-    var searchText by remember { mutableStateOf("") }
-    var selectedCategories by remember { mutableStateOf(emptySet<CenterCategory>()) }
-    var selectedCenter by remember { mutableStateOf<KindnessCenter?>(null) }
-    var visitMessage by remember { mutableStateOf<String?>(null) }
-    var preferences by remember { mutableStateOf(NotificationPreference()) }
-
-    val centers = remember { SampleImportedCatalog.centers() }
-    val query = DiscoveryQuery(searchText = searchText, categories = selectedCategories, locale = locale)
-    val filteredCenters = remember(centers, query) {
-        centers
-            .filter { center -> query.categories.isEmpty() || center.categories.any { it in query.categories } }
-            .filter { center ->
-                val text = query.searchText.trim().lowercase()
-                text.isEmpty() ||
-                    center.name.resolve(locale).lowercase().contains(text) ||
-                    center.description.resolve(locale).lowercase().contains(text) ||
-                    center.address.resolve(locale).lowercase().contains(text)
-            }
-            .sortedBy { it.name.resolve(locale) }
-    }
+fun GenerosityApp(appState: GenerosityAppState) {
+    val state by appState.state.collectAsState()
+    val locale = state.locale
+    val tab = remember { mutableStateOf(AppTab.MAP) }
 
     MaterialTheme {
         Scaffold(
@@ -98,19 +77,19 @@ fun GenerosityApp() {
                     ) {
                         Text("Generosity", style = MaterialTheme.typography.headlineSmall, fontWeight = FontWeight.Bold)
                         Row {
-                            TextButton(onClick = { locale = SupportedLocale.ENGLISH }) {
+                            TextButton(onClick = { appState.setLocale(SupportedLocale.ENGLISH) }) {
                                 Text(TextKey.LANGUAGE_ENGLISH.label(locale))
                             }
-                            TextButton(onClick = { locale = SupportedLocale.SPANISH }) {
+                            TextButton(onClick = { appState.setLocale(SupportedLocale.SPANISH) }) {
                                 Text(TextKey.LANGUAGE_SPANISH.label(locale))
                             }
                         }
                     }
-                    PrimaryTabRow(selectedTabIndex = tab.ordinal) {
+                    PrimaryTabRow(selectedTabIndex = tab.value.ordinal) {
                         AppTab.entries.forEach { appTab ->
                             Tab(
-                                selected = tab == appTab,
-                                onClick = { tab = appTab },
+                                selected = tab.value == appTab,
+                                onClick = { tab.value = appTab },
                                 text = { Text(appTab.label(locale)) }
                             )
                         }
@@ -124,57 +103,11 @@ fun GenerosityApp() {
                     .padding(innerPadding)
                     .padding(horizontal = 16.dp)
             ) {
-                when (tab) {
-                    AppTab.MAP -> DiscoveryScreen(
-                        locale = locale,
-                        centers = filteredCenters,
-                        searchText = searchText,
-                        onSearchTextChange = { searchText = it },
-                        selectedCategories = selectedCategories,
-                        onCategoryToggle = { category ->
-                            selectedCategories = if (category in selectedCategories) {
-                                selectedCategories - category
-                            } else {
-                                selectedCategories + category
-                            }
-                        },
-                        selectedCenter = selectedCenter,
-                        visitMessage = visitMessage,
-                        onCenterSelected = {
-                            selectedCenter = it
-                            visitMessage = null
-                        },
-                        onVisitSignal = {
-                            visitMessage = TextKey.VISIT_SIGNAL_SUBMITTED.label(locale)
-                        },
-                        showMap = true
-                    )
-                    AppTab.LIST -> DiscoveryScreen(
-                        locale = locale,
-                        centers = filteredCenters,
-                        searchText = searchText,
-                        onSearchTextChange = { searchText = it },
-                        selectedCategories = selectedCategories,
-                        onCategoryToggle = { category ->
-                            selectedCategories = if (category in selectedCategories) {
-                                selectedCategories - category
-                            } else {
-                                selectedCategories + category
-                            }
-                        },
-                        selectedCenter = selectedCenter,
-                        visitMessage = visitMessage,
-                        onCenterSelected = {
-                            selectedCenter = it
-                            visitMessage = null
-                        },
-                        onVisitSignal = {
-                            visitMessage = TextKey.VISIT_SIGNAL_SUBMITTED.label(locale)
-                        },
-                        showMap = false
-                    )
-                    AppTab.PROFILE -> ProfileScreen(locale)
-                    AppTab.SETTINGS -> SettingsScreen(locale, preferences) { preferences = it }
+                when (tab.value) {
+                    AppTab.MAP -> DiscoveryScreen(state, appState, showMap = true)
+                    AppTab.LIST -> DiscoveryScreen(state, appState, showMap = false)
+                    AppTab.PROFILE -> ProfileScreen(state, appState)
+                    AppTab.SETTINGS -> SettingsScreen(state, appState)
                 }
             }
         }
@@ -182,54 +115,51 @@ fun GenerosityApp() {
 }
 
 @Composable
-private fun DiscoveryScreen(
-    locale: SupportedLocale,
-    centers: List<KindnessCenter>,
-    searchText: String,
-    onSearchTextChange: (String) -> Unit,
-    selectedCategories: Set<CenterCategory>,
-    onCategoryToggle: (CenterCategory) -> Unit,
-    selectedCenter: KindnessCenter?,
-    visitMessage: String?,
-    onCenterSelected: (KindnessCenter) -> Unit,
-    onVisitSignal: () -> Unit,
-    showMap: Boolean
-) {
+private fun DiscoveryScreen(state: GenerosityUiState, appState: GenerosityAppState, showMap: Boolean) {
+    val locale = state.locale
+
     LazyColumn(verticalArrangement = Arrangement.spacedBy(12.dp)) {
         item {
             Text(TextKey.NEARBY_CENTERS.label(locale), style = MaterialTheme.typography.titleLarge)
             Spacer(Modifier.height(8.dp))
             OutlinedTextField(
-                value = searchText,
-                onValueChange = onSearchTextChange,
+                value = state.searchText,
+                onValueChange = appState::setSearchText,
                 modifier = Modifier.fillMaxWidth(),
                 label = { Text(TextKey.SEARCH_PLACEHOLDER.label(locale)) }
             )
         }
 
         item {
-            CategoryFilters(locale, selectedCategories, onCategoryToggle)
+            CategoryFilters(locale, state.selectedCategories, appState::toggleCategory)
         }
 
         if (showMap) {
-            item {
-                MapSurface(locale, centers, onCenterSelected)
-            }
+            item { MapSurface(locale, state.centers, appState::selectCenter) }
         }
 
-        if (centers.isEmpty()) {
-            item {
-                Text(TextKey.EMPTY_CENTERS.label(locale))
-            }
+        if (state.centers.isEmpty()) {
+            item { Text(TextKey.EMPTY_CENTERS.label(locale)) }
         } else {
-            items(centers, key = { it.id }) { center ->
-                CenterRow(locale, center, onClick = { onCenterSelected(center) })
+            items(state.centers, key = { it.id }) { center ->
+                CenterRow(locale, center, onClick = { appState.selectCenter(center.id) })
             }
         }
 
-        selectedCenter?.let { center ->
+        state.selectedCenter?.let { center ->
             item {
-                CenterDetail(locale, center, visitMessage, onVisitSignal)
+                CenterDetail(
+                    locale = locale,
+                    center = center,
+                    needs = state.currentNeeds,
+                    visitRecorded = state.visitSignalCenterId == center.id,
+                    rejection = state.lastRejection,
+                    onVisitSignal = { appState.signalVisit(center.id) },
+                    onOfferGoods = { appState.offerHelp(it, ContributionOffer(HelpMethod.GOODS, quantity = 5)) },
+                    onOfferTime = {
+                        appState.offerHelp(it, ContributionOffer(HelpMethod.TIME, activity = "volunteer", availability = "weekday"))
+                    }
+                )
             }
         }
     }
@@ -257,7 +187,7 @@ private fun CategoryFilters(
 private fun MapSurface(
     locale: SupportedLocale,
     centers: List<KindnessCenter>,
-    onCenterSelected: (KindnessCenter) -> Unit
+    onCenterSelected: (String) -> Unit
 ) {
     Box(
         modifier = Modifier
@@ -274,7 +204,7 @@ private fun MapSurface(
         ) {
             centers.forEach { center ->
                 Row(
-                    modifier = Modifier.clickable { onCenterSelected(center) },
+                    modifier = Modifier.clickable { onCenterSelected(center.id) },
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     Box(
@@ -313,11 +243,13 @@ private fun CenterRow(locale: SupportedLocale, center: KindnessCenter, onClick: 
 private fun CenterDetail(
     locale: SupportedLocale,
     center: KindnessCenter,
-    visitMessage: String?,
-    onVisitSignal: () -> Unit
+    needs: List<CenterNeed>,
+    visitRecorded: Boolean,
+    rejection: RejectionReason?,
+    onVisitSignal: () -> Unit,
+    onOfferGoods: (String) -> Unit,
+    onOfferTime: (String) -> Unit
 ) {
-    val currentNeeds = remember(center) { CurrentNeedsUseCase()(center.needs, "2026-05-13") }
-
     Surface(
         modifier = Modifier.fillMaxWidth(),
         tonalElevation = 2.dp,
@@ -332,74 +264,106 @@ private fun CenterDetail(
             Text(TextKey.OFFICIAL_VERIFICATION_BOUNDARY.label(locale), style = MaterialTheme.typography.bodySmall)
 
             Text(TextKey.CURRENT_NEEDS.label(locale), style = MaterialTheme.typography.titleMedium)
-            if (currentNeeds.isEmpty()) {
+            if (needs.isEmpty()) {
                 Text(TextKey.NO_CURRENT_NEEDS.label(locale))
             } else {
-                currentNeeds.forEach { need -> NeedRow(locale, need) }
+                needs.forEach { need ->
+                    NeedRow(locale, need, onOfferGoods, onOfferTime)
+                }
             }
 
-            Button(onClick = onVisitSignal) {
+            if (rejection == RejectionReason.REGISTRATION_REQUIRED) {
+                Text(TextKey.REGISTRATION_REQUIRED.label(locale), color = Color(0xFFB3261E))
+            }
+
+            Button(onClick = onVisitSignal, enabled = !visitRecorded) {
                 Text(TextKey.VISIT_SIGNAL.label(locale))
             }
-            visitMessage?.let { Text(it, color = Color(0xFF1B7F5A)) }
+            if (visitRecorded) {
+                Text(TextKey.VISIT_SIGNAL_SUBMITTED.label(locale), color = Color(0xFF1B7F5A))
+            }
         }
     }
 }
 
 @Composable
-private fun NeedRow(locale: SupportedLocale, need: CenterNeed) {
-    val canStartMoney = remember(need) { MoneyDonationPolicy().canStartDonation(need, false) }
-
+private fun NeedRow(
+    locale: SupportedLocale,
+    need: CenterNeed,
+    onOfferGoods: (String) -> Unit,
+    onOfferTime: (String) -> Unit
+) {
     Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
         Row(horizontalArrangement = Arrangement.spacedBy(8.dp), verticalAlignment = Alignment.CenterVertically) {
             Text(need.title.resolve(locale), fontWeight = FontWeight.SemiBold)
-            if (need.urgent) {
+            if (need.isUrgent) {
                 Text(TextKey.URGENT.label(locale), color = Color(0xFFB3261E), fontWeight = FontWeight.Bold)
             }
         }
         Text(need.description.resolve(locale))
+        need.quantityRemaining?.let { remaining ->
+            Text("$remaining ${TextKey.REMAINING.label(locale)}", style = MaterialTheme.typography.bodySmall)
+        }
         Text(need.helpMethods.joinToString { it.label(locale) }, style = MaterialTheme.typography.bodySmall)
-        if (HelpMethod.MONEY in need.helpMethods && !canStartMoney) {
+        if (HelpMethod.MONEY in need.helpMethods) {
             Text(TextKey.MONEY_BOUNDARY.label(locale), style = MaterialTheme.typography.bodySmall)
+        }
+        Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+            if (HelpMethod.GOODS in need.helpMethods && need.quantityRemaining != null) {
+                TextButton(onClick = { onOfferGoods(need.id) }) { Text(TextKey.OFFER_GOODS.label(locale)) }
+            }
+            if (HelpMethod.TIME in need.helpMethods) {
+                TextButton(onClick = { onOfferTime(need.id) }) { Text(TextKey.OFFER_TIME.label(locale)) }
+            }
         }
     }
 }
 
 @Composable
-private fun ProfileScreen(locale: SupportedLocale) {
-    val profile = UserProfile(mode = UserMode.ANONYMOUS)
+private fun ProfileScreen(state: GenerosityUiState, appState: GenerosityAppState) {
+    val locale = state.locale
 
     Column(Modifier.fillMaxWidth(), verticalArrangement = Arrangement.spacedBy(12.dp)) {
         Text(TextKey.TAB_PROFILE.label(locale), style = MaterialTheme.typography.titleLarge)
-        Text(if (profile.isRegistered) TextKey.REGISTERED_PROFILE.label(locale) else TextKey.ANONYMOUS_PROFILE.label(locale))
-        Text(TextKey.CONTRIBUTION_HISTORY_EMPTY.label(locale))
-        Text(TextKey.GENEROSITY_POINTS.label(locale))
+        if (state.profile.isRegistered) {
+            Text(state.profile.displayName ?: TextKey.REGISTERED_PROFILE.label(locale))
+        } else {
+            Text(TextKey.ANONYMOUS_PROFILE.label(locale))
+            Button(onClick = { appState.signIn("user-1", "Ana") }) {
+                Text(TextKey.SIGN_IN.label(locale))
+            }
+        }
+
+        if (state.contributions.isEmpty()) {
+            Text(TextKey.CONTRIBUTION_HISTORY_EMPTY.label(locale))
+        } else {
+            state.contributions.forEach { contribution ->
+                Text(contribution.title.resolve(locale))
+            }
+        }
+
+        Text(TextKey.IMPACT_TITLE.label(locale), style = MaterialTheme.typography.titleMedium)
+        Text(TextKey.GENEROSITY_POINTS.label(locale), style = MaterialTheme.typography.bodySmall)
+        Text("${state.impact.goodsCommitted} · ${state.impact.needsSupported} · ${state.impact.centersSupported}")
     }
 }
 
 @Composable
-private fun SettingsScreen(
-    locale: SupportedLocale,
-    preferences: NotificationPreference,
-    onPreferencesChange: (NotificationPreference) -> Unit
-) {
+private fun SettingsScreen(state: GenerosityUiState, appState: GenerosityAppState) {
+    val locale = state.locale
+    val preferences = state.preferences
+
     Column(Modifier.fillMaxWidth(), verticalArrangement = Arrangement.spacedBy(12.dp)) {
         Text(TextKey.TAB_SETTINGS.label(locale), style = MaterialTheme.typography.titleLarge)
-        NotificationToggle(
-            label = TextKey.NEARBY_NOTIFICATIONS.label(locale),
-            checked = preferences.nearbyCentersEnabled,
-            onCheckedChange = { onPreferencesChange(preferences.copy(nearbyCentersEnabled = it)) }
-        )
-        NotificationToggle(
-            label = TextKey.URGENT_NOTIFICATIONS.label(locale),
-            checked = preferences.urgentNeedsEnabled,
-            onCheckedChange = { onPreferencesChange(preferences.copy(urgentNeedsEnabled = it)) }
-        )
-        NotificationToggle(
-            label = TextKey.REMINDER_NOTIFICATIONS.label(locale),
-            checked = preferences.remindersEnabled,
-            onCheckedChange = { onPreferencesChange(preferences.copy(remindersEnabled = it)) }
-        )
+        NotificationToggle(TextKey.NEARBY_NOTIFICATIONS.label(locale), preferences.nearbyCentersEnabled) {
+            appState.setPreferences(preferences.copy(nearbyCentersEnabled = it))
+        }
+        NotificationToggle(TextKey.URGENT_NOTIFICATIONS.label(locale), preferences.urgentNeedsEnabled) {
+            appState.setPreferences(preferences.copy(urgentNeedsEnabled = it))
+        }
+        NotificationToggle(TextKey.REMINDER_NOTIFICATIONS.label(locale), preferences.remindersEnabled) {
+            appState.setPreferences(preferences.copy(remindersEnabled = it))
+        }
         PlatformPermissionActions(locale)
     }
 }

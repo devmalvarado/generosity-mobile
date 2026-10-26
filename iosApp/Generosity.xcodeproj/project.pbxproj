@@ -1,0 +1,457 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 77;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		448B5F3C704FCD2EBEDCEAF6 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = E65BF50201A1D0402B9F07A7 /* InfoPlist.strings */; };
+		722BD5074D69067488EBACA8 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FBDC30DB116ADDF12CF4133 /* ContentView.swift */; };
+		7866DF0B1190E35E2687F9FC /* SampleData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92B596B3C70159C0160A6F57 /* SampleData.swift */; };
+		839697680DBDE2594D00A52B /* GenerosityUiChecklistTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 553F5D8AAA7C55879E0C5371 /* GenerosityUiChecklistTests.swift */; };
+		B4D7978343E3F095C9FA760C /* Localization.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE45DA191AAC92EFE7F80454 /* Localization.swift */; };
+		C636C3B927045689B84B2905 /* PermissionService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E481E322B0BB9A78995FE75 /* PermissionService.swift */; };
+		D4A040A45D61651DD3250F13 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 4E63ACB49B747A8A82AAF2B7 /* Localizable.strings */; };
+		E00AAC8194E6A18F0A852051 /* GenerosityApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1D7757C9C78879CA45846739 /* GenerosityApp.swift */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		16328649120A05CE5316B75E /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 632774F4468E5DBDEB177F85 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 457411CE77B7AF2495A3ABC1;
+			remoteInfo = Generosity;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		0E481E322B0BB9A78995FE75 /* PermissionService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PermissionService.swift; sourceTree = "<group>"; };
+		13E8FF7199A91D36C45F77D2 /* es */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = es; path = es.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		1D7757C9C78879CA45846739 /* GenerosityApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GenerosityApp.swift; sourceTree = "<group>"; };
+		2A3BD546735DBA1B6FCBF1B5 /* Generosity.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = Generosity.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		37BD51B2133A26B9C463D1B1 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
+		4FBDC30DB116ADDF12CF4133 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
+		553F5D8AAA7C55879E0C5371 /* GenerosityUiChecklistTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GenerosityUiChecklistTests.swift; sourceTree = "<group>"; };
+		58057346B63330745D033FAD /* GenerosityUITests.xctest */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.cfbundle; path = GenerosityUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		913C043915D0438C7C5EF819 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		92B596B3C70159C0160A6F57 /* SampleData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SampleData.swift; sourceTree = "<group>"; };
+		DE45DA191AAC92EFE7F80454 /* Localization.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Localization.swift; sourceTree = "<group>"; };
+		F30C4EFEC8EF2A04BCB10CA6 /* es */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = es; path = es.lproj/Localizable.strings; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXGroup section */
+		01E6F42E1A281FF82F254B61 = {
+			isa = PBXGroup;
+			children = (
+				BF699DE653FF15A9D5F23DF0 /* GenerosityApp */,
+				D5D59DC23B1D02A9F23576EB /* GenerosityAppTests */,
+				61F4BDD0AAAA8755C45E0EFB /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		61F4BDD0AAAA8755C45E0EFB /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				2A3BD546735DBA1B6FCBF1B5 /* Generosity.app */,
+				58057346B63330745D033FAD /* GenerosityUITests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		BF699DE653FF15A9D5F23DF0 /* GenerosityApp */ = {
+			isa = PBXGroup;
+			children = (
+				4FBDC30DB116ADDF12CF4133 /* ContentView.swift */,
+				1D7757C9C78879CA45846739 /* GenerosityApp.swift */,
+				DE45DA191AAC92EFE7F80454 /* Localization.swift */,
+				0E481E322B0BB9A78995FE75 /* PermissionService.swift */,
+				92B596B3C70159C0160A6F57 /* SampleData.swift */,
+				E65BF50201A1D0402B9F07A7 /* InfoPlist.strings */,
+				4E63ACB49B747A8A82AAF2B7 /* Localizable.strings */,
+			);
+			path = GenerosityApp;
+			sourceTree = "<group>";
+		};
+		D5D59DC23B1D02A9F23576EB /* GenerosityAppTests */ = {
+			isa = PBXGroup;
+			children = (
+				553F5D8AAA7C55879E0C5371 /* GenerosityUiChecklistTests.swift */,
+			);
+			path = GenerosityAppTests;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		457411CE77B7AF2495A3ABC1 /* Generosity */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 81C892B6A774E92FF7FEA764 /* Build configuration list for PBXNativeTarget "Generosity" */;
+			buildPhases = (
+				7224B26DA0E7B16A32F833AD /* Sources */,
+				951F0DEBFDF59AC73153CEB6 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = Generosity;
+			packageProductDependencies = (
+			);
+			productName = Generosity;
+			productReference = 2A3BD546735DBA1B6FCBF1B5 /* Generosity.app */;
+			productType = "com.apple.product-type.application";
+		};
+		680486BEC9A7A0BB462DE919 /* GenerosityUITests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 587D28C14AF98374575B5DB0 /* Build configuration list for PBXNativeTarget "GenerosityUITests" */;
+			buildPhases = (
+				8D7F00013553456FCEDCFC91 /* Sources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				351DC173933ECB23EE392F2D /* PBXTargetDependency */,
+			);
+			name = GenerosityUITests;
+			packageProductDependencies = (
+			);
+			productName = GenerosityUITests;
+			productReference = 58057346B63330745D033FAD /* GenerosityUITests.xctest */;
+			productType = "com.apple.product-type.bundle.ui-testing";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		632774F4468E5DBDEB177F85 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = YES;
+				LastUpgradeCheck = 1430;
+				TargetAttributes = {
+					680486BEC9A7A0BB462DE919 = {
+						TestTargetID = 457411CE77B7AF2495A3ABC1;
+					};
+				};
+			};
+			buildConfigurationList = D99BE390C3A1C6E1057EA423 /* Build configuration list for PBXProject "Generosity" */;
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				Base,
+				en,
+				es,
+			);
+			mainGroup = 01E6F42E1A281FF82F254B61;
+			minimizedProjectReferenceProxies = 1;
+			preferredProjectObjectVersion = 77;
+			productRefGroup = 61F4BDD0AAAA8755C45E0EFB /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				457411CE77B7AF2495A3ABC1 /* Generosity */,
+				680486BEC9A7A0BB462DE919 /* GenerosityUITests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		951F0DEBFDF59AC73153CEB6 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				448B5F3C704FCD2EBEDCEAF6 /* InfoPlist.strings in Resources */,
+				D4A040A45D61651DD3250F13 /* Localizable.strings in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		7224B26DA0E7B16A32F833AD /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				722BD5074D69067488EBACA8 /* ContentView.swift in Sources */,
+				E00AAC8194E6A18F0A852051 /* GenerosityApp.swift in Sources */,
+				B4D7978343E3F095C9FA760C /* Localization.swift in Sources */,
+				C636C3B927045689B84B2905 /* PermissionService.swift in Sources */,
+				7866DF0B1190E35E2687F9FC /* SampleData.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		8D7F00013553456FCEDCFC91 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				839697680DBDE2594D00A52B /* GenerosityUiChecklistTests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		351DC173933ECB23EE392F2D /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 457411CE77B7AF2495A3ABC1 /* Generosity */;
+			targetProxy = 16328649120A05CE5316B75E /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin PBXVariantGroup section */
+		4E63ACB49B747A8A82AAF2B7 /* Localizable.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				37BD51B2133A26B9C463D1B1 /* en */,
+				F30C4EFEC8EF2A04BCB10CA6 /* es */,
+			);
+			name = Localizable.strings;
+			sourceTree = "<group>";
+		};
+		E65BF50201A1D0402B9F07A7 /* InfoPlist.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				913C043915D0438C7C5EF819 /* en */,
+				13E8FF7199A91D36C45F77D2 /* es */,
+			);
+			name = InfoPlist.strings;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		323B58F9F3C28447FEFFD02A /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = org.generosity.app.uitests;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = Generosity;
+			};
+			name = Debug;
+		};
+		5972898E9394DE00F24C5E17 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+		A1018299FFFDC742DD96459D /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = GenerosityApp/Info.plist;
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 0.1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = org.generosity.app;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+		AF63B1B15BF886DD37C69AF5 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = GenerosityApp/Info.plist;
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 0.1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = org.generosity.app;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		E6E1A015D2FE74C6BA6C8B38 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"$(inherited)",
+					"DEBUG=1",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		E9313650E1DE7A16BFB53B75 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = org.generosity.app.uitests;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = Generosity;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		587D28C14AF98374575B5DB0 /* Build configuration list for PBXNativeTarget "GenerosityUITests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				323B58F9F3C28447FEFFD02A /* Debug */,
+				E9313650E1DE7A16BFB53B75 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		81C892B6A774E92FF7FEA764 /* Build configuration list for PBXNativeTarget "Generosity" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				AF63B1B15BF886DD37C69AF5 /* Debug */,
+				A1018299FFFDC742DD96459D /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		D99BE390C3A1C6E1057EA423 /* Build configuration list for PBXProject "Generosity" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				E6E1A015D2FE74C6BA6C8B38 /* Debug */,
+				5972898E9394DE00F24C5E17 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 632774F4468E5DBDEB177F85 /* Project object */;
+}

@@ -125,15 +125,52 @@ data class CenterNeed(
     val description: LocalizedText,
     val helpMethods: Set<HelpMethod>,
     val urgent: Boolean = false,
-    val expiresOnIsoDate: String? = null
+    val expiresOnIsoDate: String? = null,
+    val category: CenterCategory? = null,
+    val priority: NeedPriority = if (urgent) NeedPriority.URGENT else NeedPriority.NORMAL,
+    val status: NeedStatus = NeedStatus.ACTIVE,
+    val quantityRequired: Int? = null,
+    val quantityCommitted: Int = 0,
+    val publishedOnIsoDate: String? = null
 ) {
+    init {
+        quantityRequired?.let { required ->
+            require(required > 0) { "A required quantity must be greater than zero." }
+            require(quantityCommitted in 0..required) {
+                "Committed quantity must stay between zero and the required quantity."
+            }
+        }
+    }
+
+    val quantityRemaining: Int?
+        get() = quantityRequired?.minus(quantityCommitted)
+
+    /** Urgent is derived from priority so the two can never disagree. */
+    val isUrgent: Boolean
+        get() = priority.isUrgent
+
     fun isExpired(referenceIsoDate: String): Boolean {
+        if (status == NeedStatus.EXPIRED) return true
         val expiration = expiresOnIsoDate ?: return false
         return expiration < referenceIsoDate
     }
 
+    fun isCurrent(referenceIsoDate: String): Boolean =
+        status.isOpen && !isExpired(referenceIsoDate)
+
     fun canStartMoneyDonation(hasPaymentHandoff: Boolean): Boolean =
         HelpMethod.MONEY in helpMethods && hasPaymentHandoff
+
+    /** Returns the need after committing [quantity] goods, or null when it does not fit. */
+    fun commitGoods(quantity: Int): CenterNeed? {
+        val required = quantityRequired ?: return null
+        if (quantity !in 1..(required - quantityCommitted)) return null
+        val committed = quantityCommitted + quantity
+        return copy(
+            quantityCommitted = committed,
+            status = if (committed == required) NeedStatus.COVERED else status
+        )
+    }
 }
 
 data class KindnessCenter(
@@ -167,7 +204,12 @@ data class Contribution(
     val helpMethod: HelpMethod,
     val recordedAtIsoDateTime: String,
     val pointsAwarded: Int = 0,
-    val note: String? = null
+    val note: String? = null,
+    val needId: String? = null,
+    val status: ContributionStatus = ContributionStatus.OFFERED,
+    val quantity: Int? = null,
+    val activity: String? = null,
+    val availability: String? = null
 )
 
 data class Reminder(

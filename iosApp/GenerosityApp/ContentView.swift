@@ -123,6 +123,7 @@ private struct DiscoveryView: View {
                             CenterRow(locale: locale, center: center)
                         }
                         .buttonStyle(.plain)
+                        .accessibilityIdentifier("center-\(center.id)")
                     }
                 }
 
