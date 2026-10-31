@@ -5,12 +5,14 @@ import kotlin.native.ObjCName
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import org.generosity.domain.CenterCategory
 import org.generosity.domain.ContributionOffer
 import org.generosity.domain.HelpMethod
 import org.generosity.domain.NotificationPreference
+import org.generosity.domain.LocalePreference
 import org.generosity.domain.SupportedLocale
 
 /**
@@ -22,20 +24,35 @@ import org.generosity.domain.SupportedLocale
 class GenerosityAppStateIos(
     private val state: GenerosityAppState
 ) {
-    constructor() : this(GenerosityAppState(
-        CoroutineScope(SupervisorJob() + Dispatchers.Main)
+    constructor(selectedLocaleCode: String?, deviceLanguageCodes: List<String>) : this(GenerosityAppState(
+        CoroutineScope(SupervisorJob() + Dispatchers.Main),
+        initialLocalePreference = LocalePreference.fromDeviceLanguages(selectedLocaleCode, deviceLanguageCodes)
     ))
 
+    constructor() : this(null, emptyList())
+
+    private val observationScope = CoroutineScope(SupervisorJob() + Dispatchers.Main)
+    private var observation: Job? = null
+    val currentState: GenerosityUiState get() = state.state.value
+
+    fun onResume() = state.onResume()
+
     fun start(onChange: (GenerosityUiState) -> Unit) {
+        stop()
         state.start()
-        CoroutineScope(SupervisorJob() + Dispatchers.Main).launch {
+        observation = observationScope.launch {
             state.state.collect { onChange(it) }
         }
     }
 
-    fun setLocale(code: String) {
-        SupportedLocale.fromCode(code)?.let { state.setLocale(it) }
+    fun stop() {
+        observation?.cancel()
+        observation = null
     }
+
+    fun setLocale(code: String?) = state.setLocale(SupportedLocale.fromCode(code))
+
+    fun setDeviceLanguages(codes: List<String>) = state.setDeviceLanguages(codes)
 
     fun setSearchText(text: String) = state.setSearchText(text)
 

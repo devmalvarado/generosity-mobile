@@ -11,6 +11,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.unit.dp
 import org.generosity.domain.SupportedLocale
+import org.generosity.app.R
 
 @Composable
 fun PlatformPermissionActions(locale: SupportedLocale) {
@@ -27,9 +28,9 @@ fun PlatformPermissionActions(locale: SupportedLocale) {
     )
 
     Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
-        Text(TextKey.OFFICIAL_VERIFICATION_BOUNDARY.label(locale))
+        Text(localizedString(R.string.permissions_explanation, locale))
         Button(onClick = { launcher.launch(permissions.toTypedArray()) }) {
-            Text(TextKey.NEARBY_NOTIFICATIONS.label(locale))
+            Text(localizedString(R.string.request_permissions, locale))
         }
     }
 }

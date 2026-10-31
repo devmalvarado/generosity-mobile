@@ -8,6 +8,9 @@ settings:
   base:
     SWIFT_VERSION: "5.0"
     TARGETED_DEVICE_FAMILY: "1,2"
+packages:
+  SharedBridge:
+    path: SharedBridge
 targets:
   Generosity:
     type: application
@@ -15,15 +18,28 @@ targets:
     sources:
       - path: GenerosityApp
         excludes: [Info.plist]
+    dependencies:
+      - package: SharedBridge
     settings:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: org.generosity.app
+        ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
         INFOPLIST_FILE: GenerosityApp/Info.plist
         GENERATE_INFOPLIST_FILE: YES
         INFOPLIST_KEY_UILaunchScreen_Generation: YES
         INFOPLIST_KEY_UIApplicationSceneManifest_Generation: YES
         MARKETING_VERSION: "0.1.0"
         CURRENT_PROJECT_VERSION: "1"
+  GenerosityLocalizationTests:
+    type: bundle.unit-test
+    platform: iOS
+    sources: [GenerosityLocalizationTests]
+    dependencies:
+      - target: Generosity
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: org.generosity.app.localizationtests
+        GENERATE_INFOPLIST_FILE: YES
   GenerosityUITests:
     type: bundle.ui-testing
     platform: iOS
@@ -41,7 +57,9 @@ schemes:
     build:
       targets:
         Generosity: all
+        GenerosityLocalizationTests: [test]
         GenerosityUITests: [test]
     test:
       targets:
+        - GenerosityLocalizationTests
         - GenerosityUITests

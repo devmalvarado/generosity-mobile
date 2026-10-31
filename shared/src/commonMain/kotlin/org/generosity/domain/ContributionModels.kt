@@ -24,6 +24,25 @@ enum class NeedPriority(val code: String, val rank: Int) {
         get() = this == URGENT
 }
 
+enum class ContributionProvenance(val code: String) {
+    CENTER_OFFER("center_offer"),
+    SELF_REPORTED("self_reported")
+}
+
+enum class SyncState(val code: String) {
+    LOCAL("local"),
+    PENDING("pending"),
+    ACKNOWLEDGED("acknowledged"),
+    REJECTED("rejected")
+}
+
+data class ContributionEvent(
+    val version: Int,
+    val status: ContributionStatus,
+    val atUtc: String,
+    val actorId: String
+)
+
 enum class ContributionStatus(val code: String) {
     OFFERED("offered"),
     CONFIRMED("confirmed"),
@@ -38,8 +57,11 @@ enum class ContributionStatus(val code: String) {
 data class ContributionOffer(
     val helpMethod: HelpMethod,
     val quantity: Int? = null,
+    val quantityUnit: String? = null,
     val activity: String? = null,
     val availability: String? = null,
+    val plannedDurationMinutes: Int? = null,
+    val actualDurationMinutes: Int? = null,
     val note: String? = null
 ) {
     init {
@@ -72,9 +94,16 @@ data class PersonalImpact(
     val monetaryContributions: Int = 0,
     val needsSupported: Int = 0,
     val centersSupported: Int = 0,
-    val personalActions: Int = 0
+    val personalActions: Int = 0,
+    val goodsByUnit: Map<String, Int> = emptyMap(),
+    val plannedDurationMinutes: Int = 0,
+    val durationMinutes: Int = 0,
+    val durationUnavailable: Boolean = false,
+    val monetaryUnavailable: Boolean = true
 ) {
     val isEmpty: Boolean
-        get() = hoursOffered == 0 && goodsCommitted == 0 && monetaryContributions == 0 &&
-            needsSupported == 0 && centersSupported == 0 && personalActions == 0
+        get() = hoursOffered == 0 && goodsCommitted == 0 && goodsByUnit.isEmpty() &&
+            plannedDurationMinutes == 0 && durationMinutes == 0 && !durationUnavailable &&
+            monetaryContributions == 0 && needsSupported == 0 && centersSupported == 0 &&
+            personalActions == 0
 }

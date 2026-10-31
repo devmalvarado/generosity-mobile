@@ -17,4 +17,5 @@ dependencyResolutionManagement {
 rootProject.name = "Generosity"
 include(":shared")
 include(":androidApp")
+include(":service")
 

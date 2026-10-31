@@ -1,162 +1,110 @@
 package org.generosity.app.ui
 
+import android.content.Context
+import android.content.res.Configuration
+import android.content.res.Resources
+import androidx.annotation.PluralsRes
+import androidx.annotation.StringRes
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
+import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.platform.LocalContext
+import java.text.NumberFormat
+import java.util.Locale
+import org.generosity.app.R
 import org.generosity.domain.CenterCategory
 import org.generosity.domain.HelpMethod
 import org.generosity.domain.NotificationType
 import org.generosity.domain.SupportedLocale
 import org.generosity.domain.VerificationStatus
 
-enum class TextKey {
-    TAB_MAP,
-    TAB_LIST,
-    TAB_PROFILE,
-    TAB_SETTINGS,
-    LANGUAGE_ENGLISH,
-    LANGUAGE_SPANISH,
-    NEARBY_CENTERS,
-    SEARCH_PLACEHOLDER,
-    EMPTY_CENTERS,
-    CURRENT_NEEDS,
-    NO_CURRENT_NEEDS,
-    URGENT,
-    MONEY_BOUNDARY,
-    ANONYMOUS_PROFILE,
-    REGISTERED_PROFILE,
-    CONTRIBUTION_HISTORY_EMPTY,
-    GENEROSITY_POINTS,
-    NEARBY_NOTIFICATIONS,
-    URGENT_NOTIFICATIONS,
-    REMINDER_NOTIFICATIONS,
-    VISIT_SIGNAL,
-    VISIT_SIGNAL_SUBMITTED,
-    OFFICIAL_VERIFICATION_BOUNDARY,
-    OFFER_GOODS,
-    OFFER_TIME,
-    SIGN_IN,
-    CONTINUE_ANONYMOUSLY,
-    REGISTRATION_REQUIRED,
-    IMPACT_TITLE,
-    REMAINING
+fun Context.localizedResources(locale: SupportedLocale): Resources =
+    createConfigurationContext(Configuration(resources.configuration).apply {
+        setLocale(Locale.forLanguageTag(locale.code))
+    }).resources
+
+@Composable
+private fun localizedResources(locale: SupportedLocale): Resources {
+    val context = LocalContext.current
+    val configuration = LocalConfiguration.current
+    return remember(context, configuration, locale) { context.localizedResources(locale) }
 }
 
-fun TextKey.label(locale: SupportedLocale): String = when (locale) {
-    SupportedLocale.ENGLISH -> when (this) {
-        TextKey.TAB_MAP -> "Map"
-        TextKey.TAB_LIST -> "List"
-        TextKey.TAB_PROFILE -> "Profile"
-        TextKey.TAB_SETTINGS -> "Settings"
-        TextKey.LANGUAGE_ENGLISH -> "English"
-        TextKey.LANGUAGE_SPANISH -> "Spanish"
-        TextKey.NEARBY_CENTERS -> "Nearby Kindness Centers"
-        TextKey.SEARCH_PLACEHOLDER -> "Search centers"
-        TextKey.EMPTY_CENTERS -> "No Kindness Centers found."
-        TextKey.CURRENT_NEEDS -> "Current needs"
-        TextKey.NO_CURRENT_NEEDS -> "No current needs are listed."
-        TextKey.URGENT -> "Urgent"
-        TextKey.MONEY_BOUNDARY -> "Money donations require a verified payment handoff. This app does not collect bank or payment details."
-        TextKey.ANONYMOUS_PROFILE -> "Anonymous browsing"
-        TextKey.REGISTERED_PROFILE -> "Registered profile"
-        TextKey.CONTRIBUTION_HISTORY_EMPTY -> "No contributions recorded yet."
-        TextKey.GENEROSITY_POINTS -> "Generosity points are informational and not redeemable."
-        TextKey.NEARBY_NOTIFICATIONS -> "Nearby center alerts"
-        TextKey.URGENT_NOTIFICATIONS -> "Urgent need alerts"
-        TextKey.REMINDER_NOTIFICATIONS -> "Reminders"
-        TextKey.VISIT_SIGNAL -> "I visited this center"
-        TextKey.VISIT_SIGNAL_SUBMITTED -> "Visit signal saved. Official verification happens through a future center workflow."
-        TextKey.OFFICIAL_VERIFICATION_BOUNDARY -> "Official verification requires a future backend and center backoffice workflow."
-        TextKey.OFFER_GOODS -> "I can bring 5"
-        TextKey.OFFER_TIME -> "I can volunteer"
-        TextKey.SIGN_IN -> "Sign in"
-        TextKey.CONTINUE_ANONYMOUSLY -> "Continue without an account"
-        TextKey.REGISTRATION_REQUIRED -> "Sign in to record help. Browsing stays open without an account."
-        TextKey.IMPACT_TITLE -> "Your impact"
-        TextKey.REMAINING -> "still needed"
-    }
-    SupportedLocale.SPANISH -> when (this) {
-        TextKey.TAB_MAP -> "Mapa"
-        TextKey.TAB_LIST -> "Lista"
-        TextKey.TAB_PROFILE -> "Perfil"
-        TextKey.TAB_SETTINGS -> "Ajustes"
-        TextKey.LANGUAGE_ENGLISH -> "Ingles"
-        TextKey.LANGUAGE_SPANISH -> "Espanol"
-        TextKey.NEARBY_CENTERS -> "Centros de bondad cercanos"
-        TextKey.SEARCH_PLACEHOLDER -> "Buscar centros"
-        TextKey.EMPTY_CENTERS -> "No se encontraron centros de bondad."
-        TextKey.CURRENT_NEEDS -> "Necesidades actuales"
-        TextKey.NO_CURRENT_NEEDS -> "No hay necesidades actuales publicadas."
-        TextKey.URGENT -> "Urgente"
-        TextKey.MONEY_BOUNDARY -> "Las donaciones de dinero requieren una transferencia de pago verificada. Esta app no recopila datos bancarios ni de pago."
-        TextKey.ANONYMOUS_PROFILE -> "Navegacion anonima"
-        TextKey.REGISTERED_PROFILE -> "Perfil registrado"
-        TextKey.CONTRIBUTION_HISTORY_EMPTY -> "Aun no hay contribuciones registradas."
-        TextKey.GENEROSITY_POINTS -> "Los puntos de generosidad son informativos y no son canjeables."
-        TextKey.NEARBY_NOTIFICATIONS -> "Alertas de centros cercanos"
-        TextKey.URGENT_NOTIFICATIONS -> "Alertas de necesidades urgentes"
-        TextKey.REMINDER_NOTIFICATIONS -> "Recordatorios"
-        TextKey.VISIT_SIGNAL -> "Visite este centro"
-        TextKey.VISIT_SIGNAL_SUBMITTED -> "Senal de visita guardada. La verificacion oficial ocurre en un futuro flujo del centro."
-        TextKey.OFFICIAL_VERIFICATION_BOUNDARY -> "La verificacion oficial requiere un futuro backend y portal para centros."
-        TextKey.OFFER_GOODS -> "Puedo llevar 5"
-        TextKey.OFFER_TIME -> "Puedo ser voluntario"
-        TextKey.SIGN_IN -> "Iniciar sesion"
-        TextKey.CONTINUE_ANONYMOUSLY -> "Continuar sin cuenta"
-        TextKey.REGISTRATION_REQUIRED -> "Inicia sesion para registrar ayuda. Puedes explorar sin cuenta."
-        TextKey.IMPACT_TITLE -> "Tu impacto"
-        TextKey.REMAINING -> "aun se necesitan"
-    }
+@Composable
+fun localizedString(@StringRes id: Int, locale: SupportedLocale, vararg args: Any): String =
+    localizedResources(locale).getString(id, *args)
+
+@Composable
+fun localizedQuantity(@PluralsRes id: Int, quantity: Int, locale: SupportedLocale): String =
+    localizedResources(locale).getQuantityString(id, quantity, quantity)
+
+fun localizedNumber(value: Int, locale: SupportedLocale): String =
+    NumberFormat.getIntegerInstance(Locale.forLanguageTag(locale.code)).format(value)
+
+enum class TextKey(@get:StringRes val resource: Int) {
+    TAB_MAP(R.string.tab_map),
+    TAB_LIST(R.string.tab_list),
+    TAB_PROFILE(R.string.tab_profile),
+    TAB_SETTINGS(R.string.tab_settings),
+    NEARBY_CENTERS(R.string.nearby_centers),
+    SEARCH_PLACEHOLDER(R.string.search_placeholder),
+    EMPTY_CENTERS(R.string.empty_centers),
+    MAP_LOADING(R.string.map_loading),
+    MAP_LOAD_DELAYED(R.string.map_load_delayed),
+    MAP_UNAVAILABLE(R.string.map_unavailable),
+    RETRY(R.string.retry),
+    CURRENT_NEEDS(R.string.current_needs),
+    NO_CURRENT_NEEDS(R.string.no_current_needs),
+    URGENT(R.string.urgent),
+    MONEY_BOUNDARY(R.string.money_boundary),
+    ANONYMOUS_PROFILE(R.string.anonymous_profile),
+    REGISTERED_PROFILE(R.string.registered_profile),
+    CONTRIBUTION_HISTORY_EMPTY(R.string.contribution_history_empty),
+    GENEROSITY_POINTS(R.string.generosity_points),
+    NEARBY_NOTIFICATIONS(R.string.nearby_notifications),
+    URGENT_NOTIFICATIONS(R.string.urgent_notifications),
+    REMINDER_NOTIFICATIONS(R.string.reminder_notifications),
+    VISIT_SIGNAL(R.string.visit_signal),
+    VISIT_SIGNAL_SUBMITTED(R.string.visit_signal_submitted),
+    OFFICIAL_VERIFICATION_BOUNDARY(R.string.official_verification_boundary),
+    OFFER_TIME(R.string.offer_time),
+    SIGN_IN(R.string.sign_in),
+    CONTINUE_ANONYMOUSLY(R.string.continue_anonymously),
+    REGISTRATION_REQUIRED(R.string.registration_required),
+    IMPACT_TITLE(R.string.impact_summary)
 }
 
-fun CenterCategory.label(locale: SupportedLocale): String = when (locale) {
-    SupportedLocale.ENGLISH -> when (this) {
-        CenterCategory.CHILDREN_SUPPORT -> "Children support"
-        CenterCategory.OLDER_ADULTS -> "Older adults"
-        CenterCategory.DISABILITY_SUPPORT -> "Disability support"
-        CenterCategory.HEALTH -> "Health"
-        CenterCategory.ADDICTION_RECOVERY -> "Addiction recovery"
-        CenterCategory.COMMUNITY_KITCHEN -> "Community kitchen"
-        CenterCategory.EDUCATION -> "Education"
-        CenterCategory.VULNERABLE_FAMILIES -> "Vulnerable families"
-        CenterCategory.ORGAN_TISSUE_DONATION -> "Organ or tissue donation"
-    }
-    SupportedLocale.SPANISH -> when (this) {
-        CenterCategory.CHILDREN_SUPPORT -> "Apoyo a ninos"
-        CenterCategory.OLDER_ADULTS -> "Adultos mayores"
-        CenterCategory.DISABILITY_SUPPORT -> "Apoyo a discapacidad"
-        CenterCategory.HEALTH -> "Salud"
-        CenterCategory.ADDICTION_RECOVERY -> "Recuperacion de adicciones"
-        CenterCategory.COMMUNITY_KITCHEN -> "Comedor comunitario"
-        CenterCategory.EDUCATION -> "Educacion"
-        CenterCategory.VULNERABLE_FAMILIES -> "Familias vulnerables"
-        CenterCategory.ORGAN_TISSUE_DONATION -> "Donacion de organos o tejidos"
-    }
-}
+@Composable
+fun TextKey.label(locale: SupportedLocale, vararg args: Any): String = localizedString(resource, locale, *args)
 
-fun HelpMethod.label(locale: SupportedLocale): String = when (locale) {
-    SupportedLocale.ENGLISH -> when (this) {
-        HelpMethod.TIME -> "Donate time"
-        HelpMethod.GOODS -> "Donate goods"
-        HelpMethod.MONEY -> "Donate money"
-    }
-    SupportedLocale.SPANISH -> when (this) {
-        HelpMethod.TIME -> "Donar tiempo"
-        HelpMethod.GOODS -> "Donar bienes"
-        HelpMethod.MONEY -> "Donar dinero"
-    }
-}
+@Composable
+fun CenterCategory.label(locale: SupportedLocale): String = localizedString(when (this) {
+    CenterCategory.CHILDREN_SUPPORT -> R.string.category_children_support
+    CenterCategory.OLDER_ADULTS -> R.string.category_older_adults
+    CenterCategory.DISABILITY_SUPPORT -> R.string.category_disability_support
+    CenterCategory.HEALTH -> R.string.category_health
+    CenterCategory.ADDICTION_RECOVERY -> R.string.category_addiction_recovery
+    CenterCategory.COMMUNITY_KITCHEN -> R.string.category_community_kitchen
+    CenterCategory.EDUCATION -> R.string.category_education
+    CenterCategory.VULNERABLE_FAMILIES -> R.string.category_vulnerable_families
+    CenterCategory.ORGAN_TISSUE_DONATION -> R.string.category_organ_tissue_donation
+}, locale)
 
-fun VerificationStatus.label(locale: SupportedLocale): String = when (locale) {
-    SupportedLocale.ENGLISH -> when (this) {
-        VerificationStatus.IMPORTED -> "Imported"
-        VerificationStatus.VISIT_SIGNALED -> "Visited by user"
-        VerificationStatus.OFFICIALLY_VERIFIED -> "Officially verified"
-    }
-    SupportedLocale.SPANISH -> when (this) {
-        VerificationStatus.IMPORTED -> "Importado"
-        VerificationStatus.VISIT_SIGNALED -> "Visitado por usuario"
-        VerificationStatus.OFFICIALLY_VERIFIED -> "Verificado oficialmente"
-    }
-}
+@Composable
+fun HelpMethod.label(locale: SupportedLocale): String = localizedString(when (this) {
+    HelpMethod.TIME -> R.string.help_with_time
+    HelpMethod.GOODS -> R.string.help_with_goods
+    HelpMethod.MONEY -> R.string.help_with_money
+}, locale)
 
+@Composable
+fun VerificationStatus.label(locale: SupportedLocale): String = localizedString(when (this) {
+    VerificationStatus.IMPORTED -> R.string.verification_imported
+    VerificationStatus.VISIT_SIGNALED -> R.string.verification_visit_signaled
+    VerificationStatus.OFFICIALLY_VERIFIED -> R.string.verification_officially_verified
+}, locale)
+
+@Composable
 fun NotificationType.label(locale: SupportedLocale): String = when (this) {
     NotificationType.NEARBY_CENTER -> TextKey.NEARBY_NOTIFICATIONS.label(locale)
     NotificationType.URGENT_NEED -> TextKey.URGENT_NOTIFICATIONS.label(locale)

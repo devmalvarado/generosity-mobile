@@ -6,11 +6,12 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import org.generosity.data.BundledKindnessCatalog
 import org.generosity.data.ImportedCatalogRepository
 import org.generosity.data.InMemoryContributionRepository
 import org.generosity.data.InMemoryImportedCatalogDataSource
 import org.generosity.data.InMemoryUserProfileRepository
-import org.generosity.data.SampleImportedCatalog
+import org.generosity.domain.currentUtcInstant
 import org.generosity.domain.CenterCategory
 import org.generosity.domain.CenterNeed
 import org.generosity.domain.Contribution
@@ -20,6 +21,7 @@ import org.generosity.domain.ContributionResult
 import org.generosity.domain.InMemoryNeedCatalog
 import org.generosity.domain.KindnessCenter
 import org.generosity.domain.KindnessCenterRepository
+import org.generosity.domain.LocalePreference
 import org.generosity.domain.NeedCatalog
 import org.generosity.domain.NotificationPreference
 import org.generosity.domain.PersonalImpact
@@ -28,6 +30,7 @@ import org.generosity.domain.SupportedLocale
 import org.generosity.domain.UserMode
 import org.generosity.domain.UserProfile
 import org.generosity.domain.UserProfileRepository
+import org.generosity.domain.utcDate
 import org.generosity.usecase.ContributionPolicy
 import org.generosity.usecase.CurrentNeedsUseCase
 import org.generosity.usecase.DiscoverKindnessCentersUseCase
@@ -40,7 +43,7 @@ import org.generosity.usecase.RecordContributionUseCase
  * SwiftUI and Compose stay free to render it however each platform expects.
  */
 data class GenerosityUiState(
-    val locale: SupportedLocale = SupportedLocale.ENGLISH,
+    val localePreference: LocalePreference = LocalePreference(),
     val profile: UserProfile = UserProfile(mode = UserMode.ANONYMOUS),
     val searchText: String = "",
     val selectedCategories: Set<CenterCategory> = emptySet(),
@@ -49,10 +52,13 @@ data class GenerosityUiState(
     val contributions: List<Contribution> = emptyList(),
     val impact: PersonalImpact = PersonalImpact(),
     val preferences: NotificationPreference = NotificationPreference(),
-    val referenceIsoDate: String = "2026-05-13",
+    val referenceIsoDate: String = "",
     val lastRejection: RejectionReason? = null,
     val visitSignalCenterId: String? = null
 ) {
+    val locale: SupportedLocale
+        get() = localePreference.activeLocale
+
     val selectedCenter: KindnessCenter?
         get() = centers.firstOrNull { it.id == selectedCenterId }
 
@@ -65,14 +71,15 @@ data class GenerosityUiState(
 
 class GenerosityAppState(
     private val scope: CoroutineScope,
-    catalog: List<KindnessCenter> = SampleImportedCatalog.centers(),
+    catalog: List<KindnessCenter> = BundledKindnessCatalog.centers(),
     private val centersRepository: KindnessCenterRepository =
         ImportedCatalogRepository(InMemoryImportedCatalogDataSource(catalog)),
     private val needs: NeedCatalog = InMemoryNeedCatalog(catalog.flatMap { it.needs }),
     private val profiles: UserProfileRepository = InMemoryUserProfileRepository(),
     private val contributions: ContributionRepository = InMemoryContributionRepository(),
-    private val clock: () -> String = { "2026-05-13T12:00:00Z" },
-    ids: (() -> String)? = null
+    private val clock: () -> String = ::currentUtcInstant,
+    ids: (() -> String)? = null,
+    initialLocalePreference: LocalePreference = LocalePreference()
 ) {
     private var contributionCounter = 0
     private val ids: () -> String = ids ?: { "contribution-${++contributionCounter}" }
@@ -80,14 +87,39 @@ class GenerosityAppState(
     private val recordContribution = RecordContributionUseCase(contributions, needs)
     private val impact = PersonalImpactUseCase()
 
-    private val _state = MutableStateFlow(GenerosityUiState())
+    private val _state = MutableStateFlow(
+        GenerosityUiState(
+            localePreference = initialLocalePreference,
+            referenceIsoDate = runCatching { utcDate(clock()) }.getOrDefault("")
+        )
+    )
     val state: StateFlow<GenerosityUiState> = _state.asStateFlow()
 
     fun start() {
         scope.launch { refresh() }
     }
 
-    fun setLocale(locale: SupportedLocale) = update { copy(locale = locale) }
+    /** Recomputes expiry from the clock. A resumed app must not keep a stale current list. */
+    fun onResume() {
+        scope.launch { refresh() }
+    }
+
+    fun setLocale(locale: SupportedLocale?) {
+        updateLocalePreference(_state.value.localePreference.copy(selectedLocale = locale))
+    }
+
+    fun setDeviceLanguages(codes: List<String>) {
+        updateLocalePreference(LocalePreference.fromDeviceLanguages(
+            selectedCode = _state.value.localePreference.selectedLocale?.code,
+            deviceCodes = codes
+        ))
+    }
+
+    private fun updateLocalePreference(preference: LocalePreference) {
+        val previous = _state.value.locale
+        update { copy(localePreference = preference) }
+        if (previous != preference.activeLocale) scope.launch { refreshCenters() }
+    }
 
     fun setSearchText(text: String) {
         update { copy(searchText = text) }
@@ -175,7 +207,12 @@ class GenerosityAppState(
         val withLiveNeeds = discovered.map { center ->
             center.copy(needs = needs.needsForCenter(center.id))
         }
-        update { copy(centers = withLiveNeeds, referenceIsoDate = clock().take(10)) }
+        // A slower lookup in the previous language must not replace current results.
+        update {
+            if (locale == current.locale && searchText == current.searchText &&
+                selectedCategories == current.selectedCategories
+            ) copy(centers = withLiveNeeds, referenceIsoDate = clock().take(10)) else this
+        }
     }
 
     private suspend fun refreshContributions() {

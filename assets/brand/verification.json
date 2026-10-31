@@ -1,0 +1,21 @@
+{
+  "source": "gen2.png",
+  "source_profile": "Display P3",
+  "output_profile": "sRGB",
+  "orange_srgb": "#F1562C",
+  "silhouette_intersection_over_union": {
+    "symbol": 0.99067,
+    "wordmark": 0.98973
+  },
+  "ico_sizes": [
+    16,
+    24,
+    32,
+    48,
+    64,
+    128,
+    256
+  ],
+  "svg_contains_embedded_raster_or_font_text": false,
+  "ios_marketing_icon_has_alpha": false
+}

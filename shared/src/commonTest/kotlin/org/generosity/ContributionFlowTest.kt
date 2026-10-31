@@ -8,6 +8,7 @@ import kotlin.test.assertTrue
 import org.generosity.data.InMemoryContributionRepository
 import org.generosity.domain.CenterCategory
 import org.generosity.domain.CenterNeed
+import org.generosity.domain.Contribution
 import org.generosity.domain.ContributionOffer
 import org.generosity.domain.ContributionResult
 import org.generosity.domain.ContributionStatus
@@ -162,6 +163,53 @@ class ContributionFlowTest {
     }
 
     @Test
+    fun recordedOfferKeepsEnteredUnitDurationAndHistory() = runTest {
+        val catalog = InMemoryNeedCatalog(listOf(diapers(required = 20, committed = 0)))
+        val repository = InMemoryContributionRepository()
+        val result = RecordContributionUseCase(repository, catalog)(
+            registered, "contribution-unit", "2026-05-13T09:00:00Z",
+            catalog.needById("need-diapers"),
+            ContributionOffer(
+                HelpMethod.GOODS,
+                quantity = 3,
+                quantityUnit = "item",
+                note = "notebooks"
+            )
+        )
+
+        val recorded = (result as ContributionResult.Recorded).contribution
+        assertEquals("item", recorded.quantityUnit)
+        assertEquals(1, recorded.version)
+        assertEquals(ContributionStatus.OFFERED, recorded.events.single().status)
+        assertEquals("user-1", recorded.events.single().actorId)
+    }
+
+    @Test
+    fun impactSeparatesUnitsAndDoesNotInventMissingMetrics() {
+        val impact = PersonalImpactUseCase()(
+            listOf(
+                recordedGoods("liters", ContributionStatus.CONFIRMED, 2, "liter"),
+                recordedGoods("items", ContributionStatus.FULFILLED, 5, "item"),
+                recordedGoods("offered", ContributionStatus.OFFERED, 9, "item"),
+                recordedGoods("cancelled", ContributionStatus.CANCELLED, 8, "item"),
+                recordedTime("missing-duration", ContributionStatus.CONFIRMED, planned = null, actual = null),
+                recordedTime("planned", ContributionStatus.CONFIRMED, planned = 90, actual = null),
+                recordedTime("done", ContributionStatus.FULFILLED, planned = 30, actual = 45),
+                recordedGoods("money", ContributionStatus.CONFIRMED, 1, "currency").copy(helpMethod = HelpMethod.MONEY)
+            )
+        )
+
+        assertEquals(0, impact.goodsCommitted)
+        assertEquals(0, impact.hoursOffered)
+        assertEquals(0, impact.monetaryContributions)
+        assertEquals(mapOf("liter" to 2, "item" to 5), impact.goodsByUnit)
+        assertEquals(90, impact.plannedDurationMinutes)
+        assertEquals(45, impact.durationMinutes)
+        assertTrue(impact.durationUnavailable)
+        assertTrue(impact.monetaryUnavailable)
+    }
+
+    @Test
     fun currentNeedsLeadWithTheMostUrgentAndDropClosedOnes() {
         val urgent = diapers(required = 10, committed = 0).copy(id = "urgent", priority = NeedPriority.URGENT, urgent = true)
         val normal = diapers(required = 10, committed = 0).copy(id = "normal", priority = NeedPriority.NORMAL)
@@ -185,12 +233,48 @@ class ContributionFlowTest {
     private fun diapers(required: Int, committed: Int) = CenterNeed(
         id = "need-diapers",
         centerId = "kc-children-001",
-        title = LocalizedText.of("Diapers", "Panales"),
-        description = LocalizedText.of("Diaper packs", "Paquetes de panales"),
+        title = LocalizedText.of("Diapers", "Pañales"),
+        description = LocalizedText.of("Diaper packs", "Paquetes de pañales"),
         helpMethods = setOf(HelpMethod.GOODS, HelpMethod.MONEY, HelpMethod.TIME),
         category = CenterCategory.CHILDREN_SUPPORT,
         quantityRequired = required,
         quantityCommitted = committed,
         expiresOnIsoDate = "2026-12-31"
+    )
+
+    private fun recordedGoods(
+        id: String,
+        status: ContributionStatus,
+        quantity: Int,
+        unit: String
+    ) = Contribution(
+        id = id,
+        userId = "user-1",
+        centerId = "kc-children-001",
+        needId = "need-diapers",
+        title = LocalizedText.of("Goods", "Bienes"),
+        helpMethod = HelpMethod.GOODS,
+        recordedAtIsoDateTime = "2026-05-13T09:00:00Z",
+        status = status,
+        quantity = quantity,
+        quantityUnit = unit
+    )
+
+    private fun recordedTime(
+        id: String,
+        status: ContributionStatus,
+        planned: Int?,
+        actual: Int?
+    ) = Contribution(
+        id = id,
+        userId = "user-1",
+        centerId = "kc-children-001",
+        needId = "need-time",
+        title = LocalizedText.of("Time", "Tiempo"),
+        helpMethod = HelpMethod.TIME,
+        recordedAtIsoDateTime = "2026-05-13T09:00:00Z",
+        status = status,
+        plannedDurationMinutes = planned,
+        actualDurationMinutes = actual
     )
 }

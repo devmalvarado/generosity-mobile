@@ -23,17 +23,4 @@ fun Coordinates.distanceMetersTo(other: Coordinates): Double {
     return 2 * EARTH_RADIUS_METERS * atan2(sqrt(haversine), sqrt(1 - haversine))
 }
 
-fun formatDistance(meters: Double, locale: SupportedLocale): String {
-    val rounded = if (meters < 1_000) {
-        "${meters.toInt()} m"
-    } else {
-        val kilometers = (meters / 100).toInt() / 10.0
-        "$kilometers km"
-    }
-    return when (locale) {
-        SupportedLocale.ENGLISH -> rounded
-        SupportedLocale.SPANISH -> rounded.replace('.', ',')
-    }
-}
-
 private fun Double.toRadians(): Double = this * 0.017453292519943295

@@ -1,0 +1,12 @@
+<resources>
+    <plurals name="remaining_units">
+        <item quantity="one">Falta %1$d unidad</item>
+        <item quantity="many">Faltan %1$d unidades</item>
+        <item quantity="other">Faltan %1$d unidades</item>
+    </plurals>
+    <plurals name="offer_goods">
+        <item quantity="one">Puedo llevar %1$d artículo</item>
+        <item quantity="many">Puedo llevar %1$d artículos</item>
+        <item quantity="other">Puedo llevar %1$d artículos</item>
+    </plurals>
+</resources>

@@ -1,318 +1,339 @@
 import SwiftUI
 import MapKit
+import SharedBridge
+import Shared
 
 struct ContentView: View {
-    @State private var locale: AppLocale = .english
-    @State private var query: String = ""
-    @State private var selectedCategories: Set<AppCategory> = []
-    @State private var selectedCenter: AppKindnessCenter?
-    @State private var visitMessage: String?
+    @StateObject private var store = GenerosityStore()
+    @Environment(\.scenePhase) private var scenePhase
     @State private var nearbyNotifications = false
     @State private var urgentNotifications = false
     @State private var reminderNotifications = false
-
-    private var filteredCenters: [AppKindnessCenter] {
-        SampleData.centers
-            .filter { center in
-                selectedCategories.isEmpty || !Set(center.categories).isDisjoint(with: selectedCategories)
-            }
-            .filter { center in
-                let normalized = query.trimmingCharacters(in: .whitespacesAndNewlines).lowercased()
-                guard !normalized.isEmpty else { return true }
-                return center.name.resolve(locale).lowercased().contains(normalized)
-                    || center.description.resolve(locale).lowercased().contains(normalized)
-                    || center.address.resolve(locale).lowercased().contains(normalized)
-            }
-            .sorted { $0.name.resolve(locale) < $1.name.resolve(locale) }
-    }
+    private var locale: AppLocale { AppLocale(rawValue: store.localeCode) ?? .fallback }
 
     var body: some View {
         TabView {
-            NavigationStack {
-                DiscoveryView(
-                    locale: locale,
-                    query: $query,
-                    selectedCategories: $selectedCategories,
-                    centers: filteredCenters,
-                    selectedCenter: $selectedCenter,
-                    visitMessage: $visitMessage,
-                    showMap: true
-                )
-                .navigationTitle("Generosity")
-                .toolbar { languageToolbar }
-            }
-            .tabItem { Text(L10n.text(.tabMap, locale: locale)) }
-
-            NavigationStack {
-                DiscoveryView(
-                    locale: locale,
-                    query: $query,
-                    selectedCategories: $selectedCategories,
-                    centers: filteredCenters,
-                    selectedCenter: $selectedCenter,
-                    visitMessage: $visitMessage,
-                    showMap: false
-                )
-                .navigationTitle(L10n.text(.tabList, locale: locale))
-                .toolbar { languageToolbar }
-            }
-            .tabItem { Text(L10n.text(.tabList, locale: locale)) }
-
-            ProfileView(locale: locale)
-                .tabItem { Text(L10n.text(.tabProfile, locale: locale)) }
-
+            discovery(showMap: true)
+                .tabItem { Label(L10n.text(.tabMap, locale: locale), systemImage: "map") }
+            discovery(showMap: false)
+                .tabItem { Label(L10n.text(.tabList, locale: locale), systemImage: "list.bullet") }
+            ProfileView(locale: locale, state: store.state)
+                .tabItem { Label(L10n.text(.tabProfile, locale: locale), systemImage: "person") }
             SettingsView(
-                locale: locale,
-                nearbyNotifications: $nearbyNotifications,
-                urgentNotifications: $urgentNotifications,
+                locale: locale, languageMode: Binding(get: { store.languageMode }, set: store.setLocale),
+                nearbyNotifications: $nearbyNotifications, urgentNotifications: $urgentNotifications,
                 reminderNotifications: $reminderNotifications
             )
-            .tabItem { Text(L10n.text(.tabSettings, locale: locale)) }
+            .tabItem { Label(L10n.text(.tabSettings, locale: locale), systemImage: "slider.horizontal.3") }
+        }
+        .tint(GenPalette.accent)
+        .environment(\.locale, Locale(identifier: locale.rawValue))
+        .environment(\.layoutDirection, Locale.Language(identifier: locale.rawValue).characterDirection == .rightToLeft ? .rightToLeft : .leftToRight)
+        .onChange(of: scenePhase) { phase in
+            if phase == .active { store.onResume() }
+        }
+        .onReceive(NotificationCenter.default.publisher(for: NSLocale.currentLocaleDidChangeNotification)) { _ in
+            store.refreshDeviceLanguages()
         }
     }
 
-    @ToolbarContentBuilder
-    private var languageToolbar: some ToolbarContent {
-        ToolbarItem(placement: .automatic) {
-            Picker("", selection: $locale) {
-                Text(L10n.text(.languageEnglish, locale: locale)).tag(AppLocale.english)
-                Text(L10n.text(.languageSpanish, locale: locale)).tag(AppLocale.spanish)
-            }
-            .pickerStyle(.segmented)
-            .frame(width: 180)
+    private func discovery(showMap: Bool) -> some View {
+        NavigationStack {
+            DiscoveryView(locale: locale, store: store, showMap: showMap)
+                .navigationBarTitleDisplayMode(.inline)
+                .toolbar { ToolbarItem(placement: .principal) { BrandWordmark() } }
+                .toolbarBackground(GenPalette.surface, for: .navigationBar)
+                .toolbarBackground(.visible, for: .navigationBar)
         }
     }
 }
 
 private struct DiscoveryView: View {
     let locale: AppLocale
-    @Binding var query: String
-    @Binding var selectedCategories: Set<AppCategory>
-    let centers: [AppKindnessCenter]
-    @Binding var selectedCenter: AppKindnessCenter?
-    @Binding var visitMessage: String?
+    @ObservedObject var store: GenerosityStore
     let showMap: Bool
 
     var body: some View {
-        ScrollView {
-            VStack(alignment: .leading, spacing: 16) {
-                Text(L10n.text(.nearbyCenters, locale: locale))
-                    .font(.title2)
-                    .fontWeight(.semibold)
-
-                TextField(L10n.text(.searchPlaceholder, locale: locale), text: $query)
-                    .textFieldStyle(.roundedBorder)
-
-                CategoryFilterView(locale: locale, selectedCategories: $selectedCategories)
-
-                if showMap {
-                    CenterMapView(centers: centers, selectedCenter: $selectedCenter, visitMessage: $visitMessage)
-                        .frame(height: 260)
-                        .clipShape(RoundedRectangle(cornerRadius: 8))
-                }
-
-                if centers.isEmpty {
-                    Text(L10n.text(.emptyCenters, locale: locale))
-                        .foregroundStyle(.secondary)
-                } else {
-                    ForEach(centers) { center in
-                        Button {
-                            selectedCenter = center
-                            visitMessage = nil
-                        } label: {
-                            CenterRow(locale: locale, center: center)
+        GeometryReader { geometry in
+            ScrollViewReader { proxy in
+                ScrollView {
+                    VStack(alignment: .leading, spacing: 16) {
+                        Text(L10n.text(.nearbyCenters, locale: locale)).font(.headline)
+                        HStack(spacing: 10) {
+                            Image(systemName: "magnifyingglass").foregroundStyle(GenPalette.secondary).accessibilityHidden(true)
+                            TextField(L10n.text(.searchPlaceholder, locale: locale), text: Binding(
+                                get: { store.state.searchText }, set: store.setSearchText
+                            ))
+                            .accessibilityIdentifier("discovery-search")
+                            .submitLabel(.search)
                         }
-                        .buttonStyle(.plain)
-                        .accessibilityIdentifier("center-\(center.id)")
+                        .padding(14).frame(minHeight: 48)
+                        .background(GenPalette.surface, in: RoundedRectangle(cornerRadius: 12))
+                        .overlay(RoundedRectangle(cornerRadius: 12).stroke(GenPalette.line))
+                        CategoryFilterView(
+                            locale: locale, selectedCategories: store.state.selectedCategories,
+                            onToggle: { store.toggleCategory($0.code) }
+                        )
+                        if showMap {
+                            CenterMapView(
+                                locale: locale, centers: store.state.centers,
+                                selectedCenterId: store.state.selectedCenter?.id,
+                                onSelect: { store.selectCenter($0) }
+                            )
+                            .frame(height: max(200, min(480, geometry.size.height * 0.52)))
+                            .clipShape(RoundedRectangle(cornerRadius: 12))
+                            if let center = store.state.selectedCenter {
+                                VStack(alignment: .leading, spacing: 8) {
+                                    Text(L10n.resource("selected_center", locale: locale)).font(.caption).foregroundStyle(GenPalette.accent)
+                                    CenterIdentity(locale: locale, center: center)
+                                    Button(L10n.resource("view_details", locale: locale)) {
+                                        withAnimation { proxy.scrollTo("center-detail", anchor: .top) }
+                                    }
+                                    .buttonStyle(.bordered).frame(minHeight: 44)
+                                }
+                                .padding(12).frame(maxWidth: .infinity, alignment: .leading)
+                                .background(GenPalette.surface, in: RoundedRectangle(cornerRadius: 12))
+                            }
+                        }
+                        if store.state.centers.isEmpty {
+                            Text(L10n.text(.emptyCenters, locale: locale)).foregroundStyle(GenPalette.secondary).padding(.vertical, 12)
+                        }
+                        ForEach(store.state.centers, id: \.id) { center in
+                            Button { store.selectCenter(center.id) } label: {
+                                CenterIdentity(locale: locale, center: center).padding(12)
+                                    .frame(maxWidth: .infinity, alignment: .leading)
+                                    .background(GenPalette.surface, in: RoundedRectangle(cornerRadius: 12))
+                            }
+                            .buttonStyle(.plain)
+                            .accessibilityIdentifier("center-\(center.id)")
+                        }
+                        if let center = store.state.selectedCenter {
+                            CenterDetail(
+                                locale: locale, center: center, currentNeeds: store.state.currentNeeds,
+                                visitNoted: store.state.visitSignalCenterId == center.id,
+                                onVisit: { store.signalVisit(center.id) }
+                            )
+                            .id("center-detail")
+                        }
+                        Text(L10n.resource("demo_catalog", locale: locale)).font(.caption).foregroundStyle(GenPalette.secondary)
                     }
+                    .padding(16)
                 }
-
-                if let selectedCenter {
-                    CenterDetail(locale: locale, center: selectedCenter, visitMessage: $visitMessage)
-                }
+                .accessibilityIdentifier("discovery-scroll")
+                .background(GenPalette.background)
+                .foregroundStyle(GenPalette.text)
             }
-            .padding()
         }
     }
 }
 
 private struct CategoryFilterView: View {
     let locale: AppLocale
-    @Binding var selectedCategories: Set<AppCategory>
+    let selectedCategories: Set<CenterCategory>
+    let onToggle: (CenterCategory) -> Void
+    @Environment(\.dynamicTypeSize) private var typeSize
 
     var body: some View {
-        ScrollView(.horizontal, showsIndicators: false) {
-            HStack {
-                ForEach(AppCategory.allCases) { category in
-                    Button {
-                        if selectedCategories.contains(category) {
-                            selectedCategories.remove(category)
-                        } else {
-                            selectedCategories.insert(category)
-                        }
-                    } label: {
-                        Text(category.label(locale))
-                            .font(.caption)
-                            .padding(.horizontal, 10)
-                            .padding(.vertical, 6)
-                            .background(selectedCategories.contains(category) ? Color.green.opacity(0.18) : Color.gray.opacity(0.12))
-                            .clipShape(Capsule())
-                    }
-                    .buttonStyle(.plain)
+        if typeSize.isAccessibilitySize {
+            LazyVGrid(columns: [GridItem(.adaptive(minimum: 160), alignment: .leading)], alignment: .leading, spacing: 8) { chips }
+        } else {
+            ScrollView(.horizontal, showsIndicators: false) { HStack(spacing: 8) { chips } }
+        }
+    }
+    private var chips: some View {
+        ForEach(CenterCategory.entries, id: \.code) { category in
+            let selected = selectedCategories.contains(category)
+            Button { onToggle(category) } label: {
+                HStack(spacing: 4) {
+                    if selected { Image(systemName: "checkmark").accessibilityHidden(true) }
+                    Text(category.label(locale)).fixedSize(horizontal: false, vertical: true)
                 }
+                .font(.subheadline).padding(.horizontal, 12).frame(minHeight: 44)
+                .foregroundStyle(selected ? GenPalette.onAccent : GenPalette.text)
+                .background(selected ? GenPalette.accent : GenPalette.surface, in: RoundedRectangle(cornerRadius: 10))
             }
+            .buttonStyle(.plain)
+            .accessibilityIdentifier("category-\(category.code)")
+            .accessibilityAddTraits(selected ? .isSelected : [])
         }
     }
 }
 
 private struct CenterMapView: View {
-    let centers: [AppKindnessCenter]
-    @Binding var selectedCenter: AppKindnessCenter?
-    @Binding var visitMessage: String?
+    private struct Annotation: Identifiable {
+        let center: KindnessCenter
+        var id: String { center.id }
+    }
+    let locale: AppLocale
+    let centers: [KindnessCenter]
+    let selectedCenterId: String?
+    let onSelect: (String) -> Void
     @State private var region = MKCoordinateRegion(
         center: CLLocationCoordinate2D(latitude: 19.4326, longitude: -99.1332),
         span: MKCoordinateSpan(latitudeDelta: 0.04, longitudeDelta: 0.04)
     )
 
     var body: some View {
-        Map(coordinateRegion: $region, annotationItems: centers) { center in
-            MapAnnotation(coordinate: center.coordinate) {
-                Button {
-                    selectedCenter = center
-                    visitMessage = nil
-                } label: {
-                    Circle()
-                        .fill(Color.green)
-                        .frame(width: 18, height: 18)
-                        .overlay(Circle().stroke(Color.white, lineWidth: 3))
+        Map(coordinateRegion: $region, annotationItems: centers.map { Annotation(center: $0) }) { annotation in
+            MapAnnotation(coordinate: annotation.center.coordinate) {
+                let selected = selectedCenterId == annotation.id
+                Button { onSelect(annotation.id) } label: {
+                    Image(systemName: annotation.center.categories.sorted { $0.ordinal < $1.ordinal }.first?.symbol ?? "mappin")
+                        .font(.system(size: 17, weight: .semibold))
+                        .foregroundStyle(selected ? GenPalette.onAccent : GenPalette.text)
+                        .frame(width: 40, height: 40)
+                        .background(selected ? GenPalette.accent : GenPalette.surface, in: Circle())
+                        .overlay(Circle().stroke(GenPalette.accent, lineWidth: selected ? 3 : 1))
+                        .padding(3)
                 }
+                .accessibilityLabel(annotation.center.name.resolve(locale))
+                .accessibilityIdentifier("marker-\(annotation.id)")
+                .accessibilityAddTraits(selected ? .isSelected : [])
             }
         }
     }
 }
 
-private struct CenterRow: View {
+private struct CenterIdentity: View {
     let locale: AppLocale
-    let center: AppKindnessCenter
-
+    let center: KindnessCenter
     var body: some View {
-        VStack(alignment: .leading, spacing: 4) {
-            Text(center.name.resolve(locale))
-                .fontWeight(.semibold)
-            Text(center.address.resolve(locale))
-                .font(.footnote)
-                .foregroundStyle(.secondary)
-            Text(center.verificationStatus.label(locale))
-                .font(.caption)
-                .foregroundStyle(.secondary)
+        HStack(alignment: .center, spacing: 12) {
+            CategoryBadge(category: center.categories.sorted { $0.ordinal < $1.ordinal }.first)
+            VStack(alignment: .leading, spacing: 4) {
+                Text(center.name.resolve(locale)).font(.subheadline.weight(.semibold)).foregroundStyle(GenPalette.text)
+                Text(center.address.resolve(locale)).font(.caption).foregroundStyle(GenPalette.secondary)
+                Text(center.verificationStatus.label(locale)).font(.caption).foregroundStyle(GenPalette.secondary)
+            }
+            .frame(maxWidth: .infinity, alignment: .leading)
         }
-        .frame(maxWidth: .infinity, alignment: .leading)
-        .padding()
-        .background(Color.gray.opacity(0.08))
-        .clipShape(RoundedRectangle(cornerRadius: 8))
     }
 }
 
 private struct CenterDetail: View {
     let locale: AppLocale
-    let center: AppKindnessCenter
-    @Binding var visitMessage: String?
-
-    private var currentNeeds: [AppNeed] {
-        center.needs.filter { $0.isCurrent(referenceIsoDate: "2026-05-13") }
-    }
+    let center: KindnessCenter
+    let currentNeeds: [CenterNeed]
+    let visitNoted: Bool
+    let onVisit: () -> Void
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 10) {
-            Text(center.name.resolve(locale))
-                .font(.title2)
-                .fontWeight(.bold)
-            Text(center.description.resolve(locale))
-            Text(center.address.resolve(locale))
-            Text(center.categories.map { $0.label(locale) }.joined(separator: ", "))
-                .font(.footnote)
-                .foregroundStyle(.secondary)
-            Text(center.verificationStatus.label(locale))
-                .fontWeight(.semibold)
-            Text(L10n.text(.officialVerificationBoundary, locale: locale))
-                .font(.footnote)
-                .foregroundStyle(.secondary)
-
-            Text(L10n.text(.currentNeeds, locale: locale))
-                .font(.headline)
-
+        VStack(alignment: .leading, spacing: 16) {
+            CategoryBadge(category: center.categories.sorted { $0.ordinal < $1.ordinal }.first, size: 52)
+            Text(center.name.resolve(locale)).font(.title2.weight(.bold))
+                .accessibilityIdentifier("detail-\(center.id)")
+            Text(center.categories.sorted { $0.ordinal < $1.ordinal }.map { $0.label(locale) }.joined(separator: " · "))
+                .font(.subheadline).foregroundStyle(GenPalette.accent)
+            Text(center.address.resolve(locale)).font(.subheadline).foregroundStyle(GenPalette.secondary)
+            Text(center.description_.resolve(locale)).font(.body)
+            Divider()
+            Text(L10n.text(.currentNeeds, locale: locale)).font(.headline)
             if currentNeeds.isEmpty {
-                Text(L10n.text(.noCurrentNeeds, locale: locale))
-            } else {
-                ForEach(currentNeeds) { need in
-                    NeedView(locale: locale, need: need)
-                }
+                Text(L10n.text(.noCurrentNeeds, locale: locale)).foregroundStyle(GenPalette.secondary)
             }
-
-            Button(L10n.text(.visitSignal, locale: locale)) {
-                visitMessage = L10n.text(.visitSignalSubmitted, locale: locale)
+            ForEach(currentNeeds, id: \.id) { need in
+                NeedView(locale: locale, need: need)
+                Divider()
             }
-            .buttonStyle(.borderedProminent)
-
-            if let visitMessage {
-                Text(visitMessage)
-                    .foregroundStyle(.green)
-                    .font(.footnote)
+            Button(L10n.text(.visitSignal, locale: locale), action: onVisit)
+                .buttonStyle(.bordered).frame(minHeight: 44)
+            if visitNoted {
+                Text(L10n.text(.visitSignalSubmitted, locale: locale)).font(.footnote)
             }
+            Text(center.verificationStatus.label(locale)).font(.subheadline.weight(.semibold))
+            Text(L10n.text(.officialVerificationBoundary, locale: locale)).font(.footnote).foregroundStyle(GenPalette.secondary)
         }
-        .padding()
-        .background(Color.green.opacity(0.08))
-        .clipShape(RoundedRectangle(cornerRadius: 8))
+        .padding(16).frame(maxWidth: .infinity, alignment: .leading)
+        .background(GenPalette.surface)
     }
 }
 
 private struct NeedView: View {
     let locale: AppLocale
-    let need: AppNeed
-
+    let need: CenterNeed
     var body: some View {
-        VStack(alignment: .leading, spacing: 4) {
-            HStack {
-                Text(need.title.resolve(locale))
-                    .fontWeight(.semibold)
-                if need.urgent {
-                    Text(L10n.text(.urgent, locale: locale))
-                        .foregroundStyle(.red)
-                        .fontWeight(.bold)
+        HStack(alignment: .top, spacing: 12) {
+            IconTile(symbol: need.helpMethods.contains(.goods) ? "gift" : "clock", size: 40)
+            VStack(alignment: .leading, spacing: 8) {
+                Text(L10n.resource(need.isUrgent ? "urgent" : "priority_\(need.priority.code)", locale: locale))
+                    .font(.caption.weight(.bold)).foregroundStyle(need.isUrgent ? GenPalette.error : GenPalette.accent)
+                Text(need.title.resolve(locale)).font(.subheadline.weight(.semibold))
+                Text(need.description_.resolve(locale)).font(.subheadline).foregroundStyle(GenPalette.secondary)
+                if let remaining = need.quantityRemaining {
+                    Text(L10n.remaining(remaining.intValue, locale: locale)).font(.subheadline.weight(.medium))
+                        .accessibilityIdentifier("remaining-\(need.id)")
+                }
+                Text(need.helpMethods.sorted { $0.ordinal < $1.ordinal }.map { $0.label(locale) }.joined(separator: " · "))
+                    .font(.footnote)
+                if need.helpMethods.contains(.money) {
+                    Text(L10n.text(.moneyBoundary, locale: locale)).font(.footnote).foregroundStyle(GenPalette.secondary)
                 }
             }
-            Text(need.description.resolve(locale))
-            Text(need.helpMethods.map { $0.label(locale) }.joined(separator: ", "))
-                .font(.footnote)
-                .foregroundStyle(.secondary)
-            if need.helpMethods.contains(.money) {
-                Text(L10n.text(.moneyBoundary, locale: locale))
-                    .font(.footnote)
-                    .foregroundStyle(.secondary)
-            }
+            .frame(maxWidth: .infinity, alignment: .leading)
         }
     }
 }
 
 private struct ProfileView: View {
     let locale: AppLocale
-
+    let state: GenerosityUiState
     var body: some View {
         NavigationStack {
-            VStack(alignment: .leading, spacing: 16) {
-                Text(L10n.text(.anonymousProfile, locale: locale))
-                Text(L10n.text(.contributionHistoryEmpty, locale: locale))
-                Text(L10n.text(.generosityPoints, locale: locale))
-                Spacer()
+            ScrollView {
+                VStack(alignment: .leading, spacing: 20) {
+                    HStack(spacing: 12) {
+                        IconTile(symbol: "person", size: 52)
+                        Text(state.profile.isRegistered ? state.profile.displayName ?? L10n.text(.registeredProfile, locale: locale) : L10n.text(.anonymousProfile, locale: locale))
+                            .font(.headline).frame(maxWidth: .infinity, alignment: .leading)
+                    }
+                    .padding(16).background(GenPalette.surface, in: RoundedRectangle(cornerRadius: 12))
+                    VStack(alignment: .leading, spacing: 8) {
+                        Text(L10n.resource("points_title", locale: locale)).font(.subheadline)
+                        Text(L10n.resource("unavailable", locale: locale)).font(.title2.weight(.bold))
+                        Text(L10n.text(.generosityPoints, locale: locale)).font(.footnote)
+                    }
+                    .padding(20).frame(maxWidth: .infinity, alignment: .leading)
+                    .foregroundStyle(GenPalette.onAccent).background(GenPalette.accent, in: RoundedRectangle(cornerRadius: 12))
+                    Text(L10n.resource("impact_summary", locale: locale)).font(.headline)
+                    LazyVGrid(columns: [GridItem(.adaptive(minimum: 140), alignment: .leading)], alignment: .leading, spacing: 12) {
+                        metric("centers_supported", value: state.profile.isRegistered ? L10n.number(state.impact.centersSupported, locale: locale) : "—")
+                        metric("needs_supported", value: state.profile.isRegistered ? L10n.number(state.impact.needsSupported, locale: locale) : "—")
+                    }
+                    Text(L10n.resource("impact_basis", locale: locale)).font(.footnote).foregroundStyle(GenPalette.secondary)
+                    Text(L10n.resource("history", locale: locale)).font(.headline)
+                    if state.contributions.isEmpty {
+                        Text(L10n.text(.contributionHistoryEmpty, locale: locale)).foregroundStyle(GenPalette.secondary)
+                    }
+                    ForEach(state.contributions, id: \.id) { contribution in
+                        VStack(alignment: .leading, spacing: 4) {
+                            Text(contribution.title.resolve(locale)).font(.subheadline.weight(.semibold))
+                            Text(L10n.resource(contribution.centerId == nil ? "personal_help" : "contribution_\(contribution.status.code)", locale: locale))
+                                .font(.footnote).foregroundStyle(GenPalette.secondary)
+                            Divider()
+                        }
+                    }
+                }
+                .padding(16)
             }
-            .padding()
-            .navigationTitle(L10n.text(.tabProfile, locale: locale))
+            .background(GenPalette.background).foregroundStyle(GenPalette.text)
+            .navigationTitle(L10n.text(.tabProfile, locale: locale)).navigationBarTitleDisplayMode(.inline)
+            .toolbarBackground(GenPalette.surface, for: .navigationBar).toolbarBackground(.visible, for: .navigationBar)
         }
+    }
+    private func metric(_ key: String, value: String) -> some View {
+        VStack(alignment: .leading, spacing: 8) {
+            Image(systemName: "heart").foregroundStyle(GenPalette.accent).accessibilityHidden(true)
+            Text(value).font(.title2.weight(.bold))
+            Text(L10n.resource(key, locale: locale)).font(.footnote)
+        }
+        .padding(16).frame(maxWidth: .infinity, alignment: .leading)
+        .background(GenPalette.surface, in: RoundedRectangle(cornerRadius: 12))
     }
 }
 
 private struct SettingsView: View {
     let locale: AppLocale
+    @Binding var languageMode: String
     @Binding var nearbyNotifications: Bool
     @Binding var urgentNotifications: Bool
     @Binding var reminderNotifications: Bool
@@ -321,15 +342,39 @@ private struct SettingsView: View {
     var body: some View {
         NavigationStack {
             Form {
-                Toggle(L10n.text(.nearbyNotifications, locale: locale), isOn: $nearbyNotifications)
-                Toggle(L10n.text(.urgentNotifications, locale: locale), isOn: $urgentNotifications)
-                Toggle(L10n.text(.reminderNotifications, locale: locale), isOn: $reminderNotifications)
-                Button(L10n.text(.nearbyNotifications, locale: locale)) {
-                    permissions.requestLocationPermission()
-                    permissions.requestNotificationPermission()
+                Section {
+                    Picker(L10n.text(.language, locale: locale), selection: $languageMode) {
+                        Text(L10n.text(.languageDevice, locale: locale)).tag("system")
+                        ForEach(AppLocale.allCases) { language in
+                            Text(language.nativeName).tag(language.rawValue)
+                        }
+                    }
+                    .pickerStyle(.inline)
+                    .fixedSize(horizontal: false, vertical: true)
+                } header: {
+                    Text(L10n.text(.language, locale: locale)).foregroundStyle(GenPalette.secondary)
+                }
+                Section {
+                    Toggle(isOn: $nearbyNotifications) { settingsLabel(.nearbyNotifications) }
+                    Toggle(isOn: $urgentNotifications) { settingsLabel(.urgentNotifications) }
+                    Toggle(isOn: $reminderNotifications) { settingsLabel(.reminderNotifications) }
+                    Text(L10n.resource("nearby_foreground_only", locale: locale)).font(.footnote)
+                    Text(L10n.resource("permissions_explanation", locale: locale)).font(.footnote)
+                    Button(L10n.resource("request_permissions", locale: locale)) {
+                        permissions.requestLocationPermission()
+                        permissions.requestNotificationPermission()
+                    }
+                } header: {
+                    Text(L10n.resource("notifications_title", locale: locale)).foregroundStyle(GenPalette.secondary)
                 }
             }
-            .navigationTitle(L10n.text(.tabSettings, locale: locale))
+            .scrollContentBackground(.hidden).background(GenPalette.background)
+            .navigationTitle(L10n.text(.tabSettings, locale: locale)).navigationBarTitleDisplayMode(.inline)
+            .toolbarBackground(GenPalette.surface, for: .navigationBar).toolbarBackground(.visible, for: .navigationBar)
         }
+    }
+
+    private func settingsLabel(_ key: L10nKey) -> some View {
+        Text(L10n.text(key, locale: locale)).fixedSize(horizontal: false, vertical: true)
     }
 }

@@ -13,7 +13,7 @@
     <key>CFBundleVersion</key>
     <string>1</string>
     <key>NSLocationWhenInUseUsageDescription</key>
-    <string>Generosity uses your location to show nearby Kindness Centers and optional nearby alerts.</string>
+    <string>Generosity uses your location to show nearby kindness centers.</string>
 </dict>
 </plist>
 

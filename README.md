@@ -4,7 +4,38 @@ Generosity is a cross-platform mobile app for iOS and Android that helps people 
 
 The shared contribution flow connects a center to its needs, offers of help, and personal impact. It tracks need priority and status, remaining goods quantities, and contributions. Only confirmed or fulfilled contributions count toward impact. Android observes this state through `GenerosityAppState`.
 
-The initial mobile scope uses imported Kindness Center data and supports Spanish and English. Backend services, Kindness Center backoffice workflows, official center verification, direct bank/payment processing, admin tooling, and data import automation are outside this repository's first mobile foundation.
+The current prototype uses sample imported Kindness Center data and supports
+Spanish and English. Both apps now default to the first supported device
+language and retain a system/Spanish/English override in Settings across
+restarts, independently of account state. On 2026-10-25 the user expanded the planning scope to
+include backend APIs, real authentication, durable storage/sync and
+center-authorized contributions, plus a mobile-first center web portal based
+on the supplied landing. These are specified, not yet implemented.
+See the [feature spec index](openspec/changes/define-generosity-mobile-app-foundation/spec-index.md).
+Reference-aligned styling of existing native screens is being implemented from
+[mobile-visual-alignment](openspec/changes/define-generosity-mobile-app-foundation/specs/mobile-visual-alignment/spec.md),
+with native orange/neutral themes, branded discovery, center previews,
+priority rows and labeled profile metrics. See [visual roles and assets](docs/native-visual-style.md)
+and [verification evidence](docs/testing/native-visual-verification.md).
+The concept's new navigation, favorites, achievements and streaks remain separate.
+Those additional functions are now specified in the separate
+[reference feature plan](openspec/changes/add-reference-product-features/spec-index.md),
+including moderated reviews, events and externally hosted payments with release
+gates. Neither plan is an implementation-completion or production-payment claim.
+The subsequent [community campaign and coverage plan](openspec/changes/add-community-campaigns-and-coverage/spec-index.md)
+adds earned organizer access, reforestation/cleanup, coordinated meals, voluntary
+needs assessment and privacy-safe comparison of needs with center capacity.
+It is also specified only, with eligibility and sensitive-data release gates.
+The [center-mediated assistance plan](openspec/changes/add-center-mediated-assistance/spec-index.md)
+adds suitable receiving-center discovery, a consented heads-up before a possible
+visit/call, and support only after center validation. It separates goods receipt
+from beneficiary handover and adds medicine-specific safeguards. This is also
+planning only; the person seeking help does not need an app or account.
+The [center directory field plan](openspec/changes/define-center-directory-details/spec-index.md)
+defines the supplied profile fields and the approved minimums: identity,
+categories and a designated public contact. Other fields can remain explicitly
+unknown; fees, beneficiary counts, admission availability and verification have
+separate meanings. Contact-only listings do not require public coordinates.
 
 ## Product Boundaries
 
@@ -15,7 +46,13 @@ The initial mobile scope uses imported Kindness Center data and supports Spanish
 - Shared logic: Kotlin Multiplatform.
 - iOS UI: SwiftUI.
 - Android UI: Jetpack Compose.
-- Out of scope: backend repository, center portal/backoffice, official organization verification, direct bank/payment processing, tax receipts, moderation tooling, and admin tooling.
+- Native maps: Google Maps on Android behind a replaceable renderer; Apple MapKit on iOS. See [configuration and MapLibre migration boundary](docs/native-maps.md).
+- Backend: now in the active planning scope; no service implementation exists yet.
+- Web: public landing and mobile-first center need publishing/management are planned; see the [portal assessment](docs/center-portal.md). The source still lives in the older PoC.
+- Follow-up scope: reference navigation/feed, favorites/sharing, public profiles, moderated reviews, gamification, inbox, events and gated external-provider donations.
+- Community scope: registered users earn organizing access through validated prior help/level/points; household follow-up is optional and private, and territorial maps use approved aggregates. Organizer status never grants center staff or blanket case access.
+- Center-mediated assistance: consented private referrals, center-assessed needs and center-directed support are planned. A heads-up does not enable purchases/donations; medicine requires separate qualified-service gates, and no unrestricted beneficiary cash transfer is added.
+- Out of scope: official organization verification, public staff self-enrollment, handling card/bank credentials, tax receipts, general admin UI and automated third-party data harvesting. Provider-hosted payments require separate production approval.
 
 ## Repository Structure
 
@@ -23,6 +60,7 @@ The initial mobile scope uses imported Kindness Center data and supports Spanish
 - `androidApp/`: Android Compose app foundation and Android localization resources.
 - `iosApp/`: SwiftUI app foundation, localization resources, and the `SharedBridge` integration package.
 - `data/`: sample imported catalog data.
+- `assets/brand/`: supplied-logo sources, SVG/PNG/ICO exports and the [downloadable brand kit](assets/brand/README.md).
 - `docs/`: implementation notes and verification checklists.
 - `openspec/`: OpenSpec proposals, specs, and task tracking.
 
@@ -54,6 +92,12 @@ file or set `ANDROID_HOME` to your SDK installation.
 The debug APK is at `androidApp/build/outputs/apk/debug/androidApp-debug.apk`.
 Compilation of UI tests does not execute them; running them requires an
 Android device or emulator.
+
+Google Maps additionally needs `MAPS_API_KEY` in ignored `local.properties`
+or the build environment and a Google Play Services device/Google APIs emulator.
+Without those, the app keeps list discovery usable and shows a map-unavailable
+state. The installed AOSP emulator does not support live Google tiles.
+See [native map setup](docs/native-maps.md) before testing real cartography.
 
 ### Run Locally on This Mac
 
@@ -87,7 +131,10 @@ terminal and install the app from another:
 The connected test task removes its test installation when finished;
 run `:androidApp:installDebug` again for manual use afterward.
 
-For iOS, open `iosApp/Generosity.xcodeproj`, select scheme `Generosity` and
+For iOS, first run `./gradlew :shared:prepareSharedBridge` after a fresh clone
+or shared Kotlin changes. The app now links the local SharedBridge package;
+its generated XCFramework is intentionally not committed.
+Then open `iosApp/Generosity.xcodeproj`, select scheme `Generosity` and
 an iPhone simulator, then Run. No Apple Developer account is required for
 the simulator. Xcode 27 shows the simulator in Device Hub.
 
@@ -109,6 +156,10 @@ Xcode setup; normal test results and failure attachments remain available.
 
 ### Local Verification
 
+Mobile translation resources, Unicode rules and the steps to add another
+language are documented in [localization](docs/localization.md). Run
+`sh scripts/check-localization.sh --self-test` to validate all enabled languages.
+
 Verified on 2026-10-25:
 
 - 25 shared tests each on JVM, Android host, and iOS ARM64 simulator.
@@ -119,16 +170,75 @@ Verified on 2026-10-25:
   for ARM64 and Intel iOS simulators.
 - English/Spanish localization-key coverage.
 
+Android map slice verified on 2026-10-26: APK build, 4 marker unit tests,
+7 Android UI tests, 25 shared tests each on JVM/Android host, SDK boundary
+guard, localization coverage and strict foundation OpenSpec validation.
+Lint: 0 errors, 47 warnings (dependency/SDK updates and unused resources).
+Live Google tiles and iOS were not exercised in this slice; see
+[native map acceptance](docs/native-maps.md).
+
+Language settings verified on 2026-10-30: 33 shared tests each on JVM and
+Android host, 34 on ARM64 iOS (including observer lifecycle), 4 Android unit
+tests, 10 Android connected tests and 6 iOS UI tests pass. Coverage includes
+regional/ordered device languages, unsupported-language fallback, persisted
+manual override, return to device language and localized search retention.
+Both apps build; Android lint passes with 0 errors and 47 existing warnings.
+Localization coverage, map-provider boundaries and strict foundation OpenSpec
+validation pass. Intel iOS simulator tests are skipped on this ARM64 Mac.
+
+The subsequent iOS discovery integration on 2026-10-30 passes 36 shared ARM64
+iOS tests, 11 Android connected tests and 9 iOS UI tests. New checks cover
+direct shared-state/iOS-controller equivalence, closed/expired need exclusion,
+priority, observer replacement, one offer after repeated navigation, marker
+selection, category retention and empty results without stale detail content.
+The duplicate Swift catalog/models were removed; MapKit remains native.
+
+Native visual alignment verified on 2026-10-31: 12 Android connected tests
+and 11 iOS UI tests pass; the additional Spanish Android tour at 200% text
+and both iPhone SE tours at maximum accessibility text/dark appearance pass.
+Android lint has 0 errors and 47 warnings. Eight visual tasks are complete;
+live Google map acceptance and the full manual accessibility matrix remain
+open. See [screenshots, test conditions and limitations](docs/testing/native-visual-verification.md).
+
+## OpenSpec
+
+OpenSpec 1.15.0 was verified as the latest stable release on 2026-10-25.
+Project instructions are generated in `.agents/skills/`. See
+[OpenSpec maintenance](docs/openspec-maintenance.md) for installation,
+validation and archive rules.
+
+```bash
+openspec --version
+openspec list --json
+openspec validate --all --strict --no-interactive
+```
+
 ## Current Limits
+
+The foundation OpenSpec change was **reopened on 2026-10-25** after its
+archived checklist overstated completion. See the
+[implementation audit](openspec/changes/define-generosity-mobile-app-foundation/implementation-status.md),
+[remaining tasks](openspec/changes/define-generosity-mobile-app-foundation/tasks.md),
+and [user-provided design reference](docs/design-reference.md).
+Main specs describe required behavior, not a claim that the prototype is complete.
 
 The app uses in-memory repositories, sample users, and a fixed demo clock.
 Sign-in is a local demonstration, not backend authentication; data is lost
-when the app process restarts. Payments and confirmation of contributions
-remain backend integration points.
+when the app process restarts. Backend-authorized confirmation is now planned;
+direct payment processing remains excluded; externally hosted payments are now
+specified in the follow-up but disabled pending its release gates. Language
+mode is now persisted locally; this does not make profile/contribution data
+durable. Welcome and localized scheduled/remote alerts remain unimplemented.
 
-The SwiftUI screens still render their own sample data. `SharedBridge` is
-prepared for integration, but it is not yet wired into those screens.
-The Xcode app can run independently of the bridge. Apple command-line
+SwiftUI discovery, map/list selection, current needs and language now consume
+`SharedBridge` through one cancellable subscription owned by the root store.
+The duplicate Swift sample catalog, search and need-expiry rules were removed;
+both apps still use the shared demonstration catalog and clock. iOS visit
+feedback explicitly describes session-only state, not durable storage or upload.
+Profile now renders the shared read-only history/counts with explicit provenance
+and unavailable metrics. Contribution forms, authoritative history/impact and
+effective notification integration are still pending on iOS.
+The Xcode app now requires the staged bridge. Apple command-line
 tools alone cannot link the iOS framework or run its native tests; use
 full Xcode. On Apple Silicon, the native ARM64 tests run; Gradle skips
 the Intel simulator test task.

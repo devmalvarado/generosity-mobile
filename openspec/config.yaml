@@ -11,6 +11,56 @@ context: |
   comments, and technical artifacts must be written in English, even when
   product discussions happen in Spanish.
 
+  Specs describe required behavior, not verified implementation status.
+  Consult active change tasks and implementation-status.md before claiming
+  completion. The foundation was reopened on 2026-10-25 after a source audit.
+  On 2026-10-25 the user expanded the active foundation to include backend,
+  authentication, multiuser persistence/sync, and center-authorized contribution
+  confirmation. Personal helping activities are explicitly self-reported.
+  The user also included the existing public landing and a mobile-first web
+  portal where authorized Kindness Center staff publish and manage needs.
+  docs/design-reference.md records the visual concept. Welcome and visual
+  alignment of existing native screens are requested. The user explicitly
+  chose design only: preserve current destinations/flows and defer the image's
+  new navigation, favorites, achievements, streaks and other new functions.
+  The subsequent add-reference-product-features change now specifies those
+  additional functions separately. It depends on the foundation, not on an
+  assumption that the backend or native integration already works.
+  Approved rules: the plus action selects a need or personal help; gamification
+  counts only center-validated completed help; reviews require completed help
+  and moderation. External-provider payments are now requested as a gated spec,
+  with provider selection still open. Nothing authorizes production charges.
+  The add-community-campaigns-and-coverage follow-up specifies reforestation,
+  cleanup, coordinated meals and voluntary household needs assessment.
+  Registered users can earn organizer eligibility through prior validated help,
+  level and points; numeric thresholds are not chosen. Organizing does not grant
+  center staff, sensitive-case or analyst authority. Optional household follow-up
+  requires consent and private scoped access; maps/analysis use safe aggregates.
+  Coverage compares service capacity, access and observed demand with uncertainty,
+  not center density or an automatic verdict to close a center. This follow-up
+  adds narrow safeguarding/data-steward/analyst operations, not general admin UI.
+  The add-center-mediated-assistance follow-up specifies suitable opted-in
+  intake services and a minimal consented heads-up about a possible visit/call.
+  The user approved advance notice but requires actual contact and center
+  validation before any case-linked purchase or donation. The person needs no
+  app, account or personal phone. Receipt and beneficiary handover are separate;
+  no-show or an unconfirmed request is not an automatic fraud label. Private
+  case access is scoped and consented; map adapters receive public centers only.
+  Medicine assistance requires separate country/service/qualified-review gates,
+  including specific permission for donor disclosure of a medicine name.
+  Clinical records stay with qualified services. No beneficiary cash transfer,
+  helper reimbursement, medical advice or app-held escrow is introduced.
+  Private intake initially requires online authorization and excludes durable
+  sensitive client caches. This is planning, not implemented case management.
+  The define-center-directory-details follow-up records the user's approved
+  profile rule: highlighted fields are prominent, not all mandatory. New public
+  records require identity, categories and a designated public contact route;
+  optional unknowns stay explicit. Legal name, fees, beneficiary counts, admission
+  availability, resource declarations and verification have distinct meanings.
+  Private contacts/locations never enter public discovery or map payloads.
+  Contact-only records can remain list-discoverable without public coordinates.
+  This change does not publish the user's named example or expand category codes.
+
   Technology stack:
   - Kotlin Multiplatform for shared business logic, domain models, repository
     contracts, validation, imported catalog handling, filtering, localization
@@ -18,6 +68,9 @@ context: |
     signal rules.
   - SwiftUI for the native iOS user interface.
   - Jetpack Compose / Kotlin Compose for the native Android user interface.
+  - Google Maps for Android rendering and Apple MapKit for iOS. Keep map SDK
+    types in native adapters; Android can migrate to MapLibre without changing
+    shared domain/state/repositories. MapLibre itself is not installed yet.
   - Platform-specific adapters for maps, location permissions, notifications,
     authentication, and future payment handoff.
 
@@ -26,17 +79,27 @@ context: |
     future approved change explicitly renames the product.
   - Spanish and English are the initial supported app languages.
   - Initial Kindness Center data comes from imported catalog data.
-  - Backend services, Kindness Center backoffice/portal workflows, official
-    organization verification, direct bank/payment processing, admin tooling,
-    tax receipts, moderation tooling, and data import automation are separate
-    systems or future changes unless explicitly brought into scope.
+  - Backend APIs, durable server storage, authenticated sessions, sync,
+    notifications and authorized center contribution actions are in scope.
+  - The public landing and authenticated center web portal are in scope;
+    browser and native clients share the authoritative backend/catalog.
+  - Official organization verification, handling card/bank details, tax receipts,
+    general admin UI and automated third-party harvesting remain excluded.
+    The foundation excludes payments and moderation; the reference-features
+    follow-up scopes hosted-provider payments and review moderation separately.
+  - The backend authorizes center confirmation/fulfillment; users cannot
+    self-verify center-linked contributions. Personal help is self-reported.
+  - Default language follows device preferences; a persisted user-setting
+    override supports Spanish or English and can return to device mode.
   - User visit signals are evidence that a user explicitly reported visiting a
     center; they must not automatically make a center officially verified.
   - Money donation support must not store payment details or nonprofit bank
     account details in the mobile app. Direct payment processing requires a
-    future backend/payment-provider integration.
+    separately gated backend/payment-provider integration.
   - Generosity points are informational and must not be presented as cash,
     credit, redeemable benefits, or financial value.
+    They may gate organizing eligibility under the community follow-up policy,
+    but are not spent/redeemed and do not establish professional competence.
 
 rules:
   proposal:
@@ -44,7 +107,7 @@ rules:
     - Keep the product name as "Generosity" unless the change is explicitly about renaming.
     - State affected capabilities in kebab-case and ensure each new capability can become a spec.
     - Make out-of-scope backend, backoffice, verification, and payment boundaries explicit when relevant.
-    - Call out localization impact when user-facing mobile behavior or content changes.
+    - Call out localization impact when user-facing mobile or web behavior or content changes.
 
   design:
     - Write in English.
@@ -57,7 +120,7 @@ rules:
     - Write in English.
     - Use normative SHALL/MUST language for requirements.
     - Every requirement must include at least one four-hash Scenario section.
-    - Keep behavior testable from a mobile product perspective.
+    - Keep behavior testable from a native mobile or mobile-first browser perspective.
     - Use stable codes for app-controlled domain labels and require Spanish/English localization for user-facing text.
     - Preserve the boundary that visit signals do not equal official verification.
     - Preserve the boundary that the mobile app does not directly process bank payments or collect bank/payment details.
@@ -68,3 +131,4 @@ rules:
     - Keep tasks small enough to complete and verify in one focused session.
     - Include validation or test tasks for shared logic, localization coverage, and platform UI behavior when relevant.
     - Separate shared KMP work from Android Compose work and iOS SwiftUI work when implementation spans platforms.
+    - Mark a task complete only with implementation and verification evidence; models, mock data, permission prompts, and successful builds alone do not prove an end-to-end feature.

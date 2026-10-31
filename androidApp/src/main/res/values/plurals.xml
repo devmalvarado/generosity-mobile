@@ -1,0 +1,10 @@
+<resources>
+    <plurals name="remaining_units">
+        <item quantity="one">%1$d item still needed</item>
+        <item quantity="other">%1$d items still needed</item>
+    </plurals>
+    <plurals name="offer_goods">
+        <item quantity="one">I can bring %1$d item</item>
+        <item quantity="other">I can bring %1$d items</item>
+    </plurals>
+</resources>

@@ -1,19 +1,19 @@
 package org.generosity.domain
 
-enum class SupportedLocale(val code: String) {
-    ENGLISH("en"),
-    SPANISH("es");
+enum class SupportedLocale(val code: String, val nativeName: String) {
+    ENGLISH("en", "English"),
+    SPANISH("es", "Español");
 
     companion object {
         val fallback: SupportedLocale = ENGLISH
 
         fun fromCode(code: String?): SupportedLocale? {
-            val normalized = code?.trim()?.lowercase().orEmpty()
-            return when {
-                normalized == "en" || normalized.startsWith("en-") || normalized.startsWith("en_") -> ENGLISH
-                normalized == "es" || normalized.startsWith("es-") || normalized.startsWith("es_") -> SPANISH
-                else -> null
+            var candidate = code?.trim()?.replace('_', '-').orEmpty()
+            while (candidate.isNotEmpty()) {
+                entries.firstOrNull { it.code.equals(candidate, ignoreCase = true) }?.let { return it }
+                candidate = candidate.substringBeforeLast('-', "")
             }
+            return null
         }
 
         fun resolve(
@@ -31,6 +31,14 @@ data class LocalePreference(
 ) {
     val activeLocale: SupportedLocale
         get() = selectedLocale ?: deviceLocale ?: fallbackLocale
+
+    companion object {
+        fun fromDeviceLanguages(selectedCode: String?, deviceCodes: List<String>): LocalePreference =
+            LocalePreference(
+                selectedLocale = SupportedLocale.fromCode(selectedCode),
+                deviceLocale = deviceCodes.firstNotNullOfOrNull(SupportedLocale::fromCode)
+            )
+    }
 }
 
 data class LocalizedText(
@@ -155,6 +163,13 @@ data class CenterNeed(
         return expiration < referenceIsoDate
     }
 
+    /** Date-only expiry compared with an authoritative UTC instant, not a device date. */
+    fun isExpiredAt(authorityUtcInstant: String): Boolean {
+        if (status == NeedStatus.EXPIRED) return true
+        val expiration = expiresOnIsoDate ?: return false
+        return isDateOnlyExpired(expiration, authorityUtcInstant)
+    }
+
     fun isCurrent(referenceIsoDate: String): Boolean =
         status.isOpen && !isExpired(referenceIsoDate)
 
@@ -208,8 +223,15 @@ data class Contribution(
     val needId: String? = null,
     val status: ContributionStatus = ContributionStatus.OFFERED,
     val quantity: Int? = null,
+    val quantityUnit: String? = null,
     val activity: String? = null,
-    val availability: String? = null
+    val availability: String? = null,
+    val plannedDurationMinutes: Int? = null,
+    val actualDurationMinutes: Int? = null,
+    val provenance: ContributionProvenance = ContributionProvenance.CENTER_OFFER,
+    val syncState: SyncState = SyncState.LOCAL,
+    val version: Int = 1,
+    val events: List<ContributionEvent> = emptyList()
 )
 
 data class Reminder(
@@ -224,7 +246,9 @@ data class NotificationPreference(
     val nearbyCentersEnabled: Boolean = false,
     val urgentNeedsEnabled: Boolean = false,
     val remindersEnabled: Boolean = false,
-    val categoryInterests: Set<CenterCategory> = emptySet()
+    val categoryInterests: Set<CenterCategory> = emptySet(),
+    /** Empty interests are not an implicit All. This must be chosen explicitly. */
+    val allCategoryInterests: Boolean = false
 ) {
     fun isEnabled(type: NotificationType): Boolean = when (type) {
         NotificationType.NEARBY_CENTER -> nearbyCentersEnabled
