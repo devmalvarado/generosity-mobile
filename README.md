@@ -10,7 +10,10 @@ language and retain a system/Spanish/English override in Settings across
 restarts, independently of account state. On 2026-10-25 the user expanded the planning scope to
 include backend APIs, real authentication, durable storage/sync and
 center-authorized contributions, plus a mobile-first center web portal based
-on the supplied landing. These are specified, not yet implemented.
+on the supplied landing. A separate PHP/Laravel API now implements accounts,
+public catalog, staff-scoped needs and transactional contributions with MySQL/MariaDB.
+Native/portal HTTP integration, account sync and delivery remain pending.
+See the [backend setup](backend/README.md) and [hosting decision](docs/backend-php-mysql.md).
 See the [feature spec index](openspec/changes/define-generosity-mobile-app-foundation/spec-index.md).
 Reference-aligned styling of existing native screens is being implemented from
 [mobile-visual-alignment](openspec/changes/define-generosity-mobile-app-foundation/specs/mobile-visual-alignment/spec.md),
@@ -47,7 +50,7 @@ separate meanings. Contact-only listings do not require public coordinates.
 - iOS UI: SwiftUI.
 - Android UI: Jetpack Compose.
 - Native maps: Google Maps on Android behind a replaceable renderer; Apple MapKit on iOS. See [configuration and MapLibre migration boundary](docs/native-maps.md).
-- Backend: now in the active planning scope; no service implementation exists yet.
+- Backend: PHP 8.4 / Laravel 13 with MySQL/MariaDB; local API and tests implemented, Hostinger deployment pending.
 - Web: public landing and mobile-first center need publishing/management are planned; see the [portal assessment](docs/center-portal.md). The source still lives in the older PoC.
 - Follow-up scope: reference navigation/feed, favorites/sharing, public profiles, moderated reviews, gamification, inbox, events and gated external-provider donations.
 - Community scope: registered users earn organizing access through validated prior help/level/points; household follow-up is optional and private, and territorial maps use approved aggregates. Organizer status never grants center staff or blanket case access.
@@ -59,10 +62,18 @@ separate meanings. Contact-only listings do not require public coordinates.
 - `shared/`: Kotlin Multiplatform shared domain, repository interfaces, imported sample catalog, use cases, and tests.
 - `androidApp/`: Android Compose app foundation and Android localization resources.
 - `iosApp/`: SwiftUI app foundation, localization resources, and the `SharedBridge` integration package.
+- `backend/`: PHP HTTP API, relational migrations, OpenAPI contract and real MariaDB tests.
 - `data/`: sample imported catalog data.
 - `assets/brand/`: supplied-logo sources, SVG/PNG/ICO exports and the [downloadable brand kit](assets/brand/README.md).
 - `docs/`: implementation notes and verification checklists.
 - `openspec/`: OpenSpec proposals, specs, and task tracking.
+
+## Backend
+
+The PHP replacement lives on `codex/backend-php-mysql`. The prior complete state
+is checkpoint `36eab89`, preserved on `codex/mockup-backend-kotlin`.
+Follow [backend/README.md](backend/README.md) to run the API at localhost:8088
+and its local email inbox at localhost:8028. No production deployment is implied.
 
 ## Build and Test
 

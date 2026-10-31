@@ -1,5 +1,34 @@
 # Foundation Implementation Audit
 
+**2026-10-31 PHP backend replacement:** User-requested checkpoint `36eab89`
+is preserved on `codex/mockup-backend-kotlin`; `codex/backend-php-mysql`
+replaces only the standalone service with Laravel 13 / PHP 8.4 and MySQL/MariaDB.
+The HTTP API includes verified accounts, revocable tokens, account recovery,
+audited operator staff assignment, public catalog, staff need management,
+transactional goods/time offers, versioned/idempotent transitions and separately
+labeled personal help/history/impact. Native/shared Kotlin remains unchanged.
+The [architecture decision](../../../docs/backend-php-mysql.md) explicitly
+selects Laravel's first-party provider instead of the previously unspecified
+external identity adapter. No production deployment or native/portal integration
+is claimed.
+
+Executable evidence is in `backend/tests/Feature/ApiTest.php` (real MariaDB,
+including independent-process reservation/transition races) and
+`backend/scripts/smoke.py` (actual local HTTP, queued email verification,
+login, durable reservations/history after restart and isolated SQL restore).
+The OpenAPI route map and core response fields are checked; full client contract
+acceptance is still open. Dependency audit found no known advisories at the
+verification time. See [backend verification](../../../docs/testing/backend-php-verification.md)
+for the final run counts and environment.
+
+Tasks 11.1/11.4 are now complete for the selected PHP provider/runtime. Task 11.5
+is reopened because imports are atomic upserts, with no source-revision conflict
+or deletion/tombstone protocol. Tasks 11.2/11.7/11.8 and 13.1–13.3 have replacement
+PHP evidence. Profile/preferences updates, visits/reminders/device endpoints,
+account sync, notification delivery, client authentication/history adapters,
+production SMTP/hosting and all cross-system acceptance remain open. Do not
+archive the foundation based on backend-only tests.
+
 **2026-10-31 native visual addendum:** Tasks 17.1–17.3 and 17.5–17.9 are
 implemented for the existing Map/List/Profile/Settings flows. Both platforms
 have native orange/neutral themes, the supplied logo, responsive discovery,

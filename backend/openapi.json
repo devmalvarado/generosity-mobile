@@ -1,0 +1,2197 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Generosity API",
+    "version": "1.0.0",
+    "description": "PHP/MySQL backend. Requests and responses are UTF-8 JSON. UTC timestamps; expiry dates are inclusive UTC days. Bearer-only authentication (7-day tokens); no cookie authentication. Idempotency keys are per-account UUIDs retained with committed operations. Same-key retries replay the exact success after current authorization; changed validated content conflicts. Need status denotes publication, not native lifecycle: clients derive covered/expired using quantities and expiry. Money is never accepted. No incremental sync contract yet."
+  },
+  "servers": [
+    {
+      "url": "http://localhost:8088/api/v1",
+      "description": "Local only; production must use HTTPS"
+    }
+  ],
+  "security": [
+    {
+      "bearerAuth": []
+    }
+  ],
+  "paths": {
+    "/health": {
+      "get": {
+        "summary": "Database readiness and disabled payment capability",
+        "operationId": "get_health",
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Health"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Stable error codes; validation errors include field keys, conflicts may include current state. HTTP 401/403/404/409/413/422/429/500.",
+            "headers": {
+              "Retry-After": {
+                "schema": {
+                  "type": "string"
+                },
+                "description": "Present when rate limited"
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "security": []
+      }
+    },
+    "/centers": {
+      "get": {
+        "summary": "Public center catalog",
+        "operationId": "get_centers",
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CenterPage"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Stable error codes; validation errors include field keys, conflicts may include current state. HTTP 401/403/404/409/413/422/429/500.",
+            "headers": {
+              "Retry-After": {
+                "schema": {
+                  "type": "string"
+                },
+                "description": "Present when rate limited"
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "security": [],
+        "parameters": [
+          {
+            "name": "page",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 100000,
+              "default": 1
+            }
+          }
+        ]
+      }
+    },
+    "/centers/{center}": {
+      "get": {
+        "summary": "Public center detail",
+        "operationId": "get_centers_center",
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Center"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Stable error codes; validation errors include field keys, conflicts may include current state. HTTP 401/403/404/409/413/422/429/500.",
+            "headers": {
+              "Retry-After": {
+                "schema": {
+                  "type": "string"
+                },
+                "description": "Present when rate limited"
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "security": [],
+        "parameters": [
+          {
+            "name": "center",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ]
+      }
+    },
+    "/needs": {
+      "get": {
+        "summary": "Published needs, including expired or fully committed records",
+        "operationId": "get_needs",
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NeedPage"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Stable error codes; validation errors include field keys, conflicts may include current state. HTTP 401/403/404/409/413/422/429/500.",
+            "headers": {
+              "Retry-After": {
+                "schema": {
+                  "type": "string"
+                },
+                "description": "Present when rate limited"
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "security": [],
+        "parameters": [
+          {
+            "name": "center_id",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 100000,
+              "default": 1
+            }
+          }
+        ]
+      }
+    },
+    "/needs/{need}": {
+      "get": {
+        "summary": "Public published need",
+        "operationId": "get_needs_need",
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Need"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Stable error codes; validation errors include field keys, conflicts may include current state. HTTP 401/403/404/409/413/422/429/500.",
+            "headers": {
+              "Retry-After": {
+                "schema": {
+                  "type": "string"
+                },
+                "description": "Present when rate limited"
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "security": [],
+        "parameters": [
+          {
+            "name": "need",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ]
+      }
+    },
+    "/auth/register": {
+      "post": {
+        "summary": "Register",
+        "operationId": "post_auth_register",
+        "responses": {
+          "202": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Status"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Stable error codes; validation errors include field keys, conflicts may include current state. HTTP 401/403/404/409/413/422/429/500.",
+            "headers": {
+              "Retry-After": {
+                "schema": {
+                  "type": "string"
+                },
+                "description": "Present when rate limited"
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "security": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Register"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/auth/login": {
+      "post": {
+        "summary": "Login",
+        "operationId": "post_auth_login",
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LoginResult"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Stable error codes; validation errors include field keys, conflicts may include current state. HTTP 401/403/404/409/413/422/429/500.",
+            "headers": {
+              "Retry-After": {
+                "schema": {
+                  "type": "string"
+                },
+                "description": "Present when rate limited"
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "security": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Login"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/auth/verification": {
+      "post": {
+        "summary": "Verification",
+        "operationId": "post_auth_verification",
+        "responses": {
+          "202": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Status"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Stable error codes; validation errors include field keys, conflicts may include current state. HTTP 401/403/404/409/413/422/429/500.",
+            "headers": {
+              "Retry-After": {
+                "schema": {
+                  "type": "string"
+                },
+                "description": "Present when rate limited"
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "security": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Email"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/auth/forgot-password": {
+      "post": {
+        "summary": "Forgot password",
+        "operationId": "post_auth_forgot-password",
+        "responses": {
+          "202": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Status"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Stable error codes; validation errors include field keys, conflicts may include current state. HTTP 401/403/404/409/413/422/429/500.",
+            "headers": {
+              "Retry-After": {
+                "schema": {
+                  "type": "string"
+                },
+                "description": "Present when rate limited"
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "security": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Email"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/auth/reset-password": {
+      "post": {
+        "summary": "Reset password",
+        "operationId": "post_auth_reset-password",
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Status"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Stable error codes; validation errors include field keys, conflicts may include current state. HTTP 401/403/404/409/413/422/429/500.",
+            "headers": {
+              "Retry-After": {
+                "schema": {
+                  "type": "string"
+                },
+                "description": "Present when rate limited"
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "security": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Reset"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/auth/verify/{id}/{hash}": {
+      "get": {
+        "summary": "Verify email using a server-signed link",
+        "operationId": "get_auth_verify_id_hash",
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Status"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Stable error codes; validation errors include field keys, conflicts may include current state. HTTP 401/403/404/409/413/422/429/500.",
+            "headers": {
+              "Retry-After": {
+                "schema": {
+                  "type": "string"
+                },
+                "description": "Present when rate limited"
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "security": [],
+        "parameters": [
+          {
+            "name": "expires",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "signature",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "hash",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ]
+      }
+    },
+    "/auth/logout": {
+      "post": {
+        "summary": "Revoke the current bearer token",
+        "operationId": "post_auth_logout",
+        "responses": {
+          "204": {
+            "description": "Success"
+          },
+          "default": {
+            "description": "Stable error codes; validation errors include field keys, conflicts may include current state. HTTP 401/403/404/409/413/422/429/500.",
+            "headers": {
+              "Retry-After": {
+                "schema": {
+                  "type": "string"
+                },
+                "description": "Present when rate limited"
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/me": {
+      "get": {
+        "summary": "Current verified account",
+        "operationId": "get_me",
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Me"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Stable error codes; validation errors include field keys, conflicts may include current state. HTTP 401/403/404/409/413/422/429/500.",
+            "headers": {
+              "Retry-After": {
+                "schema": {
+                  "type": "string"
+                },
+                "description": "Present when rate limited"
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/me/contributions": {
+      "get": {
+        "summary": "Owned contribution history",
+        "operationId": "get_me_contributions",
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ContributionPage"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Stable error codes; validation errors include field keys, conflicts may include current state. HTTP 401/403/404/409/413/422/429/500.",
+            "headers": {
+              "Retry-After": {
+                "schema": {
+                  "type": "string"
+                },
+                "description": "Present when rate limited"
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "page",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 100000,
+              "default": 1
+            }
+          }
+        ]
+      }
+    },
+    "/me/impact": {
+      "get": {
+        "summary": "Confirmed and fulfilled records; self-reported activity separate",
+        "operationId": "get_me_impact",
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Impact"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Stable error codes; validation errors include field keys, conflicts may include current state. HTTP 401/403/404/409/413/422/429/500.",
+            "headers": {
+              "Retry-After": {
+                "schema": {
+                  "type": "string"
+                },
+                "description": "Present when rate limited"
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/contributions": {
+      "post": {
+        "summary": "Create an offer or self-reported personal activity",
+        "operationId": "post_contributions",
+        "responses": {
+          "201": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Contribution"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Stable error codes; validation errors include field keys, conflicts may include current state. HTTP 401/403/404/409/413/422/429/500.",
+            "headers": {
+              "Retry-After": {
+                "schema": {
+                  "type": "string"
+                },
+                "description": "Present when rate limited"
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "Idempotency-Key",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ContributionInput"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/contributions/{contribution}": {
+      "get": {
+        "summary": "Owned or assigned-center contribution and events",
+        "operationId": "get_contributions_contribution",
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HistoryDetail"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Stable error codes; validation errors include field keys, conflicts may include current state. HTTP 401/403/404/409/413/422/429/500.",
+            "headers": {
+              "Retry-After": {
+                "schema": {
+                  "type": "string"
+                },
+                "description": "Present when rate limited"
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "contribution",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ]
+      }
+    },
+    "/contributions/{contribution}/transition": {
+      "post": {
+        "summary": "Versioned center/owner transition",
+        "operationId": "post_contributions_contribution_transition",
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Contribution"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Stable error codes; validation errors include field keys, conflicts may include current state. HTTP 401/403/404/409/413/422/429/500.",
+            "headers": {
+              "Retry-After": {
+                "schema": {
+                  "type": "string"
+                },
+                "description": "Present when rate limited"
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "contribution",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "Idempotency-Key",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Transition"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/staff/centers/{center}/contributions": {
+      "get": {
+        "summary": "Assigned-center contribution history",
+        "operationId": "get_staff_centers_center_contributions",
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ContributionPage"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Stable error codes; validation errors include field keys, conflicts may include current state. HTTP 401/403/404/409/413/422/429/500.",
+            "headers": {
+              "Retry-After": {
+                "schema": {
+                  "type": "string"
+                },
+                "description": "Present when rate limited"
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "center",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 100000,
+              "default": 1
+            }
+          }
+        ]
+      }
+    },
+    "/staff/centers/{center}/needs": {
+      "get": {
+        "summary": "Assigned-center needs including drafts",
+        "operationId": "get_staff_centers_center_needs",
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NeedPage"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Stable error codes; validation errors include field keys, conflicts may include current state. HTTP 401/403/404/409/413/422/429/500.",
+            "headers": {
+              "Retry-After": {
+                "schema": {
+                  "type": "string"
+                },
+                "description": "Present when rate limited"
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "center",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 100000,
+              "default": 1
+            }
+          }
+        ]
+      },
+      "post": {
+        "summary": "Create a need for an assigned center",
+        "operationId": "post_staff_centers_center_needs",
+        "responses": {
+          "201": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Need"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Stable error codes; validation errors include field keys, conflicts may include current state. HTTP 401/403/404/409/413/422/429/500.",
+            "headers": {
+              "Retry-After": {
+                "schema": {
+                  "type": "string"
+                },
+                "description": "Present when rate limited"
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "center",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "Idempotency-Key",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/NeedInput"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/staff/centers/{center}/needs/{need}": {
+      "put": {
+        "summary": "Replace editable need fields without resetting reservations",
+        "operationId": "put_staff_centers_center_needs_need",
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Need"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Stable error codes; validation errors include field keys, conflicts may include current state. HTTP 401/403/404/409/413/422/429/500.",
+            "headers": {
+              "Retry-After": {
+                "schema": {
+                  "type": "string"
+                },
+                "description": "Present when rate limited"
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "center",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "need",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "Idempotency-Key",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/NeedUpdate"
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "bearerAuth": {
+        "type": "http",
+        "scheme": "bearer"
+      }
+    },
+    "schemas": {
+      "LocalizedText": {
+        "type": "object",
+        "minProperties": 1,
+        "additionalProperties": {
+          "type": "string",
+          "maxLength": 4000
+        },
+        "examples": [
+          {
+            "es": "Útiles escolares",
+            "en": "School supplies"
+          }
+        ]
+      },
+      "Error": {
+        "type": "object",
+        "properties": {
+          "error": {
+            "type": "object",
+            "properties": {
+              "code": {
+                "type": "string"
+              },
+              "details": {
+                "type": [
+                  "object",
+                  "array"
+                ]
+              }
+            },
+            "required": [
+              "code",
+              "details"
+            ]
+          }
+        },
+        "required": [
+          "error"
+        ]
+      },
+      "User": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer"
+          },
+          "name": {
+            "type": "string"
+          },
+          "email": {
+            "type": "string",
+            "format": "email"
+          },
+          "email_verified_at": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "created_at": {
+            "type": "string"
+          },
+          "updated_at": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "name",
+          "email",
+          "email_verified_at",
+          "created_at",
+          "updated_at"
+        ]
+      },
+      "Center": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "object",
+            "minProperties": 1,
+            "additionalProperties": {
+              "type": "string",
+              "maxLength": 4000
+            },
+            "examples": [
+              {
+                "es": "Útiles escolares",
+                "en": "School supplies"
+              }
+            ]
+          },
+          "description": {
+            "type": "object",
+            "minProperties": 1,
+            "additionalProperties": {
+              "type": "string",
+              "maxLength": 4000
+            },
+            "examples": [
+              {
+                "es": "Útiles escolares",
+                "en": "School supplies"
+              }
+            ]
+          },
+          "address": {
+            "type": "object",
+            "minProperties": 1,
+            "additionalProperties": {
+              "type": "string",
+              "maxLength": 4000
+            },
+            "examples": [
+              {
+                "es": "Útiles escolares",
+                "en": "School supplies"
+              }
+            ]
+          },
+          "categories": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "coordinates": {
+            "type": "object",
+            "properties": {
+              "latitude": {
+                "type": "number"
+              },
+              "longitude": {
+                "type": "number"
+              }
+            },
+            "required": [
+              "latitude",
+              "longitude"
+            ]
+          },
+          "contact": {
+            "type": "object",
+            "properties": {
+              "phone": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "email": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "website": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              }
+            },
+            "required": []
+          },
+          "verificationStatus": {
+            "enum": [
+              "imported",
+              "visit_signaled",
+              "officially_verified"
+            ]
+          },
+          "importedAtIsoDate": {
+            "type": "string"
+          },
+          "version": {
+            "type": "integer"
+          },
+          "updatedAt": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "name",
+          "description",
+          "address",
+          "categories",
+          "coordinates",
+          "contact",
+          "verificationStatus",
+          "importedAtIsoDate",
+          "version",
+          "updatedAt"
+        ]
+      },
+      "NeedInput": {
+        "type": "object",
+        "properties": {
+          "title": {
+            "type": "object",
+            "minProperties": 1,
+            "additionalProperties": {
+              "type": "string",
+              "maxLength": 4000
+            },
+            "examples": [
+              {
+                "es": "Útiles escolares",
+                "en": "School supplies"
+              }
+            ]
+          },
+          "description": {
+            "type": "object",
+            "minProperties": 1,
+            "additionalProperties": {
+              "type": "string",
+              "maxLength": 4000
+            },
+            "examples": [
+              {
+                "es": "Útiles escolares",
+                "en": "School supplies"
+              }
+            ]
+          },
+          "helpMethods": {
+            "type": "array",
+            "items": {
+              "enum": [
+                "goods",
+                "time",
+                "money"
+              ]
+            },
+            "minItems": 1
+          },
+          "urgent": {
+            "type": "boolean"
+          },
+          "expiresOnIsoDate": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "date"
+          },
+          "quantityRequired": {
+            "type": [
+              "integer",
+              "null"
+            ],
+            "minimum": 1,
+            "maximum": 1000000
+          },
+          "unit": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "maxLength": 60
+          },
+          "status": {
+            "enum": [
+              "draft",
+              "published",
+              "closed"
+            ]
+          }
+        },
+        "required": [
+          "title",
+          "description",
+          "helpMethods",
+          "urgent",
+          "status"
+        ]
+      },
+      "NeedUpdate": {
+        "type": "object",
+        "properties": {
+          "title": {
+            "type": "object",
+            "minProperties": 1,
+            "additionalProperties": {
+              "type": "string",
+              "maxLength": 4000
+            },
+            "examples": [
+              {
+                "es": "Útiles escolares",
+                "en": "School supplies"
+              }
+            ]
+          },
+          "description": {
+            "type": "object",
+            "minProperties": 1,
+            "additionalProperties": {
+              "type": "string",
+              "maxLength": 4000
+            },
+            "examples": [
+              {
+                "es": "Útiles escolares",
+                "en": "School supplies"
+              }
+            ]
+          },
+          "helpMethods": {
+            "type": "array",
+            "items": {
+              "enum": [
+                "goods",
+                "time",
+                "money"
+              ]
+            },
+            "minItems": 1
+          },
+          "urgent": {
+            "type": "boolean"
+          },
+          "expiresOnIsoDate": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "date"
+          },
+          "quantityRequired": {
+            "type": [
+              "integer",
+              "null"
+            ],
+            "minimum": 1,
+            "maximum": 1000000
+          },
+          "unit": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "maxLength": 60
+          },
+          "status": {
+            "enum": [
+              "draft",
+              "published",
+              "closed"
+            ]
+          },
+          "version": {
+            "type": "integer",
+            "minimum": 1
+          }
+        },
+        "required": [
+          "title",
+          "description",
+          "helpMethods",
+          "urgent",
+          "status",
+          "version"
+        ]
+      },
+      "Need": {
+        "type": "object",
+        "properties": {
+          "title": {
+            "type": "object",
+            "minProperties": 1,
+            "additionalProperties": {
+              "type": "string",
+              "maxLength": 4000
+            },
+            "examples": [
+              {
+                "es": "Útiles escolares",
+                "en": "School supplies"
+              }
+            ]
+          },
+          "description": {
+            "type": "object",
+            "minProperties": 1,
+            "additionalProperties": {
+              "type": "string",
+              "maxLength": 4000
+            },
+            "examples": [
+              {
+                "es": "Útiles escolares",
+                "en": "School supplies"
+              }
+            ]
+          },
+          "helpMethods": {
+            "type": "array",
+            "items": {
+              "enum": [
+                "goods",
+                "time",
+                "money"
+              ]
+            },
+            "minItems": 1
+          },
+          "urgent": {
+            "type": "boolean"
+          },
+          "expiresOnIsoDate": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "date"
+          },
+          "quantityRequired": {
+            "type": [
+              "integer",
+              "null"
+            ],
+            "minimum": 1,
+            "maximum": 1000000
+          },
+          "unit": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "maxLength": 60
+          },
+          "id": {
+            "type": "string"
+          },
+          "centerId": {
+            "type": "string"
+          },
+          "status": {
+            "enum": [
+              "draft",
+              "published",
+              "closed"
+            ]
+          },
+          "version": {
+            "type": "integer"
+          },
+          "quantityCommitted": {
+            "type": "integer"
+          },
+          "updatedAt": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "centerId",
+          "status",
+          "version",
+          "title",
+          "description",
+          "helpMethods",
+          "urgent",
+          "quantityRequired",
+          "quantityCommitted",
+          "expiresOnIsoDate",
+          "updatedAt"
+        ]
+      },
+      "Contribution": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "user_id": {
+            "type": "integer"
+          },
+          "center_id": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "need_id": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "method": {
+            "enum": [
+              "goods",
+              "time"
+            ]
+          },
+          "quantity": {
+            "type": [
+              "integer",
+              "null"
+            ]
+          },
+          "minutes": {
+            "type": [
+              "integer",
+              "null"
+            ]
+          },
+          "activity": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "availability": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "notes": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "provenance": {
+            "enum": [
+              "center_offer",
+              "self_reported"
+            ]
+          },
+          "status": {
+            "enum": [
+              "offered",
+              "confirmed",
+              "fulfilled",
+              "cancelled"
+            ]
+          },
+          "version": {
+            "type": "integer"
+          },
+          "created_at": {
+            "type": "string"
+          },
+          "updated_at": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "user_id",
+          "center_id",
+          "need_id",
+          "method",
+          "provenance",
+          "status",
+          "version",
+          "created_at",
+          "updated_at"
+        ]
+      },
+      "ContributionInput": {
+        "type": "object",
+        "properties": {
+          "need_id": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "maxLength": 100
+          },
+          "method": {
+            "enum": [
+              "goods",
+              "time"
+            ]
+          },
+          "quantity": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 1000000
+          },
+          "minutes": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 525600
+          },
+          "activity": {
+            "type": "string",
+            "maxLength": 500
+          },
+          "availability": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "maxLength": 500
+          },
+          "notes": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "maxLength": 2000
+          }
+        },
+        "required": [
+          "method"
+        ],
+        "allOf": [
+          {
+            "if": {
+              "properties": {
+                "method": {
+                  "const": "goods"
+                }
+              }
+            },
+            "then": {
+              "required": [
+                "quantity"
+              ],
+              "not": {
+                "required": [
+                  "minutes"
+                ]
+              }
+            }
+          },
+          {
+            "if": {
+              "properties": {
+                "method": {
+                  "const": "time"
+                }
+              }
+            },
+            "then": {
+              "required": [
+                "minutes",
+                "activity"
+              ],
+              "not": {
+                "required": [
+                  "quantity"
+                ]
+              }
+            }
+          }
+        ]
+      },
+      "Event": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer"
+          },
+          "contribution_id": {
+            "type": "string"
+          },
+          "actor_id": {
+            "type": "integer"
+          },
+          "from_status": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "to_status": {
+            "type": "string"
+          },
+          "version": {
+            "type": "integer"
+          },
+          "created_at": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "contribution_id",
+          "actor_id",
+          "from_status",
+          "to_status",
+          "version",
+          "created_at"
+        ]
+      },
+      "Transition": {
+        "type": "object",
+        "properties": {
+          "action": {
+            "enum": [
+              "confirm",
+              "fulfill",
+              "cancel",
+              "complete"
+            ]
+          },
+          "version": {
+            "type": "integer",
+            "minimum": 1
+          }
+        },
+        "required": [
+          "action",
+          "version"
+        ]
+      },
+      "Status": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "status"
+        ]
+      },
+      "Login": {
+        "type": "object",
+        "properties": {
+          "email": {
+            "type": "string",
+            "format": "email"
+          },
+          "password": {
+            "type": "string",
+            "maxLength": 72
+          },
+          "device_name": {
+            "type": "string",
+            "maxLength": 100
+          }
+        },
+        "required": [
+          "email",
+          "password",
+          "device_name"
+        ]
+      },
+      "Register": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "maxLength": 120
+          },
+          "email": {
+            "type": "string",
+            "format": "email"
+          },
+          "password": {
+            "type": "string",
+            "minLength": 12,
+            "maxLength": 72,
+            "description": "At least one uppercase letter, lowercase letter and number; at most 72 UTF-8 bytes for bcrypt."
+          }
+        },
+        "required": [
+          "name",
+          "email",
+          "password"
+        ]
+      },
+      "Email": {
+        "type": "object",
+        "properties": {
+          "email": {
+            "type": "string",
+            "format": "email"
+          }
+        },
+        "required": [
+          "email"
+        ]
+      },
+      "Reset": {
+        "type": "object",
+        "properties": {
+          "email": {
+            "type": "string",
+            "format": "email"
+          },
+          "token": {
+            "type": "string"
+          },
+          "password": {
+            "type": "string",
+            "minLength": 12,
+            "maxLength": 72
+          },
+          "password_confirmation": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "email",
+          "token",
+          "password",
+          "password_confirmation"
+        ]
+      },
+      "LoginResult": {
+        "type": "object",
+        "properties": {
+          "token": {
+            "type": "string"
+          },
+          "token_type": {
+            "const": "Bearer"
+          },
+          "expires_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "user": {
+            "$ref": "#/components/schemas/User"
+          }
+        },
+        "required": [
+          "token",
+          "token_type",
+          "expires_at",
+          "user"
+        ]
+      },
+      "Health": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "const": "ready"
+          },
+          "apiVersion": {
+            "const": 1
+          },
+          "payments": {
+            "const": "disabled"
+          }
+        },
+        "required": [
+          "status",
+          "apiVersion",
+          "payments"
+        ]
+      },
+      "HistoryDetail": {
+        "type": "object",
+        "properties": {
+          "contribution": {
+            "$ref": "#/components/schemas/Contribution"
+          },
+          "events": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Event"
+            }
+          }
+        },
+        "required": [
+          "contribution",
+          "events"
+        ]
+      },
+      "Impact": {
+        "type": "object",
+        "properties": {
+          "groups": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "provenance": {
+                  "enum": [
+                    "center_offer",
+                    "self_reported"
+                  ]
+                },
+                "status": {
+                  "enum": [
+                    "confirmed",
+                    "fulfilled"
+                  ]
+                },
+                "contributions": {
+                  "type": "integer"
+                },
+                "minutes": {
+                  "type": "string",
+                  "pattern": "^[0-9]+$"
+                }
+              },
+              "required": [
+                "provenance",
+                "status",
+                "contributions",
+                "minutes"
+              ]
+            }
+          }
+        },
+        "required": [
+          "groups"
+        ]
+      },
+      "Me": {
+        "type": "object",
+        "properties": {
+          "user": {
+            "$ref": "#/components/schemas/User"
+          }
+        },
+        "required": [
+          "user"
+        ]
+      },
+      "CenterPage": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Center"
+            }
+          },
+          "current_page": {
+            "type": "integer"
+          },
+          "per_page": {
+            "const": 25
+          },
+          "total": {
+            "type": "integer"
+          },
+          "last_page": {
+            "type": "integer"
+          },
+          "next_page_url": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "prev_page_url": {
+            "type": [
+              "string",
+              "null"
+            ]
+          }
+        },
+        "required": [
+          "data",
+          "current_page",
+          "per_page",
+          "total",
+          "last_page",
+          "next_page_url",
+          "prev_page_url"
+        ]
+      },
+      "NeedPage": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Need"
+            }
+          },
+          "current_page": {
+            "type": "integer"
+          },
+          "per_page": {
+            "const": 25
+          },
+          "total": {
+            "type": "integer"
+          },
+          "last_page": {
+            "type": "integer"
+          },
+          "next_page_url": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "prev_page_url": {
+            "type": [
+              "string",
+              "null"
+            ]
+          }
+        },
+        "required": [
+          "data",
+          "current_page",
+          "per_page",
+          "total",
+          "last_page",
+          "next_page_url",
+          "prev_page_url"
+        ]
+      },
+      "ContributionPage": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Contribution"
+            }
+          },
+          "current_page": {
+            "type": "integer"
+          },
+          "per_page": {
+            "const": 25
+          },
+          "total": {
+            "type": "integer"
+          },
+          "last_page": {
+            "type": "integer"
+          },
+          "next_page_url": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "prev_page_url": {
+            "type": [
+              "string",
+              "null"
+            ]
+          }
+        },
+        "required": [
+          "data",
+          "current_page",
+          "per_page",
+          "total",
+          "last_page",
+          "next_page_url",
+          "prev_page_url"
+        ]
+      }
+    }
+  }
+}

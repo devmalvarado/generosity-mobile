@@ -13,8 +13,9 @@ Welcome alignment and device-default language were also requested. The new
 planning scope supersedes that earlier exclusion; implementation is unchanged.
 The user then included a mobile-first web portal for center needs, extending
 the landing in the older PoC. Official verification and payment processing
-remain future work. The repository currently has no backend service or database
-schema; the external landing is a static demonstration, not a working portal.
+remain future work. As of 2026-10-31 the repository has a separate PHP/Laravel
+API and MySQL/MariaDB schema. The native and portal clients are not yet connected
+to it; historical prototype and interface checks do not certify integration.
 
 ### Current Implementation
 
@@ -294,10 +295,15 @@ identifier/version-aware record plus event history before lifecycle integration.
 
 Add the backend as a separate runnable service within this repository during
 implementation, with one database and a durable notification-event worker.
-Use a provider-backed identity adapter instead of implementing password storage.
-Framework, database product, hosting and provider selection must satisfy these
-contracts and be documented before their implementation tasks; no vendor is
-silently selected by this spec-writing request.
+The user selected PHP and the existing Hostinger database capability on
+2026-10-31. [The architecture decision](../../../docs/backend-php-mysql.md)
+selects Laravel 13/PHP 8.4, MySQL/MariaDB and the framework first-party user
+provider/password broker with Sanctum. This supersedes the earlier unspecified
+external identity adapter: framework hashing/recovery stays on the server, with
+verified-email bearer sessions and audited CLI staff provisioning. No custom
+cryptography, Firebase, OIDC or Keycloak integration is claimed. Hostinger web
+runtime, database, SMTP and deployment acceptance remain separate gates.
+The Kotlin directory-journal service remains on `codex/mockup-backend-kotlin`.
 
 The API schema will cover these contract families, using stable domain codes:
 
@@ -406,10 +412,10 @@ not claimed to be retractable. No provider-specific delivery guarantee is promis
 
 ## Implementation Selections
 
-These selections must be recorded during the corresponding implementation task
-without weakening the behavior contracts: backend framework/database/hosting,
-identity provider, browser session/deployment configuration
-and platform delivery configuration.
+PHP/Laravel, MySQL/MariaDB and the first-party identity provider are selected
+in the backend decision. The intended hosting is Hostinger Premium; production
+web runtime/database/SMTP acceptance, browser session integration and platform
+delivery configuration still require implementation evidence.
 The Android map provider is now selected as Google Maps; key configuration and
 real-provider acceptance are pending, with MapLibre retained as a future adapter.
 Production assets, legal URLs and catalog source/rights must be supplied before
