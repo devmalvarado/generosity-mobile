@@ -1,0 +1,59 @@
+name: Publish portal
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - portal/index.html
+      - portal/styles.css
+      - portal/portal.js
+      - portal/assets/**
+      - .github/workflows/publish-portal.yml
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Stage public portal files
+        run: |
+          set -eu
+          mkdir -p publish/assets
+          cp portal/index.html portal/styles.css portal/portal.js publish/
+          cp portal/assets/apple-touch-icon.png portal/assets/favicon.png portal/assets/logo.png publish/assets/
+          find publish -type f | sort > /tmp/staged.txt
+          cat /tmp/staged.txt
+          cat > /tmp/expected.txt << 'LIST'
+          publish/assets/apple-touch-icon.png
+          publish/assets/favicon.png
+          publish/assets/logo.png
+          publish/index.html
+          publish/portal.js
+          publish/styles.css
+          LIST
+          diff -u /tmp/expected.txt /tmp/staged.txt
+
+      - name: Upload over FTPS
+        uses: SamKirkland/FTP-Deploy-Action@v4.4.0
+        with:
+          server: ${{ secrets.PORTAL_FTP_SERVER }}
+          username: ${{ secrets.PORTAL_FTP_USERNAME }}
+          password: ${{ secrets.PORTAL_FTP_PASSWORD }}
+          protocol: ftps
+          port: 21
+          # The saved server is an IP. Its certificate is for *.hstgr.io, so name checks cannot pass.
+          security: loose
+          local-dir: ./publish/
+          # This FTP account is already rooted at the portal public_html.
+          server-dir: ./
+          dangerous-clean-slate: false
+          log-level: standard
+          exclude: |
+            **/.git*
+            **/.git*/**
+            **/node_modules/**
