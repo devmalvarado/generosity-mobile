@@ -49,3 +49,18 @@ Users SHALL be able to report a campaign or organizer privately. Only a scoped s
 #### Scenario: Organizer appeals a suspension
 - **WHEN** an organizer submits an appeal
 - **THEN** its review and outcome are recorded privately while the existing restrictions stay in force until an authorized decision
+
+### Requirement: Verified contact for group and event creation
+The backend SHALL require a currently verified private mobile number before group/event creation, in addition to earned organizer eligibility and action permissions. Phone verification SHALL NOT grant center roles or bypass points/level requirements. Removal of phone proof SHALL block subsequent creation. Clients SHALL preserve drafts and require explicit resubmission after verification.
+
+#### Scenario: Direct API creation without verified contact
+- **WHEN** an otherwise eligible account without current phone verification calls a group/event creation endpoint
+- **THEN** the backend rejects it with a stable phone-verification-required error, creates nothing, and the client preserves the draft without automatic resubmission
+
+#### Scenario: Verification does not grant organizer eligibility
+- **WHEN** a phone-verified account lacks the required prior help, points or permissions
+- **THEN** event/group creation remains denied under the existing organizer policy
+
+#### Scenario: Unrelated participation remains available
+- **WHEN** a person without verified mobile contact browses, enters an account, offers ordinary help or seeks beneficiary assistance
+- **THEN** this creation policy adds no phone requirement to those operations

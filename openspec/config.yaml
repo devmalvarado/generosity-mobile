@@ -71,9 +71,11 @@ context: |
     Identity is exclusive to Generosity web/Android/iOS, not institute-wide SSO.
     Facebook OAuth entry and private mobile-number verification for explicitly
     approved actions are planned, not implemented. Phone contact is progressive,
-    not required for sign-in/discovery or beneficiaries; gated actions and the
-    verification delivery provider remain undecided.
-    Hostinger Premium is the intended deployment target, not a completed deployment.
+    not required for sign-in/discovery or beneficiaries. Creating groups and events
+    requires verified mobile contact; the delivery provider remains undecided.
+    Hostinger publishes the API at api.generosity.global, including catalog/account
+    sync. SMTP, scheduled cleanup, provider credentials, and the live center
+    workspace are not a completed deployment.
     Kotlin service mockup is preserved on codex/mockup-backend-kotlin at 36eab89.
   - SwiftUI for the native iOS user interface.
   - Jetpack Compose / Kotlin Compose for the native Android user interface.

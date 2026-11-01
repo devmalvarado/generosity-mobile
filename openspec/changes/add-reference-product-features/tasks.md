@@ -56,6 +56,7 @@
 - [ ] 8.3 Add shared points/level/achievement/chart/streak projections; test threshold equality, timezone changes, offset boundaries, missed days and invalidated progress with deterministic clocks.
 - [ ] 8.4 Add Android Impact progress and View all achievements; UI-test locked/earned/corrected/offline states and an accessible chart summary without invented balances.
 - [ ] 8.5 Add equivalent iOS Impact progress and profile level; verify both views share one source, match Android outcomes and expose no leaderboard or redeemable-value claims.
+- [ ] 8.6 Record operator-attested external activity under a published rule; verify the engine applies that rule's amount, a typed balance is rejected, missing rule configuration keeps the action unavailable, and self-reported help without attestation still earns nothing.
 
 ## 9. Notification Inbox
 

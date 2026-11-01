@@ -75,3 +75,8 @@ real data or a claim that prerequisite backend features already work.
 - [ ] 8.1 Exercise earned eligibility -> community campaign -> independent center validation -> one award across backend, portal, Android and iOS; also verify a non-partner campaign stays unvalidated and the plus action remains unchanged.
 - [ ] 8.2 Exercise consented field capture -> optional referral -> approved aggregate -> candidate comparison -> withdrawal using synthetic households; verify rights enforcement, no duplicate demand and no private-data leakage end to end.
 - [ ] 8.3 Run Chromium/WebKit screenshots and overflow checks at 320/360/390/768/1280, real Safari/Chrome keyboard checks and native ES/EN enlarged-text flows; record evidence, run strict OpenSpec validation and retain unchecked tasks where gates or verification remain incomplete.
+
+## 9. Verified organizer contact
+
+- [ ] 9.1 Enforce foundation verified-phone proof for group/event creation, alongside earned eligibility; test direct API bypass, proof revocation, missing eligibility and preservation of unsent drafts on web/Android/iOS.
+- [ ] 9.2 Verify that phone requirements do not expand to ordinary donors, participants receiving help or beneficiaries; document the selected SMS provider and approved sending/cost limits before activation.

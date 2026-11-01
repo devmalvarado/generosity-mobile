@@ -19,7 +19,7 @@ need explicit contracts instead of remaining implicit backlog items.
 
 - `center-onboarding`: Organization applications, existing-center claims, reviewed memberships and ownership recovery.
 - `organization-verification`: Evidence review, named verification scope/issuer, expiry, revocation and appeals.
-- `platform-operations`: Scoped administration, support/fraud queues, audited interventions and release controls.
+- `platform-operations`: Scoped administration, support/fraud queues, audited interventions, defined usage statistics, test-award cleanup, and release controls. This is not the Kindness Center workspace and cannot type a point balance.
 - `authorized-data-connectors`: Licensed catalog/schedule integration, provenance, conflict handling and connector disablement.
 - `event-series-and-waitlists`: Bounded recurring occurrences, exceptions, fair waitlists and expiring seat offers.
 - `participant-communications`: Contextual messages/announcements, consented delivery, blocking/reporting and moderation.

@@ -12,6 +12,7 @@ separate channel and consent configuration.
 ## 2. Public Web Participation
 
 - [ ] 2.1 Add public center/need/campaign/occurrence/meal browser routes; verify direct entry, unknown/removed records, sanitized metadata and map-free low-bandwidth browsing.
+- [ ] 2.6 Open the landing help action into public discovery without an account; verify demonstration cards stay labeled, catalog failure does not present them as current needs, and the action does not submit or open `/kindness-center`.
 - [ ] 2.2 Add provider-backed browser entry with preserved intent and session/CSRF protection; verify cancelled login, embedded-browser fallback, expired session and no automatic submission.
 - [ ] 2.3 Implement browser goods/time/event/meal/personal-help forms against existing endpoints; verify concurrent native/web capacity, stale availability, lost-response retry and gated monetary actions.
 - [ ] 2.4 Add owned history/cancellation/inbox/preferences; verify account switching, back navigation, ES/EN browser defaults and no private cache leakage.

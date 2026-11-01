@@ -7,6 +7,16 @@ is unchecked. Artifact completion is not implementation completion. Original
 IDs are stable references, not the execution order; follow the dependency
 sequence in [spec-index.md](spec-index.md).
 
+
+2026-10-31 integration update: catalog/account snapshots, protected native
+cache/outbox, entered contribution forms, owned lifecycle actions, durable visits,
+local preferences, safe contact actions, welcome routing and an authenticated
+center workspace are implemented. The API sync increment is published (`1adf57a`);
+the center workspace is not on the live landing until its portal files reach
+`main`. See [verification and remaining acceptance](../../../docs/testing/backend-integration.md).
+Tasks stay unchecked unless every acceptance condition is evidenced. No change
+is ready to archive.
+
 ## 1. Project Foundation
 
 - [x] 1.1 Scaffold the Kotlin Multiplatform project structure for shared logic, iOS, and Android targets.
@@ -177,7 +187,9 @@ The Kotlin-specific evidence remains available on the preserved mockup branch.
 - [x] 13.3 Add backend personal-help recording/completion with self-reported provenance; test owner authorization and refusal to convert personal records into verified center contributions.
 - [ ] 13.4 Expose permitted lifecycle actions on Android and show pending/conflict outcomes; UI-test cancellation followed by server-confirmed history and updated impact.
 - [ ] 13.5 Expose the equivalent lifecycle/history behavior on iOS; UI-test center transitions arriving through sync without duplicate impact.
-- [ ] 13.6 Document and exercise center staff actions through authenticated API tooling independently of the browser UI; verify staff can confirm/fulfill only their assigned center without granting official verification.
+- [x] 13.6 Document and exercise center staff actions through authenticated API tooling independently of the browser UI; verify staff can confirm/fulfill only their assigned center without granting official verification.
+
+13.6 evidence: `ApiTest::test_scoped_staff_transitions_owner_isolation_and_terminal_state` denies the owner and another center, then lets assigned staff confirm and fulfill. `test_revoked_staff_cannot_replay_a_previously_accepted_operation` stops a replay after revocation and leaves verification `imported`. Browser workspace tests do not satisfy this task.
 
 ## 14. Welcome Experience
 
@@ -206,6 +218,7 @@ The Kotlin-specific evidence remains available on the preserved mockup branch.
 - [ ] 16.10 Add Spanish/English web resources and browser-local system/en/es settings; test ordered language fallback, persisted override, localized errors/dates, keyboard navigation, screen-reader labels and focus restoration.
 - [ ] 16.11 Add browser acceptance tests and screenshots at 320/360/390/768/1280 CSS pixels in Chromium and WebKit; assert no horizontal page overflow, no false success and functional menu/forms, then record 200-percent text and real Safari/Chrome virtual-keyboard checks.
 - [ ] 16.12 Test direct API cross-center denial, public draft/private-field exclusion, script-content rendering, CSRF/origin protection and revoked sessions; document unresolved failures as release blockers rather than treating browser-only validation as authorization.
+- [ ] 16.13 Serve the landing's center entry at `/kindness-center`; verify help entry does not open it, an unassigned account sees no publishing controls, and `kidness-center` is not an alias.
 
 ## 17. Native Visual Alignment
 
@@ -235,10 +248,16 @@ The Kotlin-specific evidence remains available on the preserved mockup branch.
 
 ## 19. Progressive Mobile Contact and Verification
 
-- [ ] 19.1 Approve the action/purpose/recipient matrix requiring verified mobile contact; document delivery provider/channel, countries, challenge lifetime/retry limits, send/cost caps and retention/removal policy while preserving no-phone beneficiary and assisted-participation routes.
+- [ ] 19.1 Complete the action/purpose/recipient matrix: group/event creation requires verified mobile contact (approved 2026-10-31); document delivery provider/channel, countries, challenge lifetime/retry limits, send/cost caps and retention/removal policy while preserving no-phone beneficiary and assisted-participation routes.
 - [ ] 19.2 Add private account mobile contact storage, E.164 normalization and verification metadata; test international/invalid input, account isolation, scoped disclosure, removal and exclusion from public payloads/logs/analytics.
 - [ ] 19.3 Implement account/number/purpose-bound one-use verification with the selected delivery provider; test invalid/expired/reused/superseded codes, resend and attempt limits, provider outage, concurrent verification and recent-reauthenticated replacement/removal without takeover or automatic account merging.
 - [ ] 19.4 Enforce the approved phone requirements in backend action authorization and expose verification state/errors to shared KMP contracts; test direct API bypass, stale client state, revoked proof and preservation of unrelated account operations.
 - [ ] 19.5 Add Android account settings and progressive phone prompts using shared server state; test Spanish/English labels, international input, accessibility, failed verification, cancellation, account switching and unsent-draft preservation without automatic resubmission.
 - [ ] 19.6 Add equivalent iOS settings and progressive prompts through the shared bridge; verify the same behavior and VoiceOver/keyboard access without a separate Swift-only verification authority.
 - [ ] 19.7 Add mobile-first web contact settings/prompts with session/CSRF protection; test missing/unverified/verified states, explicit sharing, safe draft preservation and cross-client state consistency, then record live delivery acceptance for supported countries before activation.
+
+## 20. Account lifecycle
+
+- [ ] 20.1 Specify deletion/anonymization and retention rules, then implement an authenticated account-deletion request with recent reauthentication; revoke all sessions, handoffs and notification devices, suspend local queues and test cached private-data removal on every client.
+- [ ] 20.2 Implement provider unlink and revocation callbacks with provider proof validation, explicit recent reauthentication, last-working-sign-in-method protection and audit events; test replay, cross-account requests and preservation of contribution provenance.
+- [ ] 20.3 Verify provider-specific data-deletion instructions, user-visible deletion progress and retained-record explanations before store review; do not mark deletion complete while an active identity/session remains.

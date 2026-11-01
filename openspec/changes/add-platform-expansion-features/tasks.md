@@ -34,6 +34,9 @@ a task complete from models, mocks or a successful build alone.
 - [ ] 4.3 Add scoped fraud and abuse cases with evidence provenance, status and appeal; verify a signal alone is not a fraud finding, restrictions stay proportional, and public content omits allegations, reporter identity and investigative records.
 - [ ] 4.4 Add versioned release controls, queue-failure handling and audited redacted exports; verify disabling new payments, publication or collection preserves reconciliation, refunds, cancellations, rights requests and history, and that secrets stay server-side.
 - [ ] 4.5 Add mobile-first operations queues from 320 CSS pixels in Spanish and English with keyboard and screen-reader access; verify each queue has an assigned handling policy and a missing staffing selection keeps its release gate closed.
+- [ ] 4.6 Keep the operations workspace off `/kindness-center` and the helper flow; verify a center assignment and an operator permission do not grant each other.
+- [ ] 4.7 Add defined usage aggregates with period, definition, and coverage; verify an unmeasured figure stays unavailable, no beneficiary or payment detail appears, and center staff cannot read platform-wide statistics.
+- [ ] 4.8 Add test-origin award void with reason and recompute; verify it rejects a target balance, leaves real validated evidence in place, and stays unavailable when test-origin marking is absent.
 
 ## 5. Authorized Data Connectors
 

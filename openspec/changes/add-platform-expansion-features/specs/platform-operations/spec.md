@@ -37,3 +37,28 @@ Operations SHALL offer scoped searchable queues, evidence-safe detail, localized
 #### Scenario: Case is reassigned on a phone
 - **WHEN** an authorized operator hands a case to another permitted operator
 - **THEN** assignment and access change visibly with an audit record, without exposing unrelated queue items
+
+### Requirement: Separate from center staff
+The operations workspace SHALL NOT be served at `/kindness-center` or inside the helper flow. A center staff assignment SHALL NOT grant operator permissions. An operator permission SHALL NOT grant center publishing.
+
+#### Scenario: Center staff opens operations
+- **WHEN** a person assigned only to a Kindness Center opens the operations workspace
+- **THEN** access is denied and no platform statistics or award controls appear
+
+### Requirement: Defined usage statistics
+An operator with statistics permission SHALL see only aggregates the server recorded, each labeled with its period, definition, and coverage. A figure that was not measured SHALL be unavailable rather than shown as zero. The view SHALL NOT invent sessions, distances, or success rates, and SHALL NOT include beneficiary, household, or payment details. Center staff and helpers SHALL NOT see platform-wide statistics.
+
+#### Scenario: A count was not instrumented
+- **WHEN** an operator opens usage statistics and a requested figure has no recorded source
+- **THEN** that figure is unavailable and the page does not display a fabricated zero or session count
+
+### Requirement: Test award cleanup
+An operator with test-cleanup permission SHALL void awards the server marks as test-origin, with a reason. The action SHALL recompute affected totals and retain the audit trail. It SHALL NOT accept a target balance, remove real center-validated evidence, or erase contribution history. If test-origin marking is not configured, the action SHALL stay unavailable.
+
+#### Scenario: Void points left by tests
+- **WHEN** an operator voids test-origin awards and states a reason
+- **THEN** those awards are recomputed out of the totals, the original records remain auditable, and real validated evidence is unchanged
+
+#### Scenario: Cleanup is not configured
+- **WHEN** test-origin marking is absent
+- **THEN** the cleanup action stays unavailable and no balance can be typed in its place

@@ -4,7 +4,7 @@ Recognize center-validated completed helping through auditable informational poi
 ## ADDED Requirements
 
 ### Requirement: Eligible Completed Activity
-Only authoritative center-validated completed time/goods help and validated event attendance SHALL qualify. Self-reported activities SHALL remain separately visible but earn no points, achievements or streak days. Offered/confirmed-only help, app visits, reviews, favorites and payments alone SHALL not qualify. One activity represented in several systems SHALL keep one eligibility identity.
+Center-validated completed time or goods help, validated event attendance, and operator-attested external activity under its published rule SHALL qualify. Self-reported activities SHALL earn no points unless that attestation exists. Offered or confirmed-only help, visits, reviews, favorites, and payments alone SHALL not qualify. One activity SHALL keep one eligibility identity.
 
 #### Scenario: Event attendance also appears in contribution history
 - **WHEN** validated attendance creates a completed contribution for the same activity
@@ -13,6 +13,17 @@ Only authoritative center-validated completed time/goods help and validated even
 #### Scenario: User completes personal help
 - **WHEN** a user records self-reported completion
 - **THEN** personal history/impact may display it with that provenance but points and qualifying streak dates do not change
+
+### Requirement: Operator-attested external activity
+An authorized operator SHALL record off-platform evidence with actor, subject, action, time, and reason. Points SHALL be granted only by the published rule for that action, including its amount and caps. The operator SHALL NOT type a balance. Absent rule configuration SHALL keep the action unavailable. The record SHALL remain in the award audit and SHALL NOT change official verification or payment state.
+
+#### Scenario: External action has a published rule
+- **WHEN** an operator attests an off-platform action covered by the current rule and states a reason
+- **THEN** the award engine applies that rule once and the person cannot edit the resulting balance
+
+#### Scenario: No rule is configured
+- **WHEN** an operator tries to grant points for an off-platform action and no published rule defines it
+- **THEN** the action stays unavailable and no points are added
 
 ### Requirement: Versioned Audited Awards
 The backend SHALL derive awards from eligible evidence under a published rule version, including thresholds, caps and effective dates. Each award SHALL retain source IDs and rule version and be replay-safe. Clients and center staff SHALL not set balances directly. An authorized operator's evidence invalidation SHALL append a reasoned correction and recompute affected totals without erasing the original audit trail.

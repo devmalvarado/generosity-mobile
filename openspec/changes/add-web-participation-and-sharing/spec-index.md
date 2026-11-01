@@ -2,6 +2,8 @@
 
 Planning date: 2026-10-26. Four new specs; all implementation tasks remain pending.
 
+**2026-10-31 consolidation:** The proposed helper-web change was folded into this spec and into [center-web-portal](../define-generosity-mobile-app-foundation/specs/center-web-portal/spec.md). Landing help without an account is a requirement here. Staff entry is `/kindness-center` there. This change remains the owner of campaigns, meals, invitations, assisted participation, installable offline mode, and outcome sharing. It is not a second citizen site.
+
 | Experience | Contract | Tasks |
 | --- | --- | --- |
 | Help without installing | [public-web-participation](specs/public-web-participation/spec.md): anonymous discovery, real browser helping/history, optional PWA and safe offline states. | 1, 2 |

@@ -177,3 +177,18 @@ Replacing or removing a verified number SHALL require recent reauthentication. R
 #### Scenario: Number already used elsewhere
 - **WHEN** a number is shared with or reassigned from another account
 - **THEN** proving possession grants no access to that account, its history or identities and reveals no account membership
+
+### Requirement: Verified contact for group and event creation
+The backend SHALL require a currently verified private mobile number before group/event creation, in addition to earned organizer eligibility and action permissions. Phone verification SHALL NOT grant center roles or bypass points/level requirements. Removal of phone proof SHALL block subsequent creation. Clients SHALL preserve drafts and require explicit resubmission after verification.
+
+#### Scenario: Direct API creation without verified contact
+- **WHEN** an otherwise eligible account without current phone verification calls a group/event creation endpoint
+- **THEN** the backend rejects it with a stable phone-verification-required error, creates nothing, and the client preserves the draft without automatic resubmission
+
+#### Scenario: Verification does not grant organizer eligibility
+- **WHEN** a phone-verified account lacks the required prior help, points or permissions
+- **THEN** event/group creation remains denied under the existing organizer policy
+
+#### Scenario: Unrelated participation remains available
+- **WHEN** a person without verified mobile contact browses, enters an account, offers ordinary help or seeks beneficiary assistance
+- **THEN** this creation policy adds no phone requirement to those operations

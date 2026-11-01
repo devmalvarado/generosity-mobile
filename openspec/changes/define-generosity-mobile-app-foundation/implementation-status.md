@@ -1,5 +1,41 @@
 # Foundation Implementation Audit
 
+## Current integration increment — 2026-10-31
+
+Local changes on `codex/backend-php-mysql` now connect both native roots to the
+PHP catalog/account snapshots. Release entry points no longer select the bundled
+catalog; debug-only fixtures keep deterministic UI regression coverage. Native
+adapters bind credentials and protected cache/outbox files to their API/account.
+Operations are saved before sending, retain their idempotency key after a lost
+response, and stop dispatching under another account. Public discovery refreshes
+independently of private-session expiry. The API portion was published with
+`1adf57a`. A production catalog read returned no centers. The center workspace
+is not on the live landing until its portal files reach `main`.
+
+Both apps now collect goods/time/personal-help inputs and show server history,
+owner cancellation and self-reported completion. The center workspace selects
+assigned centers, edits/publishes/closes needs and confirms/fulfills contributions.
+Actual time is explicitly recorded, never inferred from planned duration. Visits
+are durable locally for guests and queued to the owned API for accounts; neither
+route confers official center verification. Notification preferences are durable
+per account/device, while delivery remains unavailable. Welcome has guest/sign-in/
+create-account entry and safe phone/email/web contact actions are wired.
+
+Evidence and exact remaining acceptance gaps are in
+[backend integration verification](../../../docs/testing/backend-integration.md).
+Partial tasks remain unchecked: full delta sync/tombstones, profile/preferences
+server updates, all rejection/draft flows, live cross-device/CORS acceptance,
+GPS/manual origins, actual alerts/reminders, provider credentials, phone delivery,
+Facebook, account deletion and the full visual/accessibility matrix are still open.
+Welcome illustration/legal destinations are not release-complete. The phone rule
+for group/event creation is approved; SMS provider selection is pending.
+
+Do not archive this foundation or equate local tests with production acceptance.
+The catalog/account endpoints and two migrations are on the published API.
+Native distribution, the live center workspace, SMTP, and cron are not.
+
+## Earlier checkpoints (historical evidence)
+
 **2026-10-31 publication correction:** The account sign-in increment was merged
 to `main` as `2f71b73` and published. `https://api.generosity.global/api/v1/health`
 reported ready with payments disabled. `/.env` stayed forbidden. Google and Apple
@@ -14,8 +50,8 @@ Specs now cover missing/unverified Facebook email, explicit linking, progressive
 phone collection, possession verification and server-enforced action gates.
 Tasks 18.7–18.10 and 19.1–19.7 remain unchecked: no Facebook adapter, phone storage,
 verification delivery or phone-gated action is implemented by this update.
-The action matrix, delivery provider/countries/limits and retention policy still
-require decisions. Existing Google/Apple test evidence below does not cover them.
+Group/event creation now requires verified mobile contact. The delivery
+provider/countries/limits and retention policy still require decisions. Existing Google/Apple test evidence below does not cover them.
 
 **2026-10-31 Google/Apple identity increment:** The user selected identity only
 for Generosity web/Android/iOS, excluding other institute platforms. Google and
@@ -223,6 +259,6 @@ requirements, and run strict validation. Do not use `--no-validate` or
 to make the prototype look complete.
 
 The [visual reference](../../../docs/design-reference.md) is recorded
-separately. Its welcome screen is now requested; ratings, rewards, events
-and payments remain outside the expanded plan. Backend alert delivery is
+separately. Welcome belongs to this foundation; ratings, rewards, events
+and payments have their own active changes and remain unimplemented here. Backend alert delivery is
 planned, not evidence that real-time data or notifications already work.

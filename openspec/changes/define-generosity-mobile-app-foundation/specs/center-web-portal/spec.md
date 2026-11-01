@@ -14,6 +14,17 @@ The public landing SHALL remain accessible without an account and expose a cente
 - **WHEN** an unauthenticated visitor chooses to publish a need
 - **THEN** the site routes to real sign-in while preserving the intended destination, without granting publishing permission
 
+### Requirement: Staff workspace path
+The landing's center entry SHALL open `/kindness-center`. That path SHALL be the staff workspace, not public helping. Choosing the landing's help action SHALL NOT send the visitor there. A misspelled `kidness-center` path SHALL NOT be published as an alias.
+
+#### Scenario: Visitor opens the center entry
+- **WHEN** a visitor chooses the landing's center entry
+- **THEN** the browser opens `/kindness-center` and that visit is not recorded as a help offer
+
+#### Scenario: Helper opens the staff path
+- **WHEN** a signed-in person without a center assignment opens `/kindness-center`
+- **THEN** the page explains that access is not granted and shows no publishing controls
+
 ### Requirement: Center-Scoped Workspace
 Only authenticated staff with an active backend-issued center assignment SHALL access that center's private workspace. The workspace SHALL show the active center and allow switching only among assigned centers. Missing or revoked access SHALL block reads and writes. Sign-out SHALL clear private views and account-scoped browser state; account registration SHALL NOT grant a center role.
 

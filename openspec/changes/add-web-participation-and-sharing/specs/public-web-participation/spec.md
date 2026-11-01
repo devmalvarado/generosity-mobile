@@ -10,6 +10,17 @@ The web SHALL expose current public centers, needs, campaigns, events and saniti
 - **WHEN** a guest opens a current opportunity URL on a phone
 - **THEN** details and available helping actions appear without an install wall or unrelated landing-page detour
 
+### Requirement: Landing help starts without an account
+The published landing's help action SHALL open this public discovery and the start of a help draft without registration, installation, or the staff workspace. Demonstration cards SHALL stay labeled and SHALL NOT be offered as the live catalog. Starting SHALL NOT submit an offer or request payment details.
+
+#### Scenario: Visitor chooses help from the landing
+- **WHEN** a visitor uses the landing's help action without an account
+- **THEN** public discovery opens and no sign-in wall, install prompt, or center publishing control appears
+
+#### Scenario: Catalog cannot be loaded
+- **WHEN** the shared catalog is unavailable after the visitor chooses help
+- **THEN** the page says the catalog is unavailable, keeps entered search text, and does not present demonstration cards as current needs
+
 ### Requirement: Authenticated Browser Helping
 Users SHALL sign in through the configured identity provider only when protected participation requires it, retaining the chosen opportunity and non-sensitive form input. Browser users SHALL submit time/goods offers, event enrollment, meal commitments and personal help using the same rules as native clients. Authentication SHALL not submit automatically; monetary actions SHALL retain provider release gates.
 

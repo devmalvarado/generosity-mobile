@@ -10,7 +10,7 @@ requests specifications for those missing functions, separately from styling.
 - Add an anonymous cross-center needs feed with All/Urgent/Nearby modes.
 - Add saved centers, safe public sharing links, actual center photos and opening hours.
 - Add eligible donor reviews with moderation, public rating/count and user reporting.
-- Add informational points, levels, achievements, a meaningful points chart and day-based streaks based only on center-validated completed help.
+- Add informational points, levels, achievements, a meaningful points chart and day-based streaks from center-validated completed help, plus operator-attested off-platform evidence under a published rule. Operators cannot type a balance.
 - Add a bell destination with an owned/readable notification inbox, without treating push permission as required to read it.
 - Add center-managed volunteering events with enrollment, capacity, cancellation and validated attendance.
 - Specify provider-hosted monetary donations and truthful currency totals, gated on provider selection and approved recipient setup; no native card/bank collection.
