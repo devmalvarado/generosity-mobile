@@ -1,5 +1,73 @@
 # Foundation Implementation Audit
 
+## Adult policy and scoped access closure — 2026-11-01
+
+This entry supersedes the earlier contact/legal-draft status below. The owner
+approved adult-only accounts, current ES/EN terms/privacy and temporary use of
+notificaciones@generosity.global, handled by institute staff. Separate mailboxes
+remain deferred. Current documents, registration receipts and an operator-assisted
+permanent access block are implemented; automated checks are recorded in
+[account-policy evidence](../../../docs/testing/account-policy.md). Publication
+is tracked separately in 20.11. No full deletion/store-review task is complete.
+Existing accounts have null receipts rather than fabricated consent.
+
+
+## Institute identity and contact channels — 2026-11-01
+
+The owner supplied the institute's fiscal identity/address and designated institute
+personnel to handle `soporte@generosity.global`, `legales@generosity.global` and
+`privacidad@generosity.global`. These details replace the corresponding legal-draft
+placeholders. Mailbox creation and receipt checks remain pending: after preparing
+the support creation form, the owner chose documents-only work. No new mailbox,
+staff access or legal publication was completed. Task 20.8 remains open for the
+privacy notice, policy decisions, review, working contacts and implementation.
+
+## Account-email fixes and portal release preparation — 2026-11-01
+
+Foundation task 7.17 is implemented and validated locally: Spanish/English queued
+mail, verification/reset HTML outcomes, visible form errors, safe retries and
+preserved iOS/Android PKCE context. API JSON responses and revocation remain
+covered. Malformed email arrays now produce validation errors, not HTTP 500.
+The release preparation includes the pending center-application migration, auth
+assets and route/view cache refresh, plus a portal prerequisite check before any
+static upload. No deployment, push or production migration occurred. See
+[release instructions](../../../docs/releases/account-portal-2026-11-01.md).
+Task 7.18 retains the production-mail/physical-device acceptance gate. The initial
+catalog, legal publication details and intake reviewer remain separate inputs.
+The institute corrected its bank to BBVA; payment enablement remains disabled.
+
+## Account entry visibility and Android parity — 2026-11-01
+
+Both native guest Profiles now expose **Create account** alongside **Sign in**.
+The shared hosted entry shows the selected email form directly and uses local
+Google/Apple logo assets. The owner approved the hosted UI deployment, which is
+live; neither social provider is configured. Android's follow-up passed five JVM
+tests and four API 36 instrumented tests, including both languages at 200% text,
+busy/registered states and the actual Profile-to-browser registration/login
+intent with Android client, locale and PKCE context. Public HTTP checks preserve
+that context when switching modes. See [test scope and reproduction](../../../docs/social-sign-in.md#account-entry-visibility--2026-11-01).
+Those earlier checks did not complete account-email UX. The later local fixes
+above close 7.17; tasks 7.9, 7.18 and 18.5 retain live/native acceptance.
+
+## Hostinger SMTP activation — 2026-11-01
+
+The user selected the included Hostinger mailbox service. Production now uses
+`notificaciones@generosity.global`, implicit TLS on port 465 and a private mailbox
+app password. Both the bounded queue worker and Laravel scheduler run through
+hPanel every minute. The scheduled worker processed an approved Gmail test email,
+and the recipient confirmed Inbox delivery on 2026-11-01;
+no queued or failed jobs remained. DNS authentication and private configuration
+checks passed. [Deployment evidence and recovery instructions](../../../docs/hostinger-backend.md#smtp-activation-evidence--2026-11-01)
+record the exact scope. Task 18.6 is met by that deployment: HTTPS, host-only
+sessions, exact portal CORS, the real database, SMTP transport and scheduled
+auth cleanup, with the landing workflow still separate. A subsequent
+[live account-email review](../../../docs/testing/account-email-journeys.md)
+verified registration, resend, signed links, password reset and session revocation.
+Those email localization, completion-screen and validation gaps were subsequently
+corrected locally in task 7.17; production verification remains in 7.18. Provider quotas and cross-client acceptance remain open.
+The expanded backend suite passed 38 tests / 425 assertions. No social/SMS provider
+was enabled, and this review did not deploy application code.
+
 ## Current integration increment — 2026-10-31
 
 Local changes on `codex/backend-php-mysql` now connect both native roots to the
@@ -32,17 +100,19 @@ for group/event creation is approved; SMS provider selection is pending.
 
 Do not archive this foundation or equate local tests with production acceptance.
 The catalog/account endpoints and two migrations are on the published API.
-Native distribution, the live center workspace, SMTP, and cron are not.
+Native distribution and the live center workspace are not. SMTP and cron were
+activated afterward as recorded above.
 
 ## Earlier checkpoints (historical evidence)
 
 **2026-10-31 publication correction:** The account sign-in increment was merged
 to `main` as `2f71b73` and published. `https://api.generosity.global/api/v1/health`
 reported ready with payments disabled. `/.env` stayed forbidden. Google and Apple
-buttons remain disabled because no provider credentials are configured. Mail uses
-the log driver, and auth-cleanup cron is not scheduled. Tasks 7.8–7.10, 16.4 and
-18.5–18.6 stay open: documentation and hosted entry are not device acceptance,
-live provider approval, SMTP, or scheduled cleanup.
+buttons remain disabled because no provider credentials are configured. At this
+checkpoint mail still used the log driver and auth-cleanup cron was not
+scheduled. That mail and cron status was superseded on 2026-11-01. Tasks
+7.8–7.10, 16.4 and 18.5 stay open: documentation and hosted entry are not
+device acceptance or live provider approval.
 
 **2026-10-31 Facebook/mobile-contact planning update:** The user added Facebook
 entry and private mobile numbers for selected features to the requirements.

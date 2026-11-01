@@ -195,7 +195,7 @@ notices and cancel stale reminder schedules on device reconciliation.
 
 Provider selection remains open. Implement a single provider adapter behind a
 contract, with provider-hosted checkout and controlled eligible-recipient IDs.
-Do not implement a wallet, hold funds, collect card data or accept a client
+Do not implement a consumer wallet, app-held escrow, card collection or a client
 recipient bank account. Provider onboarding/recipient readiness is distinct
 from the app's official-verification label and requires a controlled operator
 process. Identity, supported regions/currencies, known fees and the recipient
@@ -223,6 +223,25 @@ sandbox transactions in implementation tests. A kill switch stops new intents
 but leaves reconciliation and historical access running. Refund execution can
 initially use authorized provider operations; Generosity must reconcile results
 and offer a support route without claiming every request will be approved.
+
+The 2026-11-01 user decision changes the planned money route: the institute
+receives contributions in its existing Mexican BBVA account and later
+distributes them to centers. Separate the legal collector, payment-provider
+settlement and intended center; no paid status proves onward delivery. Use a
+private allocation/distribution ledger and controlled operators, initially with
+reconciled bank evidence rather than an unrequested automated transfer service.
+Provider underwriting must explicitly accept this model, and legal/accounting
+review must resolve organizational powers, agreements, allocation restrictions,
+fees, failed campaigns, refunds, reporting and minimum evidence retention.
+
+Current SAT donee authorization is absent or pending. Do not advertise deductible
+donations or borrow a recipient center's fiscal status. Eligibility for store
+fundraising is a separate gate per channel and territory; iOS external collection
+does not automatically authorize an Android link. Commercial advertising/listing
+payments remain a separate model. Keep payment enablement off pending those
+decisions. See [legal draft and sources](../../../docs/legal/store-and-donation-decisions.md)
+and tasks 10.9–10.11. Account deletion must preserve a narrowly verified support
+route and necessary financial evidence without restoring the former identity.
 
 Security reference: server-owned amounts and verification are supported by
 [OWASP payment integration guidance](https://cheatsheetseries.owasp.org/cheatsheets/Third_Party_Payment_Gateway_Integration_Cheat_Sheet.html).

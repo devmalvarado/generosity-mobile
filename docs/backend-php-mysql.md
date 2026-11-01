@@ -1,6 +1,6 @@
 # Decision: PHP/MySQL authoritative backend
 
-Date: 2026-10-31. Status: selected and published at `https://api.generosity.global`, including the catalog/account sync increment (`1adf57a`). The portal center workspace is a separate landing change and is not live until published from `main`. SMTP delivery, payment processing, and Google/Apple credentials remain unconfigured. Cron is not scheduled.
+Updated: 2026-11-01. Status: selected and published at `https://api.generosity.global`, including the catalog/account sync increment (`1adf57a`). The portal center workspace is a separate landing change and is not live until published from `main`. Hostinger SMTP and the queue/scheduler cron jobs are active; a queued production test email was processed automatically. See [activation evidence and remaining email acceptance](hostinger-backend.md#smtp-activation-evidence--2026-11-01). Payment processing and Google/Apple credentials remain unconfigured.
 
 ## Decision and preservation
 
@@ -18,7 +18,7 @@ Native clients use seven-day bearer tokens in Keychain/Keystore; browser clients
 
 ## Hosting fit and limits
 
-The dedicated API site now serves PHP 8.4 and a local database. Email delivery is not enabled: production mail uses the log driver. Do not change the account-wide PHP selector without checking the other hosted sites.
+The dedicated API site now serves PHP 8.4 and a local database. Production mail uses Hostinger SMTP, not the log driver. The queue and scheduler cron jobs are active. [Live registration, resend and password-reset checks](testing/account-email-journeys.md) passed their backend/security cases; email localization, completion screens and visible reset errors remain open. Do not change the account-wide PHP selector without checking the other hosted sites.
 
 Use ordinary PHP HTTP requests plus a database queue drained by short cron invocations. No JVM, Docker daemon, resident PHP worker, Node service, Redis server or new paid plan is required for this initial design. The development server is not a production web server. Notifications to devices, scheduled domain reminders and large imports/analytics remain future work; shared-hosting capacity must be measured before scale claims.
 

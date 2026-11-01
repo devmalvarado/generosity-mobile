@@ -54,7 +54,7 @@ fun GenerosityApp(
     onLanguageSelected: (SupportedLocale?) -> Unit = appState::setLocale,
     savingLanguage: Boolean = false,
     languageSaveFailed: Boolean = false,
-    onSignIn: () -> Unit = {}, onSignOut: () -> Unit = {},
+    onSignIn: () -> Unit = {}, onSignOut: () -> Unit = {}, onCreate: () -> Unit = {},
     authBusy: Boolean = false, authFailed: Boolean = false
 ) {
     val state by appState.state.collectAsState()
@@ -118,7 +118,7 @@ fun GenerosityApp(
                     when (tab) {
                         AppTab.MAP -> DiscoveryScreen(state, appState, true, mapRenderer, mapState)
                         AppTab.LIST -> DiscoveryScreen(state, appState, false, mapRenderer, mapState)
-                        AppTab.PROFILE -> ProfileScreen(state, appState, onSignIn, onSignOut, authBusy, authFailed)
+                        AppTab.PROFILE -> ProfileScreen(state, appState, onSignIn, onSignOut, onCreate, authBusy, authFailed)
                         AppTab.SETTINGS -> SettingsScreen(state, appState, onLanguageSelected, savingLanguage, languageSaveFailed)
                     }
                 }
@@ -311,7 +311,7 @@ private fun NeedRow(locale: SupportedLocale, need: CenterNeed, remoteAccount: Bo
 }
 
 @Composable
-private fun ProfileScreen(state: GenerosityUiState, appState: GenerosityAppState, onSignIn: () -> Unit, onSignOut: () -> Unit, authBusy: Boolean, authFailed: Boolean) {
+private fun ProfileScreen(state: GenerosityUiState, appState: GenerosityAppState, onSignIn: () -> Unit, onSignOut: () -> Unit, onCreate: () -> Unit, authBusy: Boolean, authFailed: Boolean) {
     val locale = state.locale
     var personalMethod by remember { mutableStateOf<HelpMethod?>(null) }
     personalMethod?.let { OfferDialog(state, appState, null, it) { personalMethod = null } }
@@ -325,6 +325,11 @@ private fun ProfileScreen(state: GenerosityUiState, appState: GenerosityAppState
                         fontWeight = FontWeight.SemiBold)
                     TextButton(onClick = if (state.profile.isRegistered) onSignOut else onSignIn, enabled = !authBusy) {
                         Text(localizedString(if (state.profile.isRegistered) R.string.auth_sign_out else R.string.auth_sign_in, locale))
+                    }
+                    if (!state.profile.isRegistered) {
+                        OutlinedButton(onClick = onCreate, enabled = !authBusy, modifier = Modifier.heightIn(min = 48.dp)) {
+                            Text(localizedString(R.string.welcome_create, locale))
+                        }
                     }
                     if (authBusy) CircularProgressIndicator(Modifier.size(24.dp))
                     if (authFailed) Text(localizedString(R.string.auth_failed, locale), color = MaterialTheme.colorScheme.error)

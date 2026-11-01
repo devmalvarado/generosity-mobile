@@ -1,6 +1,7 @@
 # Tasks
 
-All tasks are pending. This change depends on the foundation, reference-product
+All tasks remain pending except the explicitly checked initial intake below.
+This change depends on the foundation, reference-product
 and community changes; those services are not verified. Do not select a payment
 seller, fiscal country/provider, geography source, privacy threshold, credential
 template, retention period or moderation staffing value in these tasks. A missing
@@ -19,6 +20,7 @@ a task complete from models, mocks or a successful build alone.
 - [ ] 2.3 Add expiring account-bound staff invitations and audited grant, revoke, transfer and recovery; verify email or domain possession cannot seize a center, revocation stops later protected writes and clears stale staff views, and document the role matrix.
 - [ ] 2.4 Add duplicate and dispute resolution that preserves public center IDs, contributions and memberships; verify merges keep redirects and provenance, appeals stay private, and a report alone does not publish an allegation.
 - [ ] 2.5 Add the mobile-first applicant tracker in Spanish and English; verify pending, changes-requested, approved, rejected and withdrawn states, private bounded evidence, and that withdrawal keeps the audit records required by the still-unselected retention policy.
+- [x] 2.6 Prepare the initial landing intake for one organization location per application, with verified email, required identity/contact declarations, optional additional details, private pending receipts, own-history pagination and safe retries. Validate server authorization, CSRF, duplicate prevention and browser account isolation. Implemented and tested locally on 2026-11-01; not deployed. See [intake verification](../../../docs/testing/center-applications.md). Tasks 2.1 and 2.5 remain partial: claims, evidence uploads, review decisions, withdrawal and retention handling are not implemented.
 
 ## 3. Organization Verification
 

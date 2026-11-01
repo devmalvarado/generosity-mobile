@@ -37,3 +37,14 @@ Invalidated evidence or erroneous issuance SHALL update credential status with a
 #### Scenario: Source attendance is invalidated
 - **WHEN** authorized correction removes the credential's qualifying evidence
 - **THEN** the credential becomes invalid or is replaced under policy, and its verification page no longer confirms the obsolete claim
+
+### Requirement: Scoped Organizational Recognition
+Organization/team certificates SHALL identify the actual recipient, campaign or activity period, criteria version and validated collective evidence. Member credentials SHALL require that person's eligible participation and sharing choice. Neither organization membership nor a paid listing/sponsorship SHALL issue an earned helping certificate. Revised competition results SHALL update affected recognition using the same correction lifecycle.
+
+#### Scenario: Company requests certificates for its whole workforce
+- **WHEN** only some workers have validated qualifying participation
+- **THEN** the organization may receive its evidenced collective credential, while personal credentials are issued only for qualifying individuals and no employer receives their private history
+
+#### Scenario: Share a credential earned during a private competition
+- **WHEN** its owner publishes permitted certificate fields
+- **THEN** the public view omits individual campaign ranking positions, other participants and private standings, while retaining the credential's allowed evidence scope

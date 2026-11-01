@@ -40,7 +40,7 @@ suffix = uuid.uuid4().hex[:12]
 email = 'smoke-' + suffix + '@example.test'
 password = secrets.token_urlsafe(24) + 'Aa1'
 assert request('/api/v1/health')['status'] == 'ready'
-request('/api/v1/auth/register', {'name': 'Local smoke check', 'email': email, 'password': password})
+request('/api/v1/auth/register', {'adult_confirmed': True, 'terms_accepted': True, 'privacy_acknowledged': True, 'policy_version': '2026-11-01', 'name': 'Local smoke check', 'email': email, 'password': password})
 compose('exec', '-T', 'app', 'php', 'artisan', 'queue:work', '--stop-when-empty', '--max-time=30', '--tries=3')
 messages = request('/api/v1/messages', base=MAIL)['messages']
 message = next(item for item in messages if any(recipient['Address'] == email for recipient in item['To']))

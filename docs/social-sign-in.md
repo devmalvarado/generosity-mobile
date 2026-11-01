@@ -42,6 +42,65 @@ The landing opens account entry in another tab so its unsent demo form stays int
 
 ## Configuration before activation
 
+### Account entry visibility — 2026-11-01
+
+The iOS and Android guest Profile now offer both **Sign in** and **Create account**.
+Welcome already offered both. Registration opens the existing hosted entry with
+`screen=register`; the hosted page now places both account-mode links above the
+provider buttons and shows the selected email form directly. Switching modes
+preserves the validated client, locale, state and PKCE challenge.
+
+Provider buttons use the official Google mark and Apple logo, a white Google
+button and black Apple button, with visible localized text and disabled states
+when credentials are missing. Images and the Google Sans Latin font are hosted
+locally; CSP permits only same-origin images/fonts, retaining the existing
+script, form and framing restrictions. Asset sources/license are recorded in
+[`backend/public/auth-assets/README.md`](../backend/public/auth-assets/README.md).
+
+Local verification: 39 backend tests / 452 assertions; two iOS simulator UI tests
+cover welcome in both languages and the guest Profile actions. Browser checks
+cover Chromium/WebKit at 320/390 CSS pixels, English/Spanish, 200% text, loaded
+logos/font and preserved PKCE context. Captures:
+[iOS Profile](testing/screenshots/account-entry/ios-profile-es.png),
+[hosted sign-in](testing/screenshots/account-entry/hosted-sign-in-es.png),
+[hosted registration](testing/screenshots/account-entry/hosted-register-es.png).
+
+The updated iOS build is installed on the iPhone 16 Pro simulator. With explicit
+owner approval, the hosted view, CSP middleware and five asset/license files were
+published to `api.generosity.global` on 2026-11-01. Public checks passed for
+Spanish/English registration, asset hashes, CSP and HTTP 200 / `ready`. Opening
+**Create account** from iOS also displays the published form and provider logos:
+[live iOS registration](testing/screenshots/account-entry/ios-register-live-es.png).
+The private rollback copy is documented in [the hosting runbook](hostinger-backend.md#account-entry-ui-deployment--2026-11-01).
+This does not activate Google/Apple credentials or resolve the separate account-email
+completion/localization/validation findings in foundation task 7.17.
+
+Android parity verification on 2026-11-01 passed five JVM unit tests and four
+instrumented tests on `Generosity_API_36` (Android 16). Welcome/Profile actions
+remain reachable in English/Spanish at 200% text; busy actions are disabled and
+registration is hidden after sign-in. The actual Activity → AccountSession flow
+is checked by intercepting the browser intent: registration selects
+`screen=register`, sign-in omits it, both preserve Android client/locale/state and
+PKCE challenge, and neither exposes the verifier. Public HTTP checks for both
+languages confirm the Android-context registration form, provider logo references
+and context-preserving mode links. The published hosted UI is shared, so this
+Android change requires a rebuilt APK, not another backend deployment.
+The rebuilt APK is installed and opens on the emulator. After the suite, Android
+System UI stalled; a cold start with `-no-snapshot -gpu software` restored normal
+startup without wiping app data.
+
+Reproduce the focused Android UI checks with the README JDK/SDK environment:
+
+```sh
+./gradlew :androidApp:testDebugUnitTest :androidApp:connectedDebugAndroidTest \
+  -Pandroid.testInstrumentationRunnerArguments.class='org.generosity.app.AccountEntryTest,org.generosity.app.WelcomeScreenTest,org.generosity.app.GenerosityUiTest#profileShowsAnonymousEmptyState,org.generosity.app.GenerosityUiTest#profileOpensTheSelectedHostedAccountMode' --offline
+```
+
+No new accounts or provider logins were submitted. A physical-device browser and
+real Google/Apple authorization remain separate acceptance checks.
+
+### Provider configuration
+
 No Google or Apple credentials were available during implementation. Do not put secrets in the repository, app resources, portal JavaScript or chat.
 
 1. The API is deployed at `https://api.generosity.global`, with only the public front controller exposed. The catalog/account sync routes and their migrations are included. Adding Google/Apple credentials still needs only the private `.env` and a configuration refresh, not another code deploy. The portal center workspace is not on the live landing until its files are published from `main`. Add provider values only to the existing private `.env`, then refresh cached configuration. Provider sign-in refuses plain HTTP. Local fixture tests do not require provider credentials.

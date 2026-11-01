@@ -1332,6 +1332,121 @@
           }
         }
       }
+    },
+    "/center-applications": {
+      "post": {
+        "summary": "Submit one private organization location for review",
+        "operationId": "submitCenterApplication",
+        "responses": {
+          "201": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CenterApplicationReceipt"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Stable error codes; validation errors include field keys, conflicts may include current state. HTTP 401/403/404/409/413/422/429/500.",
+            "headers": {
+              "Retry-After": {
+                "schema": {
+                  "type": "string"
+                },
+                "description": "Present when rate limited"
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "Existing identical application for this account. An identical operation-key replay returns its original status.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CenterApplicationReceipt"
+                }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "Idempotency-Key",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CenterApplicationInput"
+              }
+            }
+          }
+        },
+        "description": "Requires a verified account and Idempotency-Key; browser sessions also require CSRF. Limited to five submission attempts per account per minute. Exact same-account applications are deduplicated even with a new key. Does not modify the public catalog, grant membership or verify the organization."
+      }
+    },
+    "/me/center-applications": {
+      "get": {
+        "summary": "List the verified account’s own application receipts",
+        "operationId": "listCenterApplications",
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CenterApplicationPage"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Stable error codes; validation errors include field keys, conflicts may include current state. HTTP 401/403/404/409/413/422/429/500.",
+            "headers": {
+              "Retry-After": {
+                "schema": {
+                  "type": "string"
+                },
+                "description": "Present when rate limited"
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "page",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "default": 1
+            }
+          }
+        ]
+      }
     }
   },
   "components": {
@@ -2148,12 +2263,40 @@
             "minLength": 12,
             "maxLength": 72,
             "description": "At least one uppercase letter, lowercase letter and number; at most 72 UTF-8 bytes for bcrypt."
+          },
+          "adult_confirmed": {
+            "type": "boolean",
+            "enum": [
+              true
+            ]
+          },
+          "terms_accepted": {
+            "type": "boolean",
+            "enum": [
+              true
+            ]
+          },
+          "privacy_acknowledged": {
+            "type": "boolean",
+            "enum": [
+              true
+            ]
+          },
+          "policy_version": {
+            "type": "string",
+            "enum": [
+              "2026-11-01"
+            ]
           }
         },
         "required": [
           "name",
           "email",
-          "password"
+          "password",
+          "adult_confirmed",
+          "terms_accepted",
+          "privacy_acknowledged",
+          "policy_version"
         ]
       },
       "Email": {
@@ -2819,6 +2962,173 @@
         "required": [
           "centers"
         ]
+      },
+      "CenterApplicationInput": {
+        "type": "object",
+        "required": [
+          "organization_name",
+          "site_name",
+          "activities",
+          "country",
+          "city",
+          "contact_name",
+          "contact_role",
+          "representation_confirmed",
+          "contact_consent"
+        ],
+        "properties": {
+          "organization_name": {
+            "type": "string",
+            "maxLength": 200
+          },
+          "legal_name": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "maxLength": 200
+          },
+          "site_name": {
+            "type": "string",
+            "maxLength": 200
+          },
+          "activities": {
+            "type": "string",
+            "maxLength": 2000
+          },
+          "country": {
+            "type": "string",
+            "maxLength": 100
+          },
+          "region": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "maxLength": 100
+          },
+          "city": {
+            "type": "string",
+            "maxLength": 100
+          },
+          "postal_code": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "maxLength": 20
+          },
+          "address": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "maxLength": 500
+          },
+          "contact_name": {
+            "type": "string",
+            "maxLength": 160
+          },
+          "contact_role": {
+            "type": "string",
+            "maxLength": 160
+          },
+          "phone": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "maxLength": 40,
+            "pattern": "^\\+?[0-9 ()\\-.]{6,40}$"
+          },
+          "website": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "maxLength": 2048,
+            "description": "Optional HTTP(S) URL; never fetched by the intake endpoint."
+          },
+          "representation_confirmed": {
+            "type": "boolean",
+            "const": true
+          },
+          "contact_consent": {
+            "type": "boolean",
+            "const": true
+          }
+        },
+        "description": "Private application for one location. The verified account supplies the contact email. user_id, contact_email, status, verified and center_id cannot be supplied. No publication or staff rights are granted."
+      },
+      "CenterApplication": {
+        "type": "object",
+        "required": [
+          "id",
+          "organization_name",
+          "site_name",
+          "status",
+          "submitted_at"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "organization_name": {
+            "type": "string"
+          },
+          "site_name": {
+            "type": "string"
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "pending"
+            ]
+          },
+          "submitted_at": {
+            "type": "string",
+            "description": "UTC submission timestamp."
+          }
+        }
+      },
+      "CenterApplicationReceipt": {
+        "type": "object",
+        "required": [
+          "application"
+        ],
+        "properties": {
+          "application": {
+            "$ref": "#/components/schemas/CenterApplication"
+          }
+        }
+      },
+      "CenterApplicationPage": {
+        "type": "object",
+        "required": [
+          "data",
+          "current_page",
+          "last_page",
+          "per_page"
+        ],
+        "properties": {
+          "data": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/CenterApplication"
+            }
+          },
+          "current_page": {
+            "type": "integer"
+          },
+          "last_page": {
+            "type": "integer"
+          },
+          "per_page": {
+            "type": "integer",
+            "const": 10
+          }
+        }
       }
     }
   }

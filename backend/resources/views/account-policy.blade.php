@@ -1,0 +1,4 @@
+<input type="hidden" name="policy_version" value="{{ \App\Services\AccountPolicy::VERSION }}">
+<label class="consent"><input type="checkbox" name="adult_confirmed" value="1" required><span>{{ __('I confirm that I am at least 18 and have reached the age of majority where I live.') }}</span></label>
+<label class="consent"><input type="checkbox" name="terms_accepted" value="1" required><span>{{ __('I accept the') }} <a href="{{ url('/legal/terms').'?locale='.$context['locale'] }}" target="_blank" rel="noopener">{{ __('Terms and conditions') }}</a>.</span></label>
+<label class="consent"><input type="checkbox" name="privacy_acknowledged" value="1" required><span>{{ __('I have read the') }} <a href="{{ url('/legal/privacy').'?locale='.$context['locale'] }}" target="_blank" rel="noopener">{{ __('Privacy notice') }}</a>.</span></label>

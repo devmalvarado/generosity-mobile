@@ -10,6 +10,10 @@ Tax-document requests/issuance SHALL require an approved country/jurisdiction po
 - **WHEN** a donor requests a tax document for an unsupported issuer/jurisdiction
 - **THEN** issuance is unavailable and any payment receipt is not relabeled as tax-deductible evidence
 
+#### Scenario: Institute collects before transferring to an authorized center
+- **WHEN** the institute lacks verified applicable SAT authorization, as in the absent/pending state reported on 2026-11-01, and later distributes collected money to an authorized center
+- **THEN** the original donor payment to the institute is not automatically treated as deductible, no deductible-donation receipt is issued by Generosity for it, and any future eligibility requires separate transaction-specific issuer review rather than retroactive relabeling
+
 ### Requirement: Private Necessary Fiscal Data
 Only fields required by the selected reviewed policy SHALL be requested with purpose, recipients and retention disclosed. Donors SHALL review corrections before submission; tax identifiers and documents SHALL remain private and excluded from public profiles, analytics and notification previews. Issuer/provider secrets and signing keys SHALL never be exposed to clients.
 

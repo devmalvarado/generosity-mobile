@@ -1,13 +1,21 @@
 <?php
 
-use App\Http\Controllers\AuthController;
 use App\Http\Controllers\BrowserAuthController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', fn () => ['service' => 'Generosity API', 'version' => 1]);
-Route::get('/reset-password/{token}', fn (string $token) => response()->view('reset-password', ['token' => $token, 'email' => request('email')])
-    ->header('Cache-Control', 'no-store')->header('Referrer-Policy', 'no-referrer'))->name('password.reset');
-Route::post('/reset-password', [AuthController::class, 'reset'])->middleware('throttle:accounts');
+Route::get('/legal/{document}', function (\Illuminate\Http\Request $request, string $document) {
+    $locale = $request->query('locale', 'es');
+    abort_unless(in_array($locale, ['es', 'en'], true), 404);
+    app()->setLocale($locale);
+    $markdown = file_get_contents(resource_path('legal/'.$document.'.'.$locale.'.md'));
+    $content = \Illuminate\Support\Str::markdown($markdown, ['html_input' => 'strip', 'allow_unsafe_links' => false]);
+
+    return response()->view('legal', compact('content', 'locale', 'document'));
+})->whereIn('document', ['terms', 'privacy'])->name('legal');
+Route::get('/reset-password/{token}', [BrowserAuthController::class, 'resetPage'])->name('password.reset');
+Route::post('/reset-password', [BrowserAuthController::class, 'reset'])->middleware('throttle:accounts');
+Route::get('/verify-email/{id}/{hash}', [BrowserAuthController::class, 'verify'])->middleware('throttle:accounts')->name('verification.browser');
 
 Route::prefix('auth')->middleware('throttle:identity')->group(function () {
     Route::get('sign-in', [BrowserAuthController::class, 'page'])->name('login');

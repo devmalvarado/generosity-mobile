@@ -14,6 +14,10 @@ Eligible registered organizers SHALL create private drafts and publish campaigns
 - **WHEN** an organizer proposes a center as partner before its authorized staff accepts
 - **THEN** public views show no center endorsement and center-linked validation remains unavailable
 
+#### Scenario: Organize on behalf of a company
+- **WHEN** an eligible organizer requests organization ownership under the organization-helping extension
+- **THEN** current organization assignment and verified mobile contact are also required, and the human responsible remains identified without granting center-validation authority
+
 ### Requirement: Campaign Activities Reuse Event Rules
 Each campaign activity SHALL have its own stable ID, time interval, timezone, safe meeting location and bounded capacity. Community organizers SHALL manage only their assigned activities. The volunteer-event enrollment, retry, cancellation and material-rescheduling rules SHALL apply, with this owner type replacing center publication authority only. Campaign membership SHALL not reserve every activity or grant attendance-validation authority.
 

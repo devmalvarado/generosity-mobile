@@ -28,6 +28,9 @@ class AccountLogin
 
     public function token(User $user, string $device): array
     {
+        if (! User::whereKey($user->id)->exists()) {
+            throw new ApiProblem('invalid_credentials', 401);
+        }
         $expires = now()->addDays(7);
         $token = $user->createToken($device, ['*'], $expires);
 

@@ -205,7 +205,32 @@ Welcome uses native layouts and approved logo/illustration assets, not a crop of
 the phone mockup. The guest action leads to existing discovery. Returning guests
 or valid sessions bypass welcome after restoration. Sign-out returns to welcome.
 Actual Terms/Privacy destinations and production assets are release prerequisites;
-this planning task does not create legal text or assert asset licensing.
+the [Spanish legal draft](../../../docs/legal/terms-and-conditions.es.md) added on
+2026-11-01 is not an approved or published legal destination. Identity/contact,
+retention and age-policy fields still require review; asset licensing remains
+a separate requirement.
+
+### Permanent Account Closure and Data Removal
+
+The user requires a deleted account to remain inaccessible. Commit deletion
+acceptance and the authorization block atomically; purging may finish later but
+cannot roll back access closure. Every login, recovery, provider callback,
+handoff and protected API path must reject the deleted identity. No soft-delete
+restoration is offered. A permitted future signup is a separate explicit account.
+
+Account settings on all three clients and a public ownership-verified web route
+share that backend operation. A scoped deletion receipt/status route must not
+provide a normal account session. Revoke provider credentials and retry failures;
+clear client caches/outboxes when clients receive the deletion state. Server
+authorization is immediate, while disconnected device cleanup cannot be promised.
+
+Approve a purpose-specific retention matrix before implementing purge jobs. Keep
+only minimum justified evidence with restricted access and expiry; a full profile
+with deleted_at is insufficient. Irreversibly anonymize shared records where
+appropriate, suppress deliveries and apply deletion records before serving a
+restored backup. This is not implemented by this documentation change. See the
+[source and release decisions](../../../docs/legal/store-and-donation-decisions.md)
+and tasks 20.1–20.8; unlinking a provider remains distinct from deleting an account.
 
 ### Visual Alignment Without New Product Flows
 

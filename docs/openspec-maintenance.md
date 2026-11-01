@@ -125,3 +125,26 @@ Foundation 11.1 and 11.4 are checked using the replacement API tests; 11.5 is
 reopened for complete source reconciliation/removals. Native/portal contract
 checks and integration remain open. See the foundation audit and
 [PHP verification](testing/backend-php-verification.md). No change is archived.
+
+## 2026-11-01 organization and sustainability planning
+
+[add-organization-participation-and-sustainability](../openspec/changes/add-organization-participation-and-sustainability/spec-index.md)
+adds five capabilities for commercial cost coverage, contextual sponsorships,
+supporting businesses, organization-owned helping and voluntary temporary team
+competitions with separately opted-in, campaign-only individual standings. It
+reuses community campaigns, independent validation, awards,
+recognition and payment boundaries. Related active deltas clarify scope; no main
+spec is synchronized or archived and no implementation task is marked complete.
+Prices, providers and numeric scoring rules remain unselected. Use current CLI
+counts rather than the historical snapshots above. The new change has 35 pending
+implementation tasks and no completed ones. Strict validation passed for all 16
+active-change/main-spec items; planning readiness is not implementation completion.
+
+
+## Adult policy and limited closure — 2026-11-01
+
+The owner approved adult-only accounts, publication of ES/EN terms/privacy and
+notificaciones@generosity.global as the temporary staff-handled contact. Foundation
+20.9–20.11 track public documents/acceptance, operator access blocking and publication
+separately. The broader 20.1–20.8 deletion, independent review and retention work
+remains open. No change is archived solely because a flag or document exists.

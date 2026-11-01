@@ -1,5 +1,10 @@
 package org.generosity.app
 
+import android.app.Activity
+import android.app.Instrumentation
+import android.content.Intent
+import android.net.Uri
+import androidx.test.platform.app.InstrumentationRegistry
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.assertIsSelected
 import androidx.compose.ui.test.hasScrollAction
@@ -16,6 +21,7 @@ import androidx.compose.ui.test.performScrollToNode
 import org.junit.Rule
 import org.junit.Before
 import org.junit.Test
+import org.junit.Assert.*
 
 class GenerosityUiTest {
     @get:Rule
@@ -54,7 +60,42 @@ class GenerosityUiTest {
     fun profileShowsAnonymousEmptyState() {
         composeRule.onNodeWithText("Profile").performClick()
         composeRule.onNodeWithText("Browsing as a guest").assertIsDisplayed()
-        composeRule.onNodeWithText("No contributions recorded yet.").assertIsDisplayed()
+        composeRule.onNodeWithText("Sign in").assertIsDisplayed()
+        composeRule.onNodeWithText("Create account").assertIsDisplayed()
+        composeRule.onNodeWithText("No contributions recorded yet.").performScrollTo().assertIsDisplayed()
+    }
+
+    @Test
+    fun profileOpensTheSelectedHostedAccountMode() {
+        val instrumentation = InstrumentationRegistry.getInstrumentation()
+        var opened: Uri? = null
+        val monitor = object : Instrumentation.ActivityMonitor() {
+            override fun onStartActivity(intent: Intent): Instrumentation.ActivityResult? {
+                if (intent.action != Intent.ACTION_VIEW) return null
+                opened = intent.data
+                return Instrumentation.ActivityResult(Activity.RESULT_CANCELED, null)
+            }
+        }
+        instrumentation.addMonitor(monitor)
+        try {
+            composeRule.onNodeWithTag("tab-profile").performClick()
+            for ((label, screen) in listOf("Create account" to "register", "Sign in" to null)) {
+                composeRule.runOnIdle { opened = null }
+                composeRule.onNodeWithText(label).performScrollTo().performClick()
+                composeRule.runOnIdle {
+                    val uri = requireNotNull(opened) { "Account button did not open the browser" }
+                    assertEquals(BuildConfig.API_BASE_URL + "/auth/sign-in", uri.toString().substringBefore('?'))
+                    assertEquals(screen, uri.getQueryParameter("screen"))
+                    assertEquals("android", uri.getQueryParameter("client"))
+                    assertEquals("en", uri.getQueryParameter("locale"))
+                    assertEquals(43, uri.getQueryParameter("state")?.length)
+                    assertEquals(43, uri.getQueryParameter("code_challenge")?.length)
+                    assertFalse(uri.queryParameterNames.contains("code_verifier"))
+                }
+            }
+        } finally {
+            instrumentation.removeMonitor(monitor)
+        }
     }
 
     @Test

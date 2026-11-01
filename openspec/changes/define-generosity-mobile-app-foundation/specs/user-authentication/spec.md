@@ -9,6 +9,10 @@ account store. Live provider credentials are pending; see the implementation aud
 Facebook entry and feature-specific mobile-number verification below are planned,
 not implemented. A verified social identity, email and mobile number are separate proofs.
 
+The 2026-11-01 deletion requirements below are also planned, not deployed. The
+user requires permanent loss of access to a deleted account; retaining a complete
+soft-deleted personal profile does not satisfy the data-removal requirements.
+
 ## ADDED Requirements
 
 ### Requirement: Provider-Backed Account Entry
@@ -192,3 +196,97 @@ The backend SHALL require a currently verified private mobile number before grou
 #### Scenario: Unrelated participation remains available
 - **WHEN** a person without verified mobile contact browses, enters an account, offers ordinary help or seeks beneficiary assistance
 - **THEN** this creation policy adds no phone requirement to those operations
+
+### Requirement: Accessible Confirmed Account Deletion
+Account settings on iOS, Android and web SHALL expose account deletion. A public mobile-first web resource SHALL accept ownership-verified requests without an installed app. Recent reauthentication and informed confirmation SHALL be required. The normal flow SHALL NOT depend on support or organizational ownership transfer. Responses/status access SHALL preserve privacy, and offline requests SHALL NOT claim server acceptance.
+
+#### Scenario: Confirm irreversible deletion
+- **WHEN** an owner reaches the confirmation step
+- **THEN** the flow explains permanent access loss, completion time, pending commitments and retained data before an explicit decision
+
+#### Scenario: User no longer has the app
+- **WHEN** the owner opens the published deletion resource and completes ownership verification and explicit confirmation
+- **THEN** the backend accepts the same deletion request as the native flow and provides a private reference/status route without requiring app installation
+
+#### Scenario: Deletion submission has no acknowledged result
+- **WHEN** a request is offline or its response is lost
+- **THEN** the client shows an unconfirmed outcome and offers reconciliation; retries do not create a second request or reactivate an accepted deletion
+
+### Requirement: Irreversible Access Closure
+Acceptance SHALL atomically block authorization and revoke sessions, tokens, handoffs, recovery/verification challenges and role access. All authentication and protected read/write paths SHALL enforce deletion, including during cleanup. Recovery, callbacks, queued work and backups SHALL NOT restore the account. Provider credentials SHALL be revoked with retries, without deleting external provider accounts or restoring Generosity access.
+
+#### Scenario: Existing session or recovery link after deletion
+- **WHEN** any client uses an old session, bearer token, reset link, verification link or handoff after deletion acceptance
+- **THEN** protected access and mutations are denied and no active account/session is recreated
+
+#### Scenario: Social sign-in or fresh registration later
+- **WHEN** the former owner returns through a provider callback or attempts registration
+- **THEN** the deleted account cannot be accessed or silently restored; any permitted new account requires explicit separate registration with a new identifier and no inherited history, roles or points
+
+#### Scenario: Provider revocation temporarily fails
+- **WHEN** a provider cannot confirm token revocation after Generosity accepts deletion
+- **THEN** its cleanup retries while all Generosity access stays blocked, and no claim is made that the external provider account itself was deleted
+
+#### Scenario: Mutation races with deletion
+- **WHEN** an earlier authenticated mutation reaches its commit boundary after deletion acceptance
+- **THEN** the authorization block prevents a new account-owned mutation from committing or restoring private role access
+
+### Requirement: Purpose-Bound Data Removal
+Deletion SHALL remove or irreversibly anonymize associated personal data; soft deletion SHALL only control access/state. Before release, an approved retention matrix SHALL define retained categories, purpose/basis, scope, expiry, backup handling and provider deletion. Retained evidence SHALL be minimal, restricted and expire without marketing or profile reconstruction. Shared commitments SHALL be reassigned/minimized without indefinitely blocking deletion.
+
+#### Scenario: Financial evidence must be retained
+- **WHEN** a reviewed retention rule requires a limited transaction record after account deletion
+- **THEN** only the necessary fields remain under restricted access for the documented period, the owner receives an explanation, and other personal data is removed on schedule
+
+#### Scenario: Only a deletion marker is necessary
+- **WHEN** the retention policy requires evidence preventing resurrection of an old account identifier
+- **THEN** the marker contains no complete profile or reusable credential, public identity and unnecessary provider links are removed, and the marker follows its documented purpose and retention rule
+
+#### Scenario: Purge job fails or a backup is restored
+- **WHEN** deletion cleanup fails or a backup predating deletion is recovered
+- **THEN** access stays blocked, cleanup resumes idempotently and deletion records are reapplied before restored services accept requests
+
+### Requirement: Cross-Client Deletion Completion
+Clients SHALL clear private credentials, caches, drafts and outbox work upon learning of acknowledged deletion, including on foreground/reconnection. Disconnected devices SHALL NOT be claimed erased. The server SHALL immediately stop account notifications and queued writes. Deletion receipts/status SHALL use a limited channel without restored access; completion SHALL disclose retained records/backup expiry and unresolved cleanup.
+
+#### Scenario: Another device reconnects with pending work
+- **WHEN** a device with stale private cache and queued mutations reconnects after deletion
+- **THEN** it clears that account's private state, submits no accepted mutations and returns to anonymous discovery without touching a different account
+
+#### Scenario: Required purge or provider cleanup is unresolved
+- **WHEN** the owner checks the private deletion status
+- **THEN** access closure is distinguished from incomplete cleanup, completion is not falsely claimed and justified retention/backup expiry is explained
+
+### Requirement: Published Versioned Terms and Separate Privacy Choices
+Password and social registration SHALL present approved localized terms and a separate privacy notice before account creation, recording accepted version/time. Optional consent and device permissions SHALL remain separate. Drafts, placeholders and unimplemented promises SHALL block legal-page release acceptance. Material updates SHALL follow the approved notice/acceptance policy without retroactively changing donation purpose.
+
+#### Scenario: Social registration bypasses the password form
+- **WHEN** a new social identity completes provider authorization without accepting the currently required terms
+- **THEN** Generosity presents the same legal entry step before creating its account, without treating provider consent as acceptance of Generosity's terms
+
+
+### Requirement: Adult account eligibility and current legal acceptance
+The system SHALL require new accounts to declare age 18+ and legal adulthood in their residence. Password and enabled social registration SHALL require current terms acceptance and privacy acknowledgement, with server-stamped version/date and no birth-date collection. Public ES/EN documents SHALL identify the institute and its working staff-operated contact; optional consent SHALL remain separate.
+
+#### Scenario: Required declaration is absent or declined
+- **WHEN** a registration omits or declines the adult declaration or a required legal acknowledgement, or submits an obsolete document version
+- **THEN** the server rejects it without creating an account or sending account email
+- **AND** hosted registration exposes localized errors and working links to both documents
+
+#### Scenario: Existing accounts precede policy receipts
+- **WHEN** the additive migration reaches an existing account
+- **THEN** receipt fields remain unset rather than inventing retrospective consent
+- **AND** a future material policy change requires a separate acceptance rollout
+
+### Requirement: Scoped operator-assisted permanent access block
+The system SHALL provide an operator-confirmed, audited permanent access block that excludes closed accounts from authentication/mutations, revokes credentials and pending grants, and suppresses queued account email. Public wording SHALL distinguish access closure from data erasure and provide a working rights-request channel. Store deletion completion SHALL remain separate.
+
+#### Scenario: Closed account tries another access route
+- **WHEN** a closed account retries its password, token, reset/verification link, native handoff, social subject or registration email
+- **THEN** access remains blocked and no replacement account is silently created
+- **AND** repeat operator execution does not duplicate the closure audit
+
+#### Scenario: Cancellation needs retained-record review
+- **WHEN** a person requests cancellation of data as well as access closure
+- **THEN** institute staff handle cancellation separately under the published notice and document minimum retention grounds and expiry criteria
+- **AND** full purge, provider revocation and native self-service deletion remain explicit follow-up work

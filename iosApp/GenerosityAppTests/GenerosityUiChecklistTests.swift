@@ -49,6 +49,8 @@ final class GenerosityUiChecklistTests: XCTestCase {
 
         app.tabBars.buttons["Profile"].tap()
         XCTAssertTrue(app.staticTexts["Browsing as a guest"].waitForExistence(timeout: 10))
+        XCTAssertTrue(app.buttons["Sign in"].isHittable)
+        XCTAssertTrue(app.buttons["Create account"].isHittable)
         XCTAssertTrue(app.staticTexts["No contributions recorded yet."].waitForExistence(timeout: 5))
     }
 

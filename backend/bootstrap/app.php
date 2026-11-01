@@ -37,6 +37,19 @@ return Application::configure(basePath: dirname(__DIR__))
             return response()->json(['error' => ['code' => $e->errorCode, 'details' => $e->details]], $e->status);
         });
         $exceptions->respond(function (Response $response) {
+            if (request()->is('auth/*', 'reset-password', 'reset-password/*', 'verify-email/*')
+                && ! request()->expectsJson() && in_array($response->getStatusCode(), [419, 429])) {
+                $outcome = $response->getStatusCode() === 419 ? 'session_expired' : 'rate_limited';
+
+                return response()->view('account-result', [
+                    'context' => ['client' => 'web', 'locale' => app()->getLocale()], 'outcome' => $outcome,
+                ], $response->getStatusCode())->withHeaders([
+                    'Cache-Control' => 'no-store', 'Referrer-Policy' => 'no-referrer',
+                    'X-Content-Type-Options' => 'nosniff',
+                    'Content-Security-Policy' => "default-src 'none'; style-src 'unsafe-inline'; frame-ancestors 'none'; base-uri 'none'",
+                    ...array_intersect_key($response->headers->all(), array_flip(['retry-after'])),
+                ]);
+            }
             if (! request()->is('api/*')) {
                 return $response;
             }

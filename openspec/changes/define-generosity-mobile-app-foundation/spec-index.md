@@ -1,6 +1,6 @@
 # Mobile, Backend and Portal Spec Index
 
-Planning update: 2026-10-31. This active change contains 16 capability specs:
+Planning update: 2026-11-01. This active change contains 16 capability specs:
 seven extensions of the previously synchronized baseline and nine new
 capabilities. They specify required behavior, not completed features. The
 new planning deltas have not been archived or synchronized into main specs.
@@ -16,6 +16,7 @@ apply to this foundation; they do not cancel that explicitly requested follow-up
 - Language follows the device by default and can be overridden in user settings.
 - Backend, authentication, durable server data and multiuser synchronization are now in scope.
 - Social entry includes Google, Apple and planned Facebook for Generosity web/Android/iOS only; no institute-wide SSO.
+- Account deletion permanently closes access, including recovery/social entry; soft deletion is supplemented by actual personal-data removal and justified limited retention. The institute's supplied fiscal identity/address and approved support/legal/privacy addresses are recorded in the [Spanish terms draft](../../../docs/legal/terms-and-conditions.es.md); institute personnel will handle these channels, but mailbox creation and operational checks remain pending.
 - Mobile contact is private and progressive, verified only for explicitly approved action requirements; the action list and delivery provider remain open decisions.
 - Users submit/cancel their own offers; authorized center staff confirm/fulfill them through the backend.
 - Personal helping activities are explicitly self-reported, not center-verified.
@@ -33,6 +34,7 @@ apply to this foundation; they do not cancel that explicitly requested follow-up
 | Preserve data after closing | [local-data-persistence](specs/local-data-persistence/spec.md): isolated accounts, restart recovery, idempotent offline outbox and conflict handling. | 7.11-7.12, 12.1-12.4 |
 | Map and location | [kindness-center-discovery](specs/kindness-center-discovery/spec.md): real maps, permitted GPS, manual origin, distances and denial/failure fallback. | 5.2, 5.6-5.9 |
 | Registration and sign-in | [user-authentication](specs/user-authentication/spec.md): Generosity-only Google/Apple/Facebook entry, missing-email verification, explicit linking, secure web/native sessions, expiry, recovery and authorization. | 7.8-7.10, 11.4, 18.1-18.10 |
+| Permanent account deletion and legal entry | [user-authentication](specs/user-authentication/spec.md): irrevocable access closure, in-app/web requests, data purge/retention, provider revocation, client cleanup and versioned terms acceptance. | 20.1-20.8 |
 | Progressive mobile contact | [user-authentication](specs/user-authentication/spec.md) and [user-contribution-profile](specs/user-contribution-profile/spec.md): private international numbers, possession proof, action-specific server enforcement and safe replacement/removal; no blanket phone requirement. | 19.1-19.7 |
 | Complete contribution forms | [user-contribution-profile](specs/user-contribution-profile/spec.md) and [kindness-center-needs](specs/kindness-center-needs/spec.md): entered quantities, time, availability, notes, validation and server availability. | 7.4, 7.7, 7.13-7.14, 7.16 |
 | Lifecycle, history and impact | [contribution-lifecycle](specs/contribution-lifecycle/spec.md) and [user-contribution-profile](specs/user-contribution-profile/spec.md): role-authorized transitions, cancellation, units, provenance and no duplicate impact. | 7.2, 7.6, 7.16, 13.1-13.6 |

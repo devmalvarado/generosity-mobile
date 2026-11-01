@@ -341,6 +341,11 @@ private struct ProfileView: View {
                         if state.profile.isRegistered { Task { await account.signOut(store: store) } }
                         else { account.signIn(store: store) }
                     }.buttonStyle(.borderedProminent).foregroundStyle(GenPalette.onAccent).disabled(account.busy)
+                    if !state.profile.isRegistered {
+                        Button(L10n.resource("welcome_create", locale: locale)) {
+                            account.signIn(store: store, register: true)
+                        }.buttonStyle(.bordered).frame(minHeight: 44).disabled(account.busy)
+                    }
                     if account.busy { ProgressView() }
                     if account.failed { Text(L10n.resource("auth_failed", locale: locale)).foregroundStyle(.red).accessibilityAddTraits(.updatesFrequently) }
                     Text(L10n.resource("auth_scope", locale: locale)).font(.footnote)

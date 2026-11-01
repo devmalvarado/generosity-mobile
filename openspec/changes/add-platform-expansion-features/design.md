@@ -1,8 +1,8 @@
 ## Context
 
 See [proposal.md](proposal.md) and the [scope review](../../../docs/scope-review.md).
-This repository still has sample/in-memory native state and no implemented
-backend or canonical portal. `Models.kt` has a coarse verification enum and
+At the time of the initial proposal, the repository had sample/in-memory native
+state and no implemented backend or canonical portal. `Models.kt` had a coarse verification enum and
 placeholder point fields; it cannot represent issuer evidence, certificates,
 regional comparisons, tax records or tickets. Existing event, payment, award,
 moderation and community contracts are active plans, not ready services.
@@ -12,13 +12,34 @@ comparisons and a multi-country fiscal framework with issuance disabled until
 configuration. This design describes staged extensions; it does not activate
 production payments or override personal-data protections.
 
+### Implementation note — 2026-11-01
+
+The canonical `portal/` now uses the PHP backend for accounts and authorized
+center needs/contributions. A separate initial landing intake has been prepared
+locally: verified accounts submit one location at a time to `center_applications`,
+using existing Sanctum sessions, CSRF protection and transactional idempotency.
+Applications store private form details, a snapshot of the verified contact email,
+consent version and a pending status. Only the owner can list receipt summaries.
+No `centers` or `center_memberships` record is created. Exact duplicate bodies
+within one account reuse their receipt; cross-account duplicate review is still
+pending and exposes no other applicant's data.
+
+This stage accepts a representation declaration, not documentary proof. It
+collects free-text activities rather than inventing the future category taxonomy.
+No file upload, claim/approval/withdrawal workflow or review email is activated.
+Guest drafts stay in the open form; only an attempted submission is saved in
+account-bound session storage for explicit retry, then cleared after receipt or
+account change. The backend migration and landing require separate releases;
+privacy/retention information and the operational review process remain release
+decisions. See [verification and scope](../../../docs/testing/center-applications.md).
+
 ## Goals / Non-Goals
 
 **Goals:** give deferred product functions testable ownership and lifecycle
 contracts; reuse existing domain services; separate community recognition,
 organization claims, fiscal documents and commercial tickets.
 
-**Non-Goals:** transferable money-like points, named-person leaderboards,
+**Non-Goals for this change:** transferable money-like points, named-person leaderboards,
 unrestricted surveillance/admin access, scraped private data, automatic center
 closure, a general social network, or rebuilding backend/UI frameworks. Generic
 form builders, microservices and endless recurrence are implementation expansion,
@@ -37,7 +58,7 @@ phases. Make precise exceptions rather than erase constraints:
 | Controlled staff provisioning only | Public application/claim plus independent reviewed membership | Signup never grants a staff role |
 | Verification outside foundation | Issuer-scoped review and lifecycle | Visits/ratings are not verification |
 | Native consumer needs are read-only | Explicit server-authorized staff workspace | Public/organizer mode cannot edit center content |
-| No leaderboards in reference phase | Opted-in aggregate territorial comparisons | No named-person, spending or home-address ranking |
+| No leaderboards in reference phase | Opted-in aggregate territorial comparisons | No named-person, spending or home-address ranking in geographical comparisons |
 | Points are non-financial | Earned PDF/badge recognition | No cash redemption or purchased eligibility |
 | One-off/free volunteer events | Bounded series, waitlists and gated ticketed admission | Buying a ticket is not helping evidence |
 | No tax receipts in foundation | Country/issuer/provider-gated fiscal adapters | Ordinary payment receipt or certificate is not a tax document |
@@ -45,6 +66,13 @@ phases. Make precise exceptions rather than erase constraints:
 
 Do not synchronize or archive planning deltas before their implementations and
 tests. Main specs are unchanged by this planning task.
+
+The subsequent [organization participation plan](../add-organization-participation-and-sustainability/spec-index.md)
+adds team/organization competitions and explicitly opted-in individual standings
+visible only to enrolled campaign participants. This narrow extension does not
+publish personal geographical rankings, alter donation eligibility or make
+employee histories available to employers. Campaign aggregates remain distinct
+from the territorial comparisons specified here.
 
 ### 2. Separate Membership, Verification and Payment/Fiscal Authority
 

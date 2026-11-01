@@ -56,3 +56,11 @@ enumeration, public beneficiary identities, automatic center closure, individual
 benefit eligibility decisions, medical advice, land-use approval automation,
 AI scoring of people, payments, external Meal Train account integration and
 unbounded recurring-event generation.
+
+## Later organization extension
+
+[Organization participation](../add-organization-participation-and-sustainability/spec-index.md)
+adds organization ownership and temporary team/individual challenges on the same
+activity/validation contracts. Individual standings require separate opt-in and
+remain visible only to enrolled campaign participants. Team enrollment never
+reserves event seats by itself; commercial visibility grants no organizing rights.

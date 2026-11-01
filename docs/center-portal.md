@@ -1,9 +1,33 @@
 # Center web portal
 
 The canonical source exists in `portal/`: `index.html`, `styles.css`, `portal.js`
-and `assets/`. The original PoC is preserved. The public example cards and donor
-form remain explicitly labeled demonstrations. The authenticated center workspace
-at `#center-workspace` uses the PHP API; it is separate from those examples.
+and `assets/`. The original PoC is preserved. The public cards describe causes;
+calls to action lead to the location intake and center sign-in. The former dummy
+search, donation and publication forms, fictional centers and sample figures are
+removed. The authenticated workspace at `#center-workspace` uses the PHP API.
+
+`#contacto` identifies the institute, RFC and fiscal address and names support,
+legal and privacy requests handled by institute staff at the owner-approved temporary
+contact `notificaciones@generosity.global`. Separate mailbox creation remains
+deferred. Intake and footer links point to the full ES/EN backend legal pages.
+
+## Initial location applications
+
+The landing's `#registrar-sede` form is prepared locally for organizations to
+request one location at a time. It accepts organization/location identity,
+activities, country/city and a representative, with explicit representation and
+contact consent. Legal name, region, postal code, public service address, phone
+and website are optional. It does not request beneficiary data or protected
+addresses. The verified account supplies the contact email.
+
+`POST /api/v1/center-applications` accepts verified accounts using the existing
+session, CSRF and idempotency boundary. `GET /api/v1/me/center-applications` lists
+only the current applicant's receipt summaries, ten per page. Requests remain
+private and pending; submission never creates a published center or membership.
+The browser preserves an uncertain submission across reloads and clears private
+data on account changes. Existing-center claims, documentary evidence, independent
+review, approval and withdrawal are still pending. See
+[intake verification](testing/center-applications.md).
 
 ## Implemented flow
 
@@ -35,11 +59,19 @@ cross-device acceptance. No foundation change is ready to archive.
 
 ## Deployment boundary
 
+See the [prepared account/portal release](releases/account-portal-2026-11-01.md)
+for artifacts, API-first sequence, prerequisites and rollback. The institute
+corrected its receiving bank to BBVA; no payments are enabled here.
+
 The selective main-branch workflow publishes only `index.html`, `styles.css`,
 `portal.js` and `assets/` when those files reach `main`. This source change does
 not deploy itself. The API sync migrations are already applied in production; do
 not rerun them as a fresh migration. Publishing these portal files is a separate
 landing release. Do not upload the repository or server secrets to the public web root.
+
+The new location intake is not deployed. Its PHP controller, routes and
+`2026_11_01_000003_create_center_applications.php` migration must be released
+before the landing advertises submission. No other site's files are involved.
 
 See [integration status](testing/backend-integration.md),
 [authentication](social-sign-in.md), and

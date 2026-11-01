@@ -124,6 +124,19 @@ center. Portal workspace tests intercept the API; they are not live CORS or
 production-center acceptance. The selective landing workflow does not deploy PHP.
 Rolling application code back must not drop newly recorded visits/history.
 
+On 2026-11-01, the user authorized Hostinger SMTP activation separately. The
+production queue cron delivered an approved Gmail test email, Hostinger recorded
+it as delivered, and the recipient confirmed Gmail Inbox placement on the same
+date. The Laravel scheduler ran automatically. Queue/failed-job
+counts were zero and the API health/private-file checks passed. See
+[SMTP activation evidence](../hostinger-backend.md#smtp-activation-evidence--2026-11-01).
+The subsequent [live account-email review](account-email-journeys.md) exercised
+registration, resend, verification and password reset using actual queued mail.
+Tampered/expired links, reset replay, password replacement and session revocation
+passed. The review found English-only email/reset content, raw JSON completion
+pages and invisible reset validation errors; human-facing acceptance remains open.
+The expanded backend regression suite passed 38 tests / 425 assertions.
+
 Still open:
 
 - The real portal → Android/iOS → center-confirmation → history journey with
@@ -131,7 +144,8 @@ Still open:
   UX for every rejection, migration/recovery case, unit-aware impact presentation
   and editable rejected drafts.
 - Actual Google/Apple credentials and device acceptance; Facebook, phone verification,
-  provider unlink/deletion, full registration/recovery UX and production SMTP/cron.
+  provider unlink/deletion and full registration/recovery UX, including the three
+  findings in the account-email review and provider quota/failure acceptance.
   Phone verification is required for group/event creation; the SMS provider remains
   unselected. No subscription or SMS delivery was enabled by this work.
 - Full need preview/inline-error UX, audit/urgent-event integration and live browser

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Exceptions\ApiProblem;
 use App\Models\User;
 use App\Services\AccountLogin;
+use App\Services\AccountPolicy;
 use Illuminate\Auth\Events\PasswordReset;
 use Illuminate\Auth\Events\Verified;
 use Illuminate\Http\Request;
@@ -17,19 +18,21 @@ use Laravel\Sanctum\PersonalAccessToken;
 
 class AuthController extends Controller
 {
-    public function register(Request $request)
+    public function register(Request $request, array $context = [])
     {
         $data = $request->validate([
             'name' => 'required|string|max:120', 'email' => 'required|email|max:254',
             'password' => $this->passwordRules(true),
         ]);
+        $acceptance = AccountPolicy::acceptance($request->all());
         $data['email'] = strtolower($data['email']);
         $data['password'] = Hash::make($data['password']);
         // The same response for an existing account avoids exposing registrations.
-        DB::transaction(function () use ($data) {
-            $user = User::firstOrCreate(['email' => $data['email']], $data);
+        DB::transaction(function () use ($data, $context, $acceptance) {
+            $user = User::withoutGlobalScope('active')->firstOrCreate(['email' => $data['email']], $data);
             if ($user->wasRecentlyCreated) {
-                $user->sendEmailVerificationNotification();
+                $user->forceFill($acceptance)->save();
+                $user->sendEmailVerificationNotification($context);
             }
         });
 
@@ -59,21 +62,22 @@ class AuthController extends Controller
         return response()->json(['status' => 'email_verified']);
     }
 
-    public function resend(Request $request)
+    public function resend(Request $request, array $context = [])
     {
         $data = $request->validate(['email' => 'required|email|max:254']);
         $user = User::where('email', strtolower($data['email']))->first();
         if ($user && ! $user->hasVerifiedEmail()) {
-            $user->sendEmailVerificationNotification();
+            $user->sendEmailVerificationNotification($context);
         }
 
         return response()->json(['status' => 'verification_requested'], 202);
     }
 
-    public function forgot(Request $request)
+    public function forgot(Request $request, array $context = [])
     {
         $data = $request->validate(['email' => 'required|email|max:254']);
-        Password::sendResetLink(['email' => strtolower($data['email'])]);
+        Password::sendResetLink(['email' => strtolower($data['email'])],
+            fn (User $user, string $token) => $user->sendPasswordResetNotification($token, $context));
 
         return response()->json(['status' => 'reset_requested'], 202);
     }
@@ -133,7 +137,7 @@ class AuthController extends Controller
         return array_filter(['required', 'string', 'max:72', function ($attribute, $value, $fail) {
             // Bcrypt limits bytes, so a character count alone fails for accented passwords.
             if (is_string($value) && strlen($value) > 72) {
-                $fail('The password must not exceed 72 UTF-8 bytes.');
+                $fail(__('The password is too long. Use fewer characters.'));
             }
         }, $newPassword ? PasswordRule::min(12)->mixedCase()->numbers() : null]);
     }

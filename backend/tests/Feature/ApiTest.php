@@ -122,7 +122,7 @@ class ApiTest extends TestCase
     public function test_registration_verification_login_and_revocation(): void
     {
         Notification::fake();
-        $body = ['name' => 'María', 'email' => 'MARIA@example.test', 'password' => 'LongPassword123', 'role' => 'admin'];
+        $body = ['adult_confirmed' => true, 'terms_accepted' => true, 'privacy_acknowledged' => true, 'policy_version' => \App\Services\AccountPolicy::VERSION, 'name' => 'María', 'email' => 'MARIA@example.test', 'password' => 'LongPassword123', 'role' => 'admin'];
         $this->callApi('POST', 'auth/register', null, $body)->assertStatus(202);
         $user = User::where('email', 'maria@example.test')->firstOrFail();
         $this->assertTrue(Hash::check($body['password'], $user->password));
@@ -150,6 +150,52 @@ class ApiTest extends TestCase
         $this->withHeader('Origin', 'https://evil.example')->callApi('GET', 'centers')->assertHeaderMissing('Access-Control-Allow-Origin');
     }
 
+    public function test_verification_expiry_and_reopening_a_valid_link(): void
+    {
+        $user = User::factory()->unverified()->create();
+        $parameters = ['id' => $user->id, 'hash' => sha1($user->email)];
+        $expired = URL::temporarySignedRoute('verification.verify', now()->subMinute(), $parameters);
+        $this->getJson($expired)->assertForbidden();
+        $this->assertFalse($user->fresh()->hasVerifiedEmail());
+
+        $valid = URL::temporarySignedRoute('verification.verify', now()->addHour(), $parameters);
+        $this->getJson($valid)->assertOk()->assertJsonPath('status', 'email_verified');
+        $verifiedAt = $user->fresh()->email_verified_at;
+        $this->getJson($valid)->assertOk();
+        $this->assertEquals($verifiedAt, $user->fresh()->email_verified_at);
+    }
+
+    public function test_expired_or_wrong_account_reset_token_preserves_password_and_sessions(): void
+    {
+        [$user, $accessToken] = $this->actor();
+        [$other] = $this->actor();
+        $originalPassword = $user->password;
+        $otherPassword = $other->password;
+        $token = Password::createToken($user);
+        $data = ['email' => $other->email, 'token' => $token, 'password' => 'AnotherLongPassword123', 'password_confirmation' => 'AnotherLongPassword123'];
+        $this->callApi('POST', 'auth/reset-password', null, $data)->assertUnprocessable()->assertJsonPath('error.code', 'invalid_reset_token');
+        $this->assertSame($otherPassword, $other->fresh()->password);
+
+        DB::table('password_reset_tokens')->where('email', $user->email)->update(['created_at' => now()->subMinutes(config('auth.passwords.users.expire') + 1)]);
+        $data['email'] = $user->email;
+        $this->callApi('POST', 'auth/reset-password', null, $data)->assertUnprocessable()->assertJsonPath('error.code', 'invalid_reset_token');
+        $this->assertSame($originalPassword, $user->fresh()->password);
+        $this->callApi('GET', 'me', $accessToken)->assertOk();
+    }
+
+    public function test_recovery_and_resend_do_not_disclose_unknown_accounts(): void
+    {
+        Notification::fake();
+        $user = User::factory()->unverified()->create();
+        foreach (['forgot-password' => 'reset_requested', 'verification' => 'verification_requested'] as $action => $status) {
+            $this->callApi('POST', 'auth/'.$action, null, ['email' => 'missing@example.test'])->assertStatus(202)->assertExactJson(['status' => $status]);
+            Notification::assertNothingSent();
+            $this->callApi('POST', 'auth/'.$action, null, ['email' => $user->email])->assertStatus(202)->assertExactJson(['status' => $status]);
+            Notification::assertSentTo($user, $action === 'verification' ? VerifyEmail::class : \App\Notifications\ResetPassword::class);
+            Notification::fake();
+        }
+    }
+
     public function test_password_reset_revokes_tokens_and_cannot_be_reused(): void
     {
         [$user, $token] = $this->actor();
@@ -165,9 +211,9 @@ class ApiTest extends TestCase
     {
         Notification::fake();
         $password = 'ContraseñaÚnica123';
-        $this->callApi('POST', 'auth/register', null, ['name' => 'José', 'email' => 'jose@example.test', 'password' => $password])->assertStatus(202);
+        $this->callApi('POST', 'auth/register', null, ['adult_confirmed' => true, 'terms_accepted' => true, 'privacy_acknowledged' => true, 'policy_version' => \App\Services\AccountPolicy::VERSION, 'name' => 'José', 'email' => 'jose@example.test', 'password' => $password])->assertStatus(202);
         $this->assertTrue(Hash::check($password, User::where('email', 'jose@example.test')->firstOrFail()->password));
-        $this->callApi('POST', 'auth/register', null, ['name' => 'José', 'email' => 'oversized@example.test', 'password' => str_repeat('ñ', 36).'Aa1'])->assertUnprocessable();
+        $this->callApi('POST', 'auth/register', null, ['adult_confirmed' => true, 'terms_accepted' => true, 'privacy_acknowledged' => true, 'policy_version' => \App\Services\AccountPolicy::VERSION, 'name' => 'José', 'email' => 'oversized@example.test', 'password' => str_repeat('ñ', 36).'Aa1'])->assertUnprocessable();
         $this->assertDatabaseMissing('users', ['email' => 'oversized@example.test']);
     }
 

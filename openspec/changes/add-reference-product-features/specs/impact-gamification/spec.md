@@ -37,7 +37,7 @@ The backend SHALL derive awards from eligible evidence under a published rule ve
 - **THEN** dependent awards, levels and streak dates are recalculated with visible corrected state, without silently changing terminal contribution history
 
 ### Requirement: Non-Monetary Points and Levels
-Points SHALL have no cash, credit, redemption or payment value. A user's level SHALL derive from the current valid points total and versioned thresholds, with localized labels and progress to the next level. No leaderboard or spending-based rank SHALL be introduced. Absent rule/data configuration SHALL show unavailable, not the reference's point balance or level.
+Points SHALL have no cash, credit, redemption or payment value. A user's level SHALL derive from valid points and versioned thresholds, with localized progress. This capability SHALL introduce no global personal leaderboard or spending-based rank. Separate opt-in campaigns, including participant-only individual standings, SHALL not multiply personal awards. Absent rule/data configuration SHALL show unavailable, not sample balances or levels.
 
 #### Scenario: Level threshold reached
 - **WHEN** an eligible award brings the total to a published level threshold
@@ -62,7 +62,7 @@ Streaks SHALL count consecutive calendar dates with eligible completed help, not
 - **THEN** that date, rather than the validation day, is reconciled into the streak once, including daylight-saving boundaries
 
 ### Requirement: Private Readable Progress
-Impact SHALL show balance, level, current/best streak and achievement progress for the owning account. Any point chart SHALL label its time range and derive values from the award ledger, with an equivalent readable summary. Profile SHALL use the same level/points source. Empty/offline/corrected data SHALL be labeled; progress SHALL not be published as a ranking or shared automatically.
+Impact SHALL show balance, level, current/best streak and achievement progress for the owning account. Point charts SHALL label their time range and derive values from the award ledger, with a readable summary. Profile SHALL use the same source. Empty/offline/corrected data SHALL be labeled; personal progress SHALL not be shared automatically. Explicit campaign attribution SHALL follow the separate organization-campaign-competitions contract without changing personal award rules.
 
 #### Scenario: Offline points screen
 - **WHEN** the app cannot refresh a previously loaded points summary

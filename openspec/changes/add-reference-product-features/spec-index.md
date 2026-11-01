@@ -39,6 +39,7 @@ tax receipts remain outside these changes.
 - Only center-validated completed help earns points, achievements and streak days; personal activity remains separate.
 - Reviews require completed help and independent moderation.
 - Monetary donations use an external provider; selecting it and satisfying recipient/release conditions are prerequisites, not completed setup.
+- As clarified on 2026-11-01, the institute would collect in its Mexican BBVA account and then distribute to centers. Current SAT authorization is absent/pending. Legal/provider/store approval, allocation evidence and donor resolution policies remain gates; see external-donations and tasks 10.9–10.11, plus the [legal draft decisions](../../../docs/legal/store-and-donation-decisions.md).
 
 Numeric scoring, retention and radius defaults are documented proposals in
 [design.md](design.md), not individually approved values from the image.
@@ -72,3 +73,11 @@ defines the user-supplied profile details and minimum publication rule while
 reusing this change's profile, media and schedule behavior. It adds explicit
 unknown values, public/private disclosure, fee and beneficiary/admission semantics,
 and contact-only discovery; neither plan is evidence of implemented functionality.
+
+## Organization and Sustainability Extension
+
+The later [organization participation plan](../add-organization-participation-and-sustainability/spec-index.md)
+adds organizational helping, voluntary member attribution, time-limited collective
+competitions and opt-in campaign-only individual rankings, plus separate commercial support. Existing award evidence stays
+canonical: organizational/campaign views do not multiply personal points.
+Commercial listing/ad payments do not buy awards or organic helping priority.

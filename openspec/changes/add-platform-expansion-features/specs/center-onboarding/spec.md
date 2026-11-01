@@ -3,6 +3,29 @@ Let organizations request a center presence or claim an imported center through 
 
 ## ADDED Requirements
 
+### Requirement: Landing Location Intake
+The public landing SHALL offer a mobile-first Spanish/English application for one organization location at a time. Visitors MAY prepare it before signing in. The form SHALL require minimum organization, location and representative details plus representation and contact consent, while distinguishing optional information. It SHALL not request beneficiary data or protected addresses.
+
+#### Scenario: Provide minimum location details
+- **WHEN** a representative prepares an application
+- **THEN** organization name, location name, type of support and activities, country, city, representative name/role and both declarations are required
+- **AND** legal name, region, postal code, public service address, phone and website are optional
+
+### Requirement: Verified Private Intake Receipts
+The server SHALL require a verified Generosity account and use its verified contact email. Accepted applications SHALL return a private pending reference visible only in the applicant's paginated history. Retries SHALL preserve the operation and body without duplicates. Submission SHALL grant no publication, staff or verification rights. Initial intake SHALL not claim that approval or review notifications exist before implementation.
+
+#### Scenario: Register two locations
+- **WHEN** a verified representative submits applications for two distinct locations of an organization
+- **THEN** each location receives its own private pending reference and neither appears in the public catalog automatically
+
+#### Scenario: Recover an uncertain submission
+- **WHEN** the applicant reloads after a lost response and explicitly retries
+- **THEN** the browser resends the saved operation and body, the server returns the same reference, and no second application is created
+
+#### Scenario: Change account on a shared browser
+- **WHEN** the applicant signs out or switches accounts
+- **THEN** private form values, pending browser data and receipt history from the previous account are cleared and late responses cannot restore them
+
 ### Requirement: Private Applications and Claims
 Registered applicants SHALL submit a private organization application or claim an existing center, with contact verification, representation evidence and explicit consent for submitted data. Submission SHALL grant no publishing, payout or verification status. The system SHALL flag possible duplicates without exposing another applicant's private evidence.
 

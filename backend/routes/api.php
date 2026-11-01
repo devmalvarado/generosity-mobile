@@ -30,6 +30,8 @@ Route::prefix('v1')->group(function () {
         Route::post('reset-password', [AuthController::class, 'reset']);
     });
     Route::middleware(['auth:sanctum', 'verified'])->group(function () {
+        Route::get('me/center-applications', [\App\Http\Controllers\CenterApplicationController::class, 'index']);
+        Route::post('center-applications', [\App\Http\Controllers\CenterApplicationController::class, 'store'])->middleware('throttle:center-applications');
         Route::get('sync/account', [ClientSyncController::class, 'account']);
         Route::get('staff/centers', [ClientSyncController::class, 'staffCenters']);
         Route::get('me', fn (Request $request) => ['user' => $request->user()]);

@@ -35,10 +35,30 @@ class SocialAuthTest extends TestCase
         \Illuminate\Support\Facades\Notification::fake();
         $context = ['client' => 'ios', 'locale' => 'es', 'state' => str_repeat('s', 43), 'code_challenge' => str_repeat('c', 43)];
         $this->get('/auth/sign-in?'.http_build_query($context))->assertOk()->assertSee('Crear cuenta')->assertSee('Recuperar contraseña');
-        $this->post('/auth/account/register', $context + ['name' => 'María Peña', 'email' => 'native@example.test', 'password' => 'StrongPassword123'])->assertStatus(202)->assertSee('siguientes pasos')->assertSee(str_repeat('c', 43));
+        $registration = $context + ['screen' => 'register'];
+        $this->get('/auth/sign-in?'.http_build_query($registration))->assertOk()
+            ->assertSee('id="new-name"', false)->assertDontSee('id="email"', false)
+            ->assertSee('client=ios')->assertSee('locale=es')
+            ->assertSee('state='.$context['state'])->assertSee('code_challenge='.$context['code_challenge']);
+        $this->post('/auth/account/register', $context + ['adult_confirmed' => true, 'terms_accepted' => true, 'privacy_acknowledged' => true, 'policy_version' => \App\Services\AccountPolicy::VERSION, 'name' => 'María Peña', 'email' => 'native@example.test', 'password' => 'StrongPassword123'])->assertStatus(202)->assertSee('siguientes pasos')->assertSee(str_repeat('c', 43));
         $this->assertDatabaseHas('users', ['email' => 'native@example.test', 'email_verified_at' => null]);
         $this->post('/auth/account/recover', $context + ['email' => 'unknown@example.test'])->assertStatus(202)->assertSee('siguientes pasos');
         $this->assertGuest();
+    }
+
+    public function test_hosted_entry_exposes_registration_and_local_provider_branding(): void
+    {
+        config(['identity.google.client_secret' => null]);
+        foreach (['en' => 'Create an account', 'es' => 'Crear cuenta'] as $locale => $label) {
+            $response = $this->get('/auth/sign-in?locale='.$locale);
+            $response->assertOk()->assertSee($label)->assertSee('screen=register')
+                ->assertSee('class="account-modes"', false)
+                ->assertSee('class="provider provider-google"', false)
+                ->assertSee('class="provider provider-apple"', false)
+                ->assertSee('/auth-assets/google.png')->assertSee('/auth-assets/apple.png')
+                ->assertDontSee('id="new-name"', false);
+            $this->assertStringContainsString("img-src 'self'; font-src 'self'", $response->headers->get('Content-Security-Policy'));
+        }
     }
 
     public function test_missing_configuration_disables_providers_and_does_not_create_attempts(): void
@@ -167,6 +187,10 @@ class SocialAuthTest extends TestCase
         config(['cors.allowed_origins' => ['https://generosity.global', 'https://www.generosity.global']]);
         $this->post('https://api.generosity.test/auth/logout')->assertStatus(419);
         $this->post('https://api.generosity.test/auth/google/start')->assertStatus(419);
+        foreach (['register', 'recover', 'verify'] as $action) {
+            $this->post('https://api.generosity.test/auth/account/'.$action)->assertStatus(419);
+        }
+        $this->post('https://api.generosity.test/reset-password')->assertStatus(419);
         $this->withHeader('Origin', 'https://unrelated-institute.test')->getJson('https://api.generosity.test/auth/session')->assertHeaderMissing('Access-Control-Allow-Origin');
         $this->withHeader('Origin', 'https://generosity.global')->getJson('https://api.generosity.test/auth/session')->assertHeader('Access-Control-Allow-Origin', 'https://generosity.global')->assertHeader('Access-Control-Allow-Credentials', 'true');
         $this->app->instance('env', 'testing');
@@ -212,7 +236,7 @@ class SocialAuthTest extends TestCase
 
     private function begin(array $context = [], string $provider = 'google'): array
     {
-        $response = $this->post('/auth/'.$provider.'/start', $context)->assertRedirect();
+        $response = $this->post('/auth/'.$provider.'/start', $context + ['adult_confirmed' => true, 'terms_accepted' => true, 'privacy_acknowledged' => true, 'policy_version' => \App\Services\AccountPolicy::VERSION, ])->assertRedirect();
         parse_str(parse_url($response->headers->get('Location'), PHP_URL_QUERY), $query);
         $cookie = $response->getCookie($this->cookieName($query['state']));
         $this->assertTrue($cookie->isSecure());

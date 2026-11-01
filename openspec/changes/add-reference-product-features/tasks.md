@@ -55,7 +55,7 @@
 - [ ] 8.2 Implement authoritative eligibility and award/correction ledger; test duplicate sources, daily caps, personal/payment exclusion, late evidence and controlled invalidation without rewriting terminal contribution states.
 - [ ] 8.3 Add shared points/level/achievement/chart/streak projections; test threshold equality, timezone changes, offset boundaries, missed days and invalidated progress with deterministic clocks.
 - [ ] 8.4 Add Android Impact progress and View all achievements; UI-test locked/earned/corrected/offline states and an accessible chart summary without invented balances.
-- [ ] 8.5 Add equivalent iOS Impact progress and profile level; verify both views share one source, match Android outcomes and expose no leaderboard or redeemable-value claims.
+- [ ] 8.5 Add equivalent iOS Impact progress and profile level; verify both views share one source, match Android outcomes and expose no global personal leaderboard or redeemable-value claims. Dedicated organization/team and opt-in campaign-only individual standings belong to add-organization-participation-and-sustainability and do not multiply personal awards.
 - [ ] 8.6 Record operator-attested external activity under a published rule; verify the engine applies that rule's amount, a typed balance is rejected, missing rule configuration keeps the action unavailable, and self-reported help without attestation still earns nothing.
 
 ## 9. Notification Inbox
@@ -75,6 +75,9 @@
 - [ ] 10.6 Implement equivalent iOS hosted flow; sandbox-test interrupted browser handoff, restored account ownership and matching totals/receipts.
 - [ ] 10.7 Add owned support/receipt access, disable-new-intents control and redacted diagnostics; verify private receipt isolation, continuing reconciliation while disabled and no credentials in logs, URLs or app bundles.
 - [ ] 10.8 Deliver the production-readiness checklist with accountable approval for provider/recipient eligibility, applicable compliance/store review, currency/fee presentation and refund/dispute support; record that sandbox tests are not permission to perform real charges.
+- [ ] 10.9 Review and obtain acceptance of the institute-collects-then-distributes model with Mexican legal/accounting advisers and the selected provider; confirm BBVA ownership/settlement compatibility, beneficiary agreements and per-platform/territory fundraising eligibility. Record absent/pending SAT authorization without deductible-receipt claims; test all unresolved gates keep actions and links disabled.
+- [ ] 10.10 Implement private allocation/distribution evidence and scoped audited operations separate from provider collection/settlement; test partial distributions, duplicate evidence, unauthorized recipient changes, unavailable centers, fee/net presentation and no center-received claim or help award from collection alone. Do not add automated bank transfers or a consumer wallet.
+- [ ] 10.11 Publish reviewed delivery, unallocated-fund, campaign-failure and refund/dispute rules before collection; test donor-approved purpose handling and post-deletion ownership-verified support with minimum retained evidence, without restoring deleted accounts or relabeling ordinary receipts as deductible donations.
 
 ## 11. Functional Native Navigation
 

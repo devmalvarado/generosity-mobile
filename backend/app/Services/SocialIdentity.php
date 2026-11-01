@@ -98,16 +98,16 @@ class SocialIdentity
         return $claims;
     }
 
-    public function user(string $provider, object $claims, ?int $linkUserId): User
+    public function user(string $provider, object $claims, ?int $linkUserId, array $acceptance = []): User
     {
-        return DB::transaction(function () use ($provider, $claims, $linkUserId) {
+        return DB::transaction(function () use ($provider, $claims, $linkUserId, $acceptance) {
             $identity = DB::table('social_identities')->where('provider', $provider)->where('subject', $claims->sub)->lockForUpdate()->first();
             if ($identity) {
                 if ($linkUserId !== null && $identity->user_id !== $linkUserId) {
                     throw new ApiProblem('identity_already_linked', 409);
                 }
 
-                return User::findOrFail($identity->user_id);
+                return User::whereKey($identity->user_id)->lockForUpdate()->firstOrFail();
             }
             if ($linkUserId !== null) {
                 $user = User::whereKey($linkUserId)->lockForUpdate()->firstOrFail();
@@ -120,13 +120,14 @@ class SocialIdentity
                     throw new ApiProblem('verified_email_required', 403);
                 }
                 $email = strtolower($claims->email);
-                if (User::where('email', $email)->exists()) {
+                if (User::withoutGlobalScope('active')->where('email', $email)->exists()) {
                     throw new ApiProblem('account_link_required', 409);
                 }
                 $user = User::create([
                     'name' => mb_substr(is_string($claims->name ?? null) ? $claims->name : 'Generosity', 0, 120),
                     'email' => $email, 'password' => Str::random(64),
                 ]);
+                $user->forceFill(AccountPolicy::acceptance($acceptance))->save();
                 $user->markEmailAsVerified();
             }
             DB::table('social_identities')->insert([

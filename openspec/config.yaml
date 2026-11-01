@@ -9,7 +9,8 @@ context: |
 
   All repository documentation, OpenSpec proposals, designs, specs, tasks, code
   comments, and technical artifacts must be written in English, even when
-  product discussions happen in Spanish.
+  product discussions happen in Spanish. Explicitly requested localized
+  user-facing legal drafts are an exception; technical policy notes stay English.
 
   Specs describe required behavior, not verified implementation status.
   Consult active change tasks and implementation-status.md before claiming
@@ -30,6 +31,15 @@ context: |
   counts only center-validated completed help; reviews require completed help
   and moderation. External-provider payments are now requested as a gated spec,
   with provider selection still open. Nothing authorizes production charges.
+  On 2026-11-01 the user specified permanent account deletion: immediate
+  irreversible access closure plus personal-data purge/anonymization and limited
+  justified retention, not a full-profile soft delete. Legal identity/contact
+  fields remain pending by request in docs/legal/terms-and-conditions.es.md.
+  The institute would receive money in its Mexican BBVA account and then
+  distribute it to centers. SAT donee authorization is absent or pending.
+  Keep payments and deductible-receipt claims gated pending review of the actual
+  recipient model, provider, bank compatibility, platform-specific store rules,
+  allocation/delivery evidence, fees and donor refund/dispute policies.
   The add-community-campaigns-and-coverage follow-up specifies reforestation,
   cleanup, coordinated meals and voluntary household needs assessment.
   Registered users can earn organizer eligibility through prior validated help,
@@ -61,6 +71,21 @@ context: |
   Contact-only records can remain list-discoverable without public coordinates.
   This change does not publish the user's named example or expand category codes.
 
+  The 2026-11-01 add-organization-participation-and-sustainability follow-up
+  specifies platform cost coverage through disclosed sponsorships and paid
+  supporting-business listings, plus organization-owned helping and voluntary
+  member campaigns/temporary competitions. Organizations are separate from
+  beneficiary centers, advertisers and personal accounts. Membership never grants
+  center validation or case access; group/event creation retains verified-phone
+  and applicable earned-organizer gates. One activity retains canonical evidence
+  across personal, organization and campaign views; commercial payments, company
+  revenue and headcount do not buy points or organic assistance-map priority.
+  Comparisons include teams/organizations and explicitly opted-in individual
+  standings visible only to enrolled campaign participants. Unrelated personal
+  history stays private; organization membership does not imply ranking consent.
+  Commercial seller/provider, pricing, ad limits and campaign scoring decisions
+  remain unconfigured. These specs do not enable charges or advertisements.
+
   Technology stack:
   - Kotlin Multiplatform for shared business logic, domain models, repository
     contracts, validation, imported catalog handling, filtering, localization
@@ -74,8 +99,8 @@ context: |
     not required for sign-in/discovery or beneficiaries. Creating groups and events
     requires verified mobile contact; the delivery provider remains undecided.
     Hostinger publishes the API at api.generosity.global, including catalog/account
-    sync. SMTP, scheduled cleanup, provider credentials, and the live center
-    workspace are not a completed deployment.
+    sync. Hostinger SMTP and the queue/scheduler cron are active. Provider
+    credentials and the live center workspace are not a completed deployment.
     Kotlin service mockup is preserved on codex/mockup-backend-kotlin at 36eab89.
   - SwiftUI for the native iOS user interface.
   - Jetpack Compose / Kotlin Compose for the native Android user interface.
