@@ -1,6 +1,8 @@
 # Portal público, primera etapa
 
-Fecha: 2026-10-31. Alcance local de las tareas 16.1, 16.2, 16.3, 16.10 y las comprobaciones de navegador de 16.11. Esas tareas no se marcaron hechas en `tasks.md`: siguen pendientes la revisión en un teléfono real, el lector de pantalla y todo lo que depende de un backend. No se implementaron 16.4–16.9 ni 16.12. No se eligió proveedor de autenticación ni de pagos, no se publicó el sitio y no se modificó la landing original.
+Fecha: 2026-10-31. Alcance local de las tareas 16.1, 16.2, 16.3, 16.10 y las comprobaciones de navegador de 16.11. Esas tareas no se marcaron hechas en `tasks.md`: siguen pendientes la revisión en un teléfono real, el lector de pantalla y todo lo que depende de un backend. No se implementaron 16.4–16.9 ni 16.12 en esta nota. No se eligió proveedor de autenticación ni de pagos, no se publicó el sitio y no se modificó la landing original.
+
+Nota posterior: el espacio de personal asignado quedó registrado en [center-portal.md](center-portal.md). Esta nota no se reescribe como si ese espacio ya hubiera existido el 2026-10-31.
 
 ## Archivos
 

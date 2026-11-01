@@ -1,12 +1,12 @@
 # Hostinger PHP backend deployment and recovery
 
-Prepared 2026-10-31. The API was deployed that day at `https://api.generosity.global`. Payments stay disabled, mail uses the log driver, remote MySQL stays closed, and cron is not scheduled. These instructions remain the recovery and activation procedure for that site; existing websites must keep their current document roots and data.
+Prepared 2026-10-31. The API is published at `https://api.generosity.global`. The catalog/account sync increment and its two migrations were published with `1adf57a`; a public catalog read returned no centers. Payments stay disabled, mail uses the log driver, remote MySQL stays closed, and cron is not scheduled. The portal center workspace is not part of that API release. These instructions remain the recovery and activation procedure for that site; existing websites must keep their current document roots and data.
 
 ## Required deployment inputs
 
 - A chosen Generosity API HTTPS hostname and its separate document root.
 - PHP 8.4 for this site's web requests, with PDO MySQL, mbstring, OpenSSL, ctype, curl, DOM/XML, fileinfo, filter, hash, pcre, session and tokenizer. CLI PHP 8.4 was inspected at `/opt/alt/php84/usr/bin/php`; confirm the web runtime independently. Do not leave a public `phpinfo()` page.
-- A new database and least-privilege user from hPanel, plus the actual internal host/version. The screenshots show the account database-creation facility; no Generosity database or password has been configured. Do not enable “any host” remote MySQL. Native apps connect to the HTTPS API, never directly to MySQL.
+- The existing Generosity database and least-privilege user, plus the actual internal host/version. Preserve the deployed configuration and data; provision a new database only for a separate environment or isolated restore. Do not enable “any host” remote MySQL. Native apps connect to the HTTPS API, never directly to MySQL.
 - SMTP sender/domain configuration and a real reviewed catalog. The local Mailpit addresses and demo records must not be used as production configuration.
 
 The server's Composer 2.9.8 was previously found outdated. Build dependencies locally with the pinned supported Composer instead of invoking that server binary. If PHP 8.4 cannot be selected for a dedicated site without affecting the other sites, resolve that with Hostinger before deploying; do not change the whole plan's runtime blindly.

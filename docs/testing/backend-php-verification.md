@@ -1,5 +1,8 @@
 # PHP backend verification — 2026-10-31
 
+Historical PHP replacement checkpoint; newer client integration evidence is in
+[backend-integration.md](backend-integration.md).
+
 Branch: `codex/backend-php-mysql`. Kotlin checkpoint: `36eab89` on `codex/mockup-backend-kotlin`.
 
 ## Environment

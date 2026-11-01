@@ -1,6 +1,6 @@
 # Decision: PHP/MySQL authoritative backend
 
-Date: 2026-10-31. Status: selected, implemented, and published at `https://api.generosity.global`. SMTP delivery, payment processing, and Google/Apple credentials remain unconfigured.
+Date: 2026-10-31. Status: selected and published at `https://api.generosity.global`, including the catalog/account sync increment (`1adf57a`). The portal center workspace is a separate landing change and is not live until published from `main`. SMTP delivery, payment processing, and Google/Apple credentials remain unconfigured. Cron is not scheduled.
 
 ## Decision and preservation
 
@@ -28,4 +28,4 @@ There is no automatic migration from the Kotlin prototype's local journal. Its d
 
 ## Evidence and completion boundary
 
-See `backend/tests/Feature/ApiTest.php` and `backend/scripts/smoke.py` for executable authorization, rate-limit, Unicode, lifecycle, real MariaDB concurrency, restart and backup/restore checks. `backend/openapi.json` documents every versioned route. OpenSpec remains active: native/portal integration, provider delivery, complete source reconciliation and account synchronization are not certified by backend tests.
+See `backend/tests/Feature/ApiTest.php` and `backend/scripts/smoke.py` for executable authorization, rate-limit, Unicode, lifecycle, real MariaDB concurrency, restart and backup/restore checks. `backend/openapi.json` documents every versioned route. The [client integration verification](testing/backend-integration.md) records protected native cache/outbox, forms/history and the authenticated center workspace. OpenSpec remains active: live cross-system acceptance, provider delivery and cursor/tombstone reconciliation are still pending.

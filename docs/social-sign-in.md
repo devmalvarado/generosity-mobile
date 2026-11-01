@@ -13,8 +13,7 @@ define requirements, not current endpoints or configuration:
 - The backend will enforce each approved action requirement. Failed/cancelled verification leaves unrelated features available and the draft unsent. Replacing/removing a verified number requires recent reauthentication; replacement verifies the new number before switching.
 - Phone sharing requires a stated purpose/recipient and permission. It does not imply marketing or WhatsApp consent. Public discovery, basic account entry, assisted participation and referred beneficiaries retain their existing no-phone access.
 
-Open decisions: the named action matrix, verification channel/provider, supported
-countries, abuse/cost limits and retention rules. No provider subscription, SMS
+Approved action matrix (2026-10-31): creating a group or an event requires a privately verified mobile number, in addition to earned organizer eligibility and other permissions. Browsing, basic account entry and receiving help do not. Open decisions: verification channel/provider, supported countries, abuse/cost limits and retention rules. No provider subscription, SMS
 delivery, Facebook credentials or new API routes were added by this spec update.
 Track implementation and acceptance in foundation tasks 18.7–18.10 and 19.1–19.7.
 The following implemented boundary and setup instructions cover Google/Apple only.
@@ -35,17 +34,17 @@ Laravel HTTP requests use fixed provider endpoints. `firebase/php-jwt`, pinned i
 | Android | System browser returns to `org.generosity.app.android:/oauth/callback`. An encrypted pending verifier/state survives activity/process recreation. AES-GCM key lives in Android Keystore; token and pending flow are stored atomically in `noBackupFilesDir`. |
 | iOS | System authentication session returns to `org.generosity.app.ios:/oauth/callback`. Keychain stores the token with `WhenUnlockedThisDeviceOnly`. A terminated in-flight browser flow must be restarted. |
 
-Mobile callbacks contain only a sixty-second, single-use opaque code plus client state. `/api/v1/auth/exchange` requires the corresponding PKCE S256 verifier and matching client, then returns a seven-day Sanctum bearer token over HTTPS. Fixed callbacks prevent arbitrary redirects; PKCE prevents an app that intercepts a custom-scheme callback from redeeming it. Provider access/refresh tokens are not retained. Native API requests refuse redirects. Restore calls `/api/v1/me`; 401 removes the stored credential, while connectivity failure leaves guest discovery available. Expired sessions require interactive sign-in again.
+Mobile callbacks contain only a sixty-second, single-use opaque code plus client state. `/api/v1/auth/exchange` requires the corresponding PKCE S256 verifier and matching client, then returns a seven-day Sanctum bearer token over HTTPS. Fixed callbacks prevent arbitrary redirects; PKCE prevents an app that intercepts a custom-scheme callback from redeeming it. Provider access/refresh tokens are not retained. Native API requests refuse redirects. Restore calls `/api/v1/me`; 401 removes the stored credential, while connectivity failure preserves the cached account identity/history and public discovery. Expired sessions require interactive sign-in again; cached identity is not server authorization.
 
 Logout revokes only that Generosity session, not the Google/Apple browser account or another device's session. Failed logout is shown as failure and retains the credential for retry. Password reset revokes native tokens, web sessions and pending native handoffs/link attempts. Scheduled hourly cleanup removes expired attempts/handoffs; daily Sanctum pruning remains configured.
 
-The landing opens account entry in another tab so its unsent demo form stays intact. Refocusing the landing refreshes account status. It does not automatically submit a need or grant staff access. Native demo catalog/contribution/history adapters remain disconnected: real sign-in shows that limitation and blocks accepted-looking demo contributions. Full account synchronization, staff editor, silent renewal, account deletion/provider-revocation handling and MFA are separate unfinished scope.
+The landing opens account entry in another tab so its unsent demo form stays intact. Refocusing the landing refreshes account status. It does not automatically submit a need or grant staff access. Native release entry now uses the PHP catalog/account snapshots, protected cache and account-bound outbox. Explicit debug fixtures keep the old sample catalog for tests. The landing has an assigned-center workspace with CSRF-protected writes; public demonstration forms still never submit. Hosted email registration, recovery and verification resend are available. Live credential tests, silent renewal, account deletion/provider-revocation handling and MFA remain unfinished. See [integration status](testing/backend-integration.md).
 
 ## Configuration before activation
 
 No Google or Apple credentials were available during implementation. Do not put secrets in the repository, app resources, portal JavaScript or chat.
 
-1. The API is already deployed at `https://api.generosity.global`, with only the public front controller exposed and migrations applied. Do not redeploy to activate a provider. Add the server-only values below to the existing private `.env`, then refresh the cached configuration. Provider sign-in refuses plain HTTP. Local fixture tests do not require provider credentials.
+1. The API is deployed at `https://api.generosity.global`, with only the public front controller exposed. The catalog/account sync routes and their migrations are included. Adding Google/Apple credentials still needs only the private `.env` and a configuration refresh, not another code deploy. The portal center workspace is not on the live landing until its files are published from `main`. Add provider values only to the existing private `.env`, then refresh cached configuration. Provider sign-in refuses plain HTTP. Local fixture tests do not require provider credentials.
 2. Set server-only configuration:
 
    ```dotenv
@@ -99,3 +98,11 @@ Validated locally on 2026-10-31: backend suite; 58 shared JVM tests; 5 Android u
 - [Apple login-services review guideline](https://developer.apple.com/app-store/review/guidelines/#login-services)
 - [Laravel Sanctum](https://laravel.com/framework/docs/13.x/sanctum)
 - [PHP JWT verifier](https://github.com/googleapis/php-jwt)
+
+## SMS options reviewed on 2026-10-31
+
+- [Identity Platform pricing](https://cloud.google.com/identity-platform/pricing): first ten SMS per day are not billed; Mexico is listed at USD 0.04 per additional SMS. [Firebase limits](https://firebase.google.com/docs/auth/limits) require Blaze for real verification SMS. Web phone auth needs client-side abuse checks; PHP must validate the resulting proof rather than accepting a client-supplied number as verified.
+- [Twilio Verify](https://www.twilio.com/en-us/verify/pricing): USD 0.05 per successful verification plus destination/channel delivery fees; PHP can call its API. [Twilio.org Impact Access](https://www.twilio.org/en-us/support-and-resources/impact-access-program) lists a USD 100 credit for eligible organizations. Eligibility and supported country must be confirmed for the institute; credit is not permanent free SMS.
+
+No SMS provider has been selected, subscribed to or configured. Real SMS remains
+disabled; a trial or mock code must not authorize production group/event creation.

@@ -233,22 +233,26 @@ archived checklist overstated completion. See the
 and [user-provided design reference](docs/design-reference.md).
 Main specs describe required behavior, not a claim that the prototype is complete.
 
-The app uses in-memory repositories, sample users, and a fixed demo clock.
-Sign-in is a local demonstration, not backend authentication; data is lost
-when the app process restarts. Backend-authorized confirmation is now planned;
-direct payment processing remains excluded; externally hosted payments are now
-specified in the follow-up but disabled pending its release gates. Language
-mode is now persisted locally; this does not make profile/contribution data
-durable. Welcome and localized scheduled/remote alerts remain unimplemented.
+Native roots now use the PHP API, real clocks, protected account-bound cache and
+a durable operation queue. Bundled data is restricted to tests/debug fixtures.
+Entered goods/time offers, personal help, server history, owner actions and the
+authenticated center workspace are implemented locally. Guest visits and
+notification preferences persist on the device; account visits synchronize.
+The [integration report](docs/testing/backend-integration.md) distinguishes local
+test evidence from live acceptance. The catalog, account, and visit endpoints,
+and their two migrations, are on the published API (`1adf57a`). A production
+catalog read returned no centers. The center workspace is not on the live
+landing until those portal files reach `main`. Google/Apple credentials, Facebook,
+phone verification, actual alerts/reminders, GPS/manual origin and complete
+account lifecycle remain pending. Welcome routing exists; illustration/legal
+destinations and the full accessibility matrix remain open. Payments are disabled.
 
 SwiftUI discovery, map/list selection, current needs and language now consume
 `SharedBridge` through one cancellable subscription owned by the root store.
-The duplicate Swift sample catalog, search and need-expiry rules were removed;
-both apps still use the shared demonstration catalog and clock. iOS visit
-feedback explicitly describes session-only state, not durable storage or upload.
-Profile now renders the shared read-only history/counts with explicit provenance
-and unavailable metrics. Contribution forms, authoritative history/impact and
-effective notification integration are still pending on iOS.
+The duplicate Swift sample catalog, search and need-expiry rules were removed.
+Both apps use the same catalog/account contracts and shared lifecycle rules.
+Profile displays server history with explicit personal-help provenance and
+unavailable metrics; notification delivery remains pending on both platforms.
 The Xcode app now requires the staged bridge. Apple command-line
 tools alone cannot link the iOS framework or run its native tests; use
 full Xcode. On Apple Silicon, the native ARM64 tests run; Gradle skips
