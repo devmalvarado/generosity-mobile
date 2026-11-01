@@ -1,12 +1,12 @@
 const { test, expect } = require('@playwright/test');
 const api = 'https://api.generosity.global';
 
-test('guest entry uses the hosted page and keeps the local draft in this tab', async ({ page }) => {
+test('guest entry uses the hosted page and keeps the location application in this tab', async ({ page }) => {
   await page.route(api + '/auth/session', route => route.fulfill({ json: { user: null, csrf_token: 'csrf-test' } }));
   await page.setViewportSize({ width: 320, height: 800 });
   await page.goto('/#acceso');
   await page.locator('#idioma').selectOption('es');
-  await page.locator('#titulo').fill('Medicinas para el centro');
+  await page.locator('#application-activities').fill('Medicinas para el centro');
   await expect(page.locator('#account-status')).toContainText('invitado');
   await expect(page.locator('#account-sign-in')).toHaveAttribute('href', api + '/auth/sign-in?client=web&locale=es');
   await expect(page.locator('#account-sign-in')).toHaveAttribute('target', '_blank');
@@ -14,7 +14,7 @@ test('guest entry uses the hosted page and keeps the local draft in this tab', a
   await expect(page.locator('#account-sign-out')).toBeHidden();
   await page.locator('#idioma').selectOption('en');
   await expect(page.locator('#account-sign-in')).toHaveAttribute('href', api + '/auth/sign-in?client=web&locale=en');
-  await expect(page.locator('#titulo')).toHaveValue('Medicinas para el centro');
+  await expect(page.locator('#application-activities')).toHaveValue('Medicinas para el centro');
 });
 
 test('session identity is escaped and logout sends CSRF with credentials', async ({ page }) => {
@@ -46,11 +46,11 @@ test('unavailable backend remains guest-capable and retry restores account entry
   await page.locator('#idioma').selectOption('es');
   await expect(page.locator('#account-status')).toContainText('No se pudo conectar');
   await expect(page.locator('#account-sign-in')).toBeHidden();
-  await page.locator('#titulo').fill('Mantas');
+  await page.locator('#application-activities').fill('Mantas');
   available = true;
   await page.locator('#account-retry').click();
   await expect(page.locator('#account-sign-in')).toBeVisible();
-  await expect(page.locator('#titulo')).toHaveValue('Mantas');
+  await expect(page.locator('#application-activities')).toHaveValue('Mantas');
 });
 
 test('failed logout does not pretend the server session was revoked', async ({ page }) => {

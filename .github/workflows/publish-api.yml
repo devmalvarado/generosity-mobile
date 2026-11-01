@@ -1,0 +1,52 @@
+name: Publish API
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - backend/**
+      - .github/workflows/publish-api.yml
+      - .github/scripts/publish_api.py
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: publish-api
+  cancel-in-progress: false
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: "8.4"
+          extensions: mbstring, xml, curl, zip, bcmath, intl, fileinfo
+          coverage: none
+          tools: composer:v2
+
+      - name: Install production dependencies
+        working-directory: backend
+        run: |
+          set -euo pipefail
+          test ! -f .env
+          composer install --no-dev --prefer-dist --optimize-autoloader --no-interaction --no-scripts
+          cp .env.example .env
+          php artisan key:generate --force --no-interaction
+          php artisan package:discover --ansi --no-interaction
+          rm -f .env
+          test ! -f .env
+          test -f vendor/autoload.php
+          test -f bootstrap/cache/services.php
+
+      - name: Publish release and apply pending migrations
+        env:
+          API_FTP_SERVER: ${{ secrets.API_FTP_SERVER }}
+          API_FTP_USERNAME: ${{ secrets.API_FTP_USERNAME }}
+          API_FTP_PASSWORD: ${{ secrets.API_FTP_PASSWORD }}
+        run: python3 .github/scripts/publish_api.py

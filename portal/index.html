@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Generosity — Encuentra dónde ayudar, cerca de ti</title>
-  <meta name="description" content="Generosity quiere conectar a las personas con centros de bondad. Esta página es una demostración: no envía donaciones ni publica necesidades.">
+  <meta name="description" content="Generosity, una iniciativa del Instituto de Deberes y Derechos Humanos para conectar personas, organizaciones y causas. Registra tu sede y coordina la ayuda de tu comunidad.">
   <link rel="icon" href="assets/favicon.png" type="image/png" sizes="192x192">
   <link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -21,12 +21,12 @@
     </a>
     <nav class="topnav" aria-label="Secciones" data-i18n-aria="nav.sections">
       <a href="#como-funciona" data-i18n="nav.how">Cómo funciona</a>
-      <a href="#necesidades" data-i18n="nav.needs">Necesidades</a>
+      <a href="#necesidades" data-i18n="nav.needs">Causas</a>
       <a href="#centros" data-i18n="nav.centers">Para centros</a>
     </nav>
     <div class="topactions">
-      <a class="ghost" href="#donar" data-i18n="nav.donate">Donar</a>
-      <a class="solid" href="#acceso?destino=publicar" data-i18n="nav.publish">Publicar una necesidad</a>
+      <a class="ghost" href="#donar" data-i18n="nav.donate">Cómo ayudar</a>
+      <a class="solid" href="#registrar-sede" data-i18n="application.nav">Registrar una sede</a>
     </div>
     <label class="lang">
       <span class="visually-hidden" id="idioma-label" data-i18n="lang.label">Idioma</span>
@@ -41,10 +41,10 @@
 
   <nav class="drawer" id="movil" hidden aria-label="Secciones" data-i18n-aria="nav.sections">
     <a href="#como-funciona" data-i18n="nav.how">Cómo funciona</a>
-    <a href="#necesidades" data-i18n="nav.needs">Necesidades</a>
+    <a href="#necesidades" data-i18n="nav.needs">Causas</a>
     <a href="#centros" data-i18n="nav.centers">Para centros</a>
-    <a href="#donar" data-i18n="nav.donate">Donar</a>
-    <a href="#acceso?destino=publicar" data-i18n="nav.publish">Publicar una necesidad</a>
+    <a href="#donar" data-i18n="nav.donate">Cómo ayudar</a>
+    <a href="#registrar-sede" data-i18n="application.nav">Registrar una sede</a>
     <button class="ghost close-menu" type="button" data-i18n="menu.close">Cerrar menú</button>
   </nav>
   <p class="visually-hidden" id="menu-estado" role="status"></p>
@@ -52,22 +52,18 @@
   <main id="contenido" tabindex="-1">
     <section class="hero" id="inicio" tabindex="-1">
       <div class="hero-copy">
-        <p class="where" data-i18n="hero.where">Demostración · sin catálogo conectado</p>
+        <p class="where" data-i18n="hero.where">Encuentra. Conecta. Ayuda.</p>
         <h1 data-i18n="hero.title">La ayuda llega cuando sabes exactamente quién la necesita.</h1>
-        <p class="lead" data-i18n="hero.lead">Generosity quiere mostrar centros de bondad, lo que les falta y una forma concreta de cubrirlo: unas horas, unos paquetes, una aportación. Esta página todavía no consulta un catálogo en vivo.</p>
-        <form class="finder" id="buscador" action="#necesidades" method="get">
-          <label for="ciudad" data-i18n="finder.label">Busca por ciudad</label>
-          <div class="finder-row">
-            <input id="ciudad" name="ciudad" type="text" autocomplete="off" placeholder="Ciudad de México" data-i18n-placeholder="finder.placeholder">
-            <button type="submit" data-i18n="finder.submit">Ver ejemplos</button>
-          </div>
-          <p class="hint" id="busqueda-estado" role="status"></p>
-        </form>
+        <p class="lead" data-i18n="hero.lead">Una iniciativa del Instituto de Deberes y Derechos Humanos para acercar a personas y organizaciones a las causas de su comunidad. Tu tiempo, tus conocimientos y lo que compartes pueden hacer la diferencia.</p>
+        <div class="hero-actions">
+          <a class="solid" href="#registrar-sede" data-i18n="hero.register">Registra tu organización</a>
+          <a class="ghost" href="#necesidades" data-i18n="hero.explore">Conoce las causas</a>
+        </div>
       </div>
 
       <figure class="map" data-i18n-aria="map.title">
         <svg viewBox="0 0 520 460">
-          <title data-i18n="map.title">Ilustración decorativa de calles y pines. No es un mapa en vivo ni muestra tu ubicación.</title>
+          <title data-i18n="map.title">Ilustración de una comunidad conectada por la ayuda.</title>
           <g class="streets" fill="none" stroke="#E4DDD2" stroke-width="10" stroke-linecap="round">
             <path d="M-10 90 H530M-10 200 H530M-10 320 H530M70 -10 V470M190 -10 V470M330 -10 V470M450 -10 V470"/>
           </g>
@@ -87,7 +83,7 @@
           </g>
           <a href="#comedor">
             <g class="pin" transform="translate(150 150)">
-              <title data-i18n="map.pinFood">Ir al ejemplo del comedor</title>
+              <title data-i18n="map.pinFood">Conocer la causa de alimentación</title>
               <circle cx="14" cy="16" r="28" fill="transparent"/>
               <path d="M14 2a12 12 0 0 0-5 23L14 34l5-9a12 12 0 0 0-5-23Z" fill="#E4572E"/>
               <circle cx="14" cy="14" r="4" fill="#FBF8F3"/>
@@ -95,7 +91,7 @@
           </a>
           <a href="#hogar">
             <g class="pin" transform="translate(392 188)">
-              <title data-i18n="map.pinKids">Ir al ejemplo de infancia</title>
+              <title data-i18n="map.pinKids">Conocer la causa de infancia</title>
               <circle cx="14" cy="16" r="28" fill="transparent"/>
               <path d="M14 2a12 12 0 0 0-5 23L14 34l5-9a12 12 0 0 0-5-23Z" fill="#2F6F62"/>
               <circle cx="14" cy="14" r="4" fill="#FBF8F3"/>
@@ -103,7 +99,7 @@
           </a>
           <a href="#puente">
             <g class="pin" transform="translate(300 360)">
-              <title data-i18n="map.pinHealth">Ir al ejemplo de salud</title>
+              <title data-i18n="map.pinHealth">Conocer la causa de salud</title>
               <circle cx="14" cy="16" r="28" fill="transparent"/>
               <path d="M14 2a12 12 0 0 0-5 23L14 34l5-9a12 12 0 0 0-5-23Z" fill="#E0A106"/>
               <circle cx="14" cy="14" r="4" fill="#FBF8F3"/>
@@ -111,7 +107,7 @@
           </a>
         </svg>
         <figcaption>
-          <span><i class="dot you" aria-hidden="true"></i> <span data-i18n="map.you">Referencia</span></span>
+          <span><i class="dot you" aria-hidden="true"></i> <span data-i18n="map.you">Comunidad</span></span>
           <span><i class="dot food" aria-hidden="true"></i> <span data-i18n="map.food">Comedor</span></span>
           <span><i class="dot kids" aria-hidden="true"></i> <span data-i18n="map.kids">Infancia</span></span>
           <span><i class="dot health" aria-hidden="true"></i> <span data-i18n="map.health">Salud</span></span>
@@ -120,23 +116,23 @@
     </section>
 
     <section class="loop" id="como-funciona" tabindex="-1">
-      <h2 data-i18n="how.title">Cuatro pasos, y el último te trae de vuelta.</h2>
+      <h2 data-i18n="how.title">La ayuda empieza con una conexión.</h2>
       <ol>
         <li>
           <h3 data-i18n="how.discover.title">Descubres</h3>
-          <p data-i18n="how.discover.body">Un mapa con centros de la zona, filtrados por causa: infancia, adultos mayores, salud, comedores, educación. Hoy el dibujo de arriba es solo una ilustración.</p>
+          <p data-i18n="how.discover.body">Acércate a una causa que te importe: alimentación, infancia, salud o educación.</p>
         </li>
         <li>
           <h3 data-i18n="how.understand.title">Entiendes</h3>
-          <p data-i18n="how.understand.body">Cada centro, cuando el catálogo exista, mostrará quién es, cuándo abre, cómo contactarlo y qué está pidiendo.</p>
+          <p data-i18n="how.understand.body">Conoce las necesidades de cada organización y sus condiciones para recibir apoyo.</p>
         </li>
         <li>
           <h3 data-i18n="how.help.title">Ayudas</h3>
-          <p data-i18n="how.help.body">La idea es comprometerse con algo concreto. Esta página no registra ese compromiso ni actualiza cantidades.</p>
+          <p data-i18n="how.help.body">Acuerda con el centro qué aportar, cómo hacerlo y cuándo entregar tu ayuda.</p>
         </li>
         <li>
           <h3 data-i18n="how.return.title">Vuelves</h3>
-          <p data-i18n="how.return.body">El historial sería tuyo. Sin puntos que canjear y sin ranking que comparar con nadie. Aquí todavía no hay historial.</p>
+          <p data-i18n="how.return.body">Da seguimiento a tu aportación y mantén el vínculo con quienes trabajan por tu comunidad.</p>
         </li>
       </ol>
     </section>
@@ -144,10 +140,10 @@
     <section class="needs" id="necesidades" tabindex="-1">
       <div class="needs-head">
         <div>
-          <p class="demo-banner" data-i18n="needs.banner">Contenido de demostración. No es un catálogo en vivo, no son centros reales y no hay métricas de impacto.</p>
-          <h2 data-i18n="needs.title">Ejemplos de lo que un centro podría pedir.</h2>
+
+          <h2 data-i18n="needs.title">Hay muchas formas de hacer el bien.</h2>
         </div>
-        <div class="filters" role="group" data-i18n-aria="needs.filters" aria-label="Filtrar ejemplos por causa">
+        <div class="filters" role="group" data-i18n-aria="needs.filters" aria-label="Explorar causas">
           <button type="button" class="on" data-filter="todas" aria-pressed="true" data-i18n="filter.all">Todas</button>
           <button type="button" data-filter="comedores" aria-pressed="false" data-i18n="filter.food">Comedores</button>
           <button type="button" data-filter="infancia" aria-pressed="false" data-i18n="filter.kids">Infancia</button>
@@ -156,148 +152,174 @@
       </div>
 
       <div class="board">
-        <article class="need urgent" id="comedor" data-cause="comedores" tabindex="-1">
-          <p class="demo-flag" data-i18n="demo.card">Ejemplo de demostración</p>
+        <article class="need featured" id="comedor" data-cause="comedores" tabindex="-1">
+
           <header>
             <span class="cause" data-i18n="card.food.cause">Comedor comunitario</span>
-            <span class="flag" data-i18n="card.urgent">Urgente</span>
+
           </header>
-          <h3 data-i18n="card.food.title">20 despensas para esta semana</h3>
-          <p data-i18n="card.food.body">Texto de ejemplo: arroz, frijol, aceite y lentejas. No describe un comedor que esté operando.</p>
-          <p class="where-line" data-i18n="card.food.where">Comedor Los Olivos · nombre de ejemplo</p>
-          <div class="meter" aria-hidden="true"><span style="--filled: 25%"></span></div>
-          <p class="count" data-i18n="card.food.count">Cifra de ejemplo: 5 de 20. No es un avance real.</p>
-          <a class="solid" href="#donar" data-i18n="card.food.action">Quiero cubrir una parte</a>
+          <h3 data-i18n="card.food.title">Alimentación que une</h3>
+          <p data-i18n="card.food.body">Alimentos, preparación de comidas y apoyo a comedores comunitarios. Compartir una mesa también construye comunidad.</p>
+
+          <a class="solid" href="#donar" data-i18n="card.food.action">Conoce cómo participar</a>
         </article>
 
         <article class="need" id="hogar" data-cause="infancia" tabindex="-1">
-          <p class="demo-flag" data-i18n="demo.card">Ejemplo de demostración</p>
+
           <header>
             <span class="cause" data-i18n="card.kids.cause">Infancia y educación</span>
           </header>
-          <h3 data-i18n="card.kids.title">Útiles escolares para el nuevo ciclo</h3>
-          <p data-i18n="card.kids.body">Texto de ejemplo: cuadernos, lápices y mochilas. No corresponde a un grupo real de niños.</p>
-          <p class="where-line" data-i18n="card.kids.where">Hogar Futuros Brillantes · nombre de ejemplo</p>
-          <div class="meter" aria-hidden="true"><span style="--filled: 60%"></span></div>
-          <p class="count" data-i18n="card.kids.count">Cifra de ejemplo: 24 de 40. No es un avance real.</p>
-          <a class="solid" href="#donar" data-i18n="card.kids.action">Ver cómo ayudar con bienes</a>
+          <h3 data-i18n="card.kids.title">Oportunidades para crecer</h3>
+          <p data-i18n="card.kids.body">Materiales escolares, tutorías y acompañamiento educativo para fortalecer el aprendizaje y el desarrollo.</p>
+
+          <a class="solid" href="#donar" data-i18n="card.kids.action">Conoce cómo participar</a>
         </article>
 
         <article class="need" id="puente" data-cause="salud" tabindex="-1">
-          <p class="demo-flag" data-i18n="demo.card">Ejemplo de demostración</p>
+
           <header>
             <span class="cause" data-i18n="card.health.cause">Salud</span>
           </header>
-          <h3 data-i18n="card.health.title">Turnos de dos horas, entre semana</h3>
-          <p data-i18n="card.health.body">Texto de ejemplo: acompañar a una cita. No hay turnos abiertos en esta página.</p>
-          <p class="where-line" data-i18n="card.health.where">Puente de Salud Abierta · nombre de ejemplo</p>
-          <p class="count" data-i18n="card.health.count">Cifra de ejemplo: 6 turnos. No es una agenda real.</p>
-          <a class="solid" href="#donar" data-i18n="card.health.action">Ver cómo ayudar con tiempo</a>
+          <h3 data-i18n="card.health.title">Cuidado y acompañamiento</h3>
+          <p data-i18n="card.health.body">Apoyo a centros de atención, insumos solicitados por sus responsables y tiempo para acompañar a quienes lo necesitan.</p>
+
+          <a class="solid" href="#donar" data-i18n="card.health.action">Conoce cómo participar</a>
         </article>
       </div>
-      <p class="empty" hidden data-i18n="needs.empty">No hay ejemplos de demostración para ese filtro.</p>
+      <p class="empty" hidden data-i18n="needs.empty">Elige otra causa para conocer más formas de ayudar.</p>
     </section>
 
     <section class="split" id="donar" tabindex="-1">
       <div>
-        <h2 data-i18n="donate.title">Ayuda con lo que tienes, no con lo que te sobre.</h2>
-        <p class="lead" data-i18n="donate.lead">Tres formas previstas de ayudar. Esta página no registra una oferta, no cobra y no pide tarjeta ni datos bancarios.</p>
+        <h2 data-i18n="donate.title">Tu manera de ayudar también cuenta.</h2>
+        <p class="lead" data-i18n="donate.lead">Ayudar puede empezar con unas horas, materiales útiles o algo que sabes hacer. Coordina cada aportación con la organización que la recibe.</p>
         <dl class="ways">
           <div>
             <dt data-i18n="donate.time.title">Tiempo</dt>
-            <dd data-i18n="donate.time.body">Elegir una actividad, un día y unas horas. Aquí no hay confirmación del centro ni historial.</dd>
+            <dd data-i18n="donate.time.body">Comparte tiempo para acompañar, organizar actividades o apoyar el trabajo cotidiano de un centro.</dd>
           </div>
           <div>
             <dt data-i18n="donate.goods.title">Bienes</dt>
-            <dd data-i18n="donate.goods.body">Comprometerse con una parte de lo pedido. Esta página no actualiza lo que falta.</dd>
+            <dd data-i18n="donate.goods.body">Aporta alimentos, materiales e insumos de acuerdo con las necesidades y condiciones de recepción del centro.</dd>
           </div>
           <div>
-            <dt data-i18n="donate.money.title">Dinero</dt>
-            <dd data-i18n="donate.money.body">No disponible. No hay proveedor de pagos conectado y no se aceptan aportaciones desde este sitio.</dd>
+            <dt data-i18n="donate.knowledge.title">Conocimientos</dt>
+            <dd data-i18n="donate.knowledge.body">Comparte tus habilidades mediante tutorías, talleres o apoyo profesional.</dd>
           </div>
         </dl>
       </div>
-      <form class="donate" id="formulario-donacion" action="#donar" method="get" novalidate>
-        <fieldset>
-          <legend data-i18n="donate.legend">Cómo quieres ayudar</legend>
-          <label class="choice"><input type="radio" name="forma" value="tiempo"> <span data-i18n="donate.time.choice">Donar tiempo</span></label>
-          <label class="choice"><input type="radio" name="forma" value="bienes" checked> <span data-i18n="donate.goods.choice">Donar bienes</span></label>
-          <label class="choice"><input type="radio" name="forma" value="dinero"> <span data-i18n="donate.money.choice">Donar dinero</span></label>
-        </fieldset>
-        <label for="centro"><span data-i18n="donate.center">Centro de demostración</span>
-          <select id="centro" name="centro">
-            <option value="olivos" data-i18n="center.olivos">Comedor Los Olivos</option>
-            <option value="hogar" data-i18n="center.hogar">Hogar Futuros Brillantes</option>
-            <option value="puente" data-i18n="center.puente">Puente de Salud Abierta</option>
-          </select>
-        </label>
-        <label for="cantidad"><span data-i18n="donate.amount">Cantidad</span>
-          <input id="cantidad" name="cantidad" type="number" inputmode="numeric" min="1" value="5" aria-describedby="aviso">
-        </label>
-        <p class="field-error" id="cantidad-error" role="alert"></p>
-        <p class="hint" id="aviso"></p>
-        <button class="solid" type="submit" data-i18n="donate.submit">Enviar intención</button>
-        <p class="result" id="donacion-estado" role="status" aria-live="polite"></p>
-      </form>
+      <aside class="action-card">
+        <h3 data-i18n="participate.title">Haz que tu organización sea parte.</h3>
+        <p data-i18n="participate.body">Cuéntanos dónde trabajan y a quiénes ayudan. Registra una sede para iniciar el vínculo con Generosity.</p>
+        <a class="solid" href="#registrar-sede" data-i18n="application.nav">Registrar una sede</a>
+        <a class="ghost" href="#acceso?destino=centros" data-i18n="participate.access">Ya represento a un centro</a>
+      </aside>
+    </section>
+
+    <section class="registration" id="registrar-sede" tabindex="-1" aria-labelledby="registration-title">
+      <div class="registration-copy">
+        <p class="where" data-i18n="application.eyebrow">Para organizaciones</p>
+        <h2 id="registration-title" data-i18n="application.title">Tu organización ayuda. Hagamos que más personas la encuentren.</h2>
+        <p class="lead" data-i18n="application.lead">Solicita el registro de una sede. Si tienen varias, envía una solicitud por cada ubicación.</p>
+        <ol class="registration-steps">
+          <li data-i18n="application.step1">Cuéntanos quiénes son y qué apoyo ofrecen.</li>
+          <li data-i18n="application.step2">Envía la solicitud desde tu cuenta Generosity con correo verificado.</li>
+          <li data-i18n="application.step3">Recibe un folio y consulta tu solicitud pendiente de revisión.</li>
+        </ol>
+        <p class="fine" data-i18n="application.private">Los datos de esta solicitud son privados. No publiques datos de personas beneficiarias ni domicilios protegidos. El envío no publica la sede, no la verifica ni concede permisos para administrarla.</p>
+        <p><a class="ghost" href="#acceso?destino=centros" data-i18n="application.existing">Ya tengo un centro asignado</a></p>
+      </div>
+      <div>
+        <p><a href="https://api.generosity.global/legal/privacy?locale=es" data-legal="privacy" data-i18n="footer.privacy">Aviso de privacidad</a></p>
+        <form class="registration-form" id="site-registration" novalidate>
+          <h3 data-i18n="application.formTitle">Registrar una sede</h3>
+          <p class="fine" data-i18n="application.required">Los campos marcados con * son obligatorios. Puedes preparar el formulario antes de iniciar sesión; conserva esta pestaña abierta.</p>
+          <fieldset id="registration-fields">
+            <legend data-i18n="application.organization">1. Tu organización</legend>
+            <label for="application-organization_name" data-i18n="application.organization_name">Nombre de la organización *</label>
+            <input id="application-organization_name" name="organization_name" autocomplete="organization" maxlength="200" required>
+            <label for="application-activities" data-i18n="application.activities">Tipo de centro y actividades *</label>
+            <textarea id="application-activities" name="activities" rows="3" maxlength="2000" required aria-describedby="application-activities-hint"></textarea>
+            <p id="application-activities-hint" class="fine" data-i18n="application.activitiesHint">Por ejemplo: comedor comunitario, albergue, atención de salud o capacitación. Describe a quiénes apoyan.</p>
+            <h4 data-i18n="application.location">2. La sede</h4>
+            <label for="application-site_name" data-i18n="application.site_name">Nombre de la sede *</label>
+            <input id="application-site_name" name="site_name" maxlength="200" required>
+            <div class="pair">
+              <label for="application-country"><span data-i18n="application.country">País *</span><input id="application-country" name="country" autocomplete="country-name" maxlength="100" required></label>
+              <label for="application-city"><span data-i18n="application.city">Ciudad o localidad *</span><input id="application-city" name="city" autocomplete="address-level2" maxlength="100" required></label>
+            </div>
+            <h4 data-i18n="application.contact">3. Contacto de la organización</h4>
+            <label for="application-contact_name" data-i18n="application.contact_name">Tu nombre *</label>
+            <input id="application-contact_name" name="contact_name" autocomplete="name" maxlength="160" required>
+            <label for="application-contact_role" data-i18n="application.contact_role">Cargo o relación con la organización *</label>
+            <input id="application-contact_role" name="contact_role" autocomplete="organization-title" maxlength="160" required>
+            <p class="fine" data-i18n="application.emailHint">Usaremos el correo verificado de tu cuenta para contactarte sobre esta solicitud.</p>
+            <details class="registration-optional">
+              <summary data-i18n="application.optional">Agregar datos opcionales</summary>
+              <label for="application-legal_name" data-i18n="application.legal_name">Nombre legal</label><input id="application-legal_name" name="legal_name" maxlength="200">
+              <label for="application-region" data-i18n="application.region">Estado, provincia o región</label><input id="application-region" name="region" autocomplete="address-level1" maxlength="100">
+              <label for="application-postal_code" data-i18n="application.postal_code">Código postal</label><input id="application-postal_code" name="postal_code" autocomplete="postal-code" maxlength="20">
+              <label for="application-address" data-i18n="application.address">Dirección de atención al público (omite ubicaciones protegidas)</label><textarea id="application-address" name="address" rows="2" autocomplete="street-address" maxlength="500"></textarea>
+              <label for="application-phone" data-i18n="application.phone">Teléfono con código de país</label><input id="application-phone" name="phone" type="tel" autocomplete="tel" maxlength="40">
+              <label for="application-website" data-i18n="application.website">Sitio web oficial</label><input id="application-website" name="website" type="url" autocomplete="url" maxlength="2048" placeholder="https://" pattern="https?://.+">
+            </details>
+            <label class="choice"><input name="representation_confirmed" type="checkbox" required><span data-i18n="application.representation">Declaro que represento a esta organización. *</span></label>
+            <label class="choice"><input name="contact_consent" type="checkbox" required><span data-i18n="application.consent">Autorizo que Generosity guarde estos datos para revisar la solicitud y contactarme sobre ella. *</span></label>
+          </fieldset>
+          <p id="registration-session" class="fine"></p>
+          <div class="account-actions" id="registration-access">
+            <a class="ghost" id="registration-sign-in" target="_blank" rel="noopener" href="https://api.generosity.global/auth/sign-in?client=web&amp;locale=es" data-i18n="application.signIn">Iniciar sesión ↗</a>
+            <a class="ghost" id="registration-create" target="_blank" rel="noopener" href="https://api.generosity.global/auth/sign-in?client=web&amp;locale=es&amp;screen=register" data-i18n="application.create">Crear cuenta ↗</a>
+          </div>
+          <p id="registration-errors" class="field-error" role="alert" tabindex="-1"></p>
+          <button id="registration-submit" class="solid" type="submit" disabled data-i18n="application.submit">Enviar solicitud</button>
+          <p id="registration-result" class="result" role="status" tabindex="-1"></p>
+          <noscript>Activa JavaScript para enviar la solicitud. / Enable JavaScript to submit your application.</noscript>
+        </form>
+        <div id="registration-history" hidden>
+          <h3 data-i18n="application.history">Mis solicitudes de sedes</h3>
+          <button type="button" id="registration-refresh" class="ghost" data-i18n="application.refresh">Actualizar solicitudes</button>
+          <p id="registration-history-status" role="status"></p>
+          <ul id="registration-list"></ul>
+          <div class="account-actions"><button type="button" id="registration-prev" data-i18n="staff.prev">Anterior</button><button type="button" id="registration-next" data-i18n="staff.next">Siguiente</button></div>
+        </div>
+      </div>
     </section>
 
     <section class="centers" id="centros" tabindex="-1">
       <div class="centers-copy">
-        <h2 data-i18n="centers.title">¿Administras un centro? Publicar todavía no está conectado.</h2>
-        <p class="lead" data-i18n="centers.lead">La misma cuenta Generosity puede tener permisos de un centro. Los concede personal autorizado; iniciar sesión no permite publicar por sí solo.</p>
+        <h2 data-i18n="centers.title">Un espacio para quienes ayudan todos los días.</h2>
+        <p class="lead" data-i18n="centers.lead">El portal reúne las necesidades y aportaciones de los centros que tienes asignados.</p>
         <ul>
-          <li data-i18n="centers.item1">El perfil, los horarios y el contacto quedan para cuando exista un espacio de personal.</li>
-          <li data-i18n="centers.item2">Una necesidad publicada tendrá cantidad, prioridad y cierre. Esta página no la guarda.</li>
-          <li data-i18n="centers.item3">Confirmar lo que otras personas traigan también depende de ese espacio, que no está en esta etapa.</li>
-          <li data-i18n="centers.item4">La verificación oficial y los pagos no forman parte de esta página.</li>
+          <li data-i18n="centers.item1">Selecciona el centro que representas.</li>
+          <li data-i18n="centers.item2">Publica y actualiza sus necesidades, cantidades y prioridades.</li>
+          <li data-i18n="centers.item3">Consulta las ofertas de ayuda y confirma su recepción.</li>
+          <li data-i18n="centers.item4">Mantén la coordinación con quienes participan.</li>
         </ul>
-        <p><a class="solid" href="#acceso?destino=publicar" data-i18n="centers.access">Ir al acceso de centros</a></p>
+        <p><a class="solid" href="#registrar-sede" data-i18n="application.nav">Registrar una sede</a></p>
+        <p><a class="ghost" href="#acceso?destino=publicar" data-i18n="centers.access">Ir al acceso de centros</a></p>
       </div>
-      <form class="publish" id="publicar" action="#acceso?destino=publicar" method="get" novalidate>
-        <h3 data-i18n="publish.title">Borrador local, no una publicación</h3>
-        <p class="fine" data-i18n="publish.intro">Puedes escribir aquí para no perder la idea. Enviar no publica, no entra a una revisión y no demuestra que administras el centro.</p>
-        <label for="nombre-centro"><span data-i18n="publish.center">Nombre del centro</span>
-          <input id="nombre-centro" name="nombre" type="text" autocomplete="organization" placeholder="Comedor Los Olivos" data-i18n-placeholder="publish.centerPlaceholder">
-        </label>
-        <label for="titulo"><span data-i18n="publish.need">Qué necesitas</span>
-          <input id="titulo" name="titulo" type="text" autocomplete="off" placeholder="Despensas para esta semana" data-i18n-placeholder="publish.needPlaceholder">
-        </label>
-        <div class="pair">
-          <label for="unidades"><span data-i18n="publish.qty">Cantidad</span>
-            <input id="unidades" name="unidades" type="number" inputmode="numeric" min="1" value="20">
-          </label>
-          <label for="prioridad"><span data-i18n="publish.priority">Prioridad</span>
-            <select id="prioridad" name="prioridad">
-              <option value="normal" data-i18n="priority.normal">Normal</option>
-              <option value="media" data-i18n="priority.medium">Media</option>
-              <option value="alta" data-i18n="priority.high">Alta</option>
-              <option value="urgente" data-i18n="priority.urgent">Urgente</option>
-            </select>
-          </label>
-        </div>
-        <label for="detalle"><span data-i18n="publish.detail">Detalle</span>
-          <textarea id="detalle" name="detalle" rows="3" placeholder="Para quién es y cuándo lo necesitas" data-i18n-placeholder="publish.detailPlaceholder"></textarea>
-        </label>
-        <button class="solid" type="submit" data-i18n="publish.submit">Continuar al acceso de centros</button>
-        <p class="result" id="publicar-estado" role="status" aria-live="polite"></p>
-      </form>
+      <aside class="action-card" id="publicar" tabindex="-1">
+        <h3 data-i18n="publish.title">Gestiona las necesidades de tu centro.</h3>
+        <p data-i18n="publish.intro">Entra con tu cuenta Generosity y selecciona un centro autorizado para publicar necesidades y dar seguimiento a sus aportaciones.</p>
+        <a class="solid" href="#acceso?destino=publicar" data-i18n="publish.submit">Entrar al portal de centros</a>
+      </aside>
     </section>
 
     <section class="access" id="acceso" tabindex="-1">
       <div class="access-card">
         <p class="pending-flag" data-i18n="access.flag">Cuenta Generosity</p>
         <h2 data-i18n="access.title">Acceso de centros</h2>
-        <p class="lead" data-i18n="access.lead">Usa tu cuenta Generosity en web, Android y iOS con Google, Apple o correo. El acceso se abre en otra pestaña para conservar tu borrador. Iniciar sesión no concede permisos de un centro ni publica necesidades.</p>
+        <p class="lead" data-i18n="access.lead">Inicia sesión con tu cuenta Generosity para gestionar tus centros y solicitudes de sedes.</p>
         <p id="account-status" role="status" aria-live="polite"></p>
         <div class="account-actions">
-          <a id="account-sign-in" class="solid" target="_blank" rel="noopener" href="https://api.generosity.global/auth/sign-in?client=web&amp;locale=es" hidden data-i18n="auth.signIn">Iniciar sesión o vincular cuenta ↗</a>
+          <a id="account-sign-in" class="solid" target="_blank" rel="noopener" href="https://api.generosity.global/auth/sign-in?client=web&amp;locale=es" hidden data-i18n="auth.signIn">Iniciar sesión ↗</a>
           <button id="account-sign-out" class="ghost" type="button" hidden data-i18n="auth.signOut">Cerrar sesión</button>
           <button id="account-retry" class="ghost" type="button" data-i18n="auth.retry">Comprobar conexión</button>
         </div>
         <noscript>Para iniciar sesión necesitas JavaScript. / JavaScript is required to sign in.</noscript>
         <p id="destino-previsto"></p>
-        <p data-i18n="access.keep">Si escribiste una necesidad en esta página, el texto sigue en el formulario. No se envió a ningún servidor.</p>
-        <p><a class="ghost" href="#publicar" data-i18n="access.back">Volver al borrador local</a></p>
+
       </div>
     </section>
 
@@ -333,7 +355,7 @@
             <label for="need-expires" data-i18n="staff.expires">Último día (opcional, UTC)</label><input id="need-expires" type="date">
             <label for="need-status" data-i18n="staff.status">Estado</label>
             <select id="need-status"><option value="draft" data-i18n="staff.draft">Borrador</option><option value="published" data-i18n="staff.published">Publicada</option><option value="closed" data-i18n="staff.closed">Cerrada</option></select>
-            <button type="submit" data-i18n="staff.save">Guardar en el servidor</button>
+            <button type="submit" data-i18n="staff.save">Guardar cambios</button>
           </fieldset>
         </form>
         <h3 data-i18n="staff.contributions">Aportaciones</h3>
@@ -343,13 +365,33 @@
     </section>
 
     <section class="principles" id="privacidad" tabindex="-1">
-      <h2 data-i18n="privacy.title">Lo que esta página no hace.</h2>
+      <h2 data-i18n="privacy.title">Cuidamos la información que compartes.</h2>
+      <p><a href="https://api.generosity.global/legal/privacy?locale=es" data-legal="privacy" data-i18n="footer.privacy">Aviso de privacidad</a></p>
       <div>
-        <p><strong data-i18n="privacy.rank.title">No rankea a las personas.</strong> <span data-i18n="privacy.rank.body">No hay tabla de los más generosos ni puntos que se canjeen. Tampoco hay un historial en este sitio.</span></p>
-        <p><strong data-i18n="privacy.card.title">No pide ni guarda una tarjeta.</strong> <span data-i18n="privacy.card.body">No hay pago en esta página. No escribas datos de tarjeta ni bancarios: no hay dónde guardarlos y no se deben enviar.</span></p>
-        <p><strong data-i18n="privacy.location.title">No pide tu ubicación.</strong> <span data-i18n="privacy.location.body">El dibujo no es un mapa y esta página no solicita permiso de ubicación ni alertas de proximidad.</span></p>
+        <p><strong data-i18n="privacy.purpose.title">Una finalidad concreta.</strong> <span data-i18n="privacy.purpose.body">Los datos de tu solicitud de sede se utilizan para revisarla y contactarte sobre ella.</span></p>
+        <p><strong data-i18n="privacy.access.title">Acceso según responsabilidades.</strong> <span data-i18n="privacy.access.body">Tu cuenta permite consultar tus solicitudes. La gestión de necesidades corresponde al personal autorizado de cada centro.</span></p>
+        <p><strong data-i18n="privacy.care.title">Ayudar con dignidad.</strong> <span data-i18n="privacy.care.body">Comparte información de la organización y omite datos de personas beneficiarias, expedientes médicos y domicilios protegidos.</span></p>
       </div>
-      <p class="fine" data-i18n="privacy.note">Esto no es una política de privacidad. No hay un documento legal publicado para enlazar.</p>
+    </section>
+
+    <section class="institute" id="contacto" tabindex="-1" aria-labelledby="contact-title">
+      <h2 id="contact-title" data-i18n="contact.title">Una iniciativa del Instituto.</h2>
+      <p class="lead" data-i18n="contact.lead">Generosity es una herramienta del Instituto de Deberes y Derechos Humanos, constituido como asociación civil.</p>
+      <div class="institute-details">
+        <div>
+          <h3 data-i18n="contact.fiscal">RFC y domicilio fiscal</h3>
+          <p>INSTITUTO DE DEBERES Y DERECHOS HUMANOS<br>RFC: IDD190329L69</p>
+          <address>Temixco 7, acceso 1er callejón, colonia Pedregal de Santo Domingo, Coyoacán, Ciudad de México, C.P. 04369, México.</address>
+        </div>
+        <div>
+          <p data-i18n="contact.team">Personal del Instituto atiende soporte, asuntos legales y privacidad en este correo.</p>
+          <dl class="contact-channels">
+            <div><dt data-i18n="contact.support">Soporte</dt><dd><a class="contact-email" href="mailto:notificaciones@generosity.global?subject=Generosity%20soporte">notificaciones@generosity.global</a></dd></div>
+            <div><dt data-i18n="contact.legal">Asuntos legales</dt><dd><a class="contact-email" href="mailto:notificaciones@generosity.global?subject=Generosity%20legales">notificaciones@generosity.global</a></dd></div>
+            <div><dt data-i18n="contact.privacy">Privacidad y datos personales</dt><dd><a class="contact-email" href="mailto:notificaciones@generosity.global?subject=Generosity%20privacidad">notificaciones@generosity.global</a></dd></div>
+          </dl>
+        </div>
+      </div>
     </section>
   </main>
 
@@ -357,10 +399,11 @@
     <a class="brand" href="#inicio">
       <img src="assets/logo.png" alt="generosity" width="1046" height="585">
     </a>
-    <p data-i18n="footer.tag">generosity conecta, cuando el servicio exista, a las personas con centros de bondad. Esta página no publica ni cobra.</p>
+    <p data-i18n="footer.tag">Pequeñas acciones, gran impacto. Una iniciativa del Instituto de Deberes y Derechos Humanos.</p>
     <nav data-i18n-aria="footer.nav" aria-label="Pie">
-      <a href="#privacidad" data-i18n="footer.privacy">Privacidad</a>
-      <a href="mailto:hola@generosity.global" data-i18n="footer.contact">Contacto</a>
+      <a href="https://api.generosity.global/legal/privacy?locale=es" data-legal="privacy" data-i18n="footer.privacy">Aviso de privacidad</a>
+      <a href="https://api.generosity.global/legal/terms?locale=es" data-legal="terms" data-i18n="footer.terms">Términos y condiciones</a>
+      <a href="#contacto" data-i18n="footer.contact">Instituto y contacto</a>
     </nav>
   </footer>
 

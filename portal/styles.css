@@ -130,7 +130,7 @@ h2 { font-size: clamp(1.45rem, 6vw, 2.6rem); max-width: 22ch; }
 
 .lang { flex: 1 1 100%; }
 
-.lang select, .menu, .solid, .ghost, .filters button, .finder button {
+.lang select, .menu, .solid, .ghost, .filters button {
   font: inherit;
   font-weight: 560;
   min-height: 44px;
@@ -206,20 +206,20 @@ h2 { font-size: clamp(1.45rem, 6vw, 2.6rem); max-width: 22ch; }
 .solid:hover { background: var(--pin-deep); }
 .ghost { border-color: var(--line); background: #fff; color: var(--ink); }
 
-.hero, .loop, .needs, .split, .centers, .access, .principles {
+.hero, .loop, .needs, .split, .centers, .access, .principles, .registration, .institute {
   width: min(1240px, 100%);
   margin: 0 auto;
   padding: 2rem var(--gutter);
 }
 
-.hero, .split, .centers, .needs-head, .pair, .loop ol, .board, .principles div {
+.hero, .split, .centers, .needs-head, .pair, .loop ol, .board, .principles div, .registration {
   display: grid;
   grid-template-columns: minmax(0, 1fr);
   gap: 1.25rem;
   min-width: 0;
 }
 
-.hero > *, .split > *, .centers > *, .board > *, .need, .access-card {
+.hero > *, .split > *, .centers > *, .board > *, .need, .access-card, .registration > * {
   min-width: 0;
 }
 
@@ -227,17 +227,8 @@ h2 { font-size: clamp(1.45rem, 6vw, 2.6rem); max-width: 22ch; }
 
 .hero-copy h1 { margin-bottom: .9rem; }
 
-.finder { margin-top: 1.4rem; }
-.finder label { display: block; font-weight: 560; margin-bottom: .4rem; }
 
-.finder-row {
-  display: flex;
-  flex-direction: column;
-  gap: .5rem;
-  max-width: 36rem;
-}
-
-.finder input, input, select, textarea {
+input, select, textarea {
   width: 100%;
   max-width: 100%;
   min-width: 0;
@@ -251,19 +242,7 @@ h2 { font-size: clamp(1.45rem, 6vw, 2.6rem); max-width: 22ch; }
   background: #fff;
 }
 
-.finder input { border-radius: 999px; background: #fff; }
 
-.finder button {
-  background: var(--ink);
-  color: var(--paper);
-  border: 0;
-  border-radius: 999px;
-  padding: .7rem 1.1rem;
-  cursor: pointer;
-  white-space: normal;
-}
-
-.finder button:hover { background: #000; }
 
 .map {
   margin: 0;
@@ -314,18 +293,6 @@ h2 { font-size: clamp(1.45rem, 6vw, 2.6rem); max-width: 22ch; }
 .loop p, .need p { margin: 0; }
 .loop p { color: var(--ink-soft); }
 
-.demo-banner, .demo-flag {
-  margin: 0 0 .8rem;
-  padding: .55rem .75rem;
-  border: 1.5px solid var(--line);
-  border-radius: 12px;
-  background: #fff;
-  color: var(--ink);
-  font-size: .92rem;
-  font-weight: 560;
-}
-
-.demo-flag { align-self: flex-start; margin-bottom: 0; }
 
 .filters { display: flex; flex-wrap: wrap; gap: .4rem; }
 .filters button {
@@ -353,27 +320,12 @@ h2 { font-size: clamp(1.45rem, 6vw, 2.6rem); max-width: 22ch; }
   gap: .55rem;
 }
 
-.need.urgent { background: #1C1915; color: #FBF8F3; }
-.need.urgent .demo-flag { background: transparent; color: #FBF8F3; border-color: #3A342C; }
+.need.featured { background: #1C1915; color: #FBF8F3; }
 .need header { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: .4rem; }
 .cause { font-size: .92rem; color: var(--grove); font-weight: 560; }
-.need.urgent .cause { color: #F0B49A; }
-.flag {
-  background: var(--pin);
-  color: #fff;
-  border-radius: 999px;
-  padding: .2rem .7rem;
-  font-size: .85rem;
-  font-weight: 560;
-}
+.need.featured .cause { color: #F0B49A; }
 .need h3 { font-size: 1.35rem; }
-.need .where-line, .need .count { color: var(--ink-soft); font-size: .95rem; }
-.need.urgent .where-line, .need.urgent .count { color: #C9C2B8; }
 .need .solid { align-self: stretch; margin-top: auto; }
-
-.meter { height: .5rem; background: var(--line); border-radius: 999px; overflow: hidden; }
-.need.urgent .meter { background: #3A342C; }
-.meter span { display: block; height: 100%; width: var(--filled); background: var(--pin); border-radius: inherit; }
 
 .empty {
   margin: 1rem 0 0;
@@ -388,7 +340,7 @@ h2 { font-size: clamp(1.45rem, 6vw, 2.6rem); max-width: 22ch; }
 .ways dt { font-family: var(--serif); font-size: 1.25rem; }
 .ways dd { margin: .2rem 0 0; color: var(--ink-soft); }
 
-form.donate, form.publish, .access-card {
+.action-card, .access-card, .registration-form {
   background: #fff;
   border-radius: 24px;
   padding: 1.15rem;
@@ -417,7 +369,26 @@ label { display: flex; flex-direction: column; gap: .3rem; font-weight: 560; fon
 .centers { border-top: 1px solid var(--line); }
 .centers ul { margin: .4rem 0 0; padding-left: 1.1rem; color: var(--ink-soft); }
 .centers li { margin: .4rem 0; }
-form.publish h3 { font-size: 1.4rem; }
+.action-card h3 { font-size: 1.4rem; }
+.registration { border-top: 1px solid var(--line); scroll-margin-top: 6rem; overflow-wrap: anywhere; }
+.registration button { max-width: 100%; }
+.registration h3 { font-size: 1.4rem; }
+.registration h4 { font-family: var(--serif); font-size: 1.25rem; margin: 1.4rem 0 .3rem; }
+.registration-steps { padding-left: 1.4rem; }
+.registration-steps li { margin-block: .9rem; padding-left: .4rem; }
+.registration-form fieldset { gap: .5rem; min-width: 0; }
+.registration-optional { margin-block: .8rem; }
+.registration-optional summary { cursor: pointer; min-height: 44px; padding-block: .6rem; font-weight: 560; }
+.registration-optional label { margin-top: .75rem; }
+.registration .choice { align-items: flex-start; margin-top: .6rem; }
+.registration .choice input { flex-shrink: 0; margin-top: .2rem; }
+#registration-history { margin-top: 1.5rem; padding: 1rem; border: 1px solid var(--line); border-radius: 16px; }
+#registration-list { padding-left: 1.2rem; overflow-wrap: anywhere; }
+#registration-list li { margin-block: .8rem; }
+#registration-result { overflow-wrap: anywhere; }
+@media (min-width: 60rem) {
+  .registration { grid-template-columns: minmax(0, .8fr) minmax(0, 1.2fr); gap: 3rem; align-items: start; }
+}
 
 .hint, .fine { margin: 0; color: var(--ink-soft); font-size: .95rem; font-weight: 380; }
 .field-error { margin: 0; color: var(--pin-deep); font-weight: 560; font-size: .95rem; }
@@ -458,14 +429,11 @@ footer nav a { display: inline-flex; align-items: center; min-height: 44px; colo
 @media (min-width: 40rem) {
   .lang { flex: 0 1 auto; }
   .lang select { width: auto; }
-  .finder-row { flex-direction: row; align-items: stretch; }
-  .finder input { flex: 1 1 auto; }
-  .finder button { flex: 0 0 auto; }
 }
 
 @media (min-width: 48rem) {
   :root { --gutter: 1.5rem; }
-  .hero, .loop, .needs, .split, .centers, .access, .principles { padding-block: 2.5rem; }
+  .hero, .loop, .needs, .split, .centers, .access, .principles, .institute { padding-block: 2.5rem; }
   .loop ol, .principles div, .pair { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .board { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .needs-head { align-items: end; }
@@ -515,3 +483,20 @@ footer nav a { display: inline-flex; align-items: center; min-height: 44px; colo
 .workspace-list article { border: 1px solid #ddd; border-radius: 12px; padding: 1rem; margin: 1rem 0; }
 .workspace textarea { min-height: 6rem; }
 .workspace input[type=checkbox] { width: 24px; height: 24px; vertical-align: middle; }
+
+.hero-actions { display: flex; flex-wrap: wrap; gap: .75rem; margin-top: 1.4rem; }
+.action-card { align-self: start; }
+.action-card p { margin: 0; color: var(--ink-soft); }
+.institute { border-top: 1px solid var(--line); }
+.institute-details { display: grid; gap: 1.5rem; grid-template-columns: minmax(0, 1fr); }
+.institute-details > div { min-width: 0; }
+.institute h3 { font-size: 1.25rem; }
+.institute address { font-style: normal; color: var(--ink-soft); }
+.contact-channels { margin: 0; }
+.contact-channels > div { padding: .75rem 0; border-top: 1px solid var(--line); }
+.contact-channels dt { font-weight: 560; }
+.contact-channels dd { margin: .2rem 0 0; }
+.contact-email { overflow-wrap: anywhere; }
+@media (min-width: 48rem) {
+  .institute-details { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 3rem; }
+}

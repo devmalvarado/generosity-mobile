@@ -32,15 +32,14 @@ test.describe("layout", () => {
         expect(await overflow(page)).toBeLessThanOrEqual(1);
         await page.keyboard.press("Escape");
       }
-      await page.locator("#ciudad").fill("X".repeat(80));
-      await page.locator("#buscador button").click();
+      await page.locator("#application-organization_name").fill("X".repeat(80));
       expect(await overflow(page)).toBeLessThanOrEqual(1);
     });
   }
 
   test("primary controls are at least 44px at 320", async ({ page }) => {
     await prepare(page, 320);
-    for (const selector of [".menu", "#idioma", "[data-filter=todas]", "#buscador button"]) {
+    for (const selector of [".menu", "#idioma", "[data-filter=todas]", ".hero-actions .solid"]) {
       const box = await page.locator(selector).boundingBox();
       expect(box, selector).not.toBeNull();
       expect(box.height, selector).toBeGreaterThanOrEqual(44);
@@ -85,83 +84,54 @@ test.describe("menu", () => {
 });
 
 test.describe("forms and language", () => {
-  test("disconnected forms keep values and do not claim success", async ({ page }) => {
-    const dialogs = [];
-    page.on("dialog", (dialog) => dialogs.push(dialog.message()));
+  test("public content links to real actions and identifies the institute", async ({ page }) => {
     await prepare(page, 390);
-
-    await page.locator("#cantidad").fill("5");
-    await page.locator("#centro").selectOption("olivos");
-    await page.locator("#formulario-donacion button[type=submit]").click();
-    await expect(page.locator("#donacion-estado")).toHaveText(/No se envió nada/);
-    await expect(page.locator("#donacion-estado")).not.toHaveText(/recibo|registramos|pago seguro|quedó registrado/i);
-    await expect(page.locator("#cantidad")).toHaveValue("5");
-    await expect(page.locator("#centro")).toHaveValue("olivos");
-
-    await page.locator("input[value=dinero]").check();
-    await page.locator("#formulario-donacion button[type=submit]").click();
-    await expect(page.locator("#donacion-estado")).toContainText("no se hizo ningún cobro");
-    await expect(page.locator("input[value=dinero]")).toBeChecked();
-
-    await page.locator("input[value=bienes]").check();
-    await page.locator("#cantidad").fill("0");
-    await page.locator("#formulario-donacion button[type=submit]").click();
-    await expect(page.locator("#cantidad")).toHaveAttribute("aria-invalid", "true");
-    await expect(page.locator("#cantidad-error")).toContainText("1 o más");
-    await expect(page.locator("#cantidad")).toHaveValue("0");
-    await expect(page.locator("#cantidad")).toBeFocused();
-
-    const payload = "<img src=x onerror=alert(1)>";
-    await page.locator("#nombre-centro").fill("Centro Norte");
-    await page.locator("#titulo").fill(payload);
-    await page.locator("#detalle").fill("Para el invierno");
-    await page.locator("#unidades").fill("7");
-    await page.locator("#prioridad").selectOption("alta");
-    await page.locator("#publicar button[type=submit]").click();
-    await expect(page.locator("#publicar-estado")).toContainText("No se envió nada");
-    await expect(page.locator("#publicar-estado")).toContainText("no permite publicar");
+    await expect(page.locator("#buscador, #formulario-donacion, #publicar form, .demo-banner, .demo-flag, .meter")).toHaveCount(0);
+    await expect(page.locator("#contacto")).toContainText("INSTITUTO DE DEBERES Y DERECHOS HUMANOS");
+    await expect(page.locator("#contacto")).toContainText("IDD190329L69");
+    await expect(page.locator("#contacto address")).toContainText("04369");
+    await expect(page.locator(".contact-email")).toHaveText([
+      "notificaciones@generosity.global", "notificaciones@generosity.global", "notificaciones@generosity.global"
+    ]);
+    // Use the existing mailbox while separate contact mailboxes are pending.
+    await expect(page.locator("a[href^='mailto:notificaciones@generosity.global']")).toHaveCount(3);
+    const brokenAnchors = await page.locator("a[href^='#']").evaluateAll(links => links
+      .map(link => link.getAttribute("href").slice(1).split("?")[0])
+      .filter(id => !document.getElementById(id)));
+    expect(brokenAnchors).toEqual([]);
+    await page.locator(".hero-actions .solid").click();
+    await expect(page).toHaveURL(/#registrar-sede$/);
+    await page.locator("#publicar .solid").click();
     await expect(page).toHaveURL(/#acceso\?destino=publicar$/);
-    await expect(page.locator("#destino-previsto")).toContainText("publicar una necesidad");
-    await expect(page.locator("#destino-previsto")).toContainText("no concede permiso");
-    await expect(page.locator("#acceso")).toContainText("no concede permisos");
+    await expect(page.locator("#destino-previsto")).toContainText("centro autorizado");
     await expect(page.locator("input[type=password]")).toHaveCount(0);
-    await expect(page.locator("#titulo")).toHaveValue(payload);
-    await expect(page.locator("#nombre-centro")).toHaveValue("Centro Norte");
-    await expect(page.locator("#detalle")).toHaveValue("Para el invierno");
-    await expect(page.locator("#unidades")).toHaveValue("7");
-    await expect(page.locator("#prioridad")).toHaveValue("alta");
-    expect(await page.locator("#publicar-estado").innerHTML()).not.toContain("<img");
-
-    await page.locator("#ciudad").fill(payload);
-    await page.locator("#buscador button").click();
-    const searchHtml = await page.locator("#busqueda-estado").innerHTML();
-    expect(searchHtml).not.toContain("<img");
-    expect(searchHtml).toContain("&lt;img");
-    await expect(page.locator("#ciudad")).toHaveValue(payload);
-    expect(dialogs).toEqual([]);
+    for (const locale of ["es", "en"]) {
+      await page.locator("#idioma").selectOption(locale);
+      for (const doc of ["terms", "privacy"]) await expect(page.locator(`footer [data-legal=${doc}]`)).toHaveAttribute("href", `https://api.generosity.global/legal/${doc}?locale=${locale}`);
+      await expect(page.locator("body")).not.toContainText(/demostración|maqueta|sample center|not connected|test form/i);
+      await expect(page.locator("#contacto")).toContainText("Instituto");
+    }
   });
 
   test("language change keeps fields, filters and can return to automatic", async ({ page }) => {
     await prepare(page, 390);
-    await page.locator("#ciudad").fill("Puebla");
-    await page.locator("#cantidad").fill("3");
-    await page.locator("#titulo").fill("Mantas");
+    await page.locator("#application-city").fill("Puebla");
+    await page.locator("#application-site_name").fill("Mantas");
     await page.locator("[data-filter=salud]").click();
 
     await page.locator("#idioma").selectOption("en");
     await expect(page.locator("html")).toHaveAttribute("lang", "en");
     await expect(page.locator("h1")).toHaveText("Help arrives when you know exactly who needs it.");
-    await expect(page.locator("#ciudad")).toHaveValue("Puebla");
-    await expect(page.locator("#cantidad")).toHaveValue("3");
-    await expect(page.locator("#titulo")).toHaveValue("Mantas");
+    await expect(page.locator("#application-city")).toHaveValue("Puebla");
+    await expect(page.locator("#application-site_name")).toHaveValue("Mantas");
     await expect(page.locator("#puente")).toBeVisible();
     await expect(page.locator("#comedor")).toBeHidden();
     await expect(page.locator("[data-filter=salud]")).toHaveAttribute("aria-pressed", "true");
 
     await page.locator("#idioma").selectOption("es");
     await expect(page.locator("html")).toHaveAttribute("lang", "es");
-    await expect(page.locator("#ciudad")).toHaveValue("Puebla");
-    await expect(page.locator("#titulo")).toHaveValue("Mantas");
+    await expect(page.locator("#application-city")).toHaveValue("Puebla");
+    await expect(page.locator("#application-site_name")).toHaveValue("Mantas");
     await expect(page.locator("[data-filter=salud]")).toHaveAttribute("aria-pressed", "true");
   });
 });
@@ -201,12 +171,12 @@ test.describe("locale resolution", () => {
     await expect(page.locator("html")).toHaveAttribute("lang", "es");
     await expect(page.locator("#idioma")).toHaveValue("system");
 
-    await page.locator("#ciudad").fill("Puebla");
+    await page.locator("#application-city").fill("Puebla");
     await page.locator("#idioma").selectOption("en");
     await page.reload();
     await expect(page.locator("html")).toHaveAttribute("lang", "en");
     await expect(page.locator("#idioma")).toHaveValue("en");
-    await page.locator("#ciudad").fill("Puebla");
+    await page.locator("#application-city").fill("Puebla");
 
     await page.evaluate(() => {
       Object.defineProperty(navigator, "languages", { configurable: true, get: () => ["en-GB", "fr"] });
@@ -214,7 +184,7 @@ test.describe("locale resolution", () => {
     });
     await page.locator("#idioma").selectOption("system");
     await expect(page.locator("html")).toHaveAttribute("lang", "en");
-    await expect(page.locator("#ciudad")).toHaveValue("Puebla");
+    await expect(page.locator("#application-city")).toHaveValue("Puebla");
     await context.close();
   });
 
@@ -238,10 +208,10 @@ test.describe("locale resolution", () => {
     page.on("pageerror", (error) => errors.push(String(error)));
     await page.goto(BASE);
     await expect(page.locator("html")).toHaveAttribute("lang", "es");
-    await page.locator("#titulo").fill("Mantas");
+    await page.locator("#application-site_name").fill("Mantas");
     await page.locator("#idioma").selectOption("en");
     await expect(page.locator("html")).toHaveAttribute("lang", "en");
-    await expect(page.locator("#titulo")).toHaveValue("Mantas");
+    await expect(page.locator("#application-site_name")).toHaveValue("Mantas");
     await page.reload();
     await expect(page.locator("html")).toHaveAttribute("lang", "es");
     await expect(page.locator("#idioma")).toHaveValue("system");
@@ -256,9 +226,6 @@ test.describe("keyboard and text scaling", () => {
     if (browserName === "webkit") {
       // This WebKit build matches Safari with full keyboard access off: Tab visits
       // text fields and selects, not links or buttons. Activation still uses the keyboard.
-      await page.locator("#idioma").focus();
-      await page.keyboard.press("Tab");
-      await expect(page.locator("#ciudad")).toBeFocused();
       await page.locator(".skip").focus();
     } else {
       await page.locator("body").press("Tab");
@@ -282,11 +249,11 @@ test.describe("keyboard and text scaling", () => {
     await expect(page.locator("#comedor")).toBeHidden();
   });
 
-  test("200 percent text does not overflow or hide the submit action", async ({ page }) => {
+  test("200 percent text does not overflow or hide the registration action", async ({ page }) => {
     await prepare(page, 320);
     await page.addStyleTag({ content: "html { font-size: 200% !important; }" });
     expect(await overflow(page)).toBeLessThanOrEqual(1);
-    const submit = page.locator("#formulario-donacion button[type=submit]");
+    const submit = page.locator(".hero-actions .solid");
     await submit.scrollIntoViewIfNeeded();
     await expect(submit).toBeVisible();
     const box = await page.locator(".menu").boundingBox();

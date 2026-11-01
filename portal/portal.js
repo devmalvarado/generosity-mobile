@@ -2,310 +2,231 @@
   var STORAGE_KEY = "generosity.locale";
   var mode = "system";
   var menuAnnounced = false;
-  var searchNoted = false;
-  var donateStatus = "";
-  var publishNoted = false;
 
   var copy = {
-    es: {
-      "auth.signIn": "Iniciar sesión o vincular cuenta ↗",
-      "auth.signOut": "Cerrar sesión",
-      "auth.retry": "Comprobar conexión",
-      "auth.loading": "Comprobando tu sesión…",
-      "auth.guest": "Estás navegando como invitado.",
-      "auth.failed": "No se pudo conectar con el servicio de cuentas. Puedes seguir navegando como invitado y reintentar.",
-      "auth.signedIn": "Sesión iniciada: ",
-      "auth.logoutFailed": "No se pudo cerrar la sesión. Conservamos tu sesión; vuelve a intentarlo.",
-
-      "meta.title": "Generosity — Encuentra dónde ayudar, cerca de ti",
-      "meta.description": "Generosity quiere conectar a las personas con centros de bondad. Esta página es una demostración: no envía donaciones ni publica necesidades.",
-      "skip": "Saltar al contenido",
-      "nav.sections": "Secciones",
-      "nav.how": "Cómo funciona",
-      "nav.needs": "Necesidades",
-      "nav.centers": "Para centros",
-      "nav.donate": "Donar",
-      "nav.publish": "Publicar una necesidad",
-      "lang.label": "Idioma",
-      "lang.system": "Automático",
-      "menu.label": "Menú",
-      "menu.close": "Cerrar menú",
-      "menu.open": "Menú abierto",
-      "menu.closed": "Menú cerrado",
-      "hero.where": "Demostración · sin catálogo conectado",
-      "hero.title": "La ayuda llega cuando sabes exactamente quién la necesita.",
-      "hero.lead": "Generosity quiere mostrar centros de bondad, lo que les falta y una forma concreta de cubrirlo: unas horas, unos paquetes, una aportación. Esta página todavía no consulta un catálogo en vivo.",
-      "finder.label": "Busca por ciudad",
-      "finder.placeholder": "Ciudad de México",
-      "finder.submit": "Ver ejemplos",
-      "map.title": "Ilustración decorativa de calles y pines. No es un mapa en vivo ni muestra tu ubicación.",
-      "map.pinFood": "Ir al ejemplo del comedor",
-      "map.pinKids": "Ir al ejemplo de infancia",
-      "map.pinHealth": "Ir al ejemplo de salud",
-      "map.you": "Referencia",
-      "map.food": "Comedor",
-      "map.kids": "Infancia",
-      "map.health": "Salud",
-      "how.title": "Cuatro pasos, y el último te trae de vuelta.",
-      "how.discover.title": "Descubres",
-      "how.discover.body": "Un mapa con centros de la zona, filtrados por causa: infancia, adultos mayores, salud, comedores, educación. Hoy el dibujo de arriba es solo una ilustración.",
-      "how.understand.title": "Entiendes",
-      "how.understand.body": "Cada centro, cuando el catálogo exista, mostrará quién es, cuándo abre, cómo contactarlo y qué está pidiendo.",
-      "how.help.title": "Ayudas",
-      "how.help.body": "La idea es comprometerse con algo concreto. Esta página no registra ese compromiso ni actualiza cantidades.",
-      "how.return.title": "Vuelves",
-      "how.return.body": "El historial sería tuyo. Sin puntos que canjear y sin ranking que comparar con nadie. Aquí todavía no hay historial.",
-      "needs.banner": "Contenido de demostración. No es un catálogo en vivo, no son centros reales y no hay métricas de impacto.",
-      "needs.title": "Ejemplos de lo que un centro podría pedir.",
-      "needs.filters": "Filtrar ejemplos por causa",
-      "needs.empty": "No hay ejemplos de demostración para ese filtro.",
-      "filter.all": "Todas",
-      "filter.food": "Comedores",
-      "filter.kids": "Infancia",
-      "filter.health": "Salud",
-      "demo.card": "Ejemplo de demostración",
-      "card.urgent": "Urgente",
-      "card.food.cause": "Comedor comunitario",
-      "card.food.title": "20 despensas para esta semana",
-      "card.food.body": "Texto de ejemplo: arroz, frijol, aceite y lentejas. No describe un comedor que esté operando.",
-      "card.food.where": "Comedor Los Olivos · nombre de ejemplo",
-      "card.food.count": "Cifra de ejemplo: 5 de 20. No es un avance real.",
-      "card.food.action": "Quiero cubrir una parte",
-      "card.kids.cause": "Infancia y educación",
-      "card.kids.title": "Útiles escolares para el nuevo ciclo",
-      "card.kids.body": "Texto de ejemplo: cuadernos, lápices y mochilas. No corresponde a un grupo real de niños.",
-      "card.kids.where": "Hogar Futuros Brillantes · nombre de ejemplo",
-      "card.kids.count": "Cifra de ejemplo: 24 de 40. No es un avance real.",
-      "card.kids.action": "Ver cómo ayudar con bienes",
-      "card.health.cause": "Salud",
-      "card.health.title": "Turnos de dos horas, entre semana",
-      "card.health.body": "Texto de ejemplo: acompañar a una cita. No hay turnos abiertos en esta página.",
-      "card.health.where": "Puente de Salud Abierta · nombre de ejemplo",
-      "card.health.count": "Cifra de ejemplo: 6 turnos. No es una agenda real.",
-      "card.health.action": "Ver cómo ayudar con tiempo",
-      "donate.title": "Ayuda con lo que tienes, no con lo que te sobre.",
-      "donate.lead": "Tres formas previstas de ayudar. Esta página no registra una oferta, no cobra y no pide tarjeta ni datos bancarios.",
-      "donate.time.title": "Tiempo",
-      "donate.time.body": "Elegir una actividad, un día y unas horas. Aquí no hay confirmación del centro ni historial.",
-      "donate.goods.title": "Bienes",
-      "donate.goods.body": "Comprometerse con una parte de lo pedido. Esta página no actualiza lo que falta.",
-      "donate.money.title": "Dinero",
-      "donate.money.body": "No disponible. No hay proveedor de pagos conectado y no se aceptan aportaciones desde este sitio.",
-      "donate.legend": "Cómo quieres ayudar",
-      "donate.time.choice": "Donar tiempo",
-      "donate.goods.choice": "Donar bienes",
-      "donate.money.choice": "Donar dinero",
-      "donate.center": "Centro de demostración",
-      "donate.amount": "Cantidad",
-      "donate.submit": "Enviar intención",
-      "center.olivos": "Comedor Los Olivos",
-      "center.hogar": "Hogar Futuros Brillantes",
-      "center.puente": "Puente de Salud Abierta",
-      "centers.title": "¿Administras un centro? Accede al portal de centros.",
-      "centers.lead": "La misma cuenta Generosity puede tener permisos de un centro. Los concede personal autorizado; iniciar sesión no permite publicar por sí solo.",
-      "centers.item1": "El perfil, los horarios y el contacto público no están en este portal de centros.",
-      "centers.item2": "Una necesidad publicada tendrá cantidad, prioridad y cierre. El formulario de ejemplo no la guarda; el portal de centros sí, solo con un centro asignado.",
-      "centers.item3": "Confirmar lo que otras personas traigan está en el portal de centros, no en este formulario, y solo para un centro asignado.",
-      "centers.item4": "La verificación oficial y los pagos no forman parte de esta página.",
-      "centers.access": "Ir al acceso de centros",
-      "publish.title": "Borrador local, no una publicación",
-      "publish.intro": "Puedes escribir aquí para no perder la idea. Enviar no publica, no entra a una revisión y no demuestra que administras el centro.",
-      "publish.center": "Nombre del centro",
-      "publish.centerPlaceholder": "Comedor Los Olivos",
-      "publish.need": "Qué necesitas",
-      "publish.needPlaceholder": "Despensas para esta semana",
-      "publish.qty": "Cantidad",
-      "publish.priority": "Prioridad",
-      "publish.detail": "Detalle",
-      "publish.detailPlaceholder": "Para quién es y cuándo lo necesitas",
-      "publish.submit": "Continuar al acceso de centros",
-      "priority.normal": "Normal",
-      "priority.medium": "Media",
-      "priority.high": "Alta",
-      "priority.urgent": "Urgente",
-      "access.flag": "Cuenta Generosity",
-      "access.title": "Acceso de centros",
-      "access.lead": "Usa tu cuenta Generosity en web, Android y iOS con Google, Apple o correo. El acceso se abre en otra pestaña para conservar tu borrador. Iniciar sesión no concede permisos de un centro ni publica necesidades.",
-      "access.keep": "Si escribiste una necesidad en esta página, el texto sigue en el formulario. No se envió a ningún servidor.",
-      "access.back": "Volver al borrador local",
-      "access.dest.none": "No hay un destino previsto guardado.",
-      "access.dest.publicar": "Destino previsto: publicar una necesidad. El inicio de sesión no concede permiso para publicar.",
-      "access.dest.centros": "Destino previsto: el espacio de centros. Iniciar sesión no asigna un centro ni permite publicar.",
-      "privacy.title": "Lo que esta página no hace.",
-      "privacy.rank.title": "No rankea a las personas.",
-      "privacy.rank.body": "No hay tabla de los más generosos ni puntos que se canjeen. Tampoco hay un historial en este sitio.",
-      "privacy.card.title": "No pide ni guarda una tarjeta.",
-      "privacy.card.body": "No hay pago en esta página. No escribas datos de tarjeta ni bancarios: no hay dónde guardarlos y no se deben enviar.",
-      "privacy.location.title": "No pide tu ubicación.",
-      "privacy.location.body": "El dibujo no es un mapa y esta página no solicita permiso de ubicación ni alertas de proximidad.",
-      "privacy.note": "Esto no es una política de privacidad. No hay un documento legal publicado para enlazar.",
-      "footer.tag": "generosity conecta, cuando el servicio exista, a las personas con centros de bondad. Esta página no publica ni cobra.",
-      "footer.nav": "Pie",
-      "footer.privacy": "Privacidad",
-      "footer.contact": "Contacto",
-      "search.empty": "No hay un catálogo conectado. Las tarjetas de abajo son ejemplos de demostración, no resultados de una búsqueda.",
-      "search.named": "No hay un catálogo conectado. Las tarjetas de abajo son ejemplos de demostración, no resultados para «",
-      "search.namedEnd": "».",
-      "hint.time": "Puedes anotar horas aquí. Esta página no reserva un turno ni avisa a un centro.",
-      "hint.goods": "Cantidad anotada: ",
-      "hint.goodsEnd": ". Es un ejemplo de formulario; no queda un compromiso ni cambia lo que falta.",
-      "hint.money": "El dinero no está disponible en este sitio. No se cobra nada y no hace falta una tarjeta.",
-      "error.amount": "Escribe un número entero de 1 o más.",
-      "donate.invalid": "No se envió nada. Revisa la cantidad: hace falta un número de 1 o más.",
-      "donate.notSent": "No se envió nada y no se publicó nada. No hay un servicio conectado. El formulario conserva lo que escribiste.",
-      "donate.money": "No se envió nada y no se hizo ningún cobro. Las aportaciones de dinero no están disponibles en esta página.",
-      "publish.notSent": "No se envió nada y no se publicó nada. Este formulario de ejemplo no permite publicar; usa el portal de centros con una cuenta autorizada.",
-    },
-    en: {
-      "auth.signIn": "Sign in or link account ↗",
-      "auth.signOut": "Sign out",
-      "auth.retry": "Check connection",
-      "auth.loading": "Checking your session…",
-      "auth.guest": "You are browsing as a guest.",
-      "auth.failed": "Could not reach the account service. You can keep browsing as a guest and retry.",
-      "auth.signedIn": "Signed in: ",
-      "auth.logoutFailed": "Could not sign out. Your session is still active; please retry.",
-
-      "meta.title": "Generosity — Find where to help, near you",
-      "meta.description": "Generosity aims to connect people with kindness centers. This page is a demonstration: it does not send donations or publish needs.",
-      "skip": "Skip to content",
-      "nav.sections": "Sections",
-      "nav.how": "How it works",
-      "nav.needs": "Needs",
-      "nav.centers": "For centers",
-      "nav.donate": "Donate",
-      "nav.publish": "Publish a need",
-      "lang.label": "Language",
-      "lang.system": "Automatic",
-      "menu.label": "Menu",
-      "menu.close": "Close menu",
-      "menu.open": "Menu open",
-      "menu.closed": "Menu closed",
-      "hero.where": "Demonstration · no catalog connected",
-      "hero.title": "Help arrives when you know exactly who needs it.",
-      "hero.lead": "Generosity wants to show kindness centers, what they are short of, and a concrete way to cover it: a few hours, a few packages, a contribution. This page does not query a live catalog yet.",
-      "finder.label": "Search by city",
-      "finder.placeholder": "Mexico City",
-      "finder.submit": "See examples",
-      "map.title": "Decorative illustration of streets and pins. Not a live map, and it does not show your location.",
-      "map.pinFood": "Go to the meal-center example",
-      "map.pinKids": "Go to the childhood example",
-      "map.pinHealth": "Go to the health example",
-      "map.you": "Reference",
-      "map.food": "Meals",
-      "map.kids": "Childhood",
-      "map.health": "Health",
-      "how.title": "Four steps, and the last one brings you back.",
-      "how.discover.title": "You find",
-      "how.discover.body": "A map of nearby centers, filtered by cause: childhood, older adults, health, meal centers, education. The drawing above is only an illustration today.",
-      "how.understand.title": "You understand",
-      "how.understand.body": "When a catalog exists, each center will show who they are, when they are open, how to reach them, and what they are asking for.",
-      "how.help.title": "You help",
-      "how.help.body": "The idea is to commit to something concrete. This page does not record that commitment or update quantities.",
-      "how.return.title": "You return",
-      "how.return.body": "The history would be yours. No points to redeem and no ranking to compare with anyone. There is no history here yet.",
-      "needs.banner": "Demonstration content. Not a live catalog, not real centers, and not impact metrics.",
-      "needs.title": "Examples of what a center might ask for.",
-      "needs.filters": "Filter examples by cause",
-      "needs.empty": "There are no demonstration examples for that filter.",
-      "filter.all": "All",
-      "filter.food": "Meal centers",
-      "filter.kids": "Childhood",
-      "filter.health": "Health",
-      "demo.card": "Demonstration example",
-      "card.urgent": "Urgent",
-      "card.food.cause": "Community meal center",
-      "card.food.title": "20 grocery parcels for this week",
-      "card.food.body": "Sample text: rice, beans, oil, and lentils. It does not describe a meal center that is operating.",
-      "card.food.where": "Comedor Los Olivos · sample name",
-      "card.food.count": "Sample figure: 5 of 20. Not real progress.",
-      "card.food.action": "I want to cover part of it",
-      "card.kids.cause": "Childhood and education",
-      "card.kids.title": "School supplies for the new term",
-      "card.kids.body": "Sample text: notebooks, pencils, and backpacks. It does not refer to a real group of children.",
-      "card.kids.where": "Hogar Futuros Brillantes · sample name",
-      "card.kids.count": "Sample figure: 24 of 40. Not real progress.",
-      "card.kids.action": "See how to help with goods",
-      "card.health.cause": "Health",
-      "card.health.title": "Two-hour shifts, on weekdays",
-      "card.health.body": "Sample text: going with someone to an appointment. There are no open shifts on this page.",
-      "card.health.where": "Puente de Salud Abierta · sample name",
-      "card.health.count": "Sample figure: 6 shifts. Not a real schedule.",
-      "card.health.action": "See how to help with time",
-      "donate.title": "Help with what you have, not with what you can spare.",
-      "donate.lead": "Three planned ways to help. This page does not record an offer, does not charge anyone, and does not ask for a card or bank details.",
-      "donate.time.title": "Time",
-      "donate.time.body": "Choose an activity, a day, and some hours. There is no center confirmation and no history here.",
-      "donate.goods.title": "Goods",
-      "donate.goods.body": "Commit to part of what was asked. This page does not update what is still missing.",
-      "donate.money.title": "Money",
-      "donate.money.body": "Unavailable. No payment provider is connected, and this site does not accept contributions.",
-      "donate.legend": "How you want to help",
-      "donate.time.choice": "Give time",
-      "donate.goods.choice": "Give goods",
-      "donate.money.choice": "Give money",
-      "donate.center": "Demonstration center",
-      "donate.amount": "Quantity",
-      "donate.submit": "Send intention",
-      "center.olivos": "Comedor Los Olivos",
-      "center.hogar": "Hogar Futuros Brillantes",
-      "center.puente": "Puente de Salud Abierta",
-      "centers.title": "Do you run a center? Open the center workspace.",
-      "centers.lead": "The same Generosity account can have center permissions. Authorized staff grant these permissions; signing in alone does not allow publishing.",
-      "centers.item1": "Profile, hours, and public contact are not in this center workspace.",
-      "centers.item2": "A published need has a quantity, a priority, and a closing time. The sample form does not store it; the center workspace does, only for an assigned center.",
-      "centers.item3": "Confirming what other people bring is in the center workspace, not in this sample form, and only for an assigned center.",
-      "centers.item4": "Official verification and payments are not part of this page.",
-      "centers.access": "Go to center access",
-      "publish.title": "A local draft, not a publication",
-      "publish.intro": "You can write here so the idea is not lost. Sending does not publish, does not enter a review, and does not prove you run the center.",
-      "publish.center": "Center name",
-      "publish.centerPlaceholder": "Comedor Los Olivos",
-      "publish.need": "What you need",
-      "publish.needPlaceholder": "Grocery parcels for this week",
-      "publish.qty": "Quantity",
-      "publish.priority": "Priority",
-      "publish.detail": "Detail",
-      "publish.detailPlaceholder": "Who it is for and when you need it",
-      "publish.submit": "Continue to center access",
-      "priority.normal": "Normal",
-      "priority.medium": "Medium",
-      "priority.high": "High",
-      "priority.urgent": "Urgent",
-      "access.flag": "Generosity account",
-      "access.title": "Center access",
-      "access.lead": "Use your Generosity account on web, Android and iOS with Google, Apple or email. Sign-in opens in another tab to keep your draft. Signing in does not grant center permissions or publish needs.",
-      "access.keep": "If you wrote a need on this page, the text is still in the form. It was not sent to any server.",
-      "access.back": "Back to the local draft",
-      "access.dest.none": "No intended destination is saved.",
-      "access.dest.publicar": "Intended destination: publish a need. Signing in does not grant permission to publish.",
-      "access.dest.centros": "Intended destination: the center workspace. Signing in does not assign a center or allow publishing.",
-      "privacy.title": "What this page does not do.",
-      "privacy.rank.title": "It does not rank people.",
-      "privacy.rank.body": "There is no table of the most generous and no points to redeem. There is also no history on this site.",
-      "privacy.card.title": "It does not ask for or store a card.",
-      "privacy.card.body": "There is no payment on this page. Do not type card or bank details: there is nowhere to store them, and they should not be sent.",
-      "privacy.location.title": "It does not ask for your location.",
-      "privacy.location.body": "The drawing is not a map, and this page does not request location permission or proximity alerts.",
-      "privacy.note": "This is not a privacy policy. There is no published legal document to link to.",
-      "footer.tag": "generosity will connect people with kindness centers when the service exists. This page does not publish or charge.",
-      "footer.nav": "Footer",
-      "footer.privacy": "Privacy",
-      "footer.contact": "Contact",
-      "search.empty": "No catalog is connected. The cards below are demonstration examples, not search results.",
-      "search.named": "No catalog is connected. The cards below are demonstration examples, not results for “",
-      "search.namedEnd": "”.",
-      "hint.time": "You can note hours here. This page does not book a shift or notify a center.",
-      "hint.goods": "Noted quantity: ",
-      "hint.goodsEnd": ". This is a sample form; no commitment is recorded and nothing still needed changes.",
-      "hint.money": "Money is not available on this site. Nothing is charged and no card is required.",
-      "error.amount": "Enter a whole number of 1 or more.",
-      "donate.invalid": "Nothing was sent. Check the quantity: a number of 1 or more is required.",
-      "donate.notSent": "Nothing was sent and nothing was published. No service is connected. The form keeps what you entered.",
-      "donate.money": "Nothing was sent and nothing was charged. Money contributions are not available on this page.",
-      "publish.notSent": "Nothing was sent and nothing was published. This sample form does not allow publishing; use the center workspace with an authorized account.",
-    }
-  };
+  "es": {
+    "auth.signIn": "Iniciar sesión ↗",
+    "auth.signOut": "Cerrar sesión",
+    "auth.retry": "Comprobar conexión",
+    "auth.loading": "Comprobando tu sesión…",
+    "auth.guest": "Estás navegando como invitado.",
+    "auth.failed": "No se pudo conectar con el servicio de cuentas. Puedes seguir navegando como invitado y reintentar.",
+    "auth.signedIn": "Sesión iniciada: ",
+    "auth.logoutFailed": "No se pudo cerrar la sesión. Conservamos tu sesión; vuelve a intentarlo.",
+    "meta.title": "Generosity — Encuentra dónde ayudar, cerca de ti",
+    "meta.description": "Generosity, una iniciativa del Instituto de Deberes y Derechos Humanos para conectar personas, organizaciones y causas. Registra tu sede y coordina la ayuda de tu comunidad.",
+    "skip": "Saltar al contenido",
+    "nav.sections": "Secciones",
+    "nav.how": "Cómo funciona",
+    "nav.needs": "Causas",
+    "nav.centers": "Para centros",
+    "nav.donate": "Cómo ayudar",
+    "lang.label": "Idioma",
+    "lang.system": "Automático",
+    "menu.label": "Menú",
+    "menu.close": "Cerrar menú",
+    "menu.open": "Menú abierto",
+    "menu.closed": "Menú cerrado",
+    "hero.where": "Encuentra. Conecta. Ayuda.",
+    "hero.title": "La ayuda llega cuando sabes exactamente quién la necesita.",
+    "hero.lead": "Una iniciativa del Instituto de Deberes y Derechos Humanos para acercar a personas y organizaciones a las causas de su comunidad. Tu tiempo, tus conocimientos y lo que compartes pueden hacer la diferencia.",
+    "map.title": "Ilustración de una comunidad conectada por la ayuda.",
+    "map.pinFood": "Conocer la causa de alimentación",
+    "map.pinKids": "Conocer la causa de infancia",
+    "map.pinHealth": "Conocer la causa de salud",
+    "map.you": "Comunidad",
+    "map.food": "Comedor",
+    "map.kids": "Infancia",
+    "map.health": "Salud",
+    "how.title": "La ayuda empieza con una conexión.",
+    "how.discover.title": "Descubres",
+    "how.discover.body": "Acércate a una causa que te importe: alimentación, infancia, salud o educación.",
+    "how.understand.title": "Entiendes",
+    "how.understand.body": "Conoce las necesidades de cada organización y sus condiciones para recibir apoyo.",
+    "how.help.title": "Ayudas",
+    "how.help.body": "Acuerda con el centro qué aportar, cómo hacerlo y cuándo entregar tu ayuda.",
+    "how.return.title": "Vuelves",
+    "how.return.body": "Da seguimiento a tu aportación y mantén el vínculo con quienes trabajan por tu comunidad.",
+    "needs.title": "Hay muchas formas de hacer el bien.",
+    "needs.filters": "Explorar causas",
+    "needs.empty": "Elige otra causa para conocer más formas de ayudar.",
+    "filter.all": "Todas",
+    "filter.food": "Comedores",
+    "filter.kids": "Infancia",
+    "filter.health": "Salud",
+    "card.food.cause": "Comedor comunitario",
+    "card.food.title": "Alimentación que une",
+    "card.food.body": "Alimentos, preparación de comidas y apoyo a comedores comunitarios. Compartir una mesa también construye comunidad.",
+    "card.food.action": "Conoce cómo participar",
+    "card.kids.cause": "Infancia y educación",
+    "card.kids.title": "Oportunidades para crecer",
+    "card.kids.body": "Materiales escolares, tutorías y acompañamiento educativo para fortalecer el aprendizaje y el desarrollo.",
+    "card.kids.action": "Conoce cómo participar",
+    "card.health.cause": "Salud",
+    "card.health.title": "Cuidado y acompañamiento",
+    "card.health.body": "Apoyo a centros de atención, insumos solicitados por sus responsables y tiempo para acompañar a quienes lo necesitan.",
+    "card.health.action": "Conoce cómo participar",
+    "donate.title": "Tu manera de ayudar también cuenta.",
+    "donate.lead": "Ayudar puede empezar con unas horas, materiales útiles o algo que sabes hacer. Coordina cada aportación con la organización que la recibe.",
+    "donate.time.title": "Tiempo",
+    "donate.time.body": "Comparte tiempo para acompañar, organizar actividades o apoyar el trabajo cotidiano de un centro.",
+    "donate.goods.title": "Bienes",
+    "donate.goods.body": "Aporta alimentos, materiales e insumos de acuerdo con las necesidades y condiciones de recepción del centro.",
+    "centers.title": "Un espacio para quienes ayudan todos los días.",
+    "centers.lead": "El portal reúne las necesidades y aportaciones de los centros que tienes asignados.",
+    "centers.item1": "Selecciona el centro que representas.",
+    "centers.item2": "Publica y actualiza sus necesidades, cantidades y prioridades.",
+    "centers.item3": "Consulta las ofertas de ayuda y confirma su recepción.",
+    "centers.item4": "Mantén la coordinación con quienes participan.",
+    "centers.access": "Ir al acceso de centros",
+    "publish.title": "Gestiona las necesidades de tu centro.",
+    "publish.intro": "Entra con tu cuenta Generosity y selecciona un centro autorizado para publicar necesidades y dar seguimiento a sus aportaciones.",
+    "publish.submit": "Entrar al portal de centros",
+    "access.flag": "Cuenta Generosity",
+    "access.title": "Acceso de centros",
+    "access.lead": "Inicia sesión con tu cuenta Generosity para gestionar tus centros y solicitudes de sedes.",
+    "access.dest.none": "",
+    "access.dest.publicar": "Selecciona un centro autorizado para publicar una necesidad.",
+    "access.dest.centros": "Selecciona el centro que representas para entrar a su espacio.",
+    "footer.tag": "Pequeñas acciones, gran impacto. Una iniciativa del Instituto de Deberes y Derechos Humanos.",
+    "footer.nav": "Pie",
+    "footer.privacy": "Aviso de privacidad",
+    "footer.terms": "Términos y condiciones",
+    "footer.contact": "Instituto y contacto",
+    "hero.explore": "Conoce las causas",
+    "hero.register": "Registra tu organización",
+    "donate.knowledge.title": "Conocimientos",
+    "donate.knowledge.body": "Comparte tus habilidades mediante tutorías, talleres o apoyo profesional.",
+    "participate.title": "Haz que tu organización sea parte.",
+    "participate.body": "Cuéntanos dónde trabajan y a quiénes ayudan. Registra una sede para iniciar el vínculo con Generosity.",
+    "participate.access": "Ya represento a un centro",
+    "privacy.title": "Cuidamos la información que compartes.",
+    "privacy.purpose.title": "Una finalidad concreta.",
+    "privacy.purpose.body": "Los datos de tu solicitud de sede se utilizan para revisarla y contactarte sobre ella.",
+    "privacy.access.title": "Acceso según responsabilidades.",
+    "privacy.access.body": "Tu cuenta permite consultar tus solicitudes. La gestión de necesidades corresponde al personal autorizado de cada centro.",
+    "privacy.care.title": "Ayudar con dignidad.",
+    "privacy.care.body": "Comparte información de la organización y omite datos de personas beneficiarias, expedientes médicos y domicilios protegidos.",
+    "contact.title": "Una iniciativa del Instituto.",
+    "contact.lead": "Generosity es una herramienta del Instituto de Deberes y Derechos Humanos, constituido como asociación civil.",
+    "contact.fiscal": "RFC y domicilio fiscal",
+    "contact.team": "Personal del Instituto atiende soporte, asuntos legales y privacidad en este correo.",
+    "contact.support": "Soporte",
+    "contact.legal": "Asuntos legales",
+    "contact.privacy": "Privacidad y datos personales"
+  },
+  "en": {
+    "auth.signIn": "Sign in ↗",
+    "auth.signOut": "Sign out",
+    "auth.retry": "Check connection",
+    "auth.loading": "Checking your session…",
+    "auth.guest": "You are browsing as a guest.",
+    "auth.failed": "Could not reach the account service. You can keep browsing as a guest and retry.",
+    "auth.signedIn": "Signed in: ",
+    "auth.logoutFailed": "Could not sign out. Your session is still active; please retry.",
+    "meta.title": "Generosity — Find where to help, near you",
+    "meta.description": "Generosity is an initiative of Instituto de Deberes y Derechos Humanos connecting people, organizations and causes. Register your location and coordinate support for your community.",
+    "skip": "Skip to content",
+    "nav.sections": "Sections",
+    "nav.how": "How it works",
+    "nav.needs": "Causes",
+    "nav.centers": "For centers",
+    "nav.donate": "Ways to help",
+    "lang.label": "Language",
+    "lang.system": "Automatic",
+    "menu.label": "Menu",
+    "menu.close": "Close menu",
+    "menu.open": "Menu open",
+    "menu.closed": "Menu closed",
+    "hero.where": "Find. Connect. Help.",
+    "hero.title": "Help arrives when you know exactly who needs it.",
+    "hero.lead": "An initiative of Instituto de Deberes y Derechos Humanos that brings people and organizations closer to causes in their community. Your time, skills and contributions can make a difference.",
+    "map.title": "Illustration of a community connected through helping.",
+    "map.pinFood": "Explore food support",
+    "map.pinKids": "Explore support for children",
+    "map.pinHealth": "Explore health support",
+    "map.you": "Community",
+    "map.food": "Meals",
+    "map.kids": "Childhood",
+    "map.health": "Health",
+    "how.title": "Helping starts with a connection.",
+    "how.discover.title": "You find",
+    "how.discover.body": "Find a cause you care about: food, children, health or education.",
+    "how.understand.title": "You understand",
+    "how.understand.body": "Learn what each organization needs and how it receives support.",
+    "how.help.title": "You help",
+    "how.help.body": "Agree with the center on what you can contribute, how to help and when to deliver it.",
+    "how.return.title": "You return",
+    "how.return.body": "Follow up on your contribution and stay connected with the people supporting your community.",
+    "needs.title": "There are many ways to make a difference.",
+    "needs.filters": "Explore causes",
+    "needs.empty": "Choose another cause to discover more ways to help.",
+    "filter.all": "All",
+    "filter.food": "Meal centers",
+    "filter.kids": "Childhood",
+    "filter.health": "Health",
+    "card.food.cause": "Community meal center",
+    "card.food.title": "Food that brings us together",
+    "card.food.body": "Food, meal preparation and support for community kitchens. Sharing a meal helps build a community.",
+    "card.food.action": "Learn how to get involved",
+    "card.kids.cause": "Childhood and education",
+    "card.kids.title": "Opportunities to grow",
+    "card.kids.body": "School supplies, tutoring and educational support that help children learn and develop.",
+    "card.kids.action": "Learn how to get involved",
+    "card.health.cause": "Health",
+    "card.health.title": "Care and companionship",
+    "card.health.body": "Support for care centers, supplies requested by their staff and time to accompany people who need it.",
+    "card.health.action": "Learn how to get involved",
+    "donate.title": "Your way of helping matters.",
+    "donate.lead": "Helping can start with a few hours, useful supplies or a skill you can share. Coordinate each contribution with the organization receiving it.",
+    "donate.time.title": "Time",
+    "donate.time.body": "Share your time by offering companionship, organizing activities or supporting a center’s daily work.",
+    "donate.goods.title": "Goods",
+    "donate.goods.body": "Contribute food, materials and supplies based on the center’s needs and delivery requirements.",
+    "centers.title": "A space for people who help every day.",
+    "centers.lead": "The workspace brings together needs and contributions for the centers assigned to you.",
+    "centers.item1": "Select the center you represent.",
+    "centers.item2": "Publish and update its needs, quantities and priorities.",
+    "centers.item3": "Review offers of help and confirm receipt.",
+    "centers.item4": "Stay coordinated with the people taking part.",
+    "centers.access": "Go to center access",
+    "publish.title": "Manage your center’s needs.",
+    "publish.intro": "Sign in with your Generosity account and select an authorized center to publish needs and follow up on contributions.",
+    "publish.submit": "Open the center workspace",
+    "access.flag": "Generosity account",
+    "access.title": "Center access",
+    "access.lead": "Sign in with your Generosity account to manage your centers and location applications.",
+    "access.dest.none": "",
+    "access.dest.publicar": "Select an authorized center to publish a need.",
+    "access.dest.centros": "Select the center you represent to open its workspace.",
+    "footer.tag": "Small actions, lasting impact. An initiative of Instituto de Deberes y Derechos Humanos.",
+    "footer.nav": "Footer",
+    "footer.privacy": "Privacy notice",
+    "footer.terms": "Terms and conditions",
+    "footer.contact": "Institute and contact",
+    "hero.explore": "Explore the causes",
+    "hero.register": "Register your organization",
+    "donate.knowledge.title": "Skills",
+    "donate.knowledge.body": "Share what you know through tutoring, workshops or professional support.",
+    "participate.title": "Bring your organization into the community.",
+    "participate.body": "Tell us where you work and who you support. Register a location to connect with Generosity.",
+    "participate.access": "I already represent a center",
+    "privacy.title": "We take care of the information you share.",
+    "privacy.purpose.title": "A clear purpose.",
+    "privacy.purpose.body": "Your location application details are used to review your request and contact you about it.",
+    "privacy.access.title": "Access based on responsibilities.",
+    "privacy.access.body": "Your account lets you view your applications. Only authorized center staff can manage their needs.",
+    "privacy.care.title": "Help with dignity.",
+    "privacy.care.body": "Share information about the organization and leave out beneficiary details, medical records and protected addresses.",
+    "contact.title": "An initiative of the Institute.",
+    "contact.lead": "Generosity is a tool operated by Instituto de Deberes y Derechos Humanos, a civil association.",
+    "contact.fiscal": "Tax ID and registered tax address",
+    "contact.team": "Institute staff handle support, legal and privacy requests at this email address.",
+    "contact.support": "Support",
+    "contact.legal": "Legal matters",
+    "contact.privacy": "Privacy and personal data"
+  }
+};
 
   function readStored() {
     try {
@@ -357,6 +278,9 @@
   }
 
   function applyStatic() {
+    each("[data-legal]", function (el) {
+      el.href = "https://api.generosity.global/legal/" + el.getAttribute("data-legal") + "?locale=" + effective();
+    });
     var meta = document.querySelector('meta[name="description"]');
     document.documentElement.lang = effective();
     document.title = t("meta.title");
@@ -446,7 +370,6 @@
   if (wide.addEventListener) wide.addEventListener("change", closeIfWide);
   else if (wide.addListener) wide.addListener(closeIfWide);
 
-  var board = document.querySelector(".board");
   var empty = document.querySelector(".empty");
   document.querySelector(".filters").addEventListener("click", function (event) {
     var button = event.target.closest("button");
@@ -466,91 +389,6 @@
     empty.hidden = visible !== 0;
   });
 
-  var donateForm = document.getElementById("formulario-donacion");
-  var amount = document.getElementById("cantidad");
-  var hint = document.getElementById("aviso");
-  var amountError = document.getElementById("cantidad-error");
-  var donateResult = document.getElementById("donacion-estado");
-
-  function selectedWay() {
-    var checked = donateForm.querySelector("input[name=forma]:checked");
-    return checked ? checked.value : "bienes";
-  }
-
-  function amountValue() {
-    var number = Number(amount.value);
-    return amount.value !== "" && isFinite(number) ? number : null;
-  }
-
-  function renderHint() {
-    var way = selectedWay();
-    if (way === "dinero") {
-      hint.textContent = t("hint.money");
-      return;
-    }
-    if (way === "tiempo") {
-      hint.textContent = t("hint.time");
-      return;
-    }
-    hint.textContent = t("hint.goods") + String(amount.value) + t("hint.goodsEnd");
-  }
-
-  function renderDonate() {
-    renderHint();
-    if (donateStatus === "invalid") {
-      amountError.textContent = t("error.amount");
-      amount.setAttribute("aria-invalid", "true");
-      amount.setAttribute("aria-describedby", "aviso cantidad-error");
-      donateResult.textContent = t("donate.invalid");
-      return;
-    }
-    amountError.textContent = "";
-    amount.removeAttribute("aria-invalid");
-    amount.setAttribute("aria-describedby", "aviso");
-    if (donateStatus === "money") donateResult.textContent = t("donate.money");
-    else if (donateStatus === "not-sent") donateResult.textContent = t("donate.notSent");
-    else donateResult.textContent = "";
-  }
-
-  donateForm.addEventListener("change", renderHint);
-  amount.addEventListener("input", renderHint);
-  donateForm.addEventListener("submit", function (event) {
-    event.preventDefault();
-    var way = selectedWay();
-    var value = amountValue();
-    if (way !== "dinero" && (value === null || value < 1)) {
-      donateStatus = "invalid";
-      renderDonate();
-      amount.focus();
-      return;
-    }
-    donateStatus = way === "dinero" ? "money" : "not-sent";
-    renderDonate();
-  });
-
-  var searchForm = document.getElementById("buscador");
-  var city = document.getElementById("ciudad");
-  var searchStatus = document.getElementById("busqueda-estado");
-
-  function renderSearch() {
-    if (!searchNoted) {
-      searchStatus.textContent = "";
-      return;
-    }
-    var query = city.value;
-    searchStatus.textContent = query
-      ? t("search.named") + query + t("search.namedEnd")
-      : t("search.empty");
-  }
-
-  searchForm.addEventListener("submit", function (event) {
-    event.preventDefault();
-    searchNoted = true;
-    renderSearch();
-  });
-
-  var publishForm = document.getElementById("publicar");
-  var publishResult = document.getElementById("publicar-estado");
   var destination = document.getElementById("destino-previsto");
 
   function readDestination() {
@@ -570,27 +408,6 @@
     destination.textContent = t(key);
   }
 
-  function renderPublish() {
-    publishResult.textContent = publishNoted ? t("publish.notSent") : "";
-  }
-
-  function openAccess() {
-    var next = "#acceso?destino=publicar";
-    if (location.hash === next) {
-      renderDestination();
-      document.getElementById("acceso").focus();
-    } else {
-      location.hash = next;
-    }
-  }
-
-  publishForm.addEventListener("submit", function (event) {
-    event.preventDefault();
-    publishNoted = true;
-    renderPublish();
-    openAccess();
-  });
-
   window.addEventListener("hashchange", function () {
     renderDestination();
     if ((location.hash || "").indexOf("#acceso") === 0) {
@@ -608,10 +425,6 @@
 
   function applyAll() {
     applyStatic();
-    renderHint();
-    renderDonate();
-    renderSearch();
-    renderPublish();
     renderDestination();
     renderAccount();
     if (menuAnnounced) menuStatus.textContent = drawer.hidden ? t("menu.closed") : t("menu.open");
@@ -635,6 +448,7 @@
     accountLogout.disabled = accountBusy || !accountCsrf;
     accountRetry.disabled = accountBusy;
     syncWorkspace();
+    syncApplications();
   }
 
   async function checkAccount() {
@@ -673,11 +487,11 @@
   });
   window.addEventListener("focus", checkAccount);
 
-  // Staff state is separate from the labeled public examples above.
+  // Keep private staff state scoped to the signed-in account.
   var staff = { owner: null, center: '', centers: [], needs: [], contributions: [], needPage: 1, contributionPage: 1, needLast: 1, contributionLast: 1, editing: null, pending: null, busy: false, generation: 0, status: '', durations: {} };
   var staffCopy = {
-    es: { title:'Portal de centros', scope:'Solo puedes gestionar los centros que tienes asignados.', center:'Centro autorizado', reload:'Actualizar centros', retry:'Reintentar cambio pendiente', needs:'Necesidades del centro', contributions:'Aportaciones', prev:'Anterior', next:'Siguiente', new:'Nueva necesidad', editor:'Editar necesidad', translations:'Escribe al menos un título y una descripción en español o inglés. No incluyas datos privados de beneficiarios.', goods:'Bienes', time:'Tiempo', urgent:'Urgente', quantity:'Cantidad requerida (opcional)', unit:'Unidad (p. ej., paquetes)', expires:'Último día (opcional, UTC)', status:'Estado', draft:'Borrador', published:'Publicada', closed:'Cerrada', save:'Guardar en el servidor', edit:'Editar', confirm:'Confirmar', fulfill:'Marcar como realizada', actual:'Minutos realizados (opcional)', offered:'Ofrecida', confirmed:'Confirmada', fulfilled:'Realizada', cancelled:'Cancelada', empty:'No hay registros.', none:'Tu cuenta no tiene centros asignados. Solicita acceso al responsable del centro.', loading:'Cargando…', saved:'El servidor confirmó el cambio.', failed:'No se pudo completar la operación. Conservamos el formulario.', pending:'Hay un envío sin confirmar. Reinténtalo antes de hacer otro cambio.', conflict:'Otro cambio modificó este registro. Conservamos tu formulario; revisa la versión actual antes de volver a editar.', denied:'Tu sesión o permiso ya no permite esta operación. Comprueba tu acceso.', invalid:'Escribe un título, una descripción y al menos una forma de ayudar.', unsafe:'No se pudo guardar el envío en este navegador. No se envió nada.' },
-    en: { title:'Center workspace', scope:'You can only manage centers assigned to your account.', center:'Authorized center', reload:'Refresh centers', retry:'Retry pending change', needs:'Center needs', contributions:'Contributions', prev:'Previous', next:'Next', new:'New need', editor:'Edit need', translations:'Enter at least one title and description in Spanish or English. Do not include private beneficiary information.', goods:'Goods', time:'Time', urgent:'Urgent', quantity:'Required quantity (optional)', unit:'Unit (e.g., packs)', expires:'Last day (optional, UTC)', status:'Status', draft:'Draft', published:'Published', closed:'Closed', save:'Save to server', edit:'Edit', confirm:'Confirm', fulfill:'Mark completed', actual:'Minutes completed (optional)', offered:'Offered', confirmed:'Confirmed', fulfilled:'Completed', cancelled:'Cancelled', empty:'No records.', none:'Your account has no assigned centers. Ask the center administrator for access.', loading:'Loading…', saved:'The server confirmed the change.', failed:'Could not complete the operation. Your form is preserved.', pending:'A submission has an unknown outcome. Retry it before making another change.', conflict:'Another change updated this record. Your form is preserved; review the latest version before editing again.', denied:'Your session or permission no longer allows this operation. Check your access.', invalid:'Enter a title, a description and at least one way to help.', unsafe:'Could not save the submission in this browser. Nothing was sent.' }
+    es: { title:'Portal de centros', scope:'Solo puedes gestionar los centros que tienes asignados.', center:'Centro autorizado', reload:'Actualizar centros', retry:'Reintentar cambio pendiente', needs:'Necesidades del centro', contributions:'Aportaciones', prev:'Anterior', next:'Siguiente', new:'Nueva necesidad', editor:'Editar necesidad', translations:'Escribe al menos un título y una descripción en español o inglés. No incluyas datos privados de beneficiarios.', goods:'Bienes', time:'Tiempo', urgent:'Urgente', quantity:'Cantidad requerida (opcional)', unit:'Unidad (p. ej., paquetes)', expires:'Último día (opcional, UTC)', status:'Estado', draft:'Borrador', published:'Publicada', closed:'Cerrada', save:'Guardar cambios', edit:'Editar', confirm:'Confirmar', fulfill:'Marcar como realizada', actual:'Minutos realizados (opcional)', offered:'Ofrecida', confirmed:'Confirmada', fulfilled:'Realizada', cancelled:'Cancelada', empty:'No hay registros.', none:'Tu cuenta no tiene centros asignados. Solicita acceso al responsable del centro.', loading:'Cargando…', saved:'El servidor confirmó el cambio.', failed:'No se pudo completar la operación. Conservamos el formulario.', pending:'Hay un envío sin confirmar. Reinténtalo antes de hacer otro cambio.', conflict:'Otro cambio modificó este registro. Conservamos tu formulario; revisa la versión actual antes de volver a editar.', denied:'Tu sesión o permiso ya no permite esta operación. Comprueba tu acceso.', invalid:'Escribe un título, una descripción y al menos una forma de ayudar.', unsafe:'No se pudo guardar el envío en este navegador. No se envió nada.' },
+    en: { title:'Center workspace', scope:'You can only manage centers assigned to your account.', center:'Authorized center', reload:'Refresh centers', retry:'Retry pending change', needs:'Center needs', contributions:'Contributions', prev:'Previous', next:'Next', new:'New need', editor:'Edit need', translations:'Enter at least one title and description in Spanish or English. Do not include private beneficiary information.', goods:'Goods', time:'Time', urgent:'Urgent', quantity:'Required quantity (optional)', unit:'Unit (e.g., packs)', expires:'Last day (optional, UTC)', status:'Status', draft:'Draft', published:'Published', closed:'Closed', save:'Save changes', edit:'Edit', confirm:'Confirm', fulfill:'Mark completed', actual:'Minutes completed (optional)', offered:'Offered', confirmed:'Confirmed', fulfilled:'Completed', cancelled:'Cancelled', empty:'No records.', none:'Your account has no assigned centers. Ask the center administrator for access.', loading:'Loading…', saved:'The server confirmed the change.', failed:'Could not complete the operation. Your form is preserved.', pending:'A submission has an unknown outcome. Retry it before making another change.', conflict:'Another change updated this record. Your form is preserved; review the latest version before editing again.', denied:'Your session or permission no longer allows this operation. Check your access.', invalid:'Enter a title, a description and at least one way to help.', unsafe:'Could not save the submission in this browser. Nothing was sent.' }
   };
   ['es', 'en'].forEach(function (lang) { Object.keys(staffCopy[lang]).forEach(function (key) { copy[lang]['staff.' + key] = staffCopy[lang][key]; }); });
   function staffText(key) { return key ? t('staff.' + key) : ''; }
@@ -829,6 +643,159 @@
     if (old) body.version = old.version;
     mutateStaff('/api/v1/staff/centers/' + encodeURIComponent(staff.center) + '/needs' + (old ? '/' + encodeURIComponent(old.id) : ''), old ? 'PUT' : 'POST', body);
   });
+
+  var applicationCopy = {
+    es: {
+      nav:'Registrar una sede', eyebrow:'Para organizaciones', title:'Tu organización ayuda. Hagamos que más personas la encuentren.', lead:'Solicita el registro de una sede. Si tienen varias, envía una solicitud por cada ubicación.',
+      step1:'Cuéntanos quiénes son y qué apoyo ofrecen.', step2:'Envía la solicitud desde tu cuenta Generosity con correo verificado.', step3:'Recibe un folio y consulta tu solicitud pendiente de revisión.',
+      private:'Los datos de esta solicitud son privados. No publiques datos de personas beneficiarias ni domicilios protegidos. El envío no publica la sede, no la verifica ni concede permisos para administrarla.', existing:'Ya tengo un centro asignado', formTitle:'Registrar una sede', required:'Los campos marcados con * son obligatorios. Puedes preparar el formulario antes de iniciar sesión; conserva esta pestaña abierta.',
+      organization:'1. Tu organización', organization_name:'Nombre de la organización *', activities:'Tipo de centro y actividades *', activitiesHint:'Por ejemplo: comedor comunitario, albergue, atención de salud o capacitación. Describe a quiénes apoyan.', location:'2. La sede', site_name:'Nombre de la sede *', country:'País *', city:'Ciudad o localidad *', contact:'3. Contacto de la organización', contact_name:'Tu nombre *', contact_role:'Cargo o relación con la organización *', emailHint:'Usaremos el correo verificado de tu cuenta para contactarte sobre esta solicitud.',
+      optional:'Agregar datos opcionales', legal_name:'Nombre legal', region:'Estado, provincia o región', postal_code:'Código postal', address:'Dirección de atención al público (omite ubicaciones protegidas)', phone:'Teléfono con código de país', website:'Sitio web oficial', representation:'Declaro que represento a esta organización. *', consent:'Autorizo que Generosity guarde estos datos para revisar la solicitud y contactarme sobre ella. *',
+      signIn:'Iniciar sesión ↗', create:'Crear cuenta ↗', submit:'Enviar solicitud', retry:'Reintentar el mismo envío', history:'Mis solicitudes de sedes', refresh:'Actualizar solicitudes', guest:'Inicia sesión o crea una cuenta con correo verificado para enviar. El formulario permanecerá en esta pestaña.', verify:'Verifica el correo de tu cuenta antes de enviar la solicitud.', signed:'La solicitud se enviará desde tu cuenta: ', unavailable:'No se pudo comprobar tu sesión. Conservamos el formulario; comprueba la conexión en el acceso de cuentas.',
+      invalid:'Revisa los campos marcados y confirma ambas declaraciones.', sending:'Enviando solicitud…', pending:'No pudimos confirmar el resultado. Conservamos el mismo envío para que puedas reintentarlo sin duplicarlo.', saved:'Solicitud recibida. Pendiente de revisión; la sede aún no está publicada. Folio: ', denied:'Tu sesión necesita actualizarse. Inicia sesión y reintenta el mismo envío.', rejected:'El servidor rechazó el envío. Revisa los datos antes de volver a enviarlo.', unsafe:'Este navegador no pudo guardar el envío pendiente. No se envió nada.', loading:'Consultando tus solicitudes…', empty:'Todavía no has enviado solicitudes de sedes.', listFailed:'No se pudieron consultar tus solicitudes. Puedes actualizar para volver a intentarlo.', status_pending:'Pendiente de revisión', status_other:'Consulta al equipo de Generosity', reference:'Folio: '
+    },
+    en: {
+      nav:'Register a location', eyebrow:'For organizations', title:'Your organization helps. Let’s help more people find it.', lead:'Apply to register a location. If you have several, submit one application for each location.',
+      step1:'Tell us who you are and the support you provide.', step2:'Submit through your Generosity account with a verified email.', step3:'Receive a reference number and track your application while it awaits review.',
+      private:'Application details are private. Do not include beneficiary information or protected addresses. Submitting does not publish or verify the location, or grant access to manage it.', existing:'I already have an assigned center', formTitle:'Register a location', required:'Fields marked * are required. You can fill out the form before signing in; keep this tab open.',
+      organization:'1. Your organization', organization_name:'Organization name *', activities:'Type of center and activities *', activitiesHint:'For example: community kitchen, shelter, health care or training. Describe the people you support.', location:'2. The location', site_name:'Location name *', country:'Country *', city:'City or town *', contact:'3. Organization contact', contact_name:'Your name *', contact_role:'Role or relationship to the organization *', emailHint:'We will use your account’s verified email to contact you about this application.',
+      optional:'Add optional details', legal_name:'Legal name', region:'State, province or region', postal_code:'Postal code', address:'Public service address (omit protected locations)', phone:'Phone number with country code', website:'Official website', representation:'I confirm that I represent this organization. *', consent:'I authorize Generosity to store these details to review the application and contact me about it. *',
+      signIn:'Sign in ↗', create:'Create account ↗', submit:'Submit application', retry:'Retry the same submission', history:'My location applications', refresh:'Refresh applications', guest:'Sign in or create an account with a verified email to submit. Your form will remain in this tab.', verify:'Verify your account’s email before submitting.', signed:'Submitting from your account: ', unavailable:'We could not check your session. Your form is preserved; check the connection in account access.',
+      invalid:'Review the marked fields and confirm both declarations.', sending:'Submitting application…', pending:'We could not confirm the outcome. The same submission is saved so you can retry without creating a duplicate.', saved:'Application received and pending review. The location is not published yet. Reference: ', denied:'Your session needs to be refreshed. Sign in and retry the same submission.', rejected:'The server rejected the submission. Review the details before submitting again.', unsafe:'This browser could not save the pending submission. Nothing was sent.', loading:'Loading your applications…', empty:'You have not submitted any location applications yet.', listFailed:'Could not load your applications. Refresh to try again.', status_pending:'Pending review', status_other:'Contact the Generosity team', reference:'Reference: '
+    }
+  };
+  ['es','en'].forEach(function (lang) { Object.keys(applicationCopy[lang]).forEach(function (key) { copy[lang]['application.' + key] = applicationCopy[lang][key]; }); });
+  var application = { owner:null, pending:null, busy:false, loading:false, page:1, last:1, items:[], status:'', reference:'', listStatus:'', generation:0 };
+  var registrationForm = el('site-registration');
+  function applicationText(key) { return key ? t('application.' + key) : ''; }
+  function applicationStorage(owner) { return 'generosity.application.pending.' + owner; }
+  function applicationReady() { return accountStatus === 'auth.signedIn' && accountCsrf && accountUser && accountUser.email_verified_at; }
+  function syncApplications() {
+    if (!application) return;
+    var owner = accountUser && String(accountUser.id);
+    if (application.owner !== owner) {
+      if (application.owner) {
+        try { sessionStorage.removeItem(applicationStorage(application.owner)); } catch (_) { /* Still clear another account's private view. */ }
+        registrationForm.reset();
+      }
+      application = { owner:owner, pending:null, busy:false, loading:false, page:1, last:1, items:[], status:'', reference:'', listStatus:'', generation:application.generation + 1 };
+      clearApplicationErrors();
+      if (owner) {
+        try {
+          var saved = JSON.parse(sessionStorage.getItem(applicationStorage(owner)) || 'null');
+          if (saved && saved.owner === owner && /^[0-9a-f-]{36}$/.test(saved.key) && saved.body && typeof saved.body === 'object') {
+            application.pending = saved; application.status = 'pending';
+            Array.from(registrationForm.elements).forEach(function (field) {
+              if (!field.name || !Object.prototype.hasOwnProperty.call(saved.body, field.name)) return;
+              if (field.type === 'checkbox') field.checked = saved.body[field.name] === true;
+              else field.value = saved.body[field.name] || '';
+            });
+          }
+        } catch (_) { application.status = 'unsafe'; }
+        if (applicationReady()) loadApplications();
+      }
+    }
+    if (applicationReady() && !application.listStatus && !application.items.length && !application.loading) loadApplications();
+    renderApplication();
+  }
+  function renderApplication() {
+    var ready = applicationReady();
+    el('registration-fields').disabled = application.busy || !!application.pending;
+    el('registration-submit').disabled = !ready || accountBusy || application.busy;
+    el('registration-submit').textContent = applicationText(application.pending ? 'retry' : 'submit');
+    el('registration-access').hidden = !!ready;
+    el('registration-sign-in').href = apiOrigin + '/auth/sign-in?client=web&locale=' + effective();
+    el('registration-create').href = el('registration-sign-in').href + '&screen=register';
+    el('registration-session').textContent = ready ? applicationText('signed') + accountUser.email
+      : applicationText(accountStatus === 'auth.failed' ? 'unavailable' : accountUser ? 'verify' : 'guest');
+    el('registration-result').textContent = applicationText(application.status) + (application.status === 'saved' ? application.reference : '');
+    el('registration-history').hidden = !ready;
+    el('registration-history-status').textContent = applicationText(application.listStatus);
+    el('registration-refresh').disabled = application.loading || !ready;
+    el('registration-prev').disabled = application.loading || application.page <= 1;
+    el('registration-next').disabled = application.loading || application.page >= application.last;
+    el('registration-list').replaceChildren();
+    application.items.forEach(function (item) {
+      var row = node('li', item.organization_name + ' · ' + item.site_name);
+      row.append(node('p', applicationText(item.status === 'pending' ? 'status_pending' : 'status_other')));
+      row.append(node('small', applicationText('reference') + item.id));
+      el('registration-list').append(row);
+    });
+  }
+  async function loadApplications() {
+    if (!applicationReady() || application.loading) return;
+    var generation = application.generation;
+    application.loading = true; application.listStatus = 'loading'; renderApplication();
+    try {
+      var response = await fetch(apiOrigin + '/api/v1/me/center-applications?page=' + application.page, { credentials:'include', cache:'no-store', signal:AbortSignal.timeout(15000), headers:{Accept:'application/json'} });
+      if (!response.ok) throw new Error('Applications unavailable');
+      var data = await response.json();
+      if (!Array.isArray(data.data) || !Number.isInteger(data.last_page)) throw new Error('Invalid applications response');
+      if (generation !== application.generation) return;
+      application.items = data.data; application.last = data.last_page;
+      application.listStatus = data.data.length ? '' : 'empty';
+    } catch (_) { if (generation === application.generation) application.listStatus = 'listFailed'; }
+    finally { if (generation === application.generation) { application.loading = false; renderApplication(); } }
+  }
+  function clearApplicationErrors() {
+    el('registration-errors').textContent = '';
+    Array.from(registrationForm.elements).forEach(function (field) { field.removeAttribute('aria-invalid'); field.removeAttribute('aria-errormessage'); });
+  }
+  function applicationErrors(names) {
+    el('registration-errors').textContent = applicationText('invalid');
+    var first;
+    names.forEach(function (name) {
+      var field = registrationForm.elements.namedItem(name);
+      if (field && field.focus) { field.setAttribute('aria-invalid', 'true'); field.setAttribute('aria-errormessage', 'registration-errors'); if (!first) first = field; }
+    });
+    if (first) { var details = first.closest('details'); if (details) details.open = true; first.focus(); }
+    else el('registration-errors').focus();
+  }
+  registrationForm.addEventListener('submit', async function (event) {
+    event.preventDefault();
+    if (!applicationReady() || application.busy || accountBusy) return;
+    clearApplicationErrors();
+    if (!application.pending) {
+      var invalid = Array.from(registrationForm.elements).filter(function (field) { return field.willValidate && !field.checkValidity(); });
+      if (invalid.length) { applicationErrors(invalid.map(function (field) { return field.name; })); return; }
+      var body = {};
+      Array.from(registrationForm.elements).forEach(function (field) {
+        if (field.name) body[field.name] = field.type === 'checkbox' ? field.checked : field.value.trim() || null;
+      });
+      try {
+        var pending = { owner:application.owner, key:crypto.randomUUID(), body:body };
+        sessionStorage.setItem(applicationStorage(application.owner), JSON.stringify(pending));
+        application.pending = pending;
+      } catch (_) { application.status = 'unsafe'; renderApplication(); return; }
+    }
+    var submission = application.pending, generation = application.generation;
+    application.busy = true; application.status = 'sending'; renderApplication();
+    try {
+      var response = await fetch(apiOrigin + '/api/v1/center-applications', { method:'POST', credentials:'include', cache:'no-store', signal:AbortSignal.timeout(15000), headers:{Accept:'application/json', 'Content-Type':'application/json', 'X-CSRF-TOKEN':accountCsrf, 'Idempotency-Key':submission.key}, body:JSON.stringify(submission.body) });
+      var data = await response.json();
+      if (generation !== application.generation) return;
+      if (!response.ok) {
+        if ([400,404,409,422].includes(response.status)) {
+          try { sessionStorage.removeItem(applicationStorage(application.owner)); } catch (_) { /* A rejected replay remains safe if storage is unavailable. */ }
+          application.pending = null;
+          application.status = 'rejected';
+          application.busy = false;
+          renderApplication();
+          if (response.status === 422) applicationErrors(Object.keys(data.error && data.error.details || {}));
+        } else application.status = [401,403,419].includes(response.status) ? 'denied' : 'pending';
+        return;
+      }
+      if (!data.application || typeof data.application.id !== 'string' || data.application.status !== 'pending') throw new Error('Invalid receipt');
+      try { sessionStorage.removeItem(applicationStorage(application.owner)); } catch (_) { /* Replaying an acknowledged key cannot create another application. */ }
+      application.pending = null; application.status = 'saved'; application.reference = data.application.id;
+      registrationForm.reset(); application.page = 1;
+      el('registration-result').focus();
+      await loadApplications();
+    } catch (_) { if (generation === application.generation) application.status = 'pending'; }
+    finally { if (generation === application.generation) { application.busy = false; renderApplication(); } }
+  });
+  el('registration-refresh').addEventListener('click', loadApplications);
+  ['prev','next'].forEach(function (direction) { el('registration-' + direction).addEventListener('click', function () { application.page += direction === 'next' ? 1 : -1; loadApplications(); }); });
 
   var stored = readStored();
   if (stored === "es" || stored === "en" || stored === "system") mode = stored;
