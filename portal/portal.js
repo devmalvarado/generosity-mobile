@@ -101,11 +101,11 @@
       "center.olivos": "Comedor Los Olivos",
       "center.hogar": "Hogar Futuros Brillantes",
       "center.puente": "Puente de Salud Abierta",
-      "centers.title": "¿Administras un centro? Publicar todavía no está conectado.",
+      "centers.title": "¿Administras un centro? Accede al portal de centros.",
       "centers.lead": "La misma cuenta Generosity puede tener permisos de un centro. Los concede personal autorizado; iniciar sesión no permite publicar por sí solo.",
-      "centers.item1": "El perfil, los horarios y el contacto quedan para cuando exista un espacio de personal.",
-      "centers.item2": "Una necesidad publicada tendrá cantidad, prioridad y cierre. Esta página no la guarda.",
-      "centers.item3": "Confirmar lo que otras personas traigan también depende de ese espacio, que no está en esta etapa.",
+      "centers.item1": "El perfil, los horarios y el contacto público no están en este portal de centros.",
+      "centers.item2": "Una necesidad publicada tendrá cantidad, prioridad y cierre. El formulario de ejemplo no la guarda; el portal de centros sí, solo con un centro asignado.",
+      "centers.item3": "Confirmar lo que otras personas traigan está en el portal de centros, no en este formulario, y solo para un centro asignado.",
       "centers.item4": "La verificación oficial y los pagos no forman parte de esta página.",
       "centers.access": "Ir al acceso de centros",
       "publish.title": "Borrador local, no una publicación",
@@ -130,7 +130,7 @@
       "access.back": "Volver al borrador local",
       "access.dest.none": "No hay un destino previsto guardado.",
       "access.dest.publicar": "Destino previsto: publicar una necesidad. El inicio de sesión no concede permiso para publicar.",
-      "access.dest.centros": "Destino previsto: el espacio de centros. Ahora no concede acceso.",
+      "access.dest.centros": "Destino previsto: el espacio de centros. Iniciar sesión no asigna un centro ni permite publicar.",
       "privacy.title": "Lo que esta página no hace.",
       "privacy.rank.title": "No rankea a las personas.",
       "privacy.rank.body": "No hay tabla de los más generosos ni puntos que se canjeen. Tampoco hay un historial en este sitio.",
@@ -154,7 +154,7 @@
       "donate.invalid": "No se envió nada. Revisa la cantidad: hace falta un número de 1 o más.",
       "donate.notSent": "No se envió nada y no se publicó nada. No hay un servicio conectado. El formulario conserva lo que escribiste.",
       "donate.money": "No se envió nada y no se hizo ningún cobro. Las aportaciones de dinero no están disponibles en esta página.",
-      "publish.notSent": "No se envió nada y no se publicó nada. Iniciar sesión no abre la revisión ni permite publicar esta necesidad.",
+      "publish.notSent": "No se envió nada y no se publicó nada. Este formulario de ejemplo no permite publicar; usa el portal de centros con una cuenta autorizada.",
     },
     en: {
       "auth.signIn": "Sign in or link account ↗",
@@ -250,11 +250,11 @@
       "center.olivos": "Comedor Los Olivos",
       "center.hogar": "Hogar Futuros Brillantes",
       "center.puente": "Puente de Salud Abierta",
-      "centers.title": "Do you run a center? Publishing is not connected yet.",
+      "centers.title": "Do you run a center? Open the center workspace.",
       "centers.lead": "The same Generosity account can have center permissions. Authorized staff grant these permissions; signing in alone does not allow publishing.",
-      "centers.item1": "Profile, hours, and contact wait until a staff space exists.",
-      "centers.item2": "A published need will have a quantity, a priority, and a closing time. This page does not store it.",
-      "centers.item3": "Confirming what other people bring also depends on that space, which is not part of this stage.",
+      "centers.item1": "Profile, hours, and public contact are not in this center workspace.",
+      "centers.item2": "A published need has a quantity, a priority, and a closing time. The sample form does not store it; the center workspace does, only for an assigned center.",
+      "centers.item3": "Confirming what other people bring is in the center workspace, not in this sample form, and only for an assigned center.",
       "centers.item4": "Official verification and payments are not part of this page.",
       "centers.access": "Go to center access",
       "publish.title": "A local draft, not a publication",
@@ -279,7 +279,7 @@
       "access.back": "Back to the local draft",
       "access.dest.none": "No intended destination is saved.",
       "access.dest.publicar": "Intended destination: publish a need. Signing in does not grant permission to publish.",
-      "access.dest.centros": "Intended destination: the center space. It does not grant access now.",
+      "access.dest.centros": "Intended destination: the center workspace. Signing in does not assign a center or allow publishing.",
       "privacy.title": "What this page does not do.",
       "privacy.rank.title": "It does not rank people.",
       "privacy.rank.body": "There is no table of the most generous and no points to redeem. There is also no history on this site.",
@@ -303,7 +303,7 @@
       "donate.invalid": "Nothing was sent. Check the quantity: a number of 1 or more is required.",
       "donate.notSent": "Nothing was sent and nothing was published. No service is connected. The form keeps what you entered.",
       "donate.money": "Nothing was sent and nothing was charged. Money contributions are not available on this page.",
-      "publish.notSent": "Nothing was sent and nothing was published. Signing in does not open a review and does not allow this need to be published.",
+      "publish.notSent": "Nothing was sent and nothing was published. This sample form does not allow publishing; use the center workspace with an authorized account.",
     }
   };
 
@@ -634,6 +634,7 @@
     accountLogout.hidden = !accountUser;
     accountLogout.disabled = accountBusy || !accountCsrf;
     accountRetry.disabled = accountBusy;
+    syncWorkspace();
   }
 
   async function checkAccount() {
@@ -671,6 +672,163 @@
     if (!accountUser) checkAccount();
   });
   window.addEventListener("focus", checkAccount);
+
+  // Staff state is separate from the labeled public examples above.
+  var staff = { owner: null, center: '', centers: [], needs: [], contributions: [], needPage: 1, contributionPage: 1, needLast: 1, contributionLast: 1, editing: null, pending: null, busy: false, generation: 0, status: '', durations: {} };
+  var staffCopy = {
+    es: { title:'Portal de centros', scope:'Solo puedes gestionar los centros que tienes asignados.', center:'Centro autorizado', reload:'Actualizar centros', retry:'Reintentar cambio pendiente', needs:'Necesidades del centro', contributions:'Aportaciones', prev:'Anterior', next:'Siguiente', new:'Nueva necesidad', editor:'Editar necesidad', translations:'Escribe al menos un título y una descripción en español o inglés. No incluyas datos privados de beneficiarios.', goods:'Bienes', time:'Tiempo', urgent:'Urgente', quantity:'Cantidad requerida (opcional)', unit:'Unidad (p. ej., paquetes)', expires:'Último día (opcional, UTC)', status:'Estado', draft:'Borrador', published:'Publicada', closed:'Cerrada', save:'Guardar en el servidor', edit:'Editar', confirm:'Confirmar', fulfill:'Marcar como realizada', actual:'Minutos realizados (opcional)', offered:'Ofrecida', confirmed:'Confirmada', fulfilled:'Realizada', cancelled:'Cancelada', empty:'No hay registros.', none:'Tu cuenta no tiene centros asignados. Solicita acceso al responsable del centro.', loading:'Cargando…', saved:'El servidor confirmó el cambio.', failed:'No se pudo completar la operación. Conservamos el formulario.', pending:'Hay un envío sin confirmar. Reinténtalo antes de hacer otro cambio.', conflict:'Otro cambio modificó este registro. Conservamos tu formulario; revisa la versión actual antes de volver a editar.', denied:'Tu sesión o permiso ya no permite esta operación. Comprueba tu acceso.', invalid:'Escribe un título, una descripción y al menos una forma de ayudar.', unsafe:'No se pudo guardar el envío en este navegador. No se envió nada.' },
+    en: { title:'Center workspace', scope:'You can only manage centers assigned to your account.', center:'Authorized center', reload:'Refresh centers', retry:'Retry pending change', needs:'Center needs', contributions:'Contributions', prev:'Previous', next:'Next', new:'New need', editor:'Edit need', translations:'Enter at least one title and description in Spanish or English. Do not include private beneficiary information.', goods:'Goods', time:'Time', urgent:'Urgent', quantity:'Required quantity (optional)', unit:'Unit (e.g., packs)', expires:'Last day (optional, UTC)', status:'Status', draft:'Draft', published:'Published', closed:'Closed', save:'Save to server', edit:'Edit', confirm:'Confirm', fulfill:'Mark completed', actual:'Minutes completed (optional)', offered:'Offered', confirmed:'Confirmed', fulfilled:'Completed', cancelled:'Cancelled', empty:'No records.', none:'Your account has no assigned centers. Ask the center administrator for access.', loading:'Loading…', saved:'The server confirmed the change.', failed:'Could not complete the operation. Your form is preserved.', pending:'A submission has an unknown outcome. Retry it before making another change.', conflict:'Another change updated this record. Your form is preserved; review the latest version before editing again.', denied:'Your session or permission no longer allows this operation. Check your access.', invalid:'Enter a title, a description and at least one way to help.', unsafe:'Could not save the submission in this browser. Nothing was sent.' }
+  };
+  ['es', 'en'].forEach(function (lang) { Object.keys(staffCopy[lang]).forEach(function (key) { copy[lang]['staff.' + key] = staffCopy[lang][key]; }); });
+  function staffText(key) { return key ? t('staff.' + key) : ''; }
+  function el(id) { return document.getElementById(id); }
+  function localized(value) { return value && (value[effective()] || value.en || Object.values(value)[0]) || ''; }
+  function staffMessage(key) { staff.status = key; el('staff-status').textContent = staffText(key); }
+  function node(tag, text) { var item = document.createElement(tag); item.textContent = text; return item; }
+  function staffButton(label, action) { var b = node('button', staffText(label)); b.type = 'button'; b.disabled = staff.busy || !!staff.pending; b.addEventListener('click', action); return b; }
+  function storageKey() { return 'generosity.staff.pending.' + staff.owner; }
+  function clearStaff() {
+    if (staff.owner) { try { sessionStorage.removeItem(storageKey()); } catch (_) { /* Clear private UI even when browser storage is unavailable. */ } }
+    staff.generation++; staff.owner = null; staff.center = ''; staff.centers = []; staff.needs = []; staff.contributions = []; staff.editing = null; staff.pending = null; staff.busy = false; staff.status = ''; staff.durations = {};
+    el('staff-need-form').reset(); el('staff-needs').replaceChildren(); el('staff-contributions').replaceChildren(); el('staff-center').replaceChildren(); el('staff-content').hidden = true;
+  }
+  function syncWorkspace() {
+    if (!staff) return;
+    var owner = accountUser && String(accountUser.id);
+    if (staff.owner && staff.owner !== owner) clearStaff();
+    el('center-workspace').hidden = !owner || !accountCsrf;
+    if (owner && accountCsrf && !staff.owner) {
+      staff.owner = owner;
+      try {
+        var saved = JSON.parse(sessionStorage.getItem(storageKey()) || 'null');
+        if (saved && saved.owner === owner && /^[0-9a-f-]{36}$/.test(saved.key) && /^(POST|PUT)$/.test(saved.method) && /^\/api\/v1\/(staff\/centers\/[^/]+\/needs(\/[^/]+)?|contributions\/[^/]+\/transition)$/.test(saved.path)) staff.pending = saved;
+      } catch (_) { staffMessage('unsafe'); }
+      loadStaff();
+    }
+    renderStaff();
+  }
+  async function staffRequest(path, method, body, key) {
+    var owner = staff.owner;
+    var headers = { Accept:'application/json' };
+    if (method !== 'GET') { headers['Content-Type'] = 'application/json'; headers['X-CSRF-TOKEN'] = accountCsrf; headers['Idempotency-Key'] = key; }
+    var response = await fetch(apiOrigin + path, { method:method, credentials:'include', cache:'no-store', signal:AbortSignal.timeout(15000), headers:headers, body:method === 'GET' ? undefined : JSON.stringify(body) });
+    if (!accountUser || String(accountUser.id) !== owner) throw new Error('Account changed');
+    if (!response.ok) { var error = new Error('Request rejected'); error.status = response.status; throw error; }
+    return response.json();
+  }
+  async function loadStaff() {
+    if (staff.busy || !staff.owner || !accountCsrf) return;
+    staff.busy = true; var generation = ++staff.generation; staffMessage('loading'); renderStaff();
+    try {
+      var data = await staffRequest('/api/v1/staff/centers', 'GET');
+      if (generation !== staff.generation) return;
+      staff.centers = data.centers;
+      if (!staff.centers.some(function (c) { return c.id === staff.center; })) { staff.center = staff.centers[0] ? staff.centers[0].id : ''; staff.needPage = staff.contributionPage = 1; editNeed(null); }
+      el('staff-center').replaceChildren();
+      staff.centers.forEach(function (c) { var option = node('option', localized(c.name)); option.value = c.id; el('staff-center').append(option); });
+      el('staff-center').value = staff.center;
+      staffMessage(staff.pending ? 'pending' : (staff.center ? '' : 'none'));
+    } catch (e) { if (generation === staff.generation) staffMessage('failed'); }
+    finally { if (generation === staff.generation) { staff.busy = false; renderStaff(); } }
+    if (generation === staff.generation && staff.center) loadStaffData();
+  }
+  async function loadStaffData() {
+    if (staff.busy || !staff.center) return;
+    staff.busy = true; var generation = ++staff.generation; renderStaff();
+    var path = '/api/v1/staff/centers/' + encodeURIComponent(staff.center);
+    try {
+      var results = await Promise.all([staffRequest(path + '/needs?page=' + staff.needPage, 'GET'), staffRequest(path + '/contributions?page=' + staff.contributionPage, 'GET')]);
+      if (generation !== staff.generation) return;
+      staff.needs = results[0].data; staff.needLast = results[0].last_page; staff.contributions = results[1].data; staff.contributionLast = results[1].last_page;
+    } catch (e) {
+      if (generation !== staff.generation) return;
+      if ([401,403,419].includes(e.status)) { staff.needs = []; staff.contributions = []; staff.center = ''; staffMessage('denied'); }
+      else staffMessage('failed');
+    } finally { if (generation === staff.generation) { staff.busy = false; renderStaff(); } }
+  }
+  function renderStaff() {
+    if (!staff || !staff.owner) return;
+    el('staff-status').textContent = staffText(staff.status);
+    el('staff-content').hidden = !staff.center;
+    el('staff-fields').disabled = staff.busy || !!staff.pending || accountBusy;
+    el('staff-center').disabled = staff.busy || !!staff.pending;
+    el('staff-reload').disabled = staff.busy;
+    el('staff-retry').hidden = !staff.pending; el('staff-retry').disabled = staff.busy;
+    el('need-new').disabled = staff.busy || !!staff.pending;
+    ['needs', 'contributions'].forEach(function (kind) {
+      var page = kind === 'needs' ? staff.needPage : staff.contributionPage;
+      var last = kind === 'needs' ? staff.needLast : staff.contributionLast;
+      el(kind + '-prev').disabled = staff.busy || !!staff.pending || page <= 1;
+      el(kind + '-next').disabled = staff.busy || !!staff.pending || page >= last;
+    });
+    el('staff-needs').replaceChildren(); el('staff-contributions').replaceChildren();
+    if (!staff.needs.length) el('staff-needs').append(node('p', staffText('empty')));
+    staff.needs.forEach(function (need) {
+      var row = node('article', ''); row.append(node('h4', localized(need.title)), node('p', staffText(need.status)), staffButton('edit', function () { editNeed(need); el('need-title-' + effective()).focus(); })); el('staff-needs').append(row);
+    });
+    if (!staff.contributions.length) el('staff-contributions').append(node('p', staffText('empty')));
+    staff.contributions.forEach(function (contribution) {
+      var row = node('article', ''); row.append(node('h4', localized(contribution.title) || contribution.id), node('p', staffText(contribution.status)), node('p', contribution.activity || ''), node('p', contribution.availability || ''), node('p', contribution.notes || ''));
+      if (contribution.quantity != null) row.append(node('p', contribution.quantity + ' ' + (contribution.quantity_unit || '')));
+      if (String(contribution.user_id) !== staff.owner && ['offered','confirmed'].includes(contribution.status)) {
+        var duration;
+        if (contribution.status === 'confirmed' && contribution.method === 'time') {
+          var label = node('label', staffText('actual')); duration = document.createElement('input'); duration.type = 'number'; duration.min = '1'; duration.max = '525600'; duration.step = '1'; duration.value = staff.durations[contribution.id] || ''; duration.disabled = staff.busy || !!staff.pending; duration.addEventListener('input', function () { staff.durations[contribution.id] = duration.value; }); label.append(duration); row.append(label);
+        }
+        row.append(staffButton(contribution.status === 'offered' ? 'confirm' : 'fulfill', function () {
+          var body = { action:contribution.status === 'offered' ? 'confirm' : 'fulfill', version:contribution.version };
+          if (duration && duration.value) { if (!duration.reportValidity()) return; body.actual_minutes = Number(duration.value); }
+          mutateStaff('/api/v1/contributions/' + encodeURIComponent(contribution.id) + '/transition', 'POST', body);
+        }));
+      }
+      el('staff-contributions').append(row);
+    });
+  }
+  function editNeed(need) {
+    staff.editing = need; el('staff-need-form').reset();
+    ['es','en'].forEach(function (lang) { el('need-title-' + lang).value = need && need.title[lang] || ''; el('need-description-' + lang).value = need && need.description[lang] || ''; });
+    el('need-goods').checked = !need || need.helpMethods.includes('goods'); el('need-time').checked = !!need && need.helpMethods.includes('time');
+    el('need-urgent').checked = !!need && need.urgent; el('need-quantity').value = need && need.quantityRequired || ''; el('need-unit').value = need && need.unit || ''; el('need-expires').value = need && need.expiresOnIsoDate || ''; el('need-status').value = need ? need.status : 'draft';
+  }
+  async function mutateStaff(path, method, body) {
+    if (staff.busy || staff.pending) return;
+    var pending = { owner:staff.owner, path:path, method:method, body:body, key:crypto.randomUUID() };
+    try { sessionStorage.setItem(storageKey(), JSON.stringify(pending)); } catch (_) { staffMessage('unsafe'); return; }
+    staff.pending = pending; await retryStaff();
+  }
+  async function retryStaff() {
+    if (staff.busy || !staff.pending) return;
+    staff.busy = true; var generation = ++staff.generation; var pending = staff.pending; renderStaff();
+    try {
+      await staffRequest(pending.path, pending.method, pending.body, pending.key);
+      if (generation !== staff.generation) return;
+      sessionStorage.removeItem(storageKey()); staff.pending = null; staffMessage('saved');
+      if (pending.path.includes('/needs')) editNeed(null);
+      else delete staff.durations[pending.path.split('/')[4]];
+    } catch (e) {
+      if (generation !== staff.generation) return;
+      if ([400,403,404,409,422].includes(e.status)) {
+        try { sessionStorage.removeItem(storageKey()); staff.pending = null; } catch (_) { /* Retain the known operation key until storage recovers. */ }
+      }
+      staffMessage(e.status === 409 ? 'conflict' : [401,403,419].includes(e.status) ? 'denied' : staff.pending ? 'pending' : 'failed');
+    } finally { if (generation === staff.generation) { staff.busy = false; renderStaff(); } }
+    if (generation === staff.generation && !staff.pending) await loadStaffData();
+  }
+  el('staff-center').addEventListener('change', function () { staff.center = this.value; staff.needPage = staff.contributionPage = 1; editNeed(null); loadStaffData(); });
+  el('staff-reload').addEventListener('click', loadStaff); el('staff-retry').addEventListener('click', retryStaff); el('need-new').addEventListener('click', function () { editNeed(null); });
+  ['needs','contributions'].forEach(function (kind) { ['prev','next'].forEach(function (direction) { el(kind + '-' + direction).addEventListener('click', function () { var property = kind === 'needs' ? 'needPage' : 'contributionPage'; staff[property] += direction === 'next' ? 1 : -1; loadStaffData(); }); }); });
+  el('staff-need-form').addEventListener('submit', function (event) {
+    event.preventDefault(); if (staff.pending || staff.busy) return;
+    var old = staff.editing; var title = Object.assign({}, old && old.title); var description = Object.assign({}, old && old.description);
+    ['es','en'].forEach(function (lang) { var a = el('need-title-' + lang).value.trim(), b = el('need-description-' + lang).value.trim(); if (a) title[lang] = a; else delete title[lang]; if (b) description[lang] = b; else delete description[lang]; });
+    var methods = ['goods','time'].filter(function (code) { return el('need-' + code).checked; });
+    // Preserve an existing money declaration; this workspace cannot enable payments.
+    if (old && old.helpMethods.includes('money')) methods.push('money');
+    if (!Object.keys(title).length || !Object.keys(description).length || !methods.length) { staffMessage('invalid'); return; }
+    var body = { title:title, description:description, helpMethods:methods, urgent:el('need-urgent').checked, quantityRequired:el('need-quantity').value ? Number(el('need-quantity').value) : null, unit:el('need-unit').value.trim() || null, expiresOnIsoDate:el('need-expires').value || null, status:el('need-status').value };
+    if (old) body.version = old.version;
+    mutateStaff('/api/v1/staff/centers/' + encodeURIComponent(staff.center) + '/needs' + (old ? '/' + encodeURIComponent(old.id) : ''), old ? 'PUT' : 'POST', body);
+  });
 
   var stored = readStored();
   if (stored === "es" || stored === "en" || stored === "system") mode = stored;

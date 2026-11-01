@@ -1,33 +1,26 @@
-# Portal público de Generosity
+# Generosity web portal
 
-Copia local de la primera etapa. Es un sitio estático: HTML, CSS y JavaScript. No hay framework de interfaz, ni backend, ni inicio de sesión.
+Static HTML/CSS/JavaScript with a PHP-backed account and authorized-center workspace.
+The public cards and donation form remain labeled samples; the staff workspace
+reads assigned centers and manages real API needs/contributions when the API is
+configured. Source assets are documented in [PROVENANCE.md](PROVENANCE.md).
 
-La procedencia de la marca y de los ejemplos está en [PROVENANCE.md](PROVENANCE.md). La landing original no se modifica.
+## Local preview and checks
 
-## Verla en el navegador
+Run `npm ci`, then `npm start` for `http://127.0.0.1:47321/`.
+Run `npm test` for Chromium/WebKit checks, including the staff workspace.
+API calls target `https://api.generosity.global`; browser tests intercept them with
+fixtures. A local static preview is not a local API deployment or proof of live
+credentials. Tests cover 320–1280 CSS pixels and enlarged text; physical-device
+keyboard and screen-reader acceptance remain open.
 
-Desde esta carpeta:
+## Publication
 
-```bash
-python3 -m http.server 47321 --bind 127.0.0.1
-```
+The existing main-branch deployment publishes only `index.html`, `styles.css`,
+`portal.js` and `assets/` when those paths change. It does not deploy the backend,
+upload the repository or delete the rest of the site. No deployment is performed
+by these changes. Keep dependencies, tests, screenshots and server secrets out of
+the web root. Production privacy/terms destinations still need approved content.
 
-Abrir `http://127.0.0.1:47321/`. Si ese puerto está ocupado, cambia el número y usa otro libre.
-
-Para verla en `https://generosity.global` hay que subir solo `index.html`, `styles.css`, `portal.js` y `assets/` a un hosting de archivos y quitar el Website Builder. El constructor de GoDaddy no acepta esta carpeta. No subas `node_modules/`, pruebas ni capturas. No crees `/privacy` ni `/terms`: no hay documento legal.
-
-Sin JavaScript la página sigue diciendo que no envía ni publica nada. Con JavaScript, los formularios se quedan en la página y conservan el texto.
-
-## Comprobar
-
-Las dependencias de prueba viven solo aquí.
-
-```bash
-npm install
-npx playwright install chromium webkit
-npm test
-```
-
-Eso abre Chromium y WebKit en 320, 360, 390, 768 y 1280 px CSS. No sustituye una revisión en Safari o Chrome de un teléfono, con teclado virtual, vertical y horizontal.
-
-Las capturas quedan en `screenshots/`.
+See [center portal documentation](../docs/center-portal.md) and
+[integration status](../docs/testing/backend-integration.md).

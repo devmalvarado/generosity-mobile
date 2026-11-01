@@ -301,6 +301,47 @@
       </div>
     </section>
 
+    <section class="workspace" id="center-workspace" hidden aria-labelledby="workspace-title">
+      <h2 id="workspace-title" data-i18n="staff.title">Portal de centros</h2>
+      <p data-i18n="staff.scope">Solo puedes gestionar los centros que tienes asignados.</p>
+      <p id="staff-status" role="status" aria-live="polite"></p>
+      <button type="button" id="staff-reload" data-i18n="staff.reload">Actualizar centros</button>
+      <button type="button" id="staff-retry" hidden data-i18n="staff.retry">Reintentar cambio pendiente</button>
+      <label for="staff-center" data-i18n="staff.center">Centro autorizado</label>
+      <select id="staff-center"></select>
+      <div id="staff-content" hidden>
+        <h3 data-i18n="staff.needs">Necesidades del centro</h3>
+        <div id="staff-needs" class="workspace-list"></div>
+        <div class="account-actions">
+          <button type="button" id="needs-prev" data-i18n="staff.prev">Anterior</button>
+          <button type="button" id="needs-next" data-i18n="staff.next">Siguiente</button>
+          <button type="button" id="need-new" data-i18n="staff.new">Nueva necesidad</button>
+        </div>
+        <form id="staff-need-form">
+          <fieldset id="staff-fields">
+            <legend data-i18n="staff.editor">Editar necesidad</legend>
+            <p data-i18n="staff.translations">Escribe al menos un título y una descripción en español o inglés. No incluyas datos privados de beneficiarios.</p>
+            <label for="need-title-es">Título (español)</label><input id="need-title-es" maxlength="4000">
+            <label for="need-title-en">Title (English)</label><input id="need-title-en" maxlength="4000">
+            <label for="need-description-es">Descripción (español)</label><textarea id="need-description-es" maxlength="4000"></textarea>
+            <label for="need-description-en">Description (English)</label><textarea id="need-description-en" maxlength="4000"></textarea>
+            <label><input id="need-goods" type="checkbox" checked> <span data-i18n="staff.goods">Bienes</span></label>
+            <label><input id="need-time" type="checkbox"> <span data-i18n="staff.time">Tiempo</span></label>
+            <label><input id="need-urgent" type="checkbox"> <span data-i18n="staff.urgent">Urgente</span></label>
+            <label for="need-quantity" data-i18n="staff.quantity">Cantidad requerida (opcional)</label><input id="need-quantity" type="number" min="1" max="1000000" step="1">
+            <label for="need-unit" data-i18n="staff.unit">Unidad (p. ej., paquetes)</label><input id="need-unit" maxlength="60">
+            <label for="need-expires" data-i18n="staff.expires">Último día (opcional, UTC)</label><input id="need-expires" type="date">
+            <label for="need-status" data-i18n="staff.status">Estado</label>
+            <select id="need-status"><option value="draft" data-i18n="staff.draft">Borrador</option><option value="published" data-i18n="staff.published">Publicada</option><option value="closed" data-i18n="staff.closed">Cerrada</option></select>
+            <button type="submit" data-i18n="staff.save">Guardar en el servidor</button>
+          </fieldset>
+        </form>
+        <h3 data-i18n="staff.contributions">Aportaciones</h3>
+        <div id="staff-contributions" class="workspace-list"></div>
+        <div class="account-actions"><button type="button" id="contributions-prev" data-i18n="staff.prev">Anterior</button><button type="button" id="contributions-next" data-i18n="staff.next">Siguiente</button></div>
+      </div>
+    </section>
+
     <section class="principles" id="privacidad" tabindex="-1">
       <h2 data-i18n="privacy.title">Lo que esta página no hace.</h2>
       <div>

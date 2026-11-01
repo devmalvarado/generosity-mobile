@@ -503,3 +503,15 @@ footer nav a { display: inline-flex; align-items: center; min-height: 44px; colo
 .account-actions { display: flex; flex-wrap: wrap; gap: 12px; }
 .account-actions [hidden] { display: none; }
 .account-actions button, .account-actions a { min-height: 44px; }
+
+/* The operational workspace starts as one column, including at 320 CSS pixels. */
+.workspace { margin: 2rem auto; padding: 1rem; max-width: 60rem; overflow-wrap: anywhere; }
+.workspace [hidden] { display: none !important; }
+.workspace label { display: block; margin-top: .75rem; }
+.workspace input:not([type=checkbox]), .workspace textarea, .workspace select { display: block; width: 100%; max-width: 100%; min-width: 0; padding: .65rem; font: inherit; }
+.workspace button, .workspace select { min-height: 44px; white-space: normal; }
+.workspace button { margin: .4rem 0; padding: .65rem; }
+.workspace fieldset { min-width: 0; border: 1px solid #ddd; border-radius: 12px; padding: 1rem; }
+.workspace-list article { border: 1px solid #ddd; border-radius: 12px; padding: 1rem; margin: 1rem 0; }
+.workspace textarea { min-height: 6rem; }
+.workspace input[type=checkbox] { width: 24px; height: 24px; vertical-align: middle; }
