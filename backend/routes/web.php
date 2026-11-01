@@ -14,6 +14,7 @@ Route::prefix('auth')->middleware('throttle:identity')->group(function () {
     Route::get('session', [BrowserAuthController::class, 'session']);
     Route::post('logout', [BrowserAuthController::class, 'logout']);
     Route::post('password', [BrowserAuthController::class, 'password'])->middleware('throttle:accounts');
+    Route::post('account/{action}', [BrowserAuthController::class, 'accountAction'])->whereIn('action', ['register', 'recover', 'verify'])->middleware('throttle:accounts');
     Route::post('{provider}/start', [BrowserAuthController::class, 'start'])->whereIn('provider', ['google', 'apple']);
     Route::get('google/callback', [BrowserAuthController::class, 'callback'])->defaults('provider', 'google');
     Route::post('apple/callback', [BrowserAuthController::class, 'callback'])->defaults('provider', 'apple');

@@ -8,6 +8,7 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
+use Laravel\Sanctum\TransientToken;
 
 class Mutation
 {
@@ -37,8 +38,14 @@ class Mutation
 
         return DB::transaction(function () use ($request, $key, $hash, $authorize, $write) {
             $user = User::whereKey($request->user()->id)->lockForUpdate()->firstOrFail();
-            $token = $user->tokens()->find($request->user()->currentAccessToken()->getKey());
-            abort_unless($token && (! $token->expires_at || $token->expires_at->isFuture()), 401);
+            $credential = $request->user()->currentAccessToken();
+            if ($credential instanceof TransientToken) {
+                // Stateful Sanctum middleware validates the session and CSRF before this transaction.
+                abort_unless($request->hasSession() && auth('web')->id() === $user->id, 401);
+            } else {
+                $token = $credential ? $user->tokens()->find($credential->getKey()) : null;
+                abort_unless($token && (! $token->expires_at || $token->expires_at->isFuture()), 401);
+            }
             $authorize();
             $prior = DB::table('operations')->where('user_id', $user->id)->where('key', $key)->first();
             if ($prior) {

@@ -4,6 +4,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\BrowserAuthController;
 use App\Http\Controllers\CatalogController;
 use App\Http\Controllers\ContributionController;
+use App\Http\Controllers\ClientSyncController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Route;
@@ -16,6 +17,7 @@ Route::prefix('v1')->group(function () {
         return ['status' => 'ready', 'apiVersion' => 1, 'payments' => 'disabled'];
     });
     Route::get('centers', [CatalogController::class, 'centers']);
+    Route::get('sync/catalog', [ClientSyncController::class, 'catalog']);
     Route::get('centers/{center}', [CatalogController::class, 'center']);
     Route::get('needs', [CatalogController::class, 'needs']);
     Route::get('needs/{need}', [CatalogController::class, 'need']);
@@ -28,11 +30,14 @@ Route::prefix('v1')->group(function () {
         Route::post('reset-password', [AuthController::class, 'reset']);
     });
     Route::middleware(['auth:sanctum', 'verified'])->group(function () {
+        Route::get('sync/account', [ClientSyncController::class, 'account']);
+        Route::get('staff/centers', [ClientSyncController::class, 'staffCenters']);
         Route::get('me', fn (Request $request) => ['user' => $request->user()]);
         Route::post('auth/logout', [AuthController::class, 'logout']);
         Route::get('me/contributions', [ContributionController::class, 'history']);
         Route::get('me/impact', [ContributionController::class, 'impact']);
         Route::post('contributions', [ContributionController::class, 'store']);
+        Route::post('visits', [\App\Http\Controllers\VisitController::class, 'store']);
         Route::get('contributions/{contribution}', [ContributionController::class, 'show']);
         Route::post('contributions/{contribution}/transition', [ContributionController::class, 'transition']);
         Route::get('staff/centers/{center}/contributions', [ContributionController::class, 'centerHistory']);

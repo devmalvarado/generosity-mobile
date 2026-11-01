@@ -124,7 +124,18 @@ data class ContactInfo(
     val phone: String? = null,
     val email: String? = null,
     val website: String? = null
-)
+) {
+    fun links(): List<ContactLink> = buildList {
+        phone?.replace(Regex("[ ()-]"), "")?.takeIf { it.matches(Regex("\\+?[0-9]{7,15}")) }
+            ?.let { add(ContactLink("phone", "tel:$it")) }
+        email?.takeIf { it.matches(Regex("[A-Za-z0-9._+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}")) }
+            ?.let { add(ContactLink("email", "mailto:$it")) }
+        website?.takeIf { it.matches(Regex("https?://[A-Za-z0-9.-]+(?::[0-9]{1,5})?(?:[/?#][^\\s\\p{Cc}\\\\]*)?")) }
+            ?.let { add(ContactLink("website", it)) }
+    }
+}
+
+data class ContactLink(val kind: String, val url: String)
 
 data class CenterNeed(
     val id: String,
@@ -139,7 +150,8 @@ data class CenterNeed(
     val status: NeedStatus = NeedStatus.ACTIVE,
     val quantityRequired: Int? = null,
     val quantityCommitted: Int = 0,
-    val publishedOnIsoDate: String? = null
+    val publishedOnIsoDate: String? = null,
+    val quantityUnit: String? = null
 ) {
     init {
         quantityRequired?.let { required ->

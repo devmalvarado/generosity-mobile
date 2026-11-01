@@ -6,7 +6,7 @@ final class GenerosityVisualTests: XCTestCase {
 
     private func tour(spanish: Bool) throws {
         let app = XCUIApplication()
-        app.launchArguments = ["-AppleLanguages", spanish ? "(es-MX)" : "(en-US)", "-generosity.languageMode", "system"]
+        app.launchArguments = ["--demo-catalog", "-generosity.entered", "YES", "-AppleLanguages", spanish ? "(es-MX)" : "(en-US)", "-generosity.languageMode", "system"]
         app.launch()
         let list = spanish ? "Lista" : "List"
         let profile = spanish ? "Perfil" : "Profile"

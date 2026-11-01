@@ -19,7 +19,7 @@ import org.junit.Test
 
 class GenerosityUiTest {
     @get:Rule
-    val composeRule = createAndroidComposeRule<MainActivity>()
+    val composeRule = createAndroidComposeRule<FixtureActivity>()
 
     @Before
     fun useEnglish() {

@@ -11,4 +11,6 @@ class Contribution extends Model
     protected $keyType = 'string';
 
     protected $guarded = [];
+
+    protected $casts = ['title' => 'array'];
 }

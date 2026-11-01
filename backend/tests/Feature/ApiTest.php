@@ -85,6 +85,40 @@ class ApiTest extends TestCase
         $this->get('/api/v1/me')->assertUnauthorized()->assertJsonPath('error.code', 'unauthenticated');
     }
 
+    public function test_client_snapshots_preserve_catalog_contract_and_account_isolation(): void
+    {
+        [$owner, $token] = $this->actor();
+        [, $otherToken] = $this->actor();
+        $snapshot = $this->callApi('GET', 'sync/catalog')->assertOk();
+        $snapshot->assertJsonPath('catalog.schemaVersion', 1)->assertJsonPath('catalog.centers.0.needs.0.status', 'active');
+        $revision = $snapshot->json('revision');
+        $offer = $this->offer($token)->assertCreated()->json();
+        $this->assertNotSame($revision, $this->callApi('GET', 'sync/catalog')->json('revision'));
+        $this->callApi('GET', 'sync/account', $token)->assertJsonPath('user.id', $owner->id)
+            ->assertJsonPath('contributions.0.title.es', 'Útiles')->assertJsonPath('contributions.0.quantity_unit', 'kit');
+        $this->callApi('GET', 'sync/account', $otherToken)->assertJsonCount(0, 'contributions');
+        $this->callApi('GET', 'sync/account')->assertUnauthorized();
+        Need::whereKey('need-a')->update(['status' => 'closed']);
+        $this->callApi('GET', 'sync/catalog')->assertJsonCount(0, 'catalog.centers.0.needs');
+        $this->callApi('GET', 'sync/account', $token)->assertJsonPath('contributions.0.id', $offer['id']);
+    }
+
+    public function test_browser_session_writes_use_csrf_session_authority_and_recheck_center_membership(): void
+    {
+        [$user] = $this->actor('center-a');
+        config(['sanctum.stateful' => ['portal.generosity.test']]);
+        $this->actingAs($user, 'web')->withSession(['_token' => 'test-csrf']);
+        $headers = ['Origin' => 'https://portal.generosity.test', 'X-CSRF-TOKEN' => 'test-csrf', 'Idempotency-Key' => (string) Str::uuid()];
+        $body = ['need_id' => 'need-a', 'method' => 'goods', 'quantity' => 1];
+        $this->postJson('/api/v1/contributions', $body, $headers)->assertCreated();
+        $this->postJson('/api/v1/contributions', $body, $headers)->assertCreated();
+        $this->assertDatabaseCount('contributions', 1);
+        $this->getJson('/api/v1/staff/centers', $headers)->assertJsonCount(1, 'centers')->assertJsonPath('centers.0.id', 'center-a');
+        DB::table('center_memberships')->where('user_id', $user->id)->delete();
+        $this->getJson('/api/v1/staff/centers', $headers)->assertJsonCount(0, 'centers');
+        $this->getJson('/api/v1/staff/centers/center-a/needs', $headers)->assertForbidden();
+    }
+
     public function test_registration_verification_login_and_revocation(): void
     {
         Notification::fake();
@@ -205,9 +239,34 @@ class ApiTest extends TestCase
         $id = $this->callApi('POST', 'contributions', $token, ['method' => 'time', 'minutes' => 90, 'activity' => 'Acompañamiento'])->assertCreated()->json('id');
         $this->callApi('POST', 'contributions/'.$id.'/transition', $other, ['action' => 'complete', 'version' => 1])->assertForbidden();
         $this->callApi('POST', 'contributions/'.$id.'/transition', $token, ['action' => 'complete', 'version' => 1])->assertOk();
-        $this->callApi('GET', 'me/impact', $token)->assertJsonPath('groups.0.provenance', 'self_reported')->assertJsonPath('groups.0.minutes', '90');
+        $this->callApi('GET', 'me/impact', $token)->assertJsonPath('groups.0.provenance', 'self_reported')->assertJsonPath('groups.0.minutes', '0')->assertJsonPath('groups.0.planned_minutes', '90');
         $this->callApi('POST', 'contributions', $token, ['need_id' => 'need-a', 'method' => 'money', 'quantity' => 10])->assertUnprocessable();
         $this->callApi('PUT', 'contributions/'.$id, $token, ['need_id' => 'need-a'])->assertStatus(405);
+    }
+
+    public function test_visits_are_owned_idempotent_and_never_verify_centers(): void
+    {
+        [$user, $token] = $this->actor();
+        [, $other] = $this->actor();
+        $body = ['center_id' => 'center-a', 'occurred_at' => now()->toISOString(), 'explicit_action' => true];
+        $key = (string) Str::uuid();
+        $this->callApi('POST', 'visits', null, $body)->assertUnauthorized();
+        $this->callApi('POST', 'visits', $token, array_replace($body, ['explicit_action' => false]))->assertUnprocessable();
+        $first = $this->callApi('POST', 'visits', $token, $body, $key)->assertCreated();
+        $this->callApi('POST', 'visits', $token, $body, $key)->assertCreated()->assertJsonPath('id', $first->json('id'));
+        $this->callApi('GET', 'sync/account', $token)->assertJsonCount(1, 'visits')->assertJsonPath('visits.0.user_id', $user->id);
+        $this->callApi('GET', 'sync/account', $other)->assertJsonCount(0, 'visits');
+        $this->assertDatabaseCount('visit_signals', 1);
+        $this->assertSame('imported', Center::find('center-a')->details['verificationStatus']);
+    }
+
+    public function test_actual_time_is_explicit_and_only_recorded_on_completion(): void
+    {
+        [, $token] = $this->actor();
+        $id = $this->callApi('POST', 'contributions', $token, ['method' => 'time', 'minutes' => 90, 'activity' => 'Tutoría'])->assertCreated()->json('id');
+        $this->callApi('POST', 'contributions/'.$id.'/transition', $token, ['action' => 'cancel', 'version' => 1, 'actual_minutes' => 30])->assertUnprocessable();
+        $this->callApi('POST', 'contributions/'.$id.'/transition', $token, ['action' => 'complete', 'version' => 1, 'actual_minutes' => 30])->assertOk()->assertJsonPath('actual_minutes', 30);
+        $this->callApi('GET', 'me/impact', $token)->assertJsonPath('groups.0.minutes', '30')->assertJsonPath('groups.0.planned_minutes', '90');
     }
 
     public function test_invalid_and_expired_offers_have_no_side_effects(): void

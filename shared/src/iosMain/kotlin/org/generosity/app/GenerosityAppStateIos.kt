@@ -14,6 +14,8 @@ import org.generosity.domain.HelpMethod
 import org.generosity.domain.NotificationPreference
 import org.generosity.domain.LocalePreference
 import org.generosity.domain.SupportedLocale
+import org.generosity.data.AppConnection
+import org.generosity.data.BackendStore
 
 /**
  * Swift cannot collect a Kotlin StateFlow, so this exposes the same state as
@@ -30,6 +32,11 @@ class GenerosityAppStateIos(
     ))
 
     constructor() : this(null, emptyList())
+
+    constructor(connection: AppConnection, selectedLocaleCode: String?, deviceLanguageCodes: List<String>) : this(GenerosityAppState(
+        CoroutineScope(SupervisorJob() + Dispatchers.Main), backend = BackendStore(connection),
+        initialLocalePreference = LocalePreference.fromDeviceLanguages(selectedLocaleCode, deviceLanguageCodes)
+    ))
 
     private val observationScope = CoroutineScope(SupervisorJob() + Dispatchers.Main)
     private var observation: Job? = null
@@ -78,6 +85,17 @@ class GenerosityAppStateIos(
     fun signalVisit(centerId: String) = state.signalVisit(centerId)
 
     fun dismissRejection() = state.dismissRejection()
+
+    fun submitOffer(needId: String?, method: String, quantity: Int, minutes: Int, activity: String, availability: String, notes: String, unit: String) {
+        val help = HelpMethod.entries.firstOrNull { it.code == method && it != HelpMethod.MONEY } ?: return
+        if ((help == HelpMethod.GOODS && quantity <= 0) || (help == HelpMethod.TIME && (minutes <= 0 || activity.isBlank()))) return
+        val offer = ContributionOffer(help, quantity = quantity.takeIf { help == HelpMethod.GOODS }, quantityUnit = unit.takeIf { it.isNotBlank() },
+            activity = activity, availability = availability, plannedDurationMinutes = minutes.takeIf { help == HelpMethod.TIME }, note = notes)
+        if (needId == null) state.recordPersonalHelp(offer) else state.offerHelp(needId, offer)
+    }
+
+    fun transitionContribution(id: String, action: String, version: Int) = state.transitionContribution(id, action, version)
+    fun discardRejectedOperation(id: String) = state.discardRejectedOperation(id)
 
     fun setPreferences(nearby: Boolean, urgent: Boolean, reminders: Boolean) =
         state.setPreferences(

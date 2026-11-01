@@ -1,6 +1,25 @@
 import XCTest
 
 final class GenerosityUiChecklistTests: XCTestCase {
+    func testWelcomeOffersGuestAndAccountEntryInBothLanguages() {
+        for (language, guest, signIn, create, list) in [
+            ("en-US", "Continue as a guest", "Sign in", "Create account", "List"),
+            ("es-MX", "Continuar como invitado", "Iniciar sesión", "Crear cuenta", "Lista")
+        ] {
+            let app = XCUIApplication()
+            app.launchArguments = ["--demo-catalog", "--reset-entry", "-AppleLanguages", "(\(language))", "-generosity.languageMode", "system"]
+            app.launch()
+            for label in [guest, signIn, create] { XCTAssertTrue(app.buttons[label].waitForExistence(timeout: 5)) }
+            capture(app, name: "Welcome - \(language)")
+            app.buttons[guest].tap()
+            XCTAssertTrue(app.tabBars.buttons[list].waitForExistence(timeout: 5))
+            app.terminate()
+            app.launchArguments = ["--demo-catalog", "-AppleLanguages", "(\(language))", "-generosity.languageMode", "system"]
+            app.launch()
+            XCTAssertTrue(app.tabBars.buttons[list].waitForExistence(timeout: 5))
+            app.terminate()
+        }
+    }
     func testAnonymousDiscoverySupportsLanguageSwitchingAndCenterDetails() {
         let app = launch()
 
@@ -54,7 +73,7 @@ final class GenerosityUiChecklistTests: XCTestCase {
         app.buttons["Español"].tap()
         XCTAssertTrue(app.tabBars.buttons["Ajustes"].waitForExistence(timeout: 5))
         app.terminate()
-        app.launchArguments = ["-AppleLanguages", "(fr-FR, en-GB)"]
+        app.launchArguments = ["--demo-catalog", "-generosity.entered", "YES", "-AppleLanguages", "(fr-FR, en-GB)"]
         app.launch()
         XCTAssertTrue(app.staticTexts["Centros de bondad cercanos"].waitForExistence(timeout: 10))
         app.tabBars.buttons["Ajustes"].tap()
@@ -62,7 +81,7 @@ final class GenerosityUiChecklistTests: XCTestCase {
         app.buttons["Usar idioma del dispositivo"].tap()
         XCTAssertTrue(app.tabBars.buttons["Settings"].waitForExistence(timeout: 5))
         app.terminate()
-        app.launchArguments = ["-AppleLanguages", "(es-MX, en-US)"]
+        app.launchArguments = ["--demo-catalog", "-generosity.entered", "YES", "-AppleLanguages", "(es-MX, en-US)"]
         app.launch()
         XCTAssertTrue(app.staticTexts["Centros de bondad cercanos"].waitForExistence(timeout: 10))
     }
@@ -134,7 +153,7 @@ final class GenerosityUiChecklistTests: XCTestCase {
 
     private func launch(languages: String = "(en-US)") -> XCUIApplication {
         let app = XCUIApplication()
-        app.launchArguments = ["-AppleLanguages", languages, "-generosity.languageMode", "system"]
+        app.launchArguments = ["--demo-catalog", "-generosity.entered", "YES", "-AppleLanguages", languages, "-generosity.languageMode", "system"]
         app.launch()
         return app
     }
