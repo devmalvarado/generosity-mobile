@@ -33,7 +33,7 @@ No se modificaron Android, iOS, shared, la configuración de la raíz, el README
 - Las tarjetas (Comedor Los Olivos, Hogar Futuros Brillantes, Puente de Salud Abierta) y sus cifras están marcadas como demostración. No hay «128 centros activos» ni distancias presentadas como reales.
 - El buscador no consulta un catálogo. Dice que no hay resultados reales y deja el texto escrito.
 - Donar no registra una oferta, no cobra y no pide tarjeta ni datos bancarios. Si la cantidad no es válida, el error queda asociado al campo. El formulario no se vacía.
-- Publicar no envía nada a revisión. Lleva a `#acceso?destino=publicar`, conserva el borrador y explica que no hay sesión ni permiso. No hay campo de contraseña.
+- Publicar no envía nada a revisión. Lleva a `#acceso?destino=publicar`, conserva el borrador y explica que iniciar sesión no permite publicar. No hay campo de contraseña en esta página.
 - Idioma inicial según `navigator.languages`, en orden. `es*` es español, `en*` es inglés, cualquier otra cosa cae en inglés. El control guarda `system`, `es` o `en` en `localStorage` (`generosity.locale`). Volver a automático usa la preferencia actual del navegador. Cambiar de idioma no borra campos ni filtros. Si el almacenamiento lanza, la página sigue y la elección dura solo esa vista.
 - El menú cerrado usa `hidden` y no entra en el tabulador. Escape lo cierra y devuelve el foco al botón. Al abrirlo, el estado se anuncia en una región `status`.
 - El texto que escribe la persona se inserta con `textContent`, no como HTML.
@@ -74,19 +74,19 @@ Esas vistas simuladas no sustituyen Safari en iOS ni Chrome en Android, con tecl
 
 | Tarea | Hecho en esta copia | Sigue pendiente |
 | --- | --- | --- |
-| 16.1 | Fuente y logo reunidos en `portal/` sin borrar el PoC. Procedencia, vista local y pruebas documentadas. Sin framework de interfaz. | No hay decisión de despliegue ni de sesión. No se contrató un proveedor. |
-| 16.2 | Sin métricas inventadas, sin recibo, sin revisión y sin pago. El formulario desconectado conserva el texto. Publicar lleva al acceso pendiente y guarda el destino en el hash, sin conceder permiso. | Un inicio de sesión real cuando exista proveedor. |
+| 16.1 | Fuente y logo reunidos en `portal/` sin borrar el PoC. Procedencia, vista local y pruebas documentadas. Sin framework de interfaz. La landing se publica desde `main`. | La sesión de cuenta no asigna un centro. Google y Apple no están configurados. |
+| 16.2 | Sin métricas inventadas, sin recibo, sin revisión y sin pago. El formulario no se envía y conserva el texto. Publicar guarda el destino en el hash, sin conceder permiso. | El acceso existe, pero no publica el borrador ni asigna personal. |
 | 16.3 | Base de una columna desde 320 px; más columnas desde 768 y navegación de escritorio desde 1200 px. `hidden` no se muestra ni se enfoca. Objetivos primarios de 44 px. | Teclado virtual y orientación en un teléfono real. |
 | 16.10 | Español e inglés, preferencia ordenada, persistencia, vuelta a automático, errores asociados y foco del menú. | Fechas localizadas: esta página no muestra una fecha de cierre. Lector de pantalla real. |
 | 16.11 | Chromium y WebKit en los cinco anchos, capturas es/en, sin desborde, sin falso éxito, menú y formularios ejercitados, texto al 200 % en el automatismo. | La misma revisión con el teclado virtual de Safari y Chrome. |
 
-16.4 a 16.9 y 16.12 no se empezaron. No hay espacio de personal, borradores en servidor, publicación, confirmación de aportes ni API.
+16.4 a 16.9 y 16.12 no se empezaron. No hay espacio de personal, borradores en servidor, publicación ni confirmación de aportes. La API ya existe; esta página no publica en ella.
 
-## Cuando haya backend
+## Lo que esta página todavía no hace
 
-Hace falta, y no se adelantó aquí:
+La API está en `https://api.generosity.global`. El acceso abre el inicio de sesión en otra pestaña y conserva `destino=publicar`. Google y Apple siguen desactivados. El correo de registro no se envía. Sigue haciendo falta, y no se adelantó aquí:
 
-- Un proveedor de autenticación y la regla de asignación a un centro. La pantalla `#acceso` debe sustituirse por ese inicio de sesión, conservando `destino=publicar`, sin crear sesión ni permiso antes de una respuesta real.
+- Asignación de personal a un centro. Iniciar sesión no concede permiso para publicar.
 - Catálogo compartido con las apps. Hasta entonces las tarjetas siguen siendo demostración y el buscador no puede prometer cercanía.
 - Publicación durable, con id de operación, versión y borrador privado. El formulario actual no debe vaciarse ni anunciar éxito si la red o la sesión fallan.
 - Pagos solo con un proveedor aprobado. Esta página no debe pedir tarjeta ni datos bancarios.

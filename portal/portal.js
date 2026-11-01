@@ -129,7 +129,7 @@
       "access.keep": "Si escribiste una necesidad en esta página, el texto sigue en el formulario. No se envió a ningún servidor.",
       "access.back": "Volver al borrador local",
       "access.dest.none": "No hay un destino previsto guardado.",
-      "access.dest.publicar": "Destino previsto: publicar una necesidad. Quedará como referencia cuando exista un inicio de sesión real. Ahora no concede permiso para publicar.",
+      "access.dest.publicar": "Destino previsto: publicar una necesidad. El inicio de sesión no concede permiso para publicar.",
       "access.dest.centros": "Destino previsto: el espacio de centros. Ahora no concede acceso.",
       "privacy.title": "Lo que esta página no hace.",
       "privacy.rank.title": "No rankea a las personas.",
@@ -154,7 +154,7 @@
       "donate.invalid": "No se envió nada. Revisa la cantidad: hace falta un número de 1 o más.",
       "donate.notSent": "No se envió nada y no se publicó nada. No hay un servicio conectado. El formulario conserva lo que escribiste.",
       "donate.money": "No se envió nada y no se hizo ningún cobro. Las aportaciones de dinero no están disponibles en esta página.",
-      "publish.notSent": "No se envió nada y no se publicó nada. La autenticación no está conectada, así que no hay sesión ni revisión."
+      "publish.notSent": "No se envió nada y no se publicó nada. Iniciar sesión no abre la revisión ni permite publicar esta necesidad.",
     },
     en: {
       "auth.signIn": "Sign in or link account ↗",
@@ -278,7 +278,7 @@
       "access.keep": "If you wrote a need on this page, the text is still in the form. It was not sent to any server.",
       "access.back": "Back to the local draft",
       "access.dest.none": "No intended destination is saved.",
-      "access.dest.publicar": "Intended destination: publish a need. It will be kept as a reference when a real sign-in exists. It does not grant permission to publish now.",
+      "access.dest.publicar": "Intended destination: publish a need. Signing in does not grant permission to publish.",
       "access.dest.centros": "Intended destination: the center space. It does not grant access now.",
       "privacy.title": "What this page does not do.",
       "privacy.rank.title": "It does not rank people.",
@@ -303,7 +303,7 @@
       "donate.invalid": "Nothing was sent. Check the quantity: a number of 1 or more is required.",
       "donate.notSent": "Nothing was sent and nothing was published. No service is connected. The form keeps what you entered.",
       "donate.money": "Nothing was sent and nothing was charged. Money contributions are not available on this page.",
-      "publish.notSent": "Nothing was sent and nothing was published. Authentication is not connected, so there is no session and no review."
+      "publish.notSent": "Nothing was sent and nothing was published. Signing in does not open a review and does not allow this need to be published.",
     }
   };
 

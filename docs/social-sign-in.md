@@ -45,7 +45,7 @@ The landing opens account entry in another tab so its unsent demo form stays int
 
 No Google or Apple credentials were available during implementation. Do not put secrets in the repository, app resources, portal JavaScript or chat.
 
-1. Deploy `backend/` at `https://api.generosity.global`, following [Hostinger instructions](hostinger-backend.md), with only `backend/public/` exposed. Run migrations against the intended database after backup. Use the real HTTPS `APP_URL`; provider sign-in deliberately refuses plain HTTP. Local fixture tests do not require provider credentials.
+1. The API is already deployed at `https://api.generosity.global`, with only the public front controller exposed and migrations applied. Do not redeploy to activate a provider. Add the server-only values below to the existing private `.env`, then refresh the cached configuration. Provider sign-in refuses plain HTTP. Local fixture tests do not require provider credentials.
 2. Set server-only configuration:
 
    ```dotenv

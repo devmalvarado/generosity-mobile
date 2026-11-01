@@ -119,7 +119,7 @@ test.describe("forms and language", () => {
     await page.locator("#prioridad").selectOption("alta");
     await page.locator("#publicar button[type=submit]").click();
     await expect(page.locator("#publicar-estado")).toContainText("No se envió nada");
-    await expect(page.locator("#publicar-estado")).toContainText("no hay sesión ni revisión");
+    await expect(page.locator("#publicar-estado")).toContainText("no permite publicar");
     await expect(page).toHaveURL(/#acceso\?destino=publicar$/);
     await expect(page.locator("#destino-previsto")).toContainText("publicar una necesidad");
     await expect(page.locator("#destino-previsto")).toContainText("no concede permiso");
