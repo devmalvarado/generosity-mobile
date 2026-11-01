@@ -13,7 +13,7 @@ deferred. Intake and footer links point to the full ES/EN backend legal pages.
 
 ## Initial location applications
 
-The landing's `#registrar-sede` form is prepared locally for organizations to
+The landing's `#registrar-sede` form allows organizations to
 request one location at a time. It accepts organization/location identity,
 activities, country/city and a representative, with explicit representation and
 contact consent. Legal name, region, postal code, public service address, phone
@@ -69,9 +69,10 @@ not deploy itself. The API sync migrations are already applied in production; do
 not rerun them as a fresh migration. Publishing these portal files is a separate
 landing release. Do not upload the repository or server secrets to the public web root.
 
-The new location intake is not deployed. Its PHP controller, routes and
-`2026_11_01_000003_create_center_applications.php` migration must be released
-before the landing advertises submission. No other site's files are involved.
+The initial location intake and its additive `2026_11_01_000003` migration
+were deployed on 2026-11-01 in `bd5b82e`, before the portal upload. The
+unauthenticated private listing returns 401. A controlled real applicant/pilot
+acceptance remains pending; no other site's files were changed.
 
 See [integration status](testing/backend-integration.md),
 [authentication](social-sign-in.md), and

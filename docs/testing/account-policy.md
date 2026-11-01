@@ -25,3 +25,10 @@ accounts. Full erasure/provider revocation/native self-service deletion and
 physical-device journeys remain pending. See the release record for production
 publication and read-only checks, and `docs/legal/privacy-operations.md` for staff
 handling of rights requests.
+
+
+Production release `bd5b82e`: both deployment workflows succeeded. All ES/EN
+legal URLs return 200 with version/contact/identity, hosted registration contains
+all four policy fields, private intake is 401, private files remain inaccessible,
+and the landing source hashes match the release. See the dated release record.
+No production account was closed or created for these read-only checks.

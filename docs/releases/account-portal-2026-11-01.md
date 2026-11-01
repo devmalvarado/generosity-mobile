@@ -1,8 +1,26 @@
 # Account fixes and center portal release candidate
 
-Prepared 2026-11-01 on `codex/backend-php-mysql`. This is a local release
-candidate, not a production deployment or a completed public launch. No catalog
-entries, accounts or bank connections were created in production.
+Published 2026-11-01 from release commit `bd5b82e` on `main` (source commits
+`52dee15` and `ac6d247`). The feature branch remains `codex/backend-php-mysql`.
+No production account, catalog record or bank connection was created by deployment.
+
+- [Publish API — succeeded](https://github.com/devmalvarado/generosity-mobile/actions/runs/41356491032)
+- [Publish portal — succeeded](https://github.com/devmalvarado/generosity-mobile/actions/runs/41356491078)
+
+The portal preflight waited for the API prerequisites. Both additive migrations
+were applied by the API workflow, preserving the private configuration, existing
+users and queue data. A private SQL/file backup was taken first; its location is
+recorded in `docs/hostinger-backend.md`.
+
+Read-only production checks passed: all four ES/EN legal pages return 200 with
+current version, institute identity and approved contact; the registration page
+contains the required policy fields; the session cookie is Secure/HttpOnly/Lax;
+health is ready with payments disabled; private intake returns 401 unauthenticated;
+`.env` paths return 403 and the release archive/cron script paths return 404.
+The published `index.html`, `styles.css` and `portal.js` SHA-256 hashes match the
+release source. No real user was deactivated, and no new email was sent in these
+production checks. Physical-device journeys and independent legal review remain
+open. This publication does not complete store account-deletion requirements.
 
 ## Release contents
 
@@ -51,9 +69,9 @@ six allowlisted public files. Neither release uploads private configuration.
   cache commands and all five auth asset uploads with new/existing directories.
   The FTPS transport was simulated; this does not validate server permissions.
 
-## Publication order
+## Publication procedure (executed; pilot acceptance still pending)
 
-1. Complete the legal/operator inputs below. Back up production database,
+1. Confirm the approved legal/contact inputs. Back up production database,
    application files and private configuration using the existing recovery
    procedure; keep backups outside `public_html`.
 2. Publish the API first using the prepared `Publish API` workflow. Preserve
@@ -106,8 +124,8 @@ must follow the established recovery procedure.
 
 Backend regression uses the isolated `generosity_test` database. Portal browser
 checks use fixtures; auth browser checks submit only invalid forms to local Docker.
-Serialized mail tests use an in-memory transport. These checks do not prove a new
-Hostinger deployment, inbox delivery or physical-device acceptance. See
+Serialized mail tests use an in-memory transport. Local checks do not prove inbox delivery or physical-device acceptance. The
+separate live publication checks are recorded at the top of this file. See
 [email cases](../testing/account-email-journeys.md),
 [intake cases](../testing/center-applications.md) and
 [hosting recovery](../hostinger-backend.md).

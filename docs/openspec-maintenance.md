@@ -148,3 +148,7 @@ notificaciones@generosity.global as the temporary staff-handled contact. Foundat
 20.9–20.11 track public documents/acceptance, operator access blocking and publication
 separately. The broader 20.1–20.8 deletion, independent review and retention work
 remains open. No change is archived solely because a flag or document exists.
+
+Release `bd5b82e` subsequently passed API/portal publication and public checks;
+20.9–20.11 are checked with evidence. No wider change is archived. The original
+independent legal review task 20.8 now states its remaining scope explicitly.

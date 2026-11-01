@@ -7,8 +7,8 @@ approved adult-only accounts, current ES/EN terms/privacy and temporary use of
 notificaciones@generosity.global, handled by institute staff. Separate mailboxes
 remain deferred. Current documents, registration receipts and an operator-assisted
 permanent access block are implemented; automated checks are recorded in
-[account-policy evidence](../../../docs/testing/account-policy.md). Publication
-is tracked separately in 20.11. No full deletion/store-review task is complete.
+[account-policy evidence](../../../docs/testing/account-policy.md). Release `bd5b82e` was published to API and portal, with successful workflows and
+read-only production checks recorded in 20.11. No full deletion/store-review task is complete.
 Existing accounts have null receipts rather than fabricated consent.
 
 

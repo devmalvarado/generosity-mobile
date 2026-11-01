@@ -117,3 +117,17 @@ The intended API origin is `https://api.generosity.global`. Configure Google/App
 only after HTTPS, the database and server-only secrets are ready. See the
 [provider callbacks, session/CORS settings and acceptance checklist](social-sign-in.md).
 The existing landing publish workflow does not deploy this backend.
+
+
+## Legal/account release backup — 2026-11-01
+
+Before the current release, SSH created a transaction-consistent MariaDB dump
+and an application/private-configuration archive in:
+
+`/home/u643005321/domains/api.generosity.global/.deployments/legal-20261101T221313Z/`
+
+The directory is outside the document root and mode 700; files are mode 600.
+`manifest.json` records SHA-256 hashes. The dump was 54,218 bytes and the application
+archive 4,806,859 bytes. No credentials or backup content were printed or committed.
+This records backup creation, not a new restore drill. Protect this backup under
+the restricted retention/recovery procedure; it contains personal data and APP_KEY.

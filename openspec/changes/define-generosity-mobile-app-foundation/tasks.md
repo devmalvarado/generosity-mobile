@@ -269,8 +269,16 @@ The Kotlin-specific evidence remains available on the preserved mockup branch.
 - [ ] 20.5 Implement equivalent iOS settings deletion and shared-state cleanup; test stale Keychain/session recovery, deep links, cancelled reauthentication, VoiceOver and parity with Android.
 - [ ] 20.6 Implement web account deletion and a public ownership-verified request/status resource usable without installed apps; test CSRF, reauthentication, enumeration protection, scoped status access and no dependency on support or organizational ownership transfer, then configure the store deletion URL.
 - [ ] 20.7 Implement resumable personal-data purge/anonymization, restricted retention expiry, provider token revocation, delivery suppression and backup deletion replay; test failed/retried jobs, retained financial provenance, public identity removal and no resurrection after restore. Record that offline device copies clear on next contact, not instantly.
-- [ ] 20.8 Complete and legally review docs/legal/terms-and-conditions.es.md and the separate privacy notice, approve age/retention/financial policies and English parity, publish working legal resources only after their promises are implemented, and enforce/test versioned acceptance on password and social registration without bundling optional consent.
+- [ ] 20.8 Obtain independent legal review of the published ES/EN terms/privacy and approve remaining category-specific retention, backup expiry and financial policies before enabling their associated functions. Owner-approved adult policy, current documents and versioned registration acceptance are completed separately in 20.9; this task is not closed by editorial publication.
 
-- [ ] 20.9 Publish owner-approved ES/EN terms and privacy notice at stable public URLs with the institute identity, adult-only account rule and temporary working notificaciones@generosity.global contact; link landing and hosted registration, enforce current-version acceptance for new password/social accounts, and test missing/declined/stale receipts.
+- [x] 20.9 Publish owner-approved ES/EN terms and privacy notice at stable public URLs with the institute identity, adult-only account rule and temporary working notificaciones@generosity.global contact; link landing and hosted registration, enforce current-version acceptance for new password/social accounts, and test missing/declined/stale receipts.
 - [x] 20.10 Implement an operator-confirmed permanent access-block flag with atomic credential/session/reset/handoff revocation and audit; test replayed registration, delayed provider subjects and queued account mail. This bounded task does not complete 20.1 or 20.3–20.7.
-- [ ] 20.11 Publish the account/legal/portal release after local validation and verify live legal resources, health, guarded intake and landing links. Record real-device journeys and independent legal/store-deletion review as pending rather than archiving the foundation.
+- [x] 20.11 Publish the account/legal/portal release after local validation and verify live legal resources, health, guarded intake and landing links. Record real-device journeys and independent legal/store-deletion review as pending rather than archiving the foundation.
+
+20.9–20.11 evidence: release `bd5b82e` published to API and portal on 2026-11-01;
+both GitHub workflows succeeded. Four public legal pages, policy fields, protected
+intake and exact landing file hashes were checked live. Local regression and scope
+limits are recorded in [account-policy tests](../../../docs/testing/account-policy.md)
+and the [release record](../../../docs/releases/account-portal-2026-11-01.md).
+Full erasure, provider revocation, native deletion, independent review and physical
+device journeys remain unchecked. No foundation archive is appropriate.
