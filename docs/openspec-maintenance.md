@@ -152,3 +152,12 @@ remains open. No change is archived solely because a flag or document exists.
 Release `bd5b82e` subsequently passed API/portal publication and public checks;
 20.9–20.11 are checked with evidence. No wider change is archived. The original
 independent legal review task 20.8 now states its remaining scope explicitly.
+
+
+## Landing layout correction — 2026-11-01
+
+Foundation 16.14 records aligned page margins/card actions, compact institute footer
+credit, concrete support cards and four standalone legal pages built from canonical
+ES/EN notices. Browser regression: 71 passed, one intentional duplicate-screenshot
+skip in Chromium/WebKit; all pages include no-JavaScript coverage. This does not
+complete real-catalog onboarding, live contribution pilots or native/store acceptance.

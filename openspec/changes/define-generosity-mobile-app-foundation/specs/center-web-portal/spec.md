@@ -123,3 +123,17 @@ Center-authored content SHALL render as inert text, not executable markup, in th
 #### Scenario: Malicious description or public query
 - **WHEN** a saved description contains script markup or an anonymous visitor requests a need
 - **THEN** scripts do not execute and only published public fields are returned, without leaking private draft revisions or contribution details
+
+
+### Requirement: Focused Landing and Independent Legal Pages
+The landing SHALL align its header, content and footer on a consistent responsive grid and keep institute attribution to a small footer credit. Full privacy/terms SHALL have independent ES/EN pages readable without JavaScript, linked in the selected language and generated from canonical notices. Need cards MAY describe concrete ways to help but SHALL NOT invent operational centers, collection progress or available capacity.
+
+#### Scenario: Read privacy without loading the application
+- **WHEN** a visitor opens a legal page directly with JavaScript disabled
+- **THEN** the full notice, institute identity, working contact and language links remain readable
+- **AND** no account or running API request is required
+
+#### Scenario: Browse the focused landing at different text sizes
+- **WHEN** a visitor uses a narrow phone, desktop or 200-percent text
+- **THEN** navigation, cards and actions reflow without horizontal overflow
+- **AND** legal details remain on separate pages with a concise institute credit at the bottom of the landing

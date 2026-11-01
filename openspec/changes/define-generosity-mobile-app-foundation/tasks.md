@@ -222,6 +222,8 @@ The Kotlin-specific evidence remains available on the preserved mockup branch.
 - [ ] 16.12 Test direct API cross-center denial, public draft/private-field exclusion, script-content rendering, CSRF/origin protection and revoked sessions; document unresolved failures as release blockers rather than treating browser-only validation as authorization.
 - [ ] 16.13 Serve the landing's center entry at `/kindness-center`; verify help entry does not open it, an unassigned account sees no publishing controls, and `kidness-center` is not an alias.
 
+- [x] 16.14 Align landing header/content/footer margins and need-card actions; keep institute attribution to a compact footer credit; provide standalone ES/EN legal pages from canonical notices and localize their links. Validate narrow screens, enlarged text, keyboard use, no-JavaScript legal access and an explicit public deployment allowlist. Do not represent placeholder counters or invented centers as operational data.
+
 ## 17. Native Visual Alignment
 
 - [x] 17.1 Finalize the reference-aligned native color/type/spacing/icon roles and approved brand assets; record contrast checks and deliberate omissions without adding new destinations, domain fields or a separate design-system framework.

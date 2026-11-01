@@ -22,6 +22,25 @@ async function prepare(page, width) {
 }
 
 test.describe("layout", () => {
+  test("header, content and footer share margins and card actions align", async ({ page }) => {
+    for (const width of [320, 1280]) {
+      await prepare(page, width);
+      const content = await page.locator('.hero-copy').boundingBox();
+      for (const selector of ['.topbar .brand', 'footer .brand']) {
+        const box = await page.locator(selector).boundingBox();
+        expect(Math.abs(box.x - content.x)).toBeLessThanOrEqual(1);
+      }
+      if (width === 320) {
+        const brand = await page.locator('.topbar .brand').boundingBox();
+        const menu = await page.locator('.menu').boundingBox();
+        expect(Math.abs(brand.y - menu.y)).toBeLessThanOrEqual(1);
+      } else {
+        const actions = await page.locator('.need .solid').evaluateAll(nodes => nodes.map(n => n.getBoundingClientRect().bottom));
+        expect(Math.max(...actions) - Math.min(...actions)).toBeLessThanOrEqual(1);
+      }
+    }
+  });
+
   for (const width of WIDTHS) {
     test("no horizontal overflow at " + width, async ({ page }) => {
       await prepare(page, width);
@@ -46,6 +65,25 @@ test.describe("layout", () => {
       expect(box.width, selector).toBeGreaterThanOrEqual(44);
     }
   });
+});
+
+test("standalone legal pages work without JavaScript and preserve language links", async ({ browser }) => {
+  const context = await browser.newContext({ javaScriptEnabled: false, viewport: { width: 320, height: 800 } });
+  const page = await context.newPage();
+  for (const [file, locale] of [['aviso-de-privacidad.html', 'es'], ['terminos-y-condiciones.html', 'es'], ['privacy-notice.html', 'en'], ['terms-and-conditions.html', 'en']]) {
+    await page.goto(BASE + file);
+    await expect(page.locator('html')).toHaveAttribute('lang', locale);
+    await expect(page.locator('article')).toContainText('2026-11-01');
+    await expect(page.locator('article')).toContainText('IDD190329L69');
+    await expect(page.locator('article')).toContainText('notificaciones@generosity.global');
+    expect(await overflow(page)).toBeLessThanOrEqual(1);
+    for (const href of await page.locator('a').evaluateAll(nodes => nodes.map(n => n.getAttribute('href')))) {
+      if (href.endsWith('.html')) expect((await page.request.get(BASE + href)).status()).toBe(200);
+    }
+    await page.getByRole('link', { name: locale === 'es' ? 'English' : 'Español', exact: true }).click();
+    await expect(page.locator('html')).toHaveAttribute('lang', locale === 'es' ? 'en' : 'es');
+  }
+  await context.close();
 });
 
 test.describe("menu", () => {
@@ -87,14 +125,11 @@ test.describe("forms and language", () => {
   test("public content links to real actions and identifies the institute", async ({ page }) => {
     await prepare(page, 390);
     await expect(page.locator("#buscador, #formulario-donacion, #publicar form, .demo-banner, .demo-flag, .meter")).toHaveCount(0);
-    await expect(page.locator("#contacto")).toContainText("INSTITUTO DE DEBERES Y DERECHOS HUMANOS");
-    await expect(page.locator("#contacto")).toContainText("IDD190329L69");
-    await expect(page.locator("#contacto address")).toContainText("04369");
-    await expect(page.locator(".contact-email")).toHaveText([
-      "notificaciones@generosity.global", "notificaciones@generosity.global", "notificaciones@generosity.global"
-    ]);
-    // Use the existing mailbox while separate contact mailboxes are pending.
-    await expect(page.locator("a[href^='mailto:notificaciones@generosity.global']")).toHaveCount(3);
+    await expect(page.locator("#contacto, #privacidad")).toHaveCount(0);
+    await expect(page.locator("main")).not.toContainText("Instituto de Deberes y Derechos Humanos");
+    await expect(page.locator("footer .institute-credit")).toHaveText("Una iniciativa del Instituto de Deberes y Derechos Humanos.");
+    await expect(page.locator("a[href^='mailto:notificaciones@generosity.global']")).toHaveCount(1);
+    await expect(page.locator(".need-details")).toHaveCount(3);
     const brokenAnchors = await page.locator("a[href^='#']").evaluateAll(links => links
       .map(link => link.getAttribute("href").slice(1).split("?")[0])
       .filter(id => !document.getElementById(id)));
@@ -107,9 +142,10 @@ test.describe("forms and language", () => {
     await expect(page.locator("input[type=password]")).toHaveCount(0);
     for (const locale of ["es", "en"]) {
       await page.locator("#idioma").selectOption(locale);
-      for (const doc of ["terms", "privacy"]) await expect(page.locator(`footer [data-legal=${doc}]`)).toHaveAttribute("href", `https://api.generosity.global/legal/${doc}?locale=${locale}`);
+      const pages = locale === "es" ? {terms: "terminos-y-condiciones.html", privacy: "aviso-de-privacidad.html"} : {terms: "terms-and-conditions.html", privacy: "privacy-notice.html"};
+      for (const doc of ["terms", "privacy"]) await expect(page.locator(`footer [data-legal=${doc}]`)).toHaveAttribute("href", pages[doc]);
       await expect(page.locator("body")).not.toContainText(/demostración|maqueta|sample center|not connected|test form/i);
-      await expect(page.locator("#contacto")).toContainText("Instituto");
+      await expect(page.locator("footer .institute-credit")).toContainText("Instituto");
     }
   });
 

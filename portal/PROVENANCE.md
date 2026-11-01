@@ -12,3 +12,11 @@ Archivos de origen revisados y no modificados: `index.html`, `styles.css`, `port
 - Fraunces y Outfit se piden a Google Fonts. Si no cargan, la página usa Iowan Old Style/Georgia y Avenir Next/Segoe UI.
 - Comedor Los Olivos, Hogar Futuros Brillantes y Puente de Salud Abierta, sus cantidades y el dibujo del mapa son ejemplos de demostración del PoC. No son un catálogo, un censo ni la ubicación de quien visita.
 - No se añadió un destino legal ni un enlace de descarga: el PoC no traía una política publicada, solo el ancla `#privacidad` y `mailto:hola@generosity.global`.
+
+
+Actualización 2026-11-01: la cabecera y el pie usan `assets/wordmark.svg`, copiado
+del kit aprobado `../assets/brand/svg/wordmark.svg`, para mostrar la marca horizontal
+sin reducir el texto dentro del emblema apilado. Los favicon se conservan.
+Las tarjetas presentan despensas, útiles escolares y acompañamiento sin nombres
+de centros, avances de recaudación ni cupos ficticios. Privacidad y términos tienen
+páginas propias ES/EN, generadas de los documentos canónicos del backend.

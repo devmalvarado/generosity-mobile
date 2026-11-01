@@ -1,17 +1,22 @@
 # Generosity web portal
 
 Static HTML/CSS/JavaScript with a PHP-backed account and authorized-center workspace.
-The public cards explain causes and ways to help. Registration and center-access
+The public cards show concrete types of support: food parcels, school supplies and companionship. Registration and center-access
 links lead to the location intake and authorized workspace; fictional centers,
 figures and disconnected search/donation/publication forms have been removed.
 The staff workspace reads assigned centers and manages API needs/contributions.
 Source assets are documented in [PROVENANCE.md](PROVENANCE.md).
 
-Spanish/English content identifies the institute, its RFC, fiscal address and
-staff responsibility for support, legal and privacy requests. The working temporary
+The landing identifies the institute only in a short footer credit. Separate
+Spanish/English legal pages contain its RFC, address and staff responsibility. The working temporary
 contact is `notificaciones@generosity.global`; the three separate mailboxes remain
-deferred. Intake/footer links open `/legal/privacy` and `/legal/terms` on the API
-in the selected language. The full notices live in `backend/resources/legal/`.
+deferred. Intake/footer links open standalone pages on the main website:
+`aviso-de-privacidad.html`, `terminos-y-condiciones.html`, `privacy-notice.html`
+and `terms-and-conditions.html`. They work without JavaScript or API requests.
+The canonical notices remain in `backend/resources/legal/`; with the existing
+backend Docker service running, run `python3 scripts/build-portal-legal.py` from
+the repository root after changing them. `--check` detects stale generated pages.
+The API legal URLs remain available for the hosted authentication flow.
 
 `#registrar-sede` contains the initial organization/location application in Spanish
 and English. Visitors can prepare the form; submission requires a verified
@@ -35,21 +40,13 @@ keyboard and screen-reader acceptance remain open.
 
 ## Publication
 
-The [2026-11-01 release candidate](../docs/releases/account-portal-2026-11-01.md)
-stages portal/API source separately. Its workflow waits for the intake route and
-corrected account UI before uploading. Legal/operator inputs and production
-acceptance remain required; this preparation publishes nothing by itself.
-
-The existing main-branch deployment publishes only `index.html`, `styles.css`,
-`portal.js` and `assets/` when those paths change. It does not deploy the backend,
-upload the repository or delete the rest of the site. No deployment is performed
-by these changes. Keep dependencies, tests, screenshots and server secrets out of
-the web root. Production privacy/terms destinations still need approved content.
-
-The new intake additionally needs its PHP routes/controller and
-`2026_11_01_000003_create_center_applications.php` migration released before the
-landing form is published. These are not part of the static deployment workflow.
-No production application or migration has been created by this local work.
+The [2026-11-01 account/portal release](../docs/releases/account-portal-2026-11-01.md)
+published the API and intake migration before the landing. The current portal
+workflow stages an explicit eleven-file allowlist: index, CSS, JS, four legal
+pages and four brand assets. It does not upload the repository, private config,
+tests or screenshots and does not delete the rest of the site. API publication
+remains separate. Update generated legal pages in the same commit as their source.
+A real applicant/center pilot and physical-device acceptance remain pending.
 
 See [center portal documentation](../docs/center-portal.md) and
 [integration status](../docs/testing/backend-integration.md).

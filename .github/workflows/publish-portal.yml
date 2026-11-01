@@ -4,7 +4,7 @@ on:
   push:
     branches: [main]
     paths:
-      - portal/index.html
+      - portal/*.html
       - portal/styles.css
       - portal/portal.js
       - portal/assets/**
@@ -39,17 +39,22 @@ jobs:
         run: |
           set -eu
           mkdir -p publish/assets
-          cp portal/index.html portal/styles.css portal/portal.js publish/
-          cp portal/assets/apple-touch-icon.png portal/assets/favicon.png portal/assets/logo.png publish/assets/
+          cp portal/index.html portal/aviso-de-privacidad.html portal/privacy-notice.html portal/terminos-y-condiciones.html portal/terms-and-conditions.html portal/styles.css portal/portal.js publish/
+          cp portal/assets/apple-touch-icon.png portal/assets/favicon.png portal/assets/logo.png portal/assets/wordmark.svg publish/assets/
           find publish -type f | sort > /tmp/staged.txt
           cat /tmp/staged.txt
           cat > /tmp/expected.txt << 'LIST'
           publish/assets/apple-touch-icon.png
           publish/assets/favicon.png
           publish/assets/logo.png
+          publish/assets/wordmark.svg
+          publish/aviso-de-privacidad.html
           publish/index.html
           publish/portal.js
+          publish/privacy-notice.html
           publish/styles.css
+          publish/terminos-y-condiciones.html
+          publish/terms-and-conditions.html
           LIST
           diff -u /tmp/expected.txt /tmp/staged.txt
 
