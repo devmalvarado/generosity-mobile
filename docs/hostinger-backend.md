@@ -78,3 +78,10 @@ Also run `/opt/alt/php84/usr/bin/php /PRIVATE/APP/artisan schedule:run` every mi
 No automatic promotion, remote DB allowlist change, plan upgrade or production email has been performed by this implementation.
 
 References: [Laravel deployment](https://laravel.com/framework/docs/13.x/deployment), [Sanctum](https://laravel.com/framework/docs/13.x/sanctum), [Hostinger cron](https://www.hostinger.com/support/1583465-how-to-set-up-a-cron-job-at-hostinger/), [Hostinger PHP settings](https://www.hostinger.com/support/1575755-how-to-change-the-php-version-of-your-hostinger-hosting-plan/).
+
+## Google/Apple identity activation
+
+The intended API origin is `https://api.generosity.global`. Configure Google/Apple
+only after HTTPS, the database and server-only secrets are ready. See the
+[provider callbacks, session/CORS settings and acceptance checklist](social-sign-in.md).
+The existing landing publish workflow does not deploy this backend.

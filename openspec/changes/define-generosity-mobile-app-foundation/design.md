@@ -300,8 +300,8 @@ The user selected PHP and the existing Hostinger database capability on
 selects Laravel 13/PHP 8.4, MySQL/MariaDB and the framework first-party user
 provider/password broker with Sanctum. This supersedes the earlier unspecified
 external identity adapter: framework hashing/recovery stays on the server, with
-verified-email bearer sessions and audited CLI staff provisioning. No custom
-cryptography, Firebase, OIDC or Keycloak integration is claimed. Hostinger web
+verified-email bearer sessions and audited CLI staff provisioning. Google/Apple OIDC entry now uses a maintained JWT verifier; no custom
+cryptography, Firebase or Keycloak integration is introduced. Hostinger web
 runtime, database, SMTP and deployment acceptance remain separate gates.
 The Kotlin directory-journal service remains on `codex/mockup-backend-kotlin`.
 
@@ -414,10 +414,86 @@ not claimed to be retractable. No provider-specific delivery guarantee is promis
 
 PHP/Laravel, MySQL/MariaDB and the first-party identity provider are selected
 in the backend decision. The intended hosting is Hostinger Premium; production
-web runtime/database/SMTP acceptance, browser session integration and platform
+web runtime/database/SMTP acceptance, live social-provider acceptance and platform
 delivery configuration still require implementation evidence.
 The Android map provider is now selected as Google Maps; key configuration and
 real-provider acceptance are pending, with MapLibre retained as a future adapter.
 Production assets, legal URLs and catalog source/rights must be supplied before
 release. Official verification policy and payment providers belong to separate
 future changes; they do not block the time/goods contribution contract.
+
+### Generosity social identity decision — 2026-10-31
+
+Add Google and Apple authorization-code sign-in to the Laravel account provider.
+Use one hosted `/auth/sign-in` page across web and both mobile apps. Verify signed
+OIDC identity tokens with the maintained `firebase/php-jwt` package and Laravel's
+HTTP client; do not add native provider SDKs or an OAuth authorization server.
+Sanctum remains the Generosity session issuer, not an OIDC federation service.
+This explicitly excludes SSO for other institute platforms. The subsequent user
+decision below adds Facebook to planned scope; Microsoft remains deferred.
+
+Web uses host-only HttpOnly cookies, exact CORS/stateful origins and CSRF.
+Apple's cross-site POST uses a separate five-minute encrypted browser-binding
+cookie with Secure/HttpOnly/SameSite=None. Google/Apple state and nonce are random,
+server-stored and consumed transactionally before token exchange. Native clients
+use a separate one-use handoff with PKCE S256 and fixed callbacks; bearer tokens
+are delivered only in an HTTPS exchange response, then stored using Keychain or
+Keystore. Password resets revoke API tokens, web sessions and pending handoffs.
+Do not auto-link equal emails or infer center roles. Link identities only after
+explicit consent in a recently authenticated Generosity web session.
+
+See [implementation/configuration/evidence](../../../docs/social-sign-in.md).
+Provider credentials and live acceptance are still pending. Native account entry
+is connected; catalog/history/contribution synchronization remains separate work.
+
+### Facebook and progressive mobile contact decision — 2026-10-31
+
+The user requested a Facebook specification and mobile numbers for selected
+features. Reuse the hosted browser entry, account store, explicit linking and
+web/native session boundaries. Add a Facebook-specific OAuth adapter rather than
+assuming Google/Apple ID-token semantics. Native provider SDKs are not needed for
+this hosted approach. Request only necessary identity/profile/email permissions;
+do not request friends, posting permissions or a phone number from Facebook.
+Treat absent/unverified email as an email-completion step for new accounts;
+an existing verified account can explicitly link Facebook without provider email.
+Never equate Facebook account verification with email or mobile verification.
+
+The earlier estimate was 1–2 development/test days for the Facebook extension,
+assuming the current session flow is reusable. It excludes mobile verification,
+Meta setup/review and live acceptance; it is not a delivery commitment. Before
+activation, configure a Generosity Meta app, fixed HTTPS callback and server-only
+credentials, and verify current privacy/data-deletion and publication requirements.
+Keep Facebook unavailable until configuration and acceptance pass. No Facebook
+adapter or Meta credentials have been added by this planning update.
+
+Mobile contact belongs to the Generosity account, separately from social identity,
+email proof and public center contacts. Store a normalized international number
+with server verification state/time; a pending replacement cannot overwrite the
+current verified number. Do not import mobile numbers from social providers as
+verified. Shared KMP models expose the server state and stable error codes; native
+settings and mobile-first web forms render the same policy in Spanish/English.
+No contacts permission, native SMS-reading permission or phone-only login is added.
+
+Require a number progressively at an approved action, not during basic account
+entry. The backend must enforce the requirement even if UI checks are bypassed.
+Challenges are short-lived, one-use, account/number/purpose-bound, with bounded
+verification attempts, resend cooldowns, send quotas and delivery timeouts. Choose
+explicit limits and a delivery provider before implementation; missing service
+configuration must show unavailability and preserve the unsent action safely.
+Use recent reauthentication for replacement/removal and atomically revoke the old
+proof on successful replacement. A shared/recycled number is neither a unique
+person identifier nor authority to merge/recover another account.
+
+Open decisions before enabling phone-gated actions:
+- Approve a named action/purpose/recipient matrix. Event coordination, pickups and
+  center follow-up are candidates only, not newly imposed requirements. Preserve
+  existing no-phone assisted participation and beneficiary/referral routes.
+- Select delivery channel/provider, supported countries, abuse/cost caps, challenge
+  lifetime/retry limits and service-unavailable handling; no SMS/WhatsApp purchase
+  or sending is authorized by this specification.
+- Define per-purpose contact sharing and retention/removal rules. Number collection
+  is not marketing consent; private numbers and codes stay out of public payloads,
+  analytics and logs. Only scoped operations receive a number with explicit permission.
+
+See tasks 18.7–18.10 and 19.1–19.7. Existing Google/Apple evidence does not certify
+Facebook or phone verification, and this foundation remains active.

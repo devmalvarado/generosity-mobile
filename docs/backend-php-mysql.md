@@ -12,9 +12,9 @@ Laravel supplies routing, request validation, password hashing, email verificati
 
 ## Identity decision
 
-The earlier unspecified external identity adapter is superseded for this implementation by Laravel's first-party database-backed user provider, framework password broker and Sanctum. This is a deliberate architecture choice under the requested PHP backend, not a claim that Firebase, Keycloak or OIDC has been configured. Password hashes remain exclusively on the server. Email verification is required before issuing usable account tokens. Recovery uses time-limited framework tokens; reset revokes existing API tokens.
+Laravel's database-backed account provider, password broker and Sanctum remain the account/session authority. Google and Apple OIDC sign-in now feed the same account store through a shared hosted authorization-code flow. This is exclusively for Generosity web/Android/iOS, not federation for other institute platforms. Provider credentials and live acceptance remain pending. See [social sign-in configuration and tests](social-sign-in.md).
 
-Seven-day bearer sessions are the implemented API boundary. Cookie-only requests are denied; browser origins are an explicit allowlist, not authorization. Native clients must use Keychain/Keystore. The center portal must add its own reviewed session/token lifecycle before production use; cookie/BFF integration, silent renewal, external SSO and MFA have not been implemented. Operators grant or revoke staff via audited CLI and need access to the backend host; public clients have no role-management endpoint.
+Native clients use seven-day bearer tokens in Keychain/Keystore; browser clients use CSRF-protected HttpOnly sessions from explicitly configured first-party origins. Password reset revokes both session types and pending native handoffs. Operators still grant/revoke staff via audited CLI; public clients have no role-management endpoint. Silent renewal, MFA and account deletion/provider revocation remain unfinished.
 
 ## Hosting fit and limits
 

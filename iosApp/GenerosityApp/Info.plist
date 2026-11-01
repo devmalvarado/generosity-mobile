@@ -2,6 +2,10 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
+    <key>GenerosityAPIURL</key>
+    <string>$(GENEROSITY_API_URL)</string>
+    <key>CFBundleURLTypes</key>
+    <array><dict><key>CFBundleURLSchemes</key><array><string>org.generosity.app.ios</string></array></dict></array>
     <key>CFBundleDisplayName</key>
     <string>Generosity</string>
     <key>CFBundleIdentifier</key>

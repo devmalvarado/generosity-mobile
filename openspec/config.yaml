@@ -67,7 +67,12 @@ context: |
     fallback rules, notification eligibility, contribution rules, and visit
     signal rules.
   - PHP 8.4 / Laravel 13 for the authoritative HTTP API, MySQL/MariaDB storage,
-    Laravel first-party identity provider/Sanctum and a cron-drained database queue.
+    Laravel accounts/Sanctum, Google/Apple OIDC entry and a cron-drained database queue.
+    Identity is exclusive to Generosity web/Android/iOS, not institute-wide SSO.
+    Facebook OAuth entry and private mobile-number verification for explicitly
+    approved actions are planned, not implemented. Phone contact is progressive,
+    not required for sign-in/discovery or beneficiaries; gated actions and the
+    verification delivery provider remain undecided.
     Hostinger Premium is the intended deployment target, not a completed deployment.
     Kotlin service mockup is preserved on codex/mockup-backend-kotlin at 36eab89.
   - SwiftUI for the native iOS user interface.

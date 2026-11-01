@@ -68,4 +68,10 @@
     <string name="registration_required">Sign in to record a contribution. You can browse without an account.</string>
     <string name="permissions_explanation">Location and notification permissions are optional. Alerts are not available yet.</string>
     <string name="request_permissions">Manage permissions</string>
+    <string name="auth_sign_in">Sign in · Google, Apple or email</string>
+    <string name="auth_sign_out">Sign out</string>
+    <string name="auth_failed">Could not complete the request. Check your connection and try again.</string>
+    <string name="auth_scope">One Generosity account for web, Android and iOS.</string>
+    <string name="auth_demo_data">Your account is connected. The catalog, contributions and impact shown in this app are not yet connected to your online account.</string>
+    <string name="nearby_foreground_only">Nearby checks run only while the app is open. They are not always-on detection.</string>
 </resources>

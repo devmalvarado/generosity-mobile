@@ -26,13 +26,13 @@ Register through `POST /api/v1/auth/register`, then deliver the queued verificat
 docker compose exec app php artisan queue:work --stop-when-empty --max-time=45 --tries=3
 ```
 
-Open the verification link from Mailpit and log in. API tokens expire after seven days; log in again on expiry. Logout revokes the current token; password reset revokes all account tokens. Registration and recovery return generic accepted responses. An accepted response means a request was queued, not that an email has reached an inbox.
+Open the verification link from Mailpit and log in. API tokens expire after seven days; log in again on expiry. Logout revokes the current token; password reset revokes all account tokens, web sessions and pending handoffs. Registration and recovery return generic accepted responses. An accepted response means a request was queued, not that an email has reached an inbox.
 
 ## API behavior
 
 - Public paginated centers and published needs use localized language-code dictionaries; all data is UTF-8. Page size is 25.
 - Need `status` describes publication (`draft`, `published`, `closed`). A published need can be expired or fully reserved; clients derive availability from its inclusive UTC expiry date and quantity. Native DTO adaptation is still required.
-- Protected endpoints require an email-verified account and `Authorization: Bearer ...`. Browser cookies do not authenticate this API. Configure exact allowed origins in `CORS_ALLOWED_ORIGINS`; do not store tokens in URLs or persistent browser storage. A portal cookie/session integration remains separate work.
+- Native protected requests require an email-verified account and `Authorization: Bearer ...`. Configured first-party Generosity origins may alternatively use a CSRF-protected HttpOnly session. Set exact `CORS_ALLOWED_ORIGINS` and `SANCTUM_STATEFUL_DOMAINS`; never use wildcard origins or persist bearer tokens in browser storage. See [Google/Apple entry and session configuration](../docs/social-sign-in.md).
 - Goods/time offers accept user-entered quantities, activity, minutes, availability and notes. Money is rejected; its presence in catalog help methods does not enable payments.
 - Every contribution write and staff need write requires a UUID `Idempotency-Key`. Keys are scoped to the account, retained durably, and cannot be reused with different validated content/path/method. A retry replays the original successful response after checking current permission, even if later transitions changed the record. Fetch current state separately.
 - Center offers go `offered → confirmed → fulfilled`. Only another verified account assigned to that center may confirm/fulfill; donors may cancel offered/confirmed records. Terminal states cannot change. Transitions require the current `version`.
@@ -70,4 +70,4 @@ The smoke script is fixed to local Compose/loopback. It adds clearly labeled dev
 
 ## Remaining scope
 
-Mobile and portal HTTP adapters, persistent client queues, incremental sync/cursors/tombstones, profile/preferences updates, visits, reminders, device registration, push delivery and production deployment are not implemented by this backend slice. Payment processing remains disabled. The password-reset page is a minimal English operational page; native/portal localized account UX remains a separate task.
+Mobile and portal account adapters are now implemented; catalog/contribution HTTP adapters, persistent client queues, incremental sync/cursors/tombstones, profile/preferences updates, visits, reminders, device registration, push delivery and production deployment are not implemented by this backend slice. Payment processing remains disabled. The password-reset page is a minimal English operational page; the new hosted sign-in page and native/portal account controls have Spanish/English resources.

@@ -499,3 +499,7 @@ footer nav a { display: inline-flex; align-items: center; min-height: 44px; colo
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
 }
+
+.account-actions { display: flex; flex-wrap: wrap; gap: 12px; }
+.account-actions [hidden] { display: none; }
+.account-actions button, .account-actions a { min-height: 44px; }

@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\BrowserAuthController;
 use App\Http\Controllers\CatalogController;
 use App\Http\Controllers\ContributionController;
 use Illuminate\Http\Request;
@@ -8,6 +9,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Route;
 
 Route::prefix('v1')->group(function () {
+    Route::post('auth/exchange', [BrowserAuthController::class, 'exchange'])->middleware('throttle:identity');
     Route::get('health', function () {
         DB::table('migrations')->count();
 

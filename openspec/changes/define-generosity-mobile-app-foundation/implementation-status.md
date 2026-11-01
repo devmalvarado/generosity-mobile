@@ -1,5 +1,38 @@
 # Foundation Implementation Audit
 
+**2026-10-31 Facebook/mobile-contact planning update:** The user added Facebook
+entry and private mobile numbers for selected features to the requirements.
+Specs now cover missing/unverified Facebook email, explicit linking, progressive
+phone collection, possession verification and server-enforced action gates.
+Tasks 18.7–18.10 and 19.1–19.7 remain unchecked: no Facebook adapter, phone storage,
+verification delivery or phone-gated action is implemented by this update.
+The action matrix, delivery provider/countries/limits and retention policy still
+require decisions. Existing Google/Apple test evidence below does not cover them.
+
+**2026-10-31 Google/Apple identity increment:** The user selected identity only
+for Generosity web/Android/iOS, excluding other institute platforms. Google and
+Sign in with Apple are implemented behind server configuration on
+`codex/backend-php-mysql`; neither provider has real credentials yet. Hosted
+browser entry, explicit linking, subject-based identities, secure web sessions,
+PKCE native handoff, Keychain/Keystore storage and native restore/logout are wired.
+Android no longer signs in as the fixed sample “Ana”. Real accounts cannot write
+accepted-looking demo contributions. Data synchronization and center workspace
+flows remain incomplete; tasks 7.8–7.10 and 16.4 are not certified end-to-end.
+
+Evidence: 30 backend tests / 339 assertions (including cryptographically signed
+provider fixtures), 58 shared JVM tests, 5 Android unit tests, Android debug build
+and instrumentation-test compilation, iOS simulator build and 4 unit tests,
+39 portal tests with one existing WebKit screenshot skip, locale validation and
+14 strict OpenSpec items passing. Composer audit reports no known advisories.
+The pre-existing missing Android `nearby_foreground_only` resource was filled to
+restore cross-platform localization parity. See [identity configuration and test
+traceability](../../../docs/social-sign-in.md). Live providers, private-relay mail,
+physical-device secure storage/browser returns and API hosting are still pending.
+The existing main-branch selective landing deployment was inspected and preserved;
+this increment performs no push, merge or production deployment. Section 18 tracks
+this bounded implementation and its outstanding acceptance tasks. The foundation
+remains active and must not be archived.
+
 **2026-10-31 PHP backend replacement:** User-requested checkpoint `36eab89`
 is preserved on `codex/mockup-backend-kotlin`; `codex/backend-php-mysql`
 replaces only the standalone service with Laravel 13 / PHP 8.4 and MySQL/MariaDB.

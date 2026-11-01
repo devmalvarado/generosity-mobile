@@ -13,6 +13,9 @@ val mapsApiKey = providers.environmentVariable("MAPS_API_KEY")
     .orElse(provider { localProperties.getProperty("MAPS_API_KEY", "") })
     .get().trim()
 
+val apiBaseUrl = providers.gradleProperty("generosityApiUrl").orElse("https://api.generosity.global").get()
+require(apiBaseUrl.matches(Regex("https://[A-Za-z0-9.-]+(:[0-9]+)?"))) { "generosityApiUrl must be an HTTPS origin" }
+
 android {
     namespace = "org.generosity.app"
     compileSdk = 36
@@ -25,6 +28,7 @@ android {
         versionName = "0.1.0"
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         manifestPlaceholders["MAPS_API_KEY"] = mapsApiKey
+        buildConfigField("String", "API_BASE_URL", "\"$apiBaseUrl\"")
         buildConfigField("boolean", "MAPS_API_KEY_CONFIGURED", mapsApiKey.isNotEmpty().toString())
     }
 

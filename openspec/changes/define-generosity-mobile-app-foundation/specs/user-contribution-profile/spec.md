@@ -14,6 +14,28 @@ The mobile app SHALL support a registered user state for features that require i
 - **WHEN** the user completes authentication through a supported provider
 - **THEN** the app recognizes the user as registered
 
+### Requirement: Progressive Mobile Contact Details
+Generosity web, Android and iOS SHALL allow account owners to add, view, change and remove a private mobile number in settings or a feature-specific prompt. Entry SHALL support an explicit country calling code and E.164 normalization, without assuming Mexico or inferring country from language. Clients SHALL distinguish missing, unverified and verified states using backend data and localized Spanish/English labels.
+
+#### Scenario: Social sign-in without a mobile number
+- **WHEN** a Google, Apple, Facebook or email account has no mobile number
+- **THEN** its normal account features remain available; only an approved phone-gated action requests the missing verified contact
+
+#### Scenario: International or invalid number
+- **WHEN** an account owner enters a national number with a selected country calling code
+- **THEN** the server validates and normalizes supported numbers before verification, returns a localized error for invalid input and never marks formatting alone as verification
+
+### Requirement: Private Mobile Contact Use
+Personal mobile numbers SHALL remain private account data, excluded from public profiles, maps, catalog payloads and analytics. Only the owner and explicitly authorized operations SHALL access them. Feature-specific disclosure SHALL explain purpose and recipient and require explicit permission. Saving or verifying a number SHALL NOT subscribe the user to marketing, SMS, WhatsApp or unrelated institute services.
+
+#### Scenario: A center needs coordination contact
+- **WHEN** an approved feature requests disclosure of the user's number to assigned center staff
+- **THEN** the user sees the recipient and purpose before permitting disclosure; unrelated centers and public discovery never receive it
+
+#### Scenario: Number removed or account changes
+- **WHEN** the owner removes their number or the client signs out or switches accounts
+- **THEN** active profile responses and client contact views clear the previous number; retained operational records follow the disclosed retention policy and do not silently restore it
+
 ### Requirement: Contribution History
 The mobile app SHALL allow registered users to view a history of recorded contributions when contribution data is available.
 

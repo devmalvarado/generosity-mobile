@@ -63,6 +63,9 @@ public final class GenerosityStore: ObservableObject {
     public func signIn(userId: String, displayName: String) {
         controller.signIn(userId: userId, displayName: displayName)
     }
+    public func signOut() {
+        controller.continueAnonymously()
+    }
     public func offerGoods(needId: String, quantity: Int32) {
         controller.offerGoods(needId: needId, quantity: quantity)
     }

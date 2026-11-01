@@ -53,7 +53,9 @@ fun GenerosityApp(
     mapRenderer: CenterMapRenderer,
     onLanguageSelected: (SupportedLocale?) -> Unit = appState::setLocale,
     savingLanguage: Boolean = false,
-    languageSaveFailed: Boolean = false
+    languageSaveFailed: Boolean = false,
+    onSignIn: () -> Unit = {}, onSignOut: () -> Unit = {},
+    authBusy: Boolean = false, authFailed: Boolean = false
 ) {
     val state by appState.state.collectAsState()
     val locale = state.locale
@@ -116,7 +118,7 @@ fun GenerosityApp(
                     when (tab) {
                         AppTab.MAP -> DiscoveryScreen(state, appState, true, mapRenderer, mapState)
                         AppTab.LIST -> DiscoveryScreen(state, appState, false, mapRenderer, mapState)
-                        AppTab.PROFILE -> ProfileScreen(state, appState)
+                        AppTab.PROFILE -> ProfileScreen(state, onSignIn, onSignOut, authBusy, authFailed)
                         AppTab.SETTINGS -> SettingsScreen(state, appState, onLanguageSelected, savingLanguage, languageSaveFailed)
                     }
                 }
@@ -195,7 +197,7 @@ private fun DiscoveryScreen(
                 item(key = "center-detail") {
                     CenterDetail(
                         locale, center, state.currentNeeds,
-                        state.visitSignalCenterId == center.id, state.lastRejection,
+                        state.visitSignalCenterId == center.id, state.lastRejection, state.remoteAccount,
                         { appState.signalVisit(center.id) },
                         { appState.offerHelp(it, ContributionOffer(HelpMethod.GOODS, quantity = 5)) },
                         { appState.offerHelp(it, ContributionOffer(HelpMethod.TIME, activity = "volunteer", availability = "weekday")) }
@@ -241,7 +243,7 @@ private fun CenterIdentity(locale: SupportedLocale, center: KindnessCenter) {
 @Composable
 private fun CenterDetail(
     locale: SupportedLocale, center: KindnessCenter, needs: List<CenterNeed>,
-    visitRecorded: Boolean, rejection: RejectionReason?, onVisitSignal: () -> Unit,
+    visitRecorded: Boolean, rejection: RejectionReason?, remoteAccount: Boolean, onVisitSignal: () -> Unit,
     onOfferGoods: (String) -> Unit, onOfferTime: (String) -> Unit
 ) {
     Column(
@@ -257,9 +259,10 @@ private fun CenterDetail(
         Text(TextKey.CURRENT_NEEDS.label(locale), style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.Bold)
         if (needs.isEmpty()) EmptyMessage(TextKey.NO_CURRENT_NEEDS.label(locale))
         needs.forEach { need ->
-            NeedRow(locale, need, onOfferGoods, onOfferTime)
+            NeedRow(locale, need, remoteAccount, onOfferGoods, onOfferTime)
             HorizontalDivider(color = MaterialTheme.colorScheme.outlineVariant)
         }
+        if (remoteAccount) Text(localizedString(R.string.auth_demo_data, locale), style = MaterialTheme.typography.bodySmall)
         if (rejection == RejectionReason.REGISTRATION_REQUIRED) {
             Text(TextKey.REGISTRATION_REQUIRED.label(locale), color = MaterialTheme.colorScheme.error)
         }
@@ -273,7 +276,7 @@ private fun CenterDetail(
 }
 
 @Composable
-private fun NeedRow(locale: SupportedLocale, need: CenterNeed, onOfferGoods: (String) -> Unit, onOfferTime: (String) -> Unit) {
+private fun NeedRow(locale: SupportedLocale, need: CenterNeed, remoteAccount: Boolean, onOfferGoods: (String) -> Unit, onOfferTime: (String) -> Unit) {
     Row(horizontalArrangement = Arrangement.spacedBy(12.dp)) {
         Box(Modifier.size(40.dp).background(MaterialTheme.colorScheme.primaryContainer, RoundedCornerShape(10.dp)), contentAlignment = Alignment.Center) {
             AppIcon(if (HelpMethod.GOODS in need.helpMethods) R.drawable.ic_gift else R.drawable.ic_clock, tint = MaterialTheme.colorScheme.onPrimaryContainer)
@@ -294,10 +297,10 @@ private fun NeedRow(locale: SupportedLocale, need: CenterNeed, onOfferGoods: (St
             if (HelpMethod.MONEY in need.helpMethods) Text(TextKey.MONEY_BOUNDARY.label(locale), style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
             FlowRow(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                 if (HelpMethod.GOODS in need.helpMethods && need.quantityRemaining != null) {
-                    Button(onClick = { onOfferGoods(need.id) }) { Text(localizedQuantity(R.plurals.offer_goods, 5, locale)) }
+                    Button(onClick = { onOfferGoods(need.id) }, enabled = !remoteAccount) { Text(localizedQuantity(R.plurals.offer_goods, 5, locale)) }
                 }
                 if (HelpMethod.TIME in need.helpMethods) {
-                    Button(onClick = { onOfferTime(need.id) }) { Text(TextKey.OFFER_TIME.label(locale)) }
+                    Button(onClick = { onOfferTime(need.id) }, enabled = !remoteAccount) { Text(TextKey.OFFER_TIME.label(locale)) }
                 }
             }
         }
@@ -305,7 +308,7 @@ private fun NeedRow(locale: SupportedLocale, need: CenterNeed, onOfferGoods: (St
 }
 
 @Composable
-private fun ProfileScreen(state: GenerosityUiState, appState: GenerosityAppState) {
+private fun ProfileScreen(state: GenerosityUiState, onSignIn: () -> Unit, onSignOut: () -> Unit, authBusy: Boolean, authFailed: Boolean) {
     val locale = state.locale
     Column(Modifier.fillMaxSize().verticalScroll(rememberScrollState()).padding(16.dp), verticalArrangement = Arrangement.spacedBy(20.dp)) {
         Text(TextKey.TAB_PROFILE.label(locale), style = MaterialTheme.typography.headlineSmall, fontWeight = FontWeight.Bold)
@@ -315,7 +318,13 @@ private fun ProfileScreen(state: GenerosityUiState, appState: GenerosityAppState
                 Column(Modifier.weight(1f)) {
                     Text(if (state.profile.isRegistered) state.profile.displayName ?: TextKey.REGISTERED_PROFILE.label(locale) else TextKey.ANONYMOUS_PROFILE.label(locale),
                         fontWeight = FontWeight.SemiBold)
-                    if (!state.profile.isRegistered) TextButton(onClick = { appState.signIn("user-1", "Ana") }) { Text(TextKey.SIGN_IN.label(locale)) }
+                    TextButton(onClick = if (state.profile.isRegistered) onSignOut else onSignIn, enabled = !authBusy) {
+                        Text(localizedString(if (state.profile.isRegistered) R.string.auth_sign_out else R.string.auth_sign_in, locale))
+                    }
+                    if (authBusy) CircularProgressIndicator(Modifier.size(24.dp))
+                    if (authFailed) Text(localizedString(R.string.auth_failed, locale), color = MaterialTheme.colorScheme.error)
+                    Text(localizedString(R.string.auth_scope, locale), style = MaterialTheme.typography.bodySmall)
+                    if (state.remoteAccount) Text(localizedString(R.string.auth_demo_data, locale), style = MaterialTheme.typography.bodySmall)
                 }
             }
         }
