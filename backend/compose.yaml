@@ -1,0 +1,34 @@
+name: generosity-backend
+services:
+  app:
+    build: .
+    ports: ["127.0.0.1:8088:8000"]
+    volumes: [".:/app", "../data:/catalog:ro"]
+    environment:
+      DB_HOST: db
+      DB_DATABASE: generosity
+      DB_USERNAME: generosity
+      DB_PASSWORD: local-development-only
+      MAIL_HOST: mailpit
+      MAIL_PORT: 1025
+    depends_on:
+      db:
+        condition: service_healthy
+  db:
+    image: mariadb:11.8.9
+    environment:
+      MARIADB_DATABASE: generosity
+      MARIADB_USER: generosity
+      MARIADB_PASSWORD: local-development-only
+      MARIADB_ROOT_PASSWORD: local-test-root-only
+    volumes: ["database:/var/lib/mysql"]
+    healthcheck:
+      test: ["CMD", "healthcheck.sh", "--connect", "--innodb_initialized"]
+      interval: 3s
+      timeout: 3s
+      retries: 20
+  mailpit:
+    image: axllent/mailpit:v1.29
+    ports: ["127.0.0.1:8028:8025"]
+volumes:
+  database:

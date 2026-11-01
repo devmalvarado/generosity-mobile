@@ -115,3 +115,13 @@ providers remain unselected. The local service in `docs/local-service.md` is a
 versioned directory runtime, not those selections. The confirmed public origin
 is recorded in `docs/public-origin.md`; Terms and Privacy paths on that origin
 did not resolve, so task 14.1 stays open.
+
+## 2026-10-31 PHP replacement addendum
+
+The prior Kotlin-service evidence above is preserved at `36eab89` on
+`codex/mockup-backend-kotlin`. The selected service is now PHP/Laravel +
+MySQL/MariaDB, with Laravel first-party identity and bounded database-queue jobs.
+Foundation 11.1 and 11.4 are checked using the replacement API tests; 11.5 is
+reopened for complete source reconciliation/removals. Native/portal contract
+checks and integration remain open. See the foundation audit and
+[PHP verification](testing/backend-php-verification.md). No change is archived.

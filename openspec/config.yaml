@@ -66,6 +66,10 @@ context: |
     contracts, validation, imported catalog handling, filtering, localization
     fallback rules, notification eligibility, contribution rules, and visit
     signal rules.
+  - PHP 8.4 / Laravel 13 for the authoritative HTTP API, MySQL/MariaDB storage,
+    Laravel first-party identity provider/Sanctum and a cron-drained database queue.
+    Hostinger Premium is the intended deployment target, not a completed deployment.
+    Kotlin service mockup is preserved on codex/mockup-backend-kotlin at 36eab89.
   - SwiftUI for the native iOS user interface.
   - Jetpack Compose / Kotlin Compose for the native Android user interface.
   - Google Maps for Android rendering and Apple MapKit for iOS. Keep map SDK

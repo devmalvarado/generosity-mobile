@@ -1,6 +1,11 @@
 ## Purpose
 Define real account entry and session lifecycle across both apps and the backend while preserving anonymous discovery and preventing fabricated identities.
 
+The configured first-party provider for the PHP implementation is Laravel
+framework authentication with server-only password hashes, verified email and
+Sanctum bearer tokens. This selects an identity implementation without changing
+mobile session-restoration, recovery or current-user authorization requirements.
+
 ## ADDED Requirements
 
 ### Requirement: Provider-Backed Account Entry

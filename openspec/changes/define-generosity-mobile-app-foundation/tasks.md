@@ -145,11 +145,18 @@ complete the separate forms/history, real clock, persistence or backend tasks.
 
 ## 11. Backend Foundation
 
-- [ ] 11.1 Record backend framework/database/hosting and local-runtime selections in an architecture decision; verify they support the API, transaction, migration and worker contracts without a portal dependency.
+2026-10-31 PHP migration: see [decision](../../../docs/backend-php-mysql.md),
+[API contract](../../../backend/openapi.json) and implementation-status.md.
+11.3 has a server schema/route check but still lacks native/portal contract tests.
+11.5 is reopened: transactional upsert/reservation preservation is implemented;
+source revision conflicts, authoritative removals and tombstones are not.
+The Kotlin-specific evidence remains available on the preserved mockup branch.
+
+- [x] 11.1 Record backend framework/database/hosting and local-runtime selections in an architecture decision; verify they support the API, transaction, migration and worker contracts without a portal dependency.
 - [x] 11.2 Add backend service, database migrations, isolated development fixtures and local startup instructions; test clean startup, readiness and restart durability without production credentials.
 - [ ] 11.3 Publish the machine-readable API schema with errors, pagination, versions and idempotency; run contract tests against native and center portal request/response examples.
-- [ ] 11.4 Integrate provider validation, account mapping and controlled center-role provisioning; test anonymous/public reads, invalid credentials, cross-user access and cross-center denial, and document the operator procedure.
-- [x] 11.5 Add atomic catalog file import and versioned public reads; test invalid revision rollback, duplicate imports, removed records and preservation of accepted commitments.
+- [x] 11.4 Integrate provider validation, account mapping and controlled center-role provisioning; test anonymous/public reads, invalid credentials, cross-user access and cross-center denial, and document the operator procedure.
+- [ ] 11.5 Add atomic catalog file import and versioned public reads; test invalid revision rollback, duplicate imports, removed records and preservation of accepted commitments.
 - [ ] 11.6 Add owned profile/preferences/reminder/visit endpoints and device registration; test ownership, payload validation, visit idempotency, token rotation and sign-out deactivation.
 - [x] 11.7 Add structured redacted diagnostics, rate limits and deployment secret configuration; test that failures do not expose secrets/private records or partially write domain data.
 - [x] 11.8 Document database backup/restore and upgrade/rollback; demonstrate an isolated restore preserving identities, reservations, histories and acknowledged operation IDs.
