@@ -118,7 +118,8 @@ object CatalogJson {
             } ?: NeedStatus.ACTIVE,
             quantityRequired = quantityRequired,
             quantityCommitted = quantityCommitted,
-            publishedOnIsoDate = objectValue.optional("publishedOnIsoDate")?.asDateOrNull("$path.publishedOnIsoDate")
+            publishedOnIsoDate = objectValue.optional("publishedOnIsoDate")?.asDateOrNull("$path.publishedOnIsoDate"),
+            quantityUnit = objectValue.optional("unit")?.asStringOrNull("$path.unit")
         )
     }
 
@@ -194,7 +195,7 @@ object CatalogJson {
     private val NEED_KEYS = setOf(
         "id", "centerId", "title", "description", "helpMethods", "urgent",
         "expiresOnIsoDate", "category", "priority", "status", "quantityRequired",
-        "quantityCommitted", "publishedOnIsoDate"
+        "quantityCommitted", "publishedOnIsoDate", "unit"
     )
     private val CONTACT_KEYS = setOf("phone", "email", "website")
     private val COORDINATE_KEYS = setOf("latitude", "longitude")
@@ -233,7 +234,7 @@ class ValidatingCatalogDataSource(
 
 private class CatalogJsonException(message: String) : RuntimeException(message)
 
-private sealed class JsonValue {
+internal sealed class JsonValue {
     data class Obj(val fields: Map<String, JsonValue>) : JsonValue()
     data class Arr(val items: List<JsonValue>) : JsonValue()
     data class Str(val value: String) : JsonValue()
@@ -308,8 +309,9 @@ private fun isIsoDate(value: String): Boolean {
 
 private val ISO_DATE = Regex("""\d{4}-\d{2}-\d{2}""")
 
-private class JsonReader(private val text: String) {
+internal class JsonReader(private val text: String) {
     private var index = 0
+    private var depth = 0
 
     fun parse(): JsonValue {
         val value = readValue()
@@ -319,6 +321,11 @@ private class JsonReader(private val text: String) {
     }
 
     private fun readValue(): JsonValue {
+        if (++depth > 64) fail("JSON nesting limit exceeded.")
+        return try { readNestedValue() } finally { depth-- }
+    }
+
+    private fun readNestedValue(): JsonValue {
         skipWs()
         if (index >= text.length) fail("malformed JSON.")
         return when (val char = text[index]) {

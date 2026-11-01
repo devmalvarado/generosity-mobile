@@ -118,7 +118,7 @@ fun GenerosityApp(
                     when (tab) {
                         AppTab.MAP -> DiscoveryScreen(state, appState, true, mapRenderer, mapState)
                         AppTab.LIST -> DiscoveryScreen(state, appState, false, mapRenderer, mapState)
-                        AppTab.PROFILE -> ProfileScreen(state, onSignIn, onSignOut, authBusy, authFailed)
+                        AppTab.PROFILE -> ProfileScreen(state, appState, onSignIn, onSignOut, authBusy, authFailed)
                         AppTab.SETTINGS -> SettingsScreen(state, appState, onLanguageSelected, savingLanguage, languageSaveFailed)
                     }
                 }
@@ -135,6 +135,8 @@ private fun DiscoveryScreen(
     val locale = state.locale
     val listState = rememberLazyListState()
     val scope = rememberCoroutineScope()
+    var offer by remember { mutableStateOf<Pair<CenterNeed, HelpMethod>?>(null) }
+    offer?.let { (need, method) -> OfferDialog(state, appState, need, method) { offer = null } }
     val keyboard = LocalSoftwareKeyboardController.current
     BoxWithConstraints(Modifier.fillMaxSize()) {
         val mapHeight = (maxHeight * .52f).coerceIn(200.dp, 480.dp)
@@ -144,6 +146,7 @@ private fun DiscoveryScreen(
             contentPadding = PaddingValues(16.dp),
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
+            item { SyncStatus(state, appState) }
             item {
                 Text(TextKey.NEARBY_CENTERS.label(locale), style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.SemiBold)
                 Spacer(Modifier.height(12.dp))
@@ -197,14 +200,14 @@ private fun DiscoveryScreen(
                 item(key = "center-detail") {
                     CenterDetail(
                         locale, center, state.currentNeeds,
-                        state.visitSignalCenterId == center.id, state.lastRejection, state.remoteAccount,
+                        state.visitSignalCenterId == center.id || center.id in state.visitedCenterIds, state.lastRejection, !state.canRecordContributions, state.backendConfigured,
                         { appState.signalVisit(center.id) },
-                        { appState.offerHelp(it, ContributionOffer(HelpMethod.GOODS, quantity = 5)) },
-                        { appState.offerHelp(it, ContributionOffer(HelpMethod.TIME, activity = "volunteer", availability = "weekday")) }
+                        { id -> state.currentNeeds.firstOrNull { it.id == id }?.let { offer = it to HelpMethod.GOODS } },
+                        { id -> state.currentNeeds.firstOrNull { it.id == id }?.let { offer = it to HelpMethod.TIME } }
                     )
                 }
             }
-            item { Text(localizedString(R.string.demo_catalog, locale), style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.onSurfaceVariant) }
+            item { Text(localizedString(if (state.backendConfigured) R.string.sync_cached else R.string.demo_catalog, locale), style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.onSurfaceVariant) }
         }
     }
 }
@@ -243,7 +246,7 @@ private fun CenterIdentity(locale: SupportedLocale, center: KindnessCenter) {
 @Composable
 private fun CenterDetail(
     locale: SupportedLocale, center: KindnessCenter, needs: List<CenterNeed>,
-    visitRecorded: Boolean, rejection: RejectionReason?, remoteAccount: Boolean, onVisitSignal: () -> Unit,
+    visitRecorded: Boolean, rejection: RejectionReason?, remoteAccount: Boolean, backendConfigured: Boolean, onVisitSignal: () -> Unit,
     onOfferGoods: (String) -> Unit, onOfferTime: (String) -> Unit
 ) {
     Column(
@@ -255,6 +258,7 @@ private fun CenterDetail(
         Text(center.categories.map { it.label(locale) }.joinToString(" · "), style = MaterialTheme.typography.labelLarge, color = MaterialTheme.colorScheme.primary)
         Text(center.address.resolve(locale), style = MaterialTheme.typography.bodyMedium, color = MaterialTheme.colorScheme.onSurfaceVariant)
         Text(center.description.resolve(locale), style = MaterialTheme.typography.bodyMedium)
+        ContactActions(center.contactInfo, locale)
         HorizontalDivider(color = MaterialTheme.colorScheme.outlineVariant)
         Text(TextKey.CURRENT_NEEDS.label(locale), style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.Bold)
         if (needs.isEmpty()) EmptyMessage(TextKey.NO_CURRENT_NEEDS.label(locale))
@@ -262,14 +266,13 @@ private fun CenterDetail(
             NeedRow(locale, need, remoteAccount, onOfferGoods, onOfferTime)
             HorizontalDivider(color = MaterialTheme.colorScheme.outlineVariant)
         }
-        if (remoteAccount) Text(localizedString(R.string.auth_demo_data, locale), style = MaterialTheme.typography.bodySmall)
-        if (rejection == RejectionReason.REGISTRATION_REQUIRED) {
+        if (remoteAccount || rejection == RejectionReason.REGISTRATION_REQUIRED) {
             Text(TextKey.REGISTRATION_REQUIRED.label(locale), color = MaterialTheme.colorScheme.error)
         }
         OutlinedButton(onClick = onVisitSignal, enabled = !visitRecorded, modifier = Modifier.fillMaxWidth()) {
             Text(TextKey.VISIT_SIGNAL.label(locale))
         }
-        if (visitRecorded) Text(TextKey.VISIT_SIGNAL_SUBMITTED.label(locale), style = MaterialTheme.typography.bodySmall)
+        if (visitRecorded) Text(if (backendConfigured) localizedString(R.string.visit_saved, locale) else TextKey.VISIT_SIGNAL_SUBMITTED.label(locale), style = MaterialTheme.typography.bodySmall)
         Text(center.verificationStatus.label(locale), style = MaterialTheme.typography.labelLarge)
         Text(TextKey.OFFICIAL_VERIFICATION_BOUNDARY.label(locale), style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
     }
@@ -296,8 +299,8 @@ private fun NeedRow(locale: SupportedLocale, need: CenterNeed, remoteAccount: Bo
             Text(need.helpMethods.map { it.label(locale) }.joinToString(" · "), style = MaterialTheme.typography.bodySmall)
             if (HelpMethod.MONEY in need.helpMethods) Text(TextKey.MONEY_BOUNDARY.label(locale), style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
             FlowRow(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                if (HelpMethod.GOODS in need.helpMethods && need.quantityRemaining != null) {
-                    Button(onClick = { onOfferGoods(need.id) }, enabled = !remoteAccount) { Text(localizedQuantity(R.plurals.offer_goods, 5, locale)) }
+                if (HelpMethod.GOODS in need.helpMethods) {
+                    Button(onClick = { onOfferGoods(need.id) }, enabled = !remoteAccount) { Text(localizedString(R.string.offer_goods_action, locale)) }
                 }
                 if (HelpMethod.TIME in need.helpMethods) {
                     Button(onClick = { onOfferTime(need.id) }, enabled = !remoteAccount) { Text(TextKey.OFFER_TIME.label(locale)) }
@@ -308,8 +311,10 @@ private fun NeedRow(locale: SupportedLocale, need: CenterNeed, remoteAccount: Bo
 }
 
 @Composable
-private fun ProfileScreen(state: GenerosityUiState, onSignIn: () -> Unit, onSignOut: () -> Unit, authBusy: Boolean, authFailed: Boolean) {
+private fun ProfileScreen(state: GenerosityUiState, appState: GenerosityAppState, onSignIn: () -> Unit, onSignOut: () -> Unit, authBusy: Boolean, authFailed: Boolean) {
     val locale = state.locale
+    var personalMethod by remember { mutableStateOf<HelpMethod?>(null) }
+    personalMethod?.let { OfferDialog(state, appState, null, it) { personalMethod = null } }
     Column(Modifier.fillMaxSize().verticalScroll(rememberScrollState()).padding(16.dp), verticalArrangement = Arrangement.spacedBy(20.dp)) {
         Text(TextKey.TAB_PROFILE.label(locale), style = MaterialTheme.typography.headlineSmall, fontWeight = FontWeight.Bold)
         Surface(shape = RoundedCornerShape(12.dp)) {
@@ -324,7 +329,7 @@ private fun ProfileScreen(state: GenerosityUiState, onSignIn: () -> Unit, onSign
                     if (authBusy) CircularProgressIndicator(Modifier.size(24.dp))
                     if (authFailed) Text(localizedString(R.string.auth_failed, locale), color = MaterialTheme.colorScheme.error)
                     Text(localizedString(R.string.auth_scope, locale), style = MaterialTheme.typography.bodySmall)
-                    if (state.remoteAccount) Text(localizedString(R.string.auth_demo_data, locale), style = MaterialTheme.typography.bodySmall)
+
                 }
             }
         }
@@ -333,6 +338,14 @@ private fun ProfileScreen(state: GenerosityUiState, onSignIn: () -> Unit, onSign
                 Text(localizedString(R.string.points_title, locale), style = MaterialTheme.typography.labelLarge)
                 Text(localizedString(R.string.unavailable, locale), style = MaterialTheme.typography.headlineSmall, fontWeight = FontWeight.Bold)
                 Text(TextKey.GENEROSITY_POINTS.label(locale), style = MaterialTheme.typography.bodySmall)
+            }
+        }
+        SyncStatus(state, appState)
+        if (state.canRecordContributions) {
+            Text(localizedString(R.string.personal_add, locale), style = MaterialTheme.typography.titleMedium)
+            Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                Button(onClick = { personalMethod = HelpMethod.GOODS }) { Text(localizedString(R.string.offer_goods_action, locale)) }
+                Button(onClick = { personalMethod = HelpMethod.TIME }) { Text(TextKey.OFFER_TIME.label(locale)) }
             }
         }
         Text(TextKey.IMPACT_TITLE.label(locale), style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.Bold)
@@ -352,8 +365,16 @@ private fun ProfileScreen(state: GenerosityUiState, onSignIn: () -> Unit, onSign
                     ContributionStatus.FULFILLED -> R.string.contribution_fulfilled
                     ContributionStatus.CANCELLED -> R.string.contribution_cancelled
                 }
-                Text(if (contribution.centerId == null) localizedString(R.string.personal_help, locale) else localizedString(status, locale),
+                Text(localizedString(status, locale),
                     style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
+                if (contribution.centerId == null) {
+                    Text(localizedString(R.string.personal_help, locale), style = MaterialTheme.typography.bodySmall)
+                    Text(localizedString(R.string.personal_notice, locale), style = MaterialTheme.typography.bodySmall)
+                }
+                if (contribution.status == ContributionStatus.OFFERED || contribution.status == ContributionStatus.CONFIRMED) {
+                    TextButton(onClick = { appState.transitionContribution(contribution.id, "cancel", contribution.version) }, enabled = !state.writing && !state.syncing && state.pendingOperations.isEmpty()) { Text(localizedString(R.string.contribution_cancel, locale)) }
+                    if (contribution.centerId == null) TextButton(onClick = { appState.transitionContribution(contribution.id, "complete", contribution.version) }, enabled = !state.writing && !state.syncing && state.pendingOperations.isEmpty()) { Text(localizedString(R.string.contribution_complete, locale)) }
+                }
                 HorizontalDivider(color = MaterialTheme.colorScheme.outlineVariant)
             }
         }
@@ -407,6 +428,8 @@ private fun SettingsScreen(state: GenerosityUiState, appState: GenerosityAppStat
                 Text(org.generosity.usecase.NearbyAlertPolicy().settingsNotice().resolve(locale), style = MaterialTheme.typography.bodySmall)
             }
         }
+        Text(localizedString(R.string.notifications_pending, locale), style = MaterialTheme.typography.bodySmall)
+        if (state.syncError != null) Text(localizedString(R.string.sync_failed, locale), color = MaterialTheme.colorScheme.error)
         PlatformPermissionActions(locale)
     }
 }

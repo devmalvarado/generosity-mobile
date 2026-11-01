@@ -4,15 +4,31 @@ import SharedBridge
 import Shared
 
 struct ContentView: View {
-    @StateObject private var store = GenerosityStore()
-    @StateObject private var account = AccountSession()
+    private static var demoCatalog: Bool {
+        #if DEBUG
+        return ProcessInfo.processInfo.arguments.contains("--demo-catalog")
+        #else
+        return false
+        #endif
+    }
+    @StateObject private var store: GenerosityStore
+    @StateObject private var account: AccountSession
+    init() {
+        let account = AccountSession()
+        let connection = IOSConnection()
+        connection.credential = account.credentialFor
+        _account = StateObject(wrappedValue: account)
+        _store = StateObject(wrappedValue: GenerosityStore(connection: Self.demoCatalog ? nil : connection))
+    }
     @Environment(\.scenePhase) private var scenePhase
-    @State private var nearbyNotifications = false
-    @State private var urgentNotifications = false
-    @State private var reminderNotifications = false
+    @AppStorage("generosity.entered") private var entered = false
     private var locale: AppLocale { AppLocale(rawValue: store.localeCode) ?? .fallback }
 
     var body: some View {
+        Group {
+        if !entered && !store.state.profile.isRegistered {
+            WelcomeView(locale: locale, account: account, store: store, onGuest: { entered = true })
+        } else {
         TabView {
             discovery(showMap: true)
                 .tabItem { Label(L10n.text(.tabMap, locale: locale), systemImage: "map") }
@@ -21,22 +37,26 @@ struct ContentView: View {
             ProfileView(locale: locale, state: store.state, account: account, store: store)
                 .tabItem { Label(L10n.text(.tabProfile, locale: locale), systemImage: "person") }
             SettingsView(
-                locale: locale, languageMode: Binding(get: { store.languageMode }, set: store.setLocale),
-                nearbyNotifications: $nearbyNotifications, urgentNotifications: $urgentNotifications,
-                reminderNotifications: $reminderNotifications
+                locale: locale, saveFailed: store.state.syncError == "save_failed", languageMode: Binding(get: { store.languageMode }, set: store.setLocale),
+                nearbyNotifications: Binding(get: { store.state.preferences.nearbyCentersEnabled }, set: { store.setPreferences(nearby: $0, urgent: store.state.preferences.urgentNeedsEnabled, reminders: store.state.preferences.remindersEnabled) }),
+                urgentNotifications: Binding(get: { store.state.preferences.urgentNeedsEnabled }, set: { store.setPreferences(nearby: store.state.preferences.nearbyCentersEnabled, urgent: $0, reminders: store.state.preferences.remindersEnabled) }),
+                reminderNotifications: Binding(get: { store.state.preferences.remindersEnabled }, set: { store.setPreferences(nearby: store.state.preferences.nearbyCentersEnabled, urgent: store.state.preferences.urgentNeedsEnabled, reminders: $0) })
             )
             .tabItem { Label(L10n.text(.tabSettings, locale: locale), systemImage: "slider.horizontal.3") }
         }
+        }
+        }
+        .onChange(of: store.state.profile.isRegistered) { registered in entered = registered }
         .tint(GenPalette.accent)
         .environment(\.locale, Locale(identifier: locale.rawValue))
         .environment(\.layoutDirection, Locale.Language(identifier: locale.rawValue).characterDirection == .rightToLeft ? .rightToLeft : .leftToRight)
         .onChange(of: scenePhase) { phase in
             if phase == .active {
                 store.onResume()
-                Task { await account.restore(store: store) }
+                Task { if !Self.demoCatalog { await account.restore(store: store) } }
             }
         }
-        .task { await account.restore(store: store) }
+        .task { if !Self.demoCatalog { await account.restore(store: store) } }
         .onReceive(NotificationCenter.default.publisher(for: NSLocale.currentLocaleDidChangeNotification)) { _ in
             store.refreshDeviceLanguages()
         }
@@ -63,6 +83,7 @@ private struct DiscoveryView: View {
             ScrollViewReader { proxy in
                 ScrollView {
                     VStack(alignment: .leading, spacing: 16) {
+                        SyncStatusView(locale: locale, store: store)
                         Text(L10n.text(.nearbyCenters, locale: locale)).font(.headline)
                         HStack(spacing: 10) {
                             Image(systemName: "magnifyingglass").foregroundStyle(GenPalette.secondary).accessibilityHidden(true)
@@ -114,13 +135,13 @@ private struct DiscoveryView: View {
                         }
                         if let center = store.state.selectedCenter {
                             CenterDetail(
-                                locale: locale, center: center, currentNeeds: store.state.currentNeeds,
-                                visitNoted: store.state.visitSignalCenterId == center.id,
+                                locale: locale, center: center, store: store, currentNeeds: store.state.currentNeeds,
+                                visitNoted: store.state.visitSignalCenterId == center.id || store.state.visitedCenterIds.contains(center.id),
                                 onVisit: { store.signalVisit(center.id) }
                             )
                             .id("center-detail")
                         }
-                        Text(L10n.resource("demo_catalog", locale: locale)).font(.caption).foregroundStyle(GenPalette.secondary)
+                        Text(L10n.resource(store.state.backendConfigured ? "sync_cached" : "demo_catalog", locale: locale)).font(.caption).foregroundStyle(GenPalette.secondary)
                     }
                     .padding(16)
                 }
@@ -218,9 +239,12 @@ private struct CenterIdentity: View {
 private struct CenterDetail: View {
     let locale: AppLocale
     let center: KindnessCenter
+    @ObservedObject var store: GenerosityStore
     let currentNeeds: [CenterNeed]
     let visitNoted: Bool
     let onVisit: () -> Void
+    @Environment(\.openURL) private var openURL
+    @State private var contactFailed = false
 
     var body: some View {
         VStack(alignment: .leading, spacing: 16) {
@@ -231,19 +255,26 @@ private struct CenterDetail: View {
                 .font(.subheadline).foregroundStyle(GenPalette.accent)
             Text(center.address.resolve(locale)).font(.subheadline).foregroundStyle(GenPalette.secondary)
             Text(center.description_.resolve(locale)).font(.body)
+            ForEach(center.contactInfo.links(), id: \.kind) { link in
+                Button(L10n.resource("contact_" + link.kind, locale: locale)) {
+                    if let url = URL(string: link.url) { openURL(url) { accepted in contactFailed = !accepted } }
+                }.frame(minHeight: 44)
+            }
+            if contactFailed { Text(L10n.resource("contact_failed", locale: locale)).foregroundStyle(GenPalette.error) }
             Divider()
             Text(L10n.text(.currentNeeds, locale: locale)).font(.headline)
             if currentNeeds.isEmpty {
                 Text(L10n.text(.noCurrentNeeds, locale: locale)).foregroundStyle(GenPalette.secondary)
             }
             ForEach(currentNeeds, id: \.id) { need in
-                NeedView(locale: locale, need: need)
+                NeedView(locale: locale, need: need, store: store)
                 Divider()
             }
             Button(L10n.text(.visitSignal, locale: locale), action: onVisit)
+                .disabled(visitNoted || store.state.writing)
                 .buttonStyle(.bordered).frame(minHeight: 44)
             if visitNoted {
-                Text(L10n.text(.visitSignalSubmitted, locale: locale)).font(.footnote)
+                Text(store.state.backendConfigured ? L10n.resource("visit_saved", locale: locale) : L10n.text(.visitSignalSubmitted, locale: locale)).font(.footnote)
             }
             Text(center.verificationStatus.label(locale)).font(.subheadline.weight(.semibold))
             Text(L10n.text(.officialVerificationBoundary, locale: locale)).font(.footnote).foregroundStyle(GenPalette.secondary)
@@ -256,6 +287,9 @@ private struct CenterDetail: View {
 private struct NeedView: View {
     let locale: AppLocale
     let need: CenterNeed
+    @ObservedObject var store: GenerosityStore
+    @State private var method = "goods"
+    @State private var offering = false
     var body: some View {
         HStack(alignment: .top, spacing: 12) {
             IconTile(symbol: need.helpMethods.contains(.goods) ? "gift" : "clock", size: 40)
@@ -270,12 +304,19 @@ private struct NeedView: View {
                 }
                 Text(need.helpMethods.sorted { $0.ordinal < $1.ordinal }.map { $0.label(locale) }.joined(separator: " · "))
                     .font(.footnote)
+                if store.state.canRecordContributions {
+                    ForEach(["goods", "time"].filter { code in need.helpMethods.contains { $0.code == code } }, id: \.self) { code in
+                        Button(L10n.resource(code == "goods" ? "offer_goods_action" : "offer_time", locale: locale)) { method = code; offering = true }
+                            .buttonStyle(.bordered).frame(minHeight: 44)
+                    }
+                } else { Text(L10n.resource("registration_required", locale: locale)).font(.footnote) }
                 if need.helpMethods.contains(.money) {
                     Text(L10n.text(.moneyBoundary, locale: locale)).font(.footnote).foregroundStyle(GenPalette.secondary)
                 }
             }
             .frame(maxWidth: .infinity, alignment: .leading)
         }
+        .sheet(isPresented: $offering) { OfferForm(locale: locale, store: store, need: need, method: method) }
     }
 }
 
@@ -283,7 +324,9 @@ private struct ProfileView: View {
     let locale: AppLocale
     let state: GenerosityUiState
     @ObservedObject var account: AccountSession
-    let store: GenerosityStore
+    @ObservedObject var store: GenerosityStore
+    @State private var personalMethod = "goods"
+    @State private var offering = false
     var body: some View {
         NavigationStack {
             ScrollView {
@@ -297,11 +340,17 @@ private struct ProfileView: View {
                     Button(L10n.resource(state.profile.isRegistered ? "auth_sign_out" : "auth_sign_in", locale: locale)) {
                         if state.profile.isRegistered { Task { await account.signOut(store: store) } }
                         else { account.signIn(store: store) }
-                    }.buttonStyle(.borderedProminent).disabled(account.busy)
+                    }.buttonStyle(.borderedProminent).foregroundStyle(GenPalette.onAccent).disabled(account.busy)
                     if account.busy { ProgressView() }
                     if account.failed { Text(L10n.resource("auth_failed", locale: locale)).foregroundStyle(.red).accessibilityAddTraits(.updatesFrequently) }
                     Text(L10n.resource("auth_scope", locale: locale)).font(.footnote)
-                    if state.remoteAccount { Text(L10n.resource("auth_demo_data", locale: locale)).font(.footnote) }
+                    SyncStatusView(locale: locale, store: store)
+                    if state.canRecordContributions {
+                        Menu(L10n.resource("personal_add", locale: locale)) {
+                            Button(L10n.resource("offer_goods_action", locale: locale)) { personalMethod = "goods"; offering = true }
+                            Button(L10n.resource("offer_time", locale: locale)) { personalMethod = "time"; offering = true }
+                        }.frame(minHeight: 44)
+                    }
                     VStack(alignment: .leading, spacing: 8) {
                         Text(L10n.resource("points_title", locale: locale)).font(.subheadline)
                         Text(L10n.resource("unavailable", locale: locale)).font(.title2.weight(.bold))
@@ -322,8 +371,17 @@ private struct ProfileView: View {
                     ForEach(state.contributions, id: \.id) { contribution in
                         VStack(alignment: .leading, spacing: 4) {
                             Text(contribution.title.resolve(locale)).font(.subheadline.weight(.semibold))
-                            Text(L10n.resource(contribution.centerId == nil ? "personal_help" : "contribution_\(contribution.status.code)", locale: locale))
+                            Text(L10n.resource("contribution_\(contribution.status.code)", locale: locale))
                                 .font(.footnote).foregroundStyle(GenPalette.secondary)
+                            if contribution.centerId == nil { Text(L10n.resource("personal_notice", locale: locale)).font(.footnote) }
+                            if contribution.status == .offered || contribution.status == .confirmed {
+                                Button(L10n.resource("contribution_cancel", locale: locale)) { store.transition(contribution.id, action: "cancel", version: contribution.version) }
+                                    .disabled(state.writing || state.syncing || !state.pendingOperations.isEmpty).frame(minHeight: 44)
+                                if contribution.centerId == nil {
+                                    Button(L10n.resource("contribution_complete", locale: locale)) { store.transition(contribution.id, action: "complete", version: contribution.version) }
+                                        .disabled(state.writing || state.syncing || !state.pendingOperations.isEmpty).frame(minHeight: 44)
+                                }
+                            }
                             Divider()
                         }
                     }
@@ -331,6 +389,7 @@ private struct ProfileView: View {
                 .padding(16)
             }
             .background(GenPalette.background).foregroundStyle(GenPalette.text)
+            .sheet(isPresented: $offering) { OfferForm(locale: locale, store: store, need: nil, method: personalMethod) }
             .navigationTitle(L10n.text(.tabProfile, locale: locale)).navigationBarTitleDisplayMode(.inline)
             .toolbarBackground(GenPalette.surface, for: .navigationBar).toolbarBackground(.visible, for: .navigationBar)
         }
@@ -348,6 +407,7 @@ private struct ProfileView: View {
 
 private struct SettingsView: View {
     let locale: AppLocale
+    let saveFailed: Bool
     @Binding var languageMode: String
     @Binding var nearbyNotifications: Bool
     @Binding var urgentNotifications: Bool
@@ -375,6 +435,8 @@ private struct SettingsView: View {
                     Toggle(isOn: $reminderNotifications) { settingsLabel(.reminderNotifications) }
                     Text(L10n.resource("nearby_foreground_only", locale: locale)).font(.footnote)
                     Text(L10n.resource("permissions_explanation", locale: locale)).font(.footnote)
+                    Text(L10n.resource("notifications_pending", locale: locale)).font(.footnote)
+                    if saveFailed { Text(L10n.resource("sync_failed", locale: locale)).foregroundStyle(GenPalette.error) }
                     Button(L10n.resource("request_permissions", locale: locale)) {
                         permissions.requestLocationPermission()
                         permissions.requestNotificationPermission()

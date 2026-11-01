@@ -69,8 +69,46 @@
 "permissions_explanation" = "Los permisos de ubicación y notificaciones son opcionales. Las alertas aún no están disponibles.";
 "request_permissions" = "Gestionar permisos";
 
-"auth_sign_in" = "Iniciar sesión · Google, Apple o correo";
+"auth_sign_in" = "Iniciar sesión";
 "auth_sign_out" = "Cerrar sesión";
 "auth_failed" = "No se pudo completar la solicitud. Revisa tu conexión e inténtalo de nuevo.";
 "auth_scope" = "Una cuenta Generosity para web, Android y iOS.";
 "auth_demo_data" = "Tu cuenta está conectada. El catálogo, las aportaciones y el impacto de esta app todavía no están conectados a tu cuenta en línea.";
+
+// Backend synchronization and contribution forms
+"sync_refresh" = "Actualizar";
+"sync_busy" = "Sincronizando…";
+"sync_failed" = "No se pudo sincronizar. Se conservan los datos guardados; vuelve a intentarlo.";
+"sync_auth" = "La sesión venció. Inicia sesión para enviar los cambios pendientes.";
+"sync_cached" = "Catálogo del servidor; puede mostrar la última copia guardada.";
+"sync_pending" = "Cambios guardados pendientes de sincronización";
+"sync_rejected" = "El servidor rechazó este cambio. Revisa la disponibilidad y vuelve a crearlo.";
+"sync_discard" = "Descartar cambio rechazado";
+"offer_title" = "Quiero ayudar";
+"offer_goods_action" = "Donar cosas";
+"offer_quantity" = "Cantidad";
+"offer_unit" = "Unidad (p. ej., paquetes)";
+"offer_minutes" = "Tiempo previsto (minutos)";
+"offer_activity" = "Actividad";
+"offer_availability" = "Disponibilidad (opcional)";
+"offer_notes" = "Notas (opcional)";
+"offer_send" = "Guardar aportación";
+"offer_cancel" = "Volver";
+"offer_invalid" = "Revisa la cantidad, el tiempo y la actividad antes de guardar.";
+"personal_add" = "Registrar ayuda personal";
+"contribution_cancel" = "Cancelar aportación";
+"contribution_complete" = "Marcar ayuda personal como realizada";
+"personal_notice" = "Autodeclarada; no cuenta como ayuda validada por un centro.";
+
+"welcome_tagline" = "Pequeñas acciones, gran impacto.";
+"welcome_guest" = "Continuar como invitado";
+"welcome_create" = "Crear cuenta";
+"welcome_save_failed" = "No se pudo guardar tu elección. Inténtalo de nuevo.";
+
+"contact_phone" = "Llamar al centro";
+"contact_email" = "Enviar correo";
+"contact_website" = "Abrir sitio web";
+"contact_failed" = "No hay una aplicación disponible para abrir este contacto.";
+
+"visit_saved" = "Visita guardada. Las visitas de invitado permanecen en este dispositivo. No constituye verificación oficial.";
+"notifications_pending" = "Estas preferencias se guardan en este dispositivo. La entrega de alertas todavía no está disponible.";

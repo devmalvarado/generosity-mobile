@@ -13,12 +13,16 @@ public final class GenerosityStore: ObservableObject {
     private let defaults: UserDefaults
     private static let languageKey = "generosity.languageMode"
 
-    public init(defaults: UserDefaults = .standard) {
+    public init(defaults: UserDefaults = .standard, connection: AppConnection? = nil) {
         self.defaults = defaults
+        if let connection {
+            controller = GenerosityController(connection: connection, selectedLocaleCode: defaults.string(forKey: Self.languageKey), deviceLanguageCodes: Locale.preferredLanguages)
+        } else {
         controller = GenerosityController(
             selectedLocaleCode: defaults.string(forKey: Self.languageKey),
             deviceLanguageCodes: Locale.preferredLanguages
         )
+        }
         state = controller.currentState
         controller.start { [weak self] updated in
             self?.state = updated
@@ -76,6 +80,11 @@ public final class GenerosityStore: ObservableObject {
         controller.signalVisit(centerId: centerId)
         state = controller.currentState
     }
+    public func submitOffer(needId: String?, method: String, quantity: Int32, minutes: Int32, activity: String, availability: String, notes: String, unit: String) {
+        controller.submitOffer(needId: needId, method: method, quantity: quantity, minutes: minutes, activity: activity, availability: availability, notes: notes, unit: unit)
+    }
+    public func transition(_ id: String, action: String, version: Int32) { controller.transitionContribution(id: id, action: action, version: version) }
+    public func discardRejectedOperation(_ id: String) { controller.discardRejectedOperation(id: id) }
     public func setPreferences(nearby: Bool, urgent: Bool, reminders: Bool) {
         controller.setPreferences(nearby: nearby, urgent: urgent, reminders: reminders)
     }

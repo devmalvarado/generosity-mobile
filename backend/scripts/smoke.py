@@ -11,6 +11,7 @@ import time
 import urllib.error
 import urllib.request
 import uuid
+from datetime import datetime, timezone
 
 os.chdir(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 BASE = 'http://localhost:8088'
@@ -53,11 +54,17 @@ need = request('/api/v1/staff/centers/kc-children-001/needs', {
     'helpMethods': ['goods'], 'urgent': False, 'quantityRequired': 2, 'unit': 'kit', 'status': 'published',
 }, token, str(uuid.uuid4()))
 request('/api/v1/contributions', {'need_id': need['id'], 'method': 'goods', 'quantity': 1}, token, str(uuid.uuid4()))
+assert any(center['id'] == 'kc-children-001' for center in request('/api/v1/staff/centers', token=token)['centers'])
+catalog = request('/api/v1/sync/catalog')['catalog']
+assert any(item['id'] == need['id'] and item['unit'] == 'kit' for center in catalog['centers'] for item in center['needs'])
+visit_key = str(uuid.uuid4())
+visit_body = {'center_id': 'kc-children-001', 'occurred_at': datetime.now(timezone.utc).isoformat(), 'explicit_action': True}
+visit = request('/api/v1/visits', visit_body, token, visit_key)
 key = str(uuid.uuid4())
 activity = {'method': 'time', 'minutes': 30, 'activity': 'Local recovery check'}
 offer = request('/api/v1/contributions', activity, token, key)
 assert offer['provenance'] == 'self_reported'
-request('/api/v1/contributions/' + offer['id'] + '/transition', {'action': 'complete', 'version': 1}, token, str(uuid.uuid4()))
+request('/api/v1/contributions/' + offer['id'] + '/transition', {'action': 'complete', 'version': 1, 'actual_minutes': 25}, token, str(uuid.uuid4()))
 compose('restart', 'app')
 for attempt in range(30):
     try:
@@ -70,11 +77,15 @@ else:
 assert request('/api/v1/contributions', activity, token, key) == offer
 assert request('/api/v1/contributions/' + offer['id'], token=token)['contribution']['status'] == 'fulfilled'
 assert request('/api/v1/needs/' + need['id'])['quantityCommitted'] == 1
+assert request('/api/v1/visits', visit_body, token, visit_key) == visit
+account = request('/api/v1/sync/account', token=token)
+assert any(row['id'] == offer['id'] and row['actual_minutes'] == 25 and row['status'] == 'fulfilled' for row in account['contributions'])
+assert len([row for row in account['visits'] if row['id'] == visit['id']]) == 1
 
 # Compare restored business tables byte-for-byte, including hashed identities and operations.
 database = 'generosity_restore_' + suffix
 dump_args = ('--single-transaction', '--skip-comments', '--skip-extended-insert', '--compact', '--order-by-primary', '--skip-add-locks')
-tables = ('users', 'centers', 'needs', 'center_memberships', 'contributions', 'contribution_events', 'operations', 'operator_audits', 'personal_access_tokens')
+tables = ('users', 'centers', 'needs', 'center_memberships', 'contributions', 'contribution_events', 'operations', 'operator_audits', 'personal_access_tokens', 'visit_signals')
 dump = compose('exec', '-T', 'db', 'mariadb-dump', '-uroot', '-plocal-test-root-only', *dump_args, 'generosity', *tables)
 compose('exec', '-T', 'db', 'mariadb', '-uroot', '-plocal-test-root-only', '-e', 'CREATE DATABASE ' + database)
 try:
@@ -86,4 +97,4 @@ try:
     assert dump == restored, 'Restored identities, reservations, history or operation outcomes differ'
 finally:
     compose('exec', '-T', 'db', 'mariadb', '-uroot', '-plocal-test-root-only', '-e', 'DROP DATABASE ' + database)
-print('PASS: HTTP registration, local email verification, login, contribution, restart, idempotent replay and isolated database restore.')
+print('PASS: HTTP registration, local email verification, login, catalog/account sync, visits, actual duration, restart, idempotent replay and isolated database restore.')

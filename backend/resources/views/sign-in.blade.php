@@ -6,6 +6,7 @@ $messages = [
     'authorization_cancelled' => __('Sign-in was cancelled. Try again or continue as a guest.'),
     'invalid_credentials' => __('The email or password is incorrect.'),
     'email_not_verified' => __('Verify your email before signing in.'),
+    'email_requested' => __('If this address is eligible, we will send an email with the next steps. After completing them, return here to sign in.'),
 ];
 @endphp
 <!doctype html><html lang="{{ $context['locale'] }}"><head>
@@ -36,6 +37,20 @@ $messages = [
 <label for="email">{{ __('Email') }}</label><input id="email" name="email" type="email" autocomplete="username" maxlength="254" required>
 <label for="password">{{ __('Password') }}</label><input id="password" name="password" type="password" autocomplete="current-password" maxlength="72" required>
 <button type="submit">{{ __('Sign in') }}</button></form>
+<details id="register" @if(($context['screen'] ?? null) === 'register') open @endif><summary>{{ __('Create an account') }}</summary>
+<form method="post" action="/auth/account/register">@csrf
+@foreach($context as $key => $value)<input type="hidden" name="{{ $key }}" value="{{ $value }}">@endforeach
+<label for="new-name">{{ __('Name') }}</label><input id="new-name" name="name" autocomplete="name" maxlength="120" value="{{ old('name') }}" required>
+<label for="new-email">{{ __('Email') }}</label><input id="new-email" name="email" type="email" autocomplete="email" maxlength="254" value="{{ old('email') }}" required>
+<label for="new-password">{{ __('Password') }}</label><input id="new-password" name="password" type="password" autocomplete="new-password" minlength="12" maxlength="72" required aria-describedby="password-help">
+<small id="password-help">{{ __('Use at least 12 characters, uppercase and lowercase letters, and a number. Maximum 72 UTF-8 bytes.') }}</small>
+<button type="submit">{{ __('Create an account') }}</button></form></details>
+@foreach(['recover' => 'Recover password', 'verify' => 'Resend verification email'] as $action => $label)
+<details><summary>{{ __($label) }}</summary><form method="post" action="/auth/account/{{ $action }}">@csrf
+@foreach($context as $key => $value)<input type="hidden" name="{{ $key }}" value="{{ $value }}">@endforeach
+<label for="{{ $action }}-email">{{ __('Email') }}</label><input id="{{ $action }}-email" name="email" type="email" autocomplete="email" maxlength="254" required>
+<button type="submit">{{ __($label) }}</button></form></details>
+@endforeach
 <p>{{ __('Your first Google or Apple sign-in creates an account. Signing in does not grant center permissions.') }}</p>
 @if($context['client'] === 'web')<a href="{{ config('identity.portal_url') }}">{{ __('Return to Generosity') }}</a>
 @else<p>{{ __('Close this window to return to the app as a guest.') }}</p>@endif

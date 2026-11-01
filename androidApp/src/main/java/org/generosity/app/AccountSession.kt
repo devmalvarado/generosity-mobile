@@ -36,7 +36,7 @@ class AccountSession(private val context: Context, private val scope: CoroutineS
     private val base = BuildConfig.API_BASE_URL.trimEnd('/')
     private val alias = "generosity.account.v1"
 
-    fun signIn() {
+    fun signIn(register: Boolean = false) {
         if (busy) return
         failed = false
         runCatching {
@@ -44,6 +44,7 @@ class AccountSession(private val context: Context, private val scope: CoroutineS
             val saved = read().put("pending", pending)
             write(saved)
             val uri = Uri.parse(base + "/auth/sign-in").buildUpon()
+                .apply { if (register) appendQueryParameter("screen", "register") }
                 .appendQueryParameter("client", "android")
                 .appendQueryParameter("locale", appState.state.value.locale.code)
                 .appendQueryParameter("state", pending.getString("state"))
@@ -80,12 +81,10 @@ class AccountSession(private val context: Context, private val scope: CoroutineS
         runAction {
             val token = read().optString("token")
             if (token.isEmpty()) return@runAction
+            read().optJSONObject("user")?.let { identify(it) }
             try {
                 identify(request("/api/v1/me", token = token).getJSONObject("user"))
-            } catch (error: Exception) {
-                appState.continueAnonymously()
-                throw error
-            }
+            } catch (error: Exception) { throw error }
         }
     }
 
@@ -100,7 +99,13 @@ class AccountSession(private val context: Context, private val scope: CoroutineS
     }
 
     private fun identify(user: JSONObject) {
+        write(read().put("user", user))
         appState.signIn(user.getLong("id").toString(), user.getString("name"), remoteAccount = true)
+    }
+
+    fun credentialFor(userId: String): String? {
+        val saved = read()
+        return saved.optString("token").takeIf { it.isNotEmpty() && saved.optJSONObject("user")?.optLong("id")?.toString() == userId }
     }
 
     private fun runAction(action: suspend () -> Unit) {

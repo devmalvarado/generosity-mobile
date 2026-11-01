@@ -1205,6 +1205,133 @@
           }
         }
       }
+    },
+    "/sync/catalog": {
+      "get": {
+        "summary": "Bounded consistent full public catalog snapshot with revision; includes removals by replacement",
+        "operationId": "get_sync_catalog",
+        "responses": {
+          "200": {
+            "description": "Current snapshot",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CatalogSnapshot"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Snapshot exceeds supported limit; retain last known data"
+          }
+        },
+        "security": []
+      }
+    },
+    "/sync/account": {
+      "get": {
+        "summary": "Owned full contribution snapshot; bounded at 5000 rows",
+        "operationId": "get_sync_account",
+        "responses": {
+          "200": {
+            "description": "Current snapshot",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AccountSnapshot"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Snapshot exceeds supported limit; retain last known data"
+          },
+          "401": {
+            "description": "Authentication required"
+          }
+        }
+      }
+    },
+    "/staff/centers": {
+      "get": {
+        "summary": "Centers assigned to the current account; no inferred roles",
+        "operationId": "get_staff_centers",
+        "responses": {
+          "200": {
+            "description": "Current snapshot",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AssignedCenters"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Snapshot exceeds supported limit; retain last known data"
+          },
+          "401": {
+            "description": "Authentication required"
+          }
+        }
+      }
+    },
+    "/visits": {
+      "post": {
+        "summary": "Record an explicit owned visit without changing center verification",
+        "operationId": "recordVisit",
+        "responses": {
+          "201": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Visit"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Stable error codes; validation errors include field keys, conflicts may include current state. HTTP 401/403/404/409/413/422/429/500.",
+            "headers": {
+              "Retry-After": {
+                "schema": {
+                  "type": "string"
+                },
+                "description": "Present when rate limited"
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "Idempotency-Key",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/VisitInput"
+              }
+            }
+          }
+        }
+      }
     }
   },
   "components": {
@@ -1224,7 +1351,7 @@
         },
         "examples": [
           {
-            "es": "\u00datiles escolares",
+            "es": "Útiles escolares",
             "en": "School supplies"
           }
         ]
@@ -1305,7 +1432,7 @@
             },
             "examples": [
               {
-                "es": "\u00datiles escolares",
+                "es": "Útiles escolares",
                 "en": "School supplies"
               }
             ]
@@ -1319,7 +1446,7 @@
             },
             "examples": [
               {
-                "es": "\u00datiles escolares",
+                "es": "Útiles escolares",
                 "en": "School supplies"
               }
             ]
@@ -1333,7 +1460,7 @@
             },
             "examples": [
               {
-                "es": "\u00datiles escolares",
+                "es": "Útiles escolares",
                 "en": "School supplies"
               }
             ]
@@ -1426,7 +1553,7 @@
             },
             "examples": [
               {
-                "es": "\u00datiles escolares",
+                "es": "Útiles escolares",
                 "en": "School supplies"
               }
             ]
@@ -1440,7 +1567,7 @@
             },
             "examples": [
               {
-                "es": "\u00datiles escolares",
+                "es": "Útiles escolares",
                 "en": "School supplies"
               }
             ]
@@ -1509,7 +1636,7 @@
             },
             "examples": [
               {
-                "es": "\u00datiles escolares",
+                "es": "Útiles escolares",
                 "en": "School supplies"
               }
             ]
@@ -1523,7 +1650,7 @@
             },
             "examples": [
               {
-                "es": "\u00datiles escolares",
+                "es": "Útiles escolares",
                 "en": "School supplies"
               }
             ]
@@ -1597,7 +1724,7 @@
             },
             "examples": [
               {
-                "es": "\u00datiles escolares",
+                "es": "Útiles escolares",
                 "en": "School supplies"
               }
             ]
@@ -1611,7 +1738,7 @@
             },
             "examples": [
               {
-                "es": "\u00datiles escolares",
+                "es": "Útiles escolares",
                 "en": "School supplies"
               }
             ]
@@ -1770,6 +1897,31 @@
           },
           "updated_at": {
             "type": "string"
+          },
+          "title": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/LocalizedText"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "quantity_unit": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "maxLength": 60
+          },
+          "actual_minutes": {
+            "type": [
+              "integer",
+              "null"
+            ],
+            "minimum": 1,
+            "maximum": 525600
           }
         },
         "required": [
@@ -1828,6 +1980,13 @@
               "null"
             ],
             "maxLength": 2000
+          },
+          "quantity_unit": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "maxLength": 60
           }
         },
         "required": [
@@ -1927,6 +2086,12 @@
           "version": {
             "type": "integer",
             "minimum": 1
+          },
+          "actual_minutes": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 525600,
+            "description": "Explicit completed time; allowed only for time fulfill/complete. Never inferred from planned minutes."
           }
         },
         "required": [
@@ -2116,6 +2281,10 @@
                 "minutes": {
                   "type": "string",
                   "pattern": "^[0-9]+$"
+                },
+                "planned_minutes": {
+                  "type": "string",
+                  "pattern": "^[0-9]+$"
                 }
               },
               "required": [
@@ -2272,6 +2441,383 @@
           "last_page",
           "next_page_url",
           "prev_page_url"
+        ]
+      },
+      "VisitInput": {
+        "type": "object",
+        "properties": {
+          "center_id": {
+            "type": "string",
+            "maxLength": 100
+          },
+          "occurred_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "explicit_action": {
+            "const": true
+          }
+        },
+        "required": [
+          "center_id",
+          "occurred_at",
+          "explicit_action"
+        ]
+      },
+      "Visit": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "user_id": {
+            "type": "integer"
+          },
+          "center_id": {
+            "type": "string"
+          },
+          "occurred_at": {
+            "type": "string"
+          },
+          "received_at": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "user_id",
+          "center_id",
+          "occurred_at",
+          "received_at"
+        ]
+      },
+      "SyncNeed": {
+        "type": "object",
+        "properties": {
+          "title": {
+            "type": "object",
+            "minProperties": 1,
+            "additionalProperties": {
+              "type": "string",
+              "maxLength": 4000
+            },
+            "examples": [
+              {
+                "es": "Útiles escolares",
+                "en": "School supplies"
+              }
+            ]
+          },
+          "description": {
+            "type": "object",
+            "minProperties": 1,
+            "additionalProperties": {
+              "type": "string",
+              "maxLength": 4000
+            },
+            "examples": [
+              {
+                "es": "Útiles escolares",
+                "en": "School supplies"
+              }
+            ]
+          },
+          "helpMethods": {
+            "type": "array",
+            "items": {
+              "enum": [
+                "goods",
+                "time",
+                "money"
+              ]
+            },
+            "minItems": 1
+          },
+          "urgent": {
+            "type": "boolean"
+          },
+          "expiresOnIsoDate": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "date"
+          },
+          "quantityRequired": {
+            "type": [
+              "integer",
+              "null"
+            ],
+            "minimum": 1,
+            "maximum": 1000000
+          },
+          "unit": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "maxLength": 60
+          },
+          "id": {
+            "type": "string"
+          },
+          "centerId": {
+            "type": "string"
+          },
+          "status": {
+            "enum": [
+              "active",
+              "covered",
+              "expired"
+            ]
+          },
+          "quantityCommitted": {
+            "type": "integer"
+          }
+        },
+        "required": [
+          "id",
+          "centerId",
+          "status",
+          "title",
+          "description",
+          "helpMethods",
+          "urgent",
+          "quantityRequired",
+          "expiresOnIsoDate"
+        ]
+      },
+      "SyncCenter": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "object",
+            "minProperties": 1,
+            "additionalProperties": {
+              "type": "string",
+              "maxLength": 4000
+            },
+            "examples": [
+              {
+                "es": "Útiles escolares",
+                "en": "School supplies"
+              }
+            ]
+          },
+          "description": {
+            "type": "object",
+            "minProperties": 1,
+            "additionalProperties": {
+              "type": "string",
+              "maxLength": 4000
+            },
+            "examples": [
+              {
+                "es": "Útiles escolares",
+                "en": "School supplies"
+              }
+            ]
+          },
+          "address": {
+            "type": "object",
+            "minProperties": 1,
+            "additionalProperties": {
+              "type": "string",
+              "maxLength": 4000
+            },
+            "examples": [
+              {
+                "es": "Útiles escolares",
+                "en": "School supplies"
+              }
+            ]
+          },
+          "categories": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "coordinates": {
+            "type": "object",
+            "properties": {
+              "latitude": {
+                "type": "number"
+              },
+              "longitude": {
+                "type": "number"
+              }
+            },
+            "required": [
+              "latitude",
+              "longitude"
+            ]
+          },
+          "contact": {
+            "type": "object",
+            "properties": {
+              "phone": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "email": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "website": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              }
+            },
+            "required": []
+          },
+          "verificationStatus": {
+            "enum": [
+              "imported",
+              "visit_signaled",
+              "officially_verified"
+            ]
+          },
+          "importedAtIsoDate": {
+            "type": "string"
+          },
+          "needs": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/SyncNeed"
+            }
+          }
+        },
+        "required": [
+          "id",
+          "name",
+          "description",
+          "address",
+          "categories",
+          "coordinates",
+          "verificationStatus",
+          "needs"
+        ]
+      },
+      "CatalogSnapshot": {
+        "type": "object",
+        "properties": {
+          "catalog": {
+            "type": "object",
+            "properties": {
+              "schemaVersion": {
+                "const": 1
+              },
+              "centers": {
+                "type": "array",
+                "maxItems": 2000,
+                "items": {
+                  "$ref": "#/components/schemas/SyncCenter"
+                }
+              }
+            },
+            "required": [
+              "schemaVersion",
+              "centers"
+            ]
+          },
+          "revision": {
+            "type": "string",
+            "pattern": "^[a-f0-9]{64}$"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "required": [
+          "catalog",
+          "revision",
+          "updatedAt"
+        ]
+      },
+      "AccountSnapshot": {
+        "type": "object",
+        "properties": {
+          "user": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "integer"
+              },
+              "name": {
+                "type": "string"
+              },
+              "email": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "id",
+              "name",
+              "email"
+            ]
+          },
+          "contributions": {
+            "type": "array",
+            "maxItems": 5000,
+            "items": {
+              "$ref": "#/components/schemas/Contribution"
+            }
+          },
+          "visits": {
+            "type": "array",
+            "maxItems": 5000,
+            "items": {
+              "$ref": "#/components/schemas/Visit"
+            }
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "required": [
+          "user",
+          "contributions",
+          "visits",
+          "updatedAt"
+        ]
+      },
+      "AssignedCenters": {
+        "type": "object",
+        "properties": {
+          "centers": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string"
+                },
+                "name": {
+                  "$ref": "#/components/schemas/LocalizedText"
+                }
+              },
+              "required": [
+                "id",
+                "name"
+              ]
+            }
+          }
+        },
+        "required": [
+          "centers"
         ]
       }
     }

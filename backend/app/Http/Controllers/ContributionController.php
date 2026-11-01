@@ -21,6 +21,7 @@ class ContributionController extends Controller
             'minutes' => 'required_if:method,time|prohibited_if:method,goods|integer|min:1|max:525600',
             'activity' => 'required_if:method,time|string|max:500',
             'availability' => 'nullable|string|max:500', 'notes' => 'nullable|string|max:2000',
+            'quantity_unit' => 'nullable|string|max:60',
             'center_id' => 'prohibited', 'user_id' => 'prohibited', 'status' => 'prohibited', 'provenance' => 'prohibited',
         ]);
 
@@ -46,6 +47,8 @@ class ContributionController extends Controller
                 'id' => (string) Str::uuid(), 'user_id' => $request->user()->id,
                 'need_id' => $need?->id, 'center_id' => $need?->center_id,
                 'provenance' => $need ? 'center_offer' : 'self_reported', 'status' => 'offered',
+                'title' => $need?->details['title'] ?? ['es' => 'Ayuda personal', 'en' => 'Personal help'],
+                'quantity_unit' => $need ? ($need->details['unit'] ?? null) : ($data['quantity_unit'] ?? null),
             ]));
             $contribution->refresh();
             $this->event($contribution, $request->user()->id, null);
@@ -56,7 +59,8 @@ class ContributionController extends Controller
 
     public function transition(Request $request, Contribution $contribution)
     {
-        $data = $request->validate(['action' => 'required|in:confirm,fulfill,cancel,complete', 'version' => 'required|integer|min:1']);
+        $data = $request->validate(['action' => 'required|in:confirm,fulfill,cancel,complete', 'version' => 'required|integer|min:1',
+            'actual_minutes' => 'sometimes|integer|min:1|max:525600']);
         $authorize = function () use ($request, $contribution, $data) {
             if (in_array($data['action'], ['confirm', 'fulfill'], true)) {
                 abort_unless($contribution->center_id && $contribution->user_id !== $request->user()->id, 403);
@@ -87,6 +91,12 @@ class ContributionController extends Controller
                 $need->save();
             }
             $before = $current->status;
+            if (isset($data['actual_minutes'])) {
+                if ($next !== 'fulfilled' || $current->method !== 'time') {
+                    throw new ApiProblem('invalid_duration', 422);
+                }
+                $current->actual_minutes = $data['actual_minutes'];
+            }
             $current->status = $next;
             $current->version++;
             $current->save();
@@ -125,7 +135,7 @@ class ContributionController extends Controller
     {
         // Quantities from unlike goods are not added into a misleading total.
         return ['groups' => Contribution::where('user_id', $request->user()->id)->whereIn('status', ['confirmed', 'fulfilled'])
-            ->selectRaw('provenance, status, COUNT(*) as contributions, COALESCE(SUM(minutes), 0) as minutes')
+            ->selectRaw('provenance, status, COUNT(*) as contributions, COALESCE(SUM(actual_minutes), 0) as minutes, COALESCE(SUM(minutes), 0) as planned_minutes')
             ->groupBy('provenance', 'status')->orderBy('provenance')->orderBy('status')->get()];
     }
 

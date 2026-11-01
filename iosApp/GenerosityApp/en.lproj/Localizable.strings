@@ -69,8 +69,46 @@
 "permissions_explanation" = "Location and notification permissions are optional. Alerts are not available yet.";
 "request_permissions" = "Manage permissions";
 
-"auth_sign_in" = "Sign in · Google, Apple or email";
+"auth_sign_in" = "Sign in";
 "auth_sign_out" = "Sign out";
 "auth_failed" = "Could not complete the request. Check your connection and try again.";
 "auth_scope" = "One Generosity account for web, Android and iOS.";
 "auth_demo_data" = "Your account is connected. The catalog, contributions and impact shown in this app are not yet connected to your online account.";
+
+// Backend synchronization and contribution forms
+"sync_refresh" = "Refresh";
+"sync_busy" = "Syncing…";
+"sync_failed" = "Could not sync. Saved data is still available; please retry.";
+"sync_auth" = "Your session expired. Sign in to send pending changes.";
+"sync_cached" = "Server catalog; the last saved copy may be shown.";
+"sync_pending" = "Saved changes waiting to sync";
+"sync_rejected" = "The server rejected this change. Check availability before creating it again.";
+"sync_discard" = "Discard rejected change";
+"offer_title" = "I want to help";
+"offer_goods_action" = "Offer goods";
+"offer_quantity" = "Quantity";
+"offer_unit" = "Unit (e.g., packs)";
+"offer_minutes" = "Planned time (minutes)";
+"offer_activity" = "Activity";
+"offer_availability" = "Availability (optional)";
+"offer_notes" = "Notes (optional)";
+"offer_send" = "Save contribution";
+"offer_cancel" = "Back";
+"offer_invalid" = "Check the quantity, time and activity before saving.";
+"personal_add" = "Record personal help";
+"contribution_cancel" = "Cancel contribution";
+"contribution_complete" = "Mark personal help as completed";
+"personal_notice" = "Self-reported; does not count as help verified by a center.";
+
+"welcome_tagline" = "Small actions, lasting impact.";
+"welcome_guest" = "Continue as a guest";
+"welcome_create" = "Create account";
+"welcome_save_failed" = "Could not save your choice. Please try again.";
+
+"contact_phone" = "Call center";
+"contact_email" = "Send email";
+"contact_website" = "Open website";
+"contact_failed" = "No app is available to open this contact.";
+
+"visit_saved" = "Visit saved. Guest visits stay on this device. This is not official verification.";
+"notifications_pending" = "These preferences are saved on this device. Alert delivery is not available yet.";

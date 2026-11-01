@@ -14,7 +14,7 @@ final class AccountSession: NSObject, ObservableObject, ASWebAuthenticationPrese
     private let service = "org.generosity.app.session"
     private let callbackScheme = "org.generosity.app.ios"
 
-    func signIn(store: GenerosityStore) {
+    func signIn(store: GenerosityStore, register: Bool = false) {
         guard !busy else { return }
         failed = false
         do {
@@ -26,6 +26,7 @@ final class AccountSession: NSObject, ObservableObject, ASWebAuthenticationPrese
                 URLQueryItem(name: "state", value: state),
                 URLQueryItem(name: "code_challenge", value: Self.challenge(verifier))
             ]
+            if register { components.queryItems?.append(URLQueryItem(name: "screen", value: "register")) }
             guard let url = components.url else { throw AuthError.invalidResponse }
             busy = true
             browser = ASWebAuthenticationSession(url: url, callbackURLScheme: callbackScheme) { [weak self, weak store] callback, error in
@@ -39,7 +40,7 @@ final class AccountSession: NSObject, ObservableObject, ASWebAuthenticationPrese
                         let code = try Self.handoff(callback, expectedState: state)
                         let result = try await self.request("/api/v1/auth/exchange", body: ["client": "ios", "code": code, "code_verifier": verifier])
                         guard let token = result["token"] as? String, let user = result["user"] as? [String: Any] else { throw AuthError.invalidResponse }
-                        try self.saveToken(token)
+                        try self.saveToken(token, user: user)
                         try self.identify(user, store: store)
                     } catch { self.failed = true }
                 }
@@ -56,11 +57,16 @@ final class AccountSession: NSObject, ObservableObject, ASWebAuthenticationPrese
         defer { busy = false }
         do {
             guard let token = try loadToken() else { return }
+            if let stored = try loadStoredSession(), let data = stored.data(using: .utf8),
+               let cached = try? JSONSerialization.jsonObject(with: data) as? [String: Any],
+               let id = cached["id"] as? Int, let name = cached["name"] as? String {
+                store.signIn(userId: String(id), displayName: name)
+            }
             let result = try await request("/api/v1/me", token: token)
             guard let user = result["user"] as? [String: Any] else { throw AuthError.invalidResponse }
             try identify(user, store: store)
         } catch {
-            store.signOut()
+            if (try? loadToken()) == nil { store.signOut() }
             failed = true
         }
     }
@@ -96,7 +102,15 @@ final class AccountSession: NSObject, ObservableObject, ASWebAuthenticationPrese
 
     private func identify(_ user: [String: Any], store: GenerosityStore) throws {
         guard let id = user["id"] as? Int, let name = user["name"] as? String else { throw AuthError.invalidResponse }
+        if let token = try loadToken() { try saveToken(token, user: user) }
         store.signIn(userId: String(id), displayName: name)
+    }
+
+    func credentialFor(_ userId: String) -> String? {
+        guard let stored = try? loadStoredSession(), let data = stored.data(using: .utf8),
+              let record = try? JSONSerialization.jsonObject(with: data) as? [String: Any],
+              let owner = record["id"] as? Int, String(owner) == userId else { return nil }
+        return record["token"] as? String
     }
 
     private func request(_ path: String, body: [String: String]? = nil, token: String? = nil) async throws -> [String: Any] {
@@ -127,6 +141,12 @@ final class AccountSession: NSObject, ObservableObject, ASWebAuthenticationPrese
     private var keyQuery: [String: Any] { [kSecClass as String: kSecClassGenericPassword, kSecAttrService as String: service, kSecAttrAccount as String: "token"] }
 
     private func loadToken() throws -> String? {
+        guard let stored = try loadStoredSession() else { return nil }
+        if let data = stored.data(using: .utf8), let record = try? JSONSerialization.jsonObject(with: data) as? [String: Any] { return record["token"] as? String }
+        return stored
+    }
+
+    private func loadStoredSession() throws -> String? {
         var query = keyQuery
         query[kSecReturnData as String] = true
         query[kSecMatchLimit as String] = kSecMatchLimitOne
@@ -137,8 +157,10 @@ final class AccountSession: NSObject, ObservableObject, ASWebAuthenticationPrese
         return token
     }
 
-    private func saveToken(_ token: String) throws {
-        let values: [String: Any] = [kSecValueData as String: Data(token.utf8), kSecAttrAccessible as String: kSecAttrAccessibleWhenUnlockedThisDeviceOnly]
+    private func saveToken(_ token: String, user: [String: Any]) throws {
+        guard let id = user["id"] as? Int else { throw AuthError.invalidResponse }
+        let data = try JSONSerialization.data(withJSONObject: ["token": token, "id": id, "name": user["name"] as? String ?? ""])
+        let values: [String: Any] = [kSecValueData as String: data, kSecAttrAccessible as String: kSecAttrAccessibleWhenUnlockedThisDeviceOnly]
         var status = SecItemUpdate(keyQuery as CFDictionary, values as CFDictionary)
         if status == errSecItemNotFound {
             status = SecItemAdd(keyQuery.merging(values) { _, new in new } as CFDictionary, nil)

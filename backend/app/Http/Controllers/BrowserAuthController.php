@@ -105,6 +105,21 @@ class BrowserAuthController extends Controller
         }
     }
 
+    public function accountAction(Request $request, string $action)
+    {
+        $context = $this->context($request);
+        app()->setLocale($context['locale']);
+        $controller = app(AuthController::class);
+        match ($action) {
+            'register' => $controller->register($request),
+            'recover' => $controller->forgot($request),
+            'verify' => $controller->resend($request),
+            default => abort(404),
+        };
+
+        return $this->view($context, 'email_requested', 202);
+    }
+
     public function exchange(Request $request)
     {
         $data = $request->validate([
@@ -156,7 +171,7 @@ class BrowserAuthController extends Controller
     private function context(Request $request): array
     {
         $data = $request->validate([
-            'client' => 'sometimes|in:web,android,ios', 'locale' => 'sometimes|in:es,en',
+            'client' => 'sometimes|in:web,android,ios', 'locale' => 'sometimes|in:es,en', 'screen' => 'sometimes|in:register',
             'code_challenge' => 'required_if:client,android,ios|string|size:43|regex:/^[a-zA-Z0-9_-]+$/D',
             'state' => 'required_if:client,android,ios|string|min:32|max:128|regex:/^[a-zA-Z0-9_-]+$/D',
         ]);

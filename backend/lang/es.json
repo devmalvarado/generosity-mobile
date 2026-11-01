@@ -21,5 +21,11 @@
   "Sign in": "Iniciar sesión",
   "Your first Google or Apple sign-in creates an account. Signing in does not grant center permissions.": "Al acceder por primera vez con Google o Apple se crea tu cuenta. No se conceden permisos de un centro por iniciar sesión.",
   "Return to Generosity": "Volver a Generosity",
-  "Close this window to return to the app as a guest.": "Puedes cerrar esta ventana para volver a la app como invitado."
+  "Close this window to return to the app as a guest.": "Puedes cerrar esta ventana para volver a la app como invitado.",
+  "If this address is eligible, we will send an email with the next steps. After completing them, return here to sign in.": "Si corresponde, enviaremos un correo con los siguientes pasos. Después de completarlos, vuelve aquí para iniciar sesión.",
+  "Create an account": "Crear cuenta",
+  "Name": "Nombre",
+  "Use at least 12 characters, uppercase and lowercase letters, and a number. Maximum 72 UTF-8 bytes.": "Usa al menos 12 caracteres, mayúsculas, minúsculas y un número. Máximo 72 bytes UTF-8.",
+  "Recover password": "Recuperar contraseña",
+  "Resend verification email": "Reenviar correo de verificación"
 }

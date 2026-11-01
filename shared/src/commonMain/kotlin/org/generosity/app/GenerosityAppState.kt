@@ -6,6 +6,11 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.CancellationException
+import kotlinx.coroutines.sync.Mutex
+import org.generosity.data.BackendStore
+import org.generosity.data.BackendFailure
+import org.generosity.data.PendingOperation
 import org.generosity.data.BundledKindnessCatalog
 import org.generosity.data.ImportedCatalogRepository
 import org.generosity.data.InMemoryContributionRepository
@@ -55,7 +60,15 @@ data class GenerosityUiState(
     val referenceIsoDate: String = "",
     val lastRejection: RejectionReason? = null,
     val visitSignalCenterId: String? = null,
-    val remoteAccount: Boolean = false
+    val visitedCenterIds: Set<String> = emptySet(),
+    val remoteAccount: Boolean = false,
+    val backendConfigured: Boolean = false,
+    val syncing: Boolean = false,
+    val writing: Boolean = false,
+    val savedOffer: Int = 0,
+    val syncError: String? = null,
+    val catalogUpdatedAt: String? = null,
+    val pendingOperations: List<PendingOperation> = emptyList()
 ) {
     val locale: SupportedLocale
         get() = localePreference.activeLocale
@@ -67,15 +80,16 @@ data class GenerosityUiState(
         get() = selectedCenter?.let { CurrentNeedsUseCase()(it.needs, referenceIsoDate) }.orEmpty()
 
     val canRecordContributions: Boolean
-        get() = !remoteAccount && ContributionPolicy().canRecordContribution(profile)
+        get() = (!remoteAccount || backendConfigured) && ContributionPolicy().canRecordContribution(profile)
 }
 
 class GenerosityAppState(
     private val scope: CoroutineScope,
+    private val backend: BackendStore? = null,
     catalog: List<KindnessCenter> = BundledKindnessCatalog.centers(),
     private val centersRepository: KindnessCenterRepository =
-        ImportedCatalogRepository(InMemoryImportedCatalogDataSource(catalog)),
-    private val needs: NeedCatalog = InMemoryNeedCatalog(catalog.flatMap { it.needs }),
+        backend ?: ImportedCatalogRepository(InMemoryImportedCatalogDataSource(catalog)),
+    private val needs: NeedCatalog = backend ?: InMemoryNeedCatalog(catalog.flatMap { it.needs }),
     private val profiles: UserProfileRepository = InMemoryUserProfileRepository(),
     private val contributions: ContributionRepository = InMemoryContributionRepository(),
     private val clock: () -> String = ::currentUtcInstant,
@@ -87,10 +101,13 @@ class GenerosityAppState(
     private val discovery = DiscoverKindnessCentersUseCase(centersRepository)
     private val recordContribution = RecordContributionUseCase(contributions, needs)
     private val impact = PersonalImpactUseCase()
+    private val syncMutex = Mutex()
+    private var refreshRequested = false
 
     private val _state = MutableStateFlow(
         GenerosityUiState(
             localePreference = initialLocalePreference,
+            backendConfigured = backend != null,
             referenceIsoDate = runCatching { utcDate(clock()) }.getOrDefault("")
         )
     )
@@ -142,14 +159,21 @@ class GenerosityAppState(
 
     fun selectCenter(centerId: String?) = update { copy(selectedCenterId = centerId, lastRejection = null) }
 
-    fun setPreferences(preferences: NotificationPreference) = update { copy(preferences = preferences) }
+    fun setPreferences(preferences: NotificationPreference) {
+        try {
+            backend?.savePreferences(_state.value.profile.id, preferences)
+            update { copy(preferences = preferences) }
+        } catch (_: Exception) { update { copy(syncError = "save_failed") } }
+    }
 
     fun signIn(userId: String, displayName: String, remoteAccount: Boolean = false) {
         scope.launch {
             val profile = UserProfile(id = userId, mode = UserMode.REGISTERED, displayName = displayName)
             profiles.saveProfile(profile)
-            update { copy(profile = profile, remoteAccount = remoteAccount) }
-            refreshContributions()
+            update { copy(profile = profile, remoteAccount = remoteAccount,
+                contributions = if (this.profile.id == userId) contributions else emptyList(),
+                impact = if (this.profile.id == userId) impact else PersonalImpact(), pendingOperations = emptyList(), visitedCenterIds = emptySet(), visitSignalCenterId = null, preferences = NotificationPreference()) }
+            refresh()
         }
     }
 
@@ -157,22 +181,26 @@ class GenerosityAppState(
         scope.launch {
             val profile = UserProfile(mode = UserMode.ANONYMOUS)
             profiles.saveProfile(profile)
-            update { copy(profile = profile, remoteAccount = false, contributions = emptyList(), impact = PersonalImpact()) }
+            update { copy(profile = profile, remoteAccount = false, contributions = emptyList(), impact = PersonalImpact(), pendingOperations = emptyList(), visitedCenterIds = emptySet(), visitSignalCenterId = null, preferences = NotificationPreference()) }
+            refresh()
         }
     }
 
     fun offerHelp(needId: String, offer: ContributionOffer) {
         scope.launch {
-            // shortcut: real accounts cannot write demo contributions; connect the contribution API next.
             val current = _state.value
-            if (current.remoteAccount) return@launch
+            if (current.remoteAccount) {
+                if (backend != null) remoteWrite(offer = true) { backend.offer(requireNotNull(current.profile.id), needId, offer) }
+                return@launch
+            }
+            if (backend != null) { update { copy(lastRejection = RejectionReason.REGISTRATION_REQUIRED) }; return@launch }
             val need = needs.needById(needId)
             if (need == null) {
                 update { copy(lastRejection = RejectionReason.NEED_NOT_FOUND) }
                 return@launch
             }
             when (val result = recordContribution(current.profile, ids(), clock(), need, offer)) {
-                is ContributionResult.Recorded -> refresh()
+                is ContributionResult.Recorded -> { update { copy(savedOffer = savedOffer + 1) }; refresh() }
                 is ContributionResult.Rejected -> update { copy(lastRejection = result.reason) }
             }
         }
@@ -182,21 +210,78 @@ class GenerosityAppState(
     fun recordPersonalHelp(offer: ContributionOffer) {
         scope.launch {
             val current = _state.value
-            if (current.remoteAccount) return@launch
+            if (current.remoteAccount) {
+                if (backend != null) remoteWrite(offer = true) { backend.offer(requireNotNull(current.profile.id), null, offer) }
+                return@launch
+            }
+            if (backend != null) { update { copy(lastRejection = RejectionReason.REGISTRATION_REQUIRED) }; return@launch }
             when (val result = recordContribution(current.profile, ids(), clock(), need = null, offer = offer)) {
-                is ContributionResult.Recorded -> refreshContributions()
+                is ContributionResult.Recorded -> { update { copy(savedOffer = savedOffer + 1) }; refreshContributions() }
                 is ContributionResult.Rejected -> update { copy(lastRejection = result.reason) }
             }
         }
     }
 
-    fun signalVisit(centerId: String) = update { copy(visitSignalCenterId = centerId) }
+    fun signalVisit(centerId: String) {
+        if (backend == null) { update { copy(visitSignalCenterId = centerId) }; return }
+        val owner = _state.value.profile.id
+        scope.launch { remoteWrite { backend.recordVisit(owner, centerId, clock()) } }
+    }
 
     fun dismissRejection() = update { copy(lastRejection = null) }
 
+    fun transitionContribution(id: String, action: String, version: Int) {
+        val userId = _state.value.profile.id ?: return
+        val server = backend ?: return
+        scope.launch { remoteWrite { server.transition(userId, id, action, version) } }
+    }
+
+    fun discardRejectedOperation(id: String) {
+        val userId = _state.value.profile.id ?: return
+        val server = backend ?: return
+        scope.launch { remoteWrite { server.discard(userId, id) } }
+    }
+
+    private suspend fun remoteWrite(offer: Boolean = false, write: suspend () -> Unit) {
+        if (_state.value.writing) return
+        update { copy(writing = true, syncError = null) }
+        try {
+            write()
+            if (offer) update { copy(savedOffer = savedOffer + 1) }
+            refreshContributions()
+            refresh()
+        } catch (error: CancellationException) { throw error }
+        catch (error: Exception) { update { copy(syncError = (error as? BackendFailure)?.code ?: "save_failed") } }
+        finally { update { copy(writing = false) } }
+    }
+
     private suspend fun refresh() {
-        refreshCenters()
-        refreshContributions()
+        if (!syncMutex.tryLock()) { refreshRequested = true; return }
+        try {
+            refreshCenters()
+            try { refreshContributions() }
+            catch (error: CancellationException) { throw error }
+            catch (_: Exception) { update { copy(syncError = "cache_unavailable") } }
+            if (backend != null) {
+                update { copy(syncing = true, syncError = null) }
+                // Public discovery must still refresh when the private session expires.
+                try { backend.refreshCatalog(); refreshCenters(); update { copy(catalogUpdatedAt = backend.updatedAt) } }
+                catch (error: CancellationException) { throw error }
+                catch (error: Exception) { update { copy(syncError = (error as? BackendFailure)?.code ?: "sync_failed") } }
+                val userId = _state.value.profile.id
+                if (userId != null && _state.value.remoteAccount) {
+                    backend.flush(userId) { _state.value.profile.id == userId && _state.value.remoteAccount }
+                    if (_state.value.profile.id == userId) backend.refreshAccount(userId)
+                }
+                refreshContributions()
+            }
+        } catch (error: CancellationException) { throw error }
+        catch (error: Exception) { update { copy(syncError = (error as? BackendFailure)?.code ?: "sync_failed") } }
+        finally {
+            update { copy(syncing = false) }
+            syncMutex.unlock()
+            if (refreshRequested) { refreshRequested = false; scope.launch { refresh() } }
+        }
     }
 
     private suspend fun refreshCenters() {
@@ -223,9 +308,12 @@ class GenerosityAppState(
         val profile = _state.value.profile
         val history = ContributionPolicy().visibleHistory(
             profile,
-            profile.id?.let { contributions.contributionsForUser(it) }.orEmpty()
+            profile.id?.let { if (backend != null) backend.history(it) else contributions.contributionsForUser(it) }.orEmpty()
         )
-        update { copy(contributions = history, impact = impact(history)) }
+        val pending = profile.id?.let { backend?.pending(it) }.orEmpty()
+        val visits = backend?.visitedCenters(profile.id).orEmpty()
+        val preferences = backend?.preferences(profile.id) ?: _state.value.preferences
+        update { if (this.profile.id == profile.id) copy(contributions = history, impact = impact(history), pendingOperations = pending, visitedCenterIds = visits, preferences = preferences) else this }
     }
 
     private fun update(transform: GenerosityUiState.() -> GenerosityUiState) {

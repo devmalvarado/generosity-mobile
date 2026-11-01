@@ -30,6 +30,17 @@ class SocialAuthTest extends TestCase
         Http::preventStrayRequests();
     }
 
+    public function test_hosted_registration_and_recovery_preserve_native_context(): void
+    {
+        \Illuminate\Support\Facades\Notification::fake();
+        $context = ['client' => 'ios', 'locale' => 'es', 'state' => str_repeat('s', 43), 'code_challenge' => str_repeat('c', 43)];
+        $this->get('/auth/sign-in?'.http_build_query($context))->assertOk()->assertSee('Crear cuenta')->assertSee('Recuperar contraseña');
+        $this->post('/auth/account/register', $context + ['name' => 'María Peña', 'email' => 'native@example.test', 'password' => 'StrongPassword123'])->assertStatus(202)->assertSee('siguientes pasos')->assertSee(str_repeat('c', 43));
+        $this->assertDatabaseHas('users', ['email' => 'native@example.test', 'email_verified_at' => null]);
+        $this->post('/auth/account/recover', $context + ['email' => 'unknown@example.test'])->assertStatus(202)->assertSee('siguientes pasos');
+        $this->assertGuest();
+    }
+
     public function test_missing_configuration_disables_providers_and_does_not_create_attempts(): void
     {
         config(['identity.google.client_secret' => null]);
