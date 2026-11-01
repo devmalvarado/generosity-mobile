@@ -244,7 +244,7 @@
     <section class="centers" id="centros" tabindex="-1">
       <div class="centers-copy">
         <h2 data-i18n="centers.title">¿Administras un centro? Publicar todavía no está conectado.</h2>
-        <p class="lead" data-i18n="centers.lead">Una cuenta de centro será distinta a la de una persona. Hoy no hay proveedor de autenticación, así que nadie inicia sesión ni recibe permiso para publicar.</p>
+        <p class="lead" data-i18n="centers.lead">La misma cuenta Generosity puede tener permisos de un centro. Los concede personal autorizado; iniciar sesión no permite publicar por sí solo.</p>
         <ul>
           <li data-i18n="centers.item1">El perfil, los horarios y el contacto quedan para cuando exista un espacio de personal.</li>
           <li data-i18n="centers.item2">Una necesidad publicada tendrá cantidad, prioridad y cierre. Esta página no la guarda.</li>
@@ -285,9 +285,16 @@
 
     <section class="access" id="acceso" tabindex="-1">
       <div class="access-card">
-        <p class="pending-flag" data-i18n="access.flag">Conexión pendiente</p>
+        <p class="pending-flag" data-i18n="access.flag">Cuenta Generosity</p>
         <h2 data-i18n="access.title">Acceso de centros</h2>
-        <p class="lead" data-i18n="access.lead">La autenticación todavía no está conectada. No hay un proveedor elegido. Esta pantalla no inicia sesión, no asigna permisos y no publica nada.</p>
+        <p class="lead" data-i18n="access.lead">Usa tu cuenta Generosity en web, Android y iOS con Google, Apple o correo. El acceso se abre en otra pestaña para conservar tu borrador. Iniciar sesión no concede permisos de un centro ni publica necesidades.</p>
+        <p id="account-status" role="status" aria-live="polite"></p>
+        <div class="account-actions">
+          <a id="account-sign-in" class="solid" target="_blank" rel="noopener" href="https://api.generosity.global/auth/sign-in?client=web&amp;locale=es" hidden data-i18n="auth.signIn">Iniciar sesión o vincular cuenta ↗</a>
+          <button id="account-sign-out" class="ghost" type="button" hidden data-i18n="auth.signOut">Cerrar sesión</button>
+          <button id="account-retry" class="ghost" type="button" data-i18n="auth.retry">Comprobar conexión</button>
+        </div>
+        <noscript>Para iniciar sesión necesitas JavaScript. / JavaScript is required to sign in.</noscript>
         <p id="destino-previsto"></p>
         <p data-i18n="access.keep">Si escribiste una necesidad en esta página, el texto sigue en el formulario. No se envió a ningún servidor.</p>
         <p><a class="ghost" href="#publicar" data-i18n="access.back">Volver al borrador local</a></p>

@@ -62,7 +62,7 @@ class GenerosityAppStateIos(
 
     fun selectCenter(centerId: String?) = state.selectCenter(centerId)
 
-    fun signIn(userId: String, displayName: String) = state.signIn(userId, displayName)
+    fun signIn(userId: String, displayName: String) = state.signIn(userId, displayName, remoteAccount = true)
 
     fun continueAnonymously() = state.continueAnonymously()
 

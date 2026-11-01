@@ -54,7 +54,8 @@ data class GenerosityUiState(
     val preferences: NotificationPreference = NotificationPreference(),
     val referenceIsoDate: String = "",
     val lastRejection: RejectionReason? = null,
-    val visitSignalCenterId: String? = null
+    val visitSignalCenterId: String? = null,
+    val remoteAccount: Boolean = false
 ) {
     val locale: SupportedLocale
         get() = localePreference.activeLocale
@@ -66,7 +67,7 @@ data class GenerosityUiState(
         get() = selectedCenter?.let { CurrentNeedsUseCase()(it.needs, referenceIsoDate) }.orEmpty()
 
     val canRecordContributions: Boolean
-        get() = ContributionPolicy().canRecordContribution(profile)
+        get() = !remoteAccount && ContributionPolicy().canRecordContribution(profile)
 }
 
 class GenerosityAppState(
@@ -143,11 +144,11 @@ class GenerosityAppState(
 
     fun setPreferences(preferences: NotificationPreference) = update { copy(preferences = preferences) }
 
-    fun signIn(userId: String, displayName: String) {
+    fun signIn(userId: String, displayName: String, remoteAccount: Boolean = false) {
         scope.launch {
             val profile = UserProfile(id = userId, mode = UserMode.REGISTERED, displayName = displayName)
             profiles.saveProfile(profile)
-            update { copy(profile = profile) }
+            update { copy(profile = profile, remoteAccount = remoteAccount) }
             refreshContributions()
         }
     }
@@ -156,13 +157,15 @@ class GenerosityAppState(
         scope.launch {
             val profile = UserProfile(mode = UserMode.ANONYMOUS)
             profiles.saveProfile(profile)
-            update { copy(profile = profile, contributions = emptyList(), impact = PersonalImpact()) }
+            update { copy(profile = profile, remoteAccount = false, contributions = emptyList(), impact = PersonalImpact()) }
         }
     }
 
     fun offerHelp(needId: String, offer: ContributionOffer) {
         scope.launch {
+            // shortcut: real accounts cannot write demo contributions; connect the contribution API next.
             val current = _state.value
+            if (current.remoteAccount) return@launch
             val need = needs.needById(needId)
             if (need == null) {
                 update { copy(lastRejection = RejectionReason.NEED_NOT_FOUND) }
@@ -179,6 +182,7 @@ class GenerosityAppState(
     fun recordPersonalHelp(offer: ContributionOffer) {
         scope.launch {
             val current = _state.value
+            if (current.remoteAccount) return@launch
             when (val result = recordContribution(current.profile, ids(), clock(), need = null, offer = offer)) {
                 is ContributionResult.Recorded -> refreshContributions()
                 is ContributionResult.Rejected -> update { copy(lastRejection = result.reason) }

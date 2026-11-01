@@ -49,6 +49,7 @@ backend explicitly requested by the user, without claiming they are built.
 - Align existing native screens with the reference's brand, spacing, hierarchy and compact controls, preserving their flows and truthful data states.
 - Connect iOS to shared state and add durable local storage, real clocks and native maps/location.
 - Add backend identity integration, durable data, authenticated APIs and multiuser synchronization.
+- Scope Google, Apple and Facebook entry to Generosity web/Android/iOS; add private mobile contact details and possession verification only for explicitly approved feature gates. Facebook and mobile verification are planned extensions, not implemented behavior.
 - Replace fixed contribution values with forms; add server-authorized transitions, history and correctly labeled impact.
 - Load and refresh a real catalog; implement contacts, visit queues, reminders and opted-in nearby/urgent alerts.
 - Extend the existing public landing with an authenticated, mobile-first center workspace for need publishing and contribution actions through the same backend.
@@ -61,7 +62,7 @@ backend explicitly requested by the user, without claiming they are built.
 - `mobile-welcome`: First-screen appearance, navigation and accessibility.
 - `mobile-visual-alignment`: Reference-aligned visual language and screen composition for existing native flows, with accessible layouts and visual acceptance.
 - `local-data-persistence`: Restart recovery, account isolation, offline outbox and conflict handling.
-- `user-authentication`: Real registration, sign-in, session recovery and sign-out.
+- `user-authentication`: Real registration, Generosity-only social sign-in, explicit linking, session recovery, sign-out and feature-specific mobile verification.
 - `imported-center-catalog`: Validated file import, backend catalog refresh and last-known-good data.
 - `app-time`: Real timestamps, expiration and timezone-aware reminders.
 - `contribution-lifecycle`: Center-authorized transitions, cancellation, capacity and self-reported activities.
@@ -74,7 +75,7 @@ backend explicitly requested by the user, without claiming they are built.
 - `mobile-platform-architecture`: Native/shared parity and the expanded backend boundary.
 - `kindness-center-discovery`: Real maps, location/manual fallback and contact actions.
 - `kindness-center-needs`: Server-synchronized status and remaining capacity.
-- `user-contribution-profile`: Input forms, detailed history and truthful impact units.
+- `user-contribution-profile`: Input forms, detailed history, truthful impact units and private progressive mobile contact settings.
 - `location-notifications`: Effective delivery, reminder management and opt-out handling.
 - `center-verification-signals`: Durable explicit visits and authenticated upload without official verification.
 

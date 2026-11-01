@@ -68,4 +68,10 @@
     <string name="registration_required">Inicia sesión para registrar una aportación. Puedes explorar sin cuenta.</string>
     <string name="permissions_explanation">Los permisos de ubicación y notificaciones son opcionales. Las alertas aún no están disponibles.</string>
     <string name="request_permissions">Gestionar permisos</string>
+    <string name="auth_sign_in">Iniciar sesión · Google, Apple o correo</string>
+    <string name="auth_sign_out">Cerrar sesión</string>
+    <string name="auth_failed">No se pudo completar la solicitud. Revisa tu conexión e inténtalo de nuevo.</string>
+    <string name="auth_scope">Una cuenta Generosity para web, Android y iOS.</string>
+    <string name="auth_demo_data">Tu cuenta está conectada. El catálogo, las aportaciones y el impacto de esta app todavía no están conectados a tu cuenta en línea.</string>
+    <string name="nearby_foreground_only">Las comprobaciones cercanas ocurren solo con la aplicación abierta. No son detección permanente.</string>
 </resources>

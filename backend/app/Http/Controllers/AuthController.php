@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Exceptions\ApiProblem;
 use App\Models\User;
+use App\Services\AccountLogin;
 use Illuminate\Auth\Events\PasswordReset;
 use Illuminate\Auth\Events\Verified;
 use Illuminate\Http\Request;
@@ -12,6 +13,7 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Password;
 use Illuminate\Support\Str;
 use Illuminate\Validation\Rules\Password as PasswordRule;
+use Laravel\Sanctum\PersonalAccessToken;
 
 class AuthController extends Controller
 {
@@ -39,22 +41,10 @@ class AuthController extends Controller
         $data = $request->validate(['email' => 'required|email|max:254', 'password' => $this->passwordRules(false), 'device_name' => 'required|string|max:100']);
 
         return DB::transaction(function () use ($data) {
-            $user = User::where('email', strtolower($data['email']))->lockForUpdate()->first();
-            // Hash::check also runs for unknown accounts to avoid the fast failure path.
-            $hash = $user?->password ?? '$2y$12$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2uheWG/igi.';
-            if (! Hash::check($data['password'], $hash) || ! $user) {
-                throw new ApiProblem('invalid_credentials', 401);
-            }
-            if (! $user->hasVerifiedEmail()) {
-                throw new ApiProblem('email_not_verified', 403);
-            }
-            if (Hash::needsRehash($user->password)) {
-                $user->update(['password' => $data['password']]);
-            }
-            $expires = now()->addDays(7);
-            $token = $user->createToken($data['device_name'], ['*'], $expires);
+            $accounts = app(AccountLogin::class);
+            $user = $accounts->password($data['email'], $data['password']);
 
-            return response()->json(['token' => $token->plainTextToken, 'token_type' => 'Bearer', 'expires_at' => $expires->toISOString(), 'user' => $user]);
+            return response()->json($accounts->token($user, $data['device_name']));
         });
     }
 
@@ -102,11 +92,20 @@ class AuthController extends Controller
             return Password::reset($data, function (User $user, string $password) {
                 $user->forceFill(['password' => $password, 'remember_token' => Str::random(60)])->save();
                 $user->tokens()->delete();
+                DB::table('sessions')->where('user_id', $user->id)->delete();
+                DB::table('auth_handoffs')->where('user_id', $user->id)->delete();
+                DB::table('auth_attempts')->where('link_user_id', $user->id)->delete();
                 event(new PasswordReset($user));
             });
         });
         if ($status !== Password::PasswordReset) {
             throw new ApiProblem('invalid_reset_token', 422);
+        }
+
+        if ($request->hasSession()) {
+            auth('web')->logout();
+            $request->session()->invalidate();
+            $request->session()->regenerateToken();
         }
 
         return response()->json(['status' => 'password_reset']);
@@ -116,7 +115,14 @@ class AuthController extends Controller
     {
         DB::transaction(function () use ($request) {
             User::whereKey($request->user()->id)->lockForUpdate()->firstOrFail();
-            $request->user()->currentAccessToken()->delete();
+            $token = $request->user()->currentAccessToken();
+            if ($token instanceof PersonalAccessToken) {
+                $token->delete();
+            } elseif ($request->hasSession()) {
+                auth('web')->logout();
+                $request->session()->invalidate();
+                $request->session()->regenerateToken();
+            }
         });
 
         return response()->noContent();

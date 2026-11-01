@@ -16,7 +16,9 @@
 		9DA89B3EDAA68C28F54491E8 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = A329E8A62A3E8AF8AC06A055 /* Assets.xcassets */; };
 		A48B6DC7CFB09A9777E77CAE /* SharedPresentation.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8784F2F4ED055CB97F1F795 /* SharedPresentation.swift */; };
 		B4D7978343E3F095C9FA760C /* Localization.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE45DA191AAC92EFE7F80454 /* Localization.swift */; };
+		BA8DD7E4456D4050D2C0E39F /* AccountSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = 985FFFE5BD68ED75796DEF66 /* AccountSession.swift */; };
 		C636C3B927045689B84B2905 /* PermissionService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E481E322B0BB9A78995FE75 /* PermissionService.swift */; };
+		C72D9ED021713CDAB29553DB /* AccountSessionTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 240C698EB5B5AE811FAA4D18 /* AccountSessionTests.swift */; };
 		D4A040A45D61651DD3250F13 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 4E63ACB49B747A8A82AAF2B7 /* Localizable.strings */; };
 		DB7D0BF395448E188FF449E9 /* Localizable.stringsdict in Resources */ = {isa = PBXBuildFile; fileRef = F630248C351628F9595862C4 /* Localizable.stringsdict */; };
 		E00AAC8194E6A18F0A852051 /* GenerosityApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1D7757C9C78879CA45846739 /* GenerosityApp.swift */; };
@@ -45,6 +47,7 @@
 		0F7611EC10D04F452C208FB6 /* GenerosityVisualTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GenerosityVisualTests.swift; sourceTree = "<group>"; };
 		13E8FF7199A91D36C45F77D2 /* es */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = es; path = es.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		1D7757C9C78879CA45846739 /* GenerosityApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GenerosityApp.swift; sourceTree = "<group>"; };
+		240C698EB5B5AE811FAA4D18 /* AccountSessionTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountSessionTests.swift; sourceTree = "<group>"; };
 		2A3BD546735DBA1B6FCBF1B5 /* Generosity.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = Generosity.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		37BD51B2133A26B9C463D1B1 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
 		4762199ADF64A196FDD60FAB /* LocalizationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalizationTests.swift; sourceTree = "<group>"; };
@@ -54,6 +57,7 @@
 		553F5D8AAA7C55879E0C5371 /* GenerosityUiChecklistTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GenerosityUiChecklistTests.swift; sourceTree = "<group>"; };
 		58057346B63330745D033FAD /* GenerosityUITests.xctest */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.cfbundle; path = GenerosityUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		913C043915D0438C7C5EF819 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		985FFFE5BD68ED75796DEF66 /* AccountSession.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountSession.swift; sourceTree = "<group>"; };
 		A329E8A62A3E8AF8AC06A055 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		B4FE93304ED7A88E85D158AD /* GenerosityLocalizationTests.xctest */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.cfbundle; path = GenerosityLocalizationTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		D8784F2F4ED055CB97F1F795 /* SharedPresentation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SharedPresentation.swift; sourceTree = "<group>"; };
@@ -107,6 +111,7 @@
 		A874792CBF089E80FE4F5DF6 /* GenerosityLocalizationTests */ = {
 			isa = PBXGroup;
 			children = (
+				240C698EB5B5AE811FAA4D18 /* AccountSessionTests.swift */,
 				4762199ADF64A196FDD60FAB /* LocalizationTests.swift */,
 			);
 			path = GenerosityLocalizationTests;
@@ -115,6 +120,7 @@
 		BF699DE653FF15A9D5F23DF0 /* GenerosityApp */ = {
 			isa = PBXGroup;
 			children = (
+				985FFFE5BD68ED75796DEF66 /* AccountSession.swift */,
 				A329E8A62A3E8AF8AC06A055 /* Assets.xcassets */,
 				4FBDC30DB116ADDF12CF4133 /* ContentView.swift */,
 				1D7757C9C78879CA45846739 /* GenerosityApp.swift */,
@@ -255,6 +261,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C72D9ED021713CDAB29553DB /* AccountSessionTests.swift in Sources */,
 				3068D1D15ED9BF004CC2831B /* LocalizationTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -263,6 +270,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				BA8DD7E4456D4050D2C0E39F /* AccountSession.swift in Sources */,
 				722BD5074D69067488EBACA8 /* ContentView.swift in Sources */,
 				E00AAC8194E6A18F0A852051 /* GenerosityApp.swift in Sources */,
 				8E24A613189DCB5846BE84F8 /* GenerosityTheme.swift in Sources */,
@@ -443,6 +451,7 @@
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CURRENT_PROJECT_VERSION = 1;
 				GENERATE_INFOPLIST_FILE = YES;
+				GENEROSITY_API_URL = "https://api.generosity.global";
 				INFOPLIST_FILE = GenerosityApp/Info.plist;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -464,6 +473,7 @@
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CURRENT_PROJECT_VERSION = 1;
 				GENERATE_INFOPLIST_FILE = YES;
+				GENEROSITY_API_URL = "https://api.generosity.global";
 				INFOPLIST_FILE = GenerosityApp/Info.plist;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;

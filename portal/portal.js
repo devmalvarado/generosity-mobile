@@ -8,6 +8,15 @@
 
   var copy = {
     es: {
+      "auth.signIn": "Iniciar sesión o vincular cuenta ↗",
+      "auth.signOut": "Cerrar sesión",
+      "auth.retry": "Comprobar conexión",
+      "auth.loading": "Comprobando tu sesión…",
+      "auth.guest": "Estás navegando como invitado.",
+      "auth.failed": "No se pudo conectar con el servicio de cuentas. Puedes seguir navegando como invitado y reintentar.",
+      "auth.signedIn": "Sesión iniciada: ",
+      "auth.logoutFailed": "No se pudo cerrar la sesión. Conservamos tu sesión; vuelve a intentarlo.",
+
       "meta.title": "Generosity — Encuentra dónde ayudar, cerca de ti",
       "meta.description": "Generosity quiere conectar a las personas con centros de bondad. Esta página es una demostración: no envía donaciones ni publica necesidades.",
       "skip": "Saltar al contenido",
@@ -93,7 +102,7 @@
       "center.hogar": "Hogar Futuros Brillantes",
       "center.puente": "Puente de Salud Abierta",
       "centers.title": "¿Administras un centro? Publicar todavía no está conectado.",
-      "centers.lead": "Una cuenta de centro será distinta a la de una persona. Hoy no hay proveedor de autenticación, así que nadie inicia sesión ni recibe permiso para publicar.",
+      "centers.lead": "La misma cuenta Generosity puede tener permisos de un centro. Los concede personal autorizado; iniciar sesión no permite publicar por sí solo.",
       "centers.item1": "El perfil, los horarios y el contacto quedan para cuando exista un espacio de personal.",
       "centers.item2": "Una necesidad publicada tendrá cantidad, prioridad y cierre. Esta página no la guarda.",
       "centers.item3": "Confirmar lo que otras personas traigan también depende de ese espacio, que no está en esta etapa.",
@@ -114,9 +123,9 @@
       "priority.medium": "Media",
       "priority.high": "Alta",
       "priority.urgent": "Urgente",
-      "access.flag": "Conexión pendiente",
+      "access.flag": "Cuenta Generosity",
       "access.title": "Acceso de centros",
-      "access.lead": "La autenticación todavía no está conectada. No hay un proveedor elegido. Esta pantalla no inicia sesión, no asigna permisos y no publica nada.",
+      "access.lead": "Usa tu cuenta Generosity en web, Android y iOS con Google, Apple o correo. El acceso se abre en otra pestaña para conservar tu borrador. Iniciar sesión no concede permisos de un centro ni publica necesidades.",
       "access.keep": "Si escribiste una necesidad en esta página, el texto sigue en el formulario. No se envió a ningún servidor.",
       "access.back": "Volver al borrador local",
       "access.dest.none": "No hay un destino previsto guardado.",
@@ -148,6 +157,15 @@
       "publish.notSent": "No se envió nada y no se publicó nada. La autenticación no está conectada, así que no hay sesión ni revisión."
     },
     en: {
+      "auth.signIn": "Sign in or link account ↗",
+      "auth.signOut": "Sign out",
+      "auth.retry": "Check connection",
+      "auth.loading": "Checking your session…",
+      "auth.guest": "You are browsing as a guest.",
+      "auth.failed": "Could not reach the account service. You can keep browsing as a guest and retry.",
+      "auth.signedIn": "Signed in: ",
+      "auth.logoutFailed": "Could not sign out. Your session is still active; please retry.",
+
       "meta.title": "Generosity — Find where to help, near you",
       "meta.description": "Generosity aims to connect people with kindness centers. This page is a demonstration: it does not send donations or publish needs.",
       "skip": "Skip to content",
@@ -233,7 +251,7 @@
       "center.hogar": "Hogar Futuros Brillantes",
       "center.puente": "Puente de Salud Abierta",
       "centers.title": "Do you run a center? Publishing is not connected yet.",
-      "centers.lead": "A center account will be different from a personal one. There is no authentication provider today, so nobody signs in and nobody receives permission to publish.",
+      "centers.lead": "The same Generosity account can have center permissions. Authorized staff grant these permissions; signing in alone does not allow publishing.",
       "centers.item1": "Profile, hours, and contact wait until a staff space exists.",
       "centers.item2": "A published need will have a quantity, a priority, and a closing time. This page does not store it.",
       "centers.item3": "Confirming what other people bring also depends on that space, which is not part of this stage.",
@@ -254,9 +272,9 @@
       "priority.medium": "Medium",
       "priority.high": "High",
       "priority.urgent": "Urgent",
-      "access.flag": "Connection pending",
+      "access.flag": "Generosity account",
       "access.title": "Center access",
-      "access.lead": "Authentication is not connected yet. No provider has been chosen. This screen does not sign anyone in, does not assign permissions, and does not publish anything.",
+      "access.lead": "Use your Generosity account on web, Android and iOS with Google, Apple or email. Sign-in opens in another tab to keep your draft. Signing in does not grant center permissions or publish needs.",
       "access.keep": "If you wrote a need on this page, the text is still in the form. It was not sent to any server.",
       "access.back": "Back to the local draft",
       "access.dest.none": "No intended destination is saved.",
@@ -595,10 +613,67 @@
     renderSearch();
     renderPublish();
     renderDestination();
+    renderAccount();
     if (menuAnnounced) menuStatus.textContent = drawer.hidden ? t("menu.closed") : t("menu.open");
   }
+
+  var apiOrigin = "https://api.generosity.global";
+  var accountUser = null;
+  var accountStatus = "auth.loading";
+  var accountCsrf = "";
+  var accountBusy = false;
+  var accountLink = document.getElementById("account-sign-in");
+  var accountLogout = document.getElementById("account-sign-out");
+  var accountRetry = document.getElementById("account-retry");
+
+  function renderAccount() {
+    document.getElementById("account-status").textContent = accountStatus === "auth.signedIn"
+      ? t(accountStatus) + accountUser.name : t(accountStatus);
+    accountLink.href = apiOrigin + "/auth/sign-in?client=web&locale=" + effective();
+    accountLink.hidden = !accountCsrf;
+    accountLogout.hidden = !accountUser;
+    accountLogout.disabled = accountBusy || !accountCsrf;
+    accountRetry.disabled = accountBusy;
+  }
+
+  async function checkAccount() {
+    if (accountBusy) return;
+    accountBusy = true;
+    accountStatus = "auth.loading";
+    renderAccount();
+    try {
+      var response = await fetch(apiOrigin + "/auth/session", { credentials: "include", cache: "no-store", signal: AbortSignal.timeout(10000), headers: { Accept: "application/json" } });
+      if (!response.ok) throw new Error("Account unavailable");
+      var data = await response.json();
+      if (typeof data.csrf_token !== "string" || !data.csrf_token) throw new Error("Invalid session");
+      accountCsrf = data.csrf_token;
+      accountUser = data.user && typeof data.user.name === "string" ? data.user : null;
+      accountStatus = accountUser ? "auth.signedIn" : "auth.guest";
+    } catch (_) {
+      accountStatus = "auth.failed";
+      accountCsrf = "";
+    } finally { accountBusy = false; renderAccount(); }
+  }
+
+  accountRetry.addEventListener("click", checkAccount);
+  accountLogout.addEventListener("click", async function () {
+    if (accountBusy || !accountCsrf) return;
+    accountBusy = true;
+    renderAccount();
+    try {
+      var response = await fetch(apiOrigin + "/auth/logout", { method: "POST", credentials: "include", cache: "no-store", signal: AbortSignal.timeout(10000), headers: { Accept: "application/json", "X-CSRF-TOKEN": accountCsrf } });
+      if (!response.ok) throw new Error("Logout failed");
+      accountUser = null;
+      accountCsrf = "";
+      accountStatus = "auth.guest";
+    } catch (_) { accountStatus = "auth.logoutFailed"; }
+    finally { accountBusy = false; renderAccount(); }
+    if (!accountUser) checkAccount();
+  });
+  window.addEventListener("focus", checkAccount);
 
   var stored = readStored();
   if (stored === "es" || stored === "en" || stored === "system") mode = stored;
   applyAll();
+  checkAccount();
 })();

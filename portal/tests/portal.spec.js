@@ -2,6 +2,10 @@ const { test, expect } = require("@playwright/test");
 const path = require("path");
 
 const WIDTHS = [320, 360, 390, 768, 1280];
+test.beforeEach(async ({ page }) => {
+  await page.route("https://api.generosity.global/**", route => route.abort());
+});
+
 const BASE = "http://127.0.0.1:47321/";
 
 async function overflow(page) {
@@ -119,7 +123,7 @@ test.describe("forms and language", () => {
     await expect(page).toHaveURL(/#acceso\?destino=publicar$/);
     await expect(page.locator("#destino-previsto")).toContainText("publicar una necesidad");
     await expect(page.locator("#destino-previsto")).toContainText("no concede permiso");
-    await expect(page.locator("#acceso")).toContainText("no inicia sesión");
+    await expect(page.locator("#acceso")).toContainText("no concede permisos");
     await expect(page.locator("input[type=password]")).toHaveCount(0);
     await expect(page.locator("#titulo")).toHaveValue(payload);
     await expect(page.locator("#nombre-centro")).toHaveValue("Centro Norte");
@@ -191,6 +195,7 @@ test.describe("locale resolution", () => {
       Object.defineProperty(navigator, "languages", { configurable: true, get: () => langs });
       Object.defineProperty(navigator, "language", { configurable: true, get: () => langs[0] });
     });
+    await context.route("https://api.generosity.global/**", route => route.fulfill({ status: 503, body: "unavailable" }));
     const page = await context.newPage();
     await page.goto(BASE);
     await expect(page.locator("html")).toHaveAttribute("lang", "es");
@@ -227,6 +232,7 @@ test.describe("locale resolution", () => {
         return setItem.call(this, key, value);
       };
     });
+    await context.route("https://api.generosity.global/**", route => route.fulfill({ status: 503, body: "unavailable" }));
     const page = await context.newPage();
     const errors = [];
     page.on("pageerror", (error) => errors.push(String(error)));

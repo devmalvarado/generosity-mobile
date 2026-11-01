@@ -68,3 +68,9 @@
 "registration_required" = "Sign in to record a contribution. You can browse without an account.";
 "permissions_explanation" = "Location and notification permissions are optional. Alerts are not available yet.";
 "request_permissions" = "Manage permissions";
+
+"auth_sign_in" = "Sign in · Google, Apple or email";
+"auth_sign_out" = "Sign out";
+"auth_failed" = "Could not complete the request. Check your connection and try again.";
+"auth_scope" = "One Generosity account for web, Android and iOS.";
+"auth_demo_data" = "Your account is connected. The catalog, contributions and impact shown in this app are not yet connected to your online account.";

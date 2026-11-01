@@ -42,6 +42,25 @@ class GenerosityAppStateTest {
     }
 
     @Test
+    fun remoteAccountsCannotCreateDemoContributions() = runTest {
+        val app = GenerosityAppState(backgroundScope)
+        app.start()
+        app.signIn("42", "María Peña", remoteAccount = true)
+        runCurrent()
+        val need = app.state.value.centers.flatMap { it.needs }.first { it.quantityRemaining != null }
+        app.offerHelp(need.id, ContributionOffer(HelpMethod.GOODS, quantity = 1))
+        app.recordPersonalHelp(ContributionOffer(HelpMethod.GOODS, note = "example"))
+        runCurrent()
+        assertTrue(app.state.value.remoteAccount)
+        assertEquals(false, app.state.value.canRecordContributions)
+        assertTrue(app.state.value.contributions.isEmpty())
+        app.continueAnonymously()
+        runCurrent()
+        assertEquals(false, app.state.value.profile.isRegistered)
+        assertEquals(false, app.state.value.remoteAccount)
+    }
+
+    @Test
     fun anUnknownNeedCannotBeRecordedAsPersonalHelp() = runTest {
         val app = GenerosityAppState(backgroundScope)
         app.signIn("user-1", "Ana")

@@ -3,7 +3,7 @@
   "info": {
     "title": "Generosity API",
     "version": "1.0.0",
-    "description": "PHP/MySQL backend. Requests and responses are UTF-8 JSON. UTC timestamps; expiry dates are inclusive UTC days. Bearer-only authentication (7-day tokens); no cookie authentication. Idempotency keys are per-account UUIDs retained with committed operations. Same-key retries replay the exact success after current authorization; changed validated content conflicts. Need status denotes publication, not native lifecycle: clients derive covered/expired using quantities and expiry. Money is never accepted. No incremental sync contract yet."
+    "description": "PHP/MySQL backend. Requests and responses are UTF-8 JSON. UTC timestamps; expiry dates are inclusive UTC days. Native authentication uses 7-day Sanctum bearer tokens. Explicitly configured first-party Generosity browser origins use HttpOnly Laravel sessions with CSRF on writes. Google/Apple sign-in is hosted at /auth/sign-in; native codes are exchanged at /auth/exchange. Other institute platforms are excluded. Idempotency keys are per-account UUIDs retained with committed operations. Same-key retries replay the exact success after current authorization; changed validated content conflicts. Need status denotes publication, not native lifecycle: clients derive covered/expired using quantities and expiry. Money is never accepted. No incremental sync contract yet."
   },
   "servers": [
     {
@@ -1123,6 +1123,88 @@
           }
         }
       }
+    },
+    "/auth/exchange": {
+      "post": {
+        "summary": "Exchange a one-use native sign-in code bound to PKCE S256",
+        "security": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "code",
+                  "code_verifier",
+                  "client"
+                ],
+                "properties": {
+                  "code": {
+                    "type": "string",
+                    "minLength": 64,
+                    "maxLength": 64
+                  },
+                  "code_verifier": {
+                    "type": "string",
+                    "minLength": 43,
+                    "maxLength": 128
+                  },
+                  "client": {
+                    "type": "string",
+                    "enum": [
+                      "android",
+                      "ios"
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Seven-day Sanctum bearer token and verified user; never returned in a redirect URL",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "token",
+                    "token_type",
+                    "expires_at",
+                    "user"
+                  ],
+                  "properties": {
+                    "token": {
+                      "type": "string"
+                    },
+                    "token_type": {
+                      "const": "Bearer"
+                    },
+                    "expires_at": {
+                      "type": "string",
+                      "format": "date-time"
+                    },
+                    "user": {
+                      "$ref": "#/components/schemas/User"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Expired, consumed, or mismatched handoff"
+          },
+          "422": {
+            "description": "Invalid request"
+          },
+          "429": {
+            "description": "Rate limited"
+          }
+        }
+      }
     }
   },
   "components": {
@@ -1142,7 +1224,7 @@
         },
         "examples": [
           {
-            "es": "Útiles escolares",
+            "es": "\u00datiles escolares",
             "en": "School supplies"
           }
         ]
@@ -1223,7 +1305,7 @@
             },
             "examples": [
               {
-                "es": "Útiles escolares",
+                "es": "\u00datiles escolares",
                 "en": "School supplies"
               }
             ]
@@ -1237,7 +1319,7 @@
             },
             "examples": [
               {
-                "es": "Útiles escolares",
+                "es": "\u00datiles escolares",
                 "en": "School supplies"
               }
             ]
@@ -1251,7 +1333,7 @@
             },
             "examples": [
               {
-                "es": "Útiles escolares",
+                "es": "\u00datiles escolares",
                 "en": "School supplies"
               }
             ]
@@ -1344,7 +1426,7 @@
             },
             "examples": [
               {
-                "es": "Útiles escolares",
+                "es": "\u00datiles escolares",
                 "en": "School supplies"
               }
             ]
@@ -1358,7 +1440,7 @@
             },
             "examples": [
               {
-                "es": "Útiles escolares",
+                "es": "\u00datiles escolares",
                 "en": "School supplies"
               }
             ]
@@ -1427,7 +1509,7 @@
             },
             "examples": [
               {
-                "es": "Útiles escolares",
+                "es": "\u00datiles escolares",
                 "en": "School supplies"
               }
             ]
@@ -1441,7 +1523,7 @@
             },
             "examples": [
               {
-                "es": "Útiles escolares",
+                "es": "\u00datiles escolares",
                 "en": "School supplies"
               }
             ]
@@ -1515,7 +1597,7 @@
             },
             "examples": [
               {
-                "es": "Útiles escolares",
+                "es": "\u00datiles escolares",
                 "en": "School supplies"
               }
             ]
@@ -1529,7 +1611,7 @@
             },
             "examples": [
               {
-                "es": "Útiles escolares",
+                "es": "\u00datiles escolares",
                 "en": "School supplies"
               }
             ]

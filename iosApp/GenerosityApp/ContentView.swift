@@ -5,6 +5,7 @@ import Shared
 
 struct ContentView: View {
     @StateObject private var store = GenerosityStore()
+    @StateObject private var account = AccountSession()
     @Environment(\.scenePhase) private var scenePhase
     @State private var nearbyNotifications = false
     @State private var urgentNotifications = false
@@ -17,7 +18,7 @@ struct ContentView: View {
                 .tabItem { Label(L10n.text(.tabMap, locale: locale), systemImage: "map") }
             discovery(showMap: false)
                 .tabItem { Label(L10n.text(.tabList, locale: locale), systemImage: "list.bullet") }
-            ProfileView(locale: locale, state: store.state)
+            ProfileView(locale: locale, state: store.state, account: account, store: store)
                 .tabItem { Label(L10n.text(.tabProfile, locale: locale), systemImage: "person") }
             SettingsView(
                 locale: locale, languageMode: Binding(get: { store.languageMode }, set: store.setLocale),
@@ -30,8 +31,12 @@ struct ContentView: View {
         .environment(\.locale, Locale(identifier: locale.rawValue))
         .environment(\.layoutDirection, Locale.Language(identifier: locale.rawValue).characterDirection == .rightToLeft ? .rightToLeft : .leftToRight)
         .onChange(of: scenePhase) { phase in
-            if phase == .active { store.onResume() }
+            if phase == .active {
+                store.onResume()
+                Task { await account.restore(store: store) }
+            }
         }
+        .task { await account.restore(store: store) }
         .onReceive(NotificationCenter.default.publisher(for: NSLocale.currentLocaleDidChangeNotification)) { _ in
             store.refreshDeviceLanguages()
         }
@@ -277,6 +282,8 @@ private struct NeedView: View {
 private struct ProfileView: View {
     let locale: AppLocale
     let state: GenerosityUiState
+    @ObservedObject var account: AccountSession
+    let store: GenerosityStore
     var body: some View {
         NavigationStack {
             ScrollView {
@@ -287,6 +294,14 @@ private struct ProfileView: View {
                             .font(.headline).frame(maxWidth: .infinity, alignment: .leading)
                     }
                     .padding(16).background(GenPalette.surface, in: RoundedRectangle(cornerRadius: 12))
+                    Button(L10n.resource(state.profile.isRegistered ? "auth_sign_out" : "auth_sign_in", locale: locale)) {
+                        if state.profile.isRegistered { Task { await account.signOut(store: store) } }
+                        else { account.signIn(store: store) }
+                    }.buttonStyle(.borderedProminent).disabled(account.busy)
+                    if account.busy { ProgressView() }
+                    if account.failed { Text(L10n.resource("auth_failed", locale: locale)).foregroundStyle(.red).accessibilityAddTraits(.updatesFrequently) }
+                    Text(L10n.resource("auth_scope", locale: locale)).font(.footnote)
+                    if state.remoteAccount { Text(L10n.resource("auth_demo_data", locale: locale)).font(.footnote) }
                     VStack(alignment: .leading, spacing: 8) {
                         Text(L10n.resource("points_title", locale: locale)).font(.subheadline)
                         Text(L10n.resource("unavailable", locale: locale)).font(.title2.weight(.bold))

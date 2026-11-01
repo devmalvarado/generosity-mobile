@@ -219,3 +219,26 @@ The Kotlin-specific evidence remains available on the preserved mockup branch.
 - [x] 17.8 Restyle Android Profile/Impact, Settings and existing form states; verify labeled units/provenance, guest/empty/unavailable states and no invented points, duration, balances or achievement panels.
 - [x] 17.9 Restyle equivalent SwiftUI Profile/Impact, Settings and form states; verify the same data semantics and that visual changes do not restore sample-only business logic.
 - [ ] 17.10 Record Android/iOS screenshot baselines and reference comparison using the matrix in docs/testing/mobile-ui-checks.md; test Spanish/English, small/large phones, enlarged text, keyboard/screen-reader access, supported appearance modes and failure states, and rerun navigation/flow regressions before marking visual alignment complete.
+
+## 18. Generosity-Only Social Sign-In
+
+- [x] 18.1 Specify Google and Apple for Generosity web/Android/iOS, explicit account linking, missing-configuration behavior and exclusion of institute-wide SSO.
+- [x] 18.2 Implement server authorization-code exchange, signed ID-token validation, browser binding, one-use attempts and subject-based identities; test replay, invalid claims, email collisions, linking and private-relay email.
+- [x] 18.3 Implement HttpOnly browser sessions, exact-origin CORS, CSRF and mobile-first account entry in the existing portal; test guest, signed-in, unavailable and failed-logout states in Chromium/WebKit.
+- [x] 18.4 Implement native PKCE handoff and secure session storage adapters; remove Android's fixed sample login and gate remote accounts from demo contribution writes; compile both clients and test PKCE/callback/shared-state boundaries.
+- [ ] 18.5 Configure Google Cloud OAuth consent/client credentials and Apple Developer Services ID/key/domain; complete live authorization, cancellation, account linking, private relay, restart, expiry and logout on web and physical Android/iOS devices.
+- [ ] 18.6 Deploy the API to api.generosity.global with HTTPS, secure host-only sessions, exact Generosity CORS/stateful origins, real database/SMTP and scheduled auth cleanup; verify the existing main-only landing workflow remains separate.
+- [ ] 18.7 Add Facebook server configuration and authorization adapter using the existing hosted entry/session boundaries; test app-bound identity validation, denied permission, invalid state, wrong browser, expiry, replay and unavailable configuration without adding native provider SDKs.
+- [ ] 18.8 Add pending email completion for social identities without trusted verified email; test absent/unverified email, existing-email collisions, explicit linking without provider email and no account merge or premature protected access.
+- [ ] 18.9 Expose Facebook through hosted web/native entry with Spanish/English states; test cancellation, existing-account resolution, linking, PKCE handoff and unchanged guest access across web, Android and iOS.
+- [ ] 18.10 Configure the Meta app and server-only credentials, verify applicable publication/privacy/data-deletion requirements, and record real web/Android/iOS acceptance before enabling Facebook; do not treat fixture tests as live approval.
+
+## 19. Progressive Mobile Contact and Verification
+
+- [ ] 19.1 Approve the action/purpose/recipient matrix requiring verified mobile contact; document delivery provider/channel, countries, challenge lifetime/retry limits, send/cost caps and retention/removal policy while preserving no-phone beneficiary and assisted-participation routes.
+- [ ] 19.2 Add private account mobile contact storage, E.164 normalization and verification metadata; test international/invalid input, account isolation, scoped disclosure, removal and exclusion from public payloads/logs/analytics.
+- [ ] 19.3 Implement account/number/purpose-bound one-use verification with the selected delivery provider; test invalid/expired/reused/superseded codes, resend and attempt limits, provider outage, concurrent verification and recent-reauthenticated replacement/removal without takeover or automatic account merging.
+- [ ] 19.4 Enforce the approved phone requirements in backend action authorization and expose verification state/errors to shared KMP contracts; test direct API bypass, stale client state, revoked proof and preservation of unrelated account operations.
+- [ ] 19.5 Add Android account settings and progressive phone prompts using shared server state; test Spanish/English labels, international input, accessibility, failed verification, cancellation, account switching and unsent-draft preservation without automatic resubmission.
+- [ ] 19.6 Add equivalent iOS settings and progressive prompts through the shared bridge; verify the same behavior and VoiceOver/keyboard access without a separate Swift-only verification authority.
+- [ ] 19.7 Add mobile-first web contact settings/prompts with session/CSRF protection; test missing/unverified/verified states, explicit sharing, safe draft preservation and cross-client state consistency, then record live delivery acceptance for supported countries before activation.
