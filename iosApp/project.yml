@@ -20,6 +20,10 @@ targets:
         excludes: [Info.plist]
     dependencies:
       - package: SharedBridge
+    preBuildScripts:
+      - name: Check design resources
+        script: python3 "$SRCROOT/../scripts/generate-design-system.py" --check
+        basedOnDependencyAnalysis: false
     settings:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: org.generosity.app

@@ -3,6 +3,50 @@ Bring the existing Generosity native screens closer to the supplied visual refer
 
 ## ADDED Requirements
 
+### Requirement: Shared Design Source Across Native and Web
+Android, iOS, the public/center portal and hosted account/legal pages SHALL
+derive Generosity color roles, font configuration and common dimensions from
+one versioned design file. Native components SHALL retain their platform
+behavior and text scaling. Google/Apple branded controls SHALL retain provider
+styling. Logo masters SHALL be separate editable vectors; a single generation
+command SHALL update platform assets and web exports without editing screens.
+
+#### Scenario: Change the brand's primary action color
+- **WHEN** a maintainer changes the shared action color and regenerates resources
+- **THEN** Android, iOS, portal and account actions consume the new value, with light/dark text contrast checked before publication
+
+#### Scenario: Change typography or a logo
+- **WHEN** configured fonts or a master logo are changed and resources are regenerated
+- **THEN** existing screen components consume the new font configuration or logo resources, native text remains scalable, and unsupported or uninstalled font/asset inputs are not advertised as verified
+
+#### Scenario: Prevent stale platform output
+- **WHEN** a generated theme or brand asset differs from its source configuration
+- **THEN** native builds and web publication checks fail with a regeneration instruction, without modifying production or silently publishing only one platform's theme
+
+### Requirement: Validated Build-Time Design Resources
+Generation SHALL validate semantic light/dark color pairs, font configuration,
+common dimensions and SVG masters. Configured normal-text pairs SHALL meet
+4.5:1 contrast and touch targets SHALL be at least 48dp Android / 44pt iOS /
+44px web. Native builds and web/API publication SHALL reject generated-resource
+drift. Installed mobile versions SHALL receive regenerated themes through app
+updates.
+
+#### Scenario: Reject an unreadable action color
+- **WHEN** a proposed primary action color leaves its configured text below 4.5:1 in either appearance
+- **THEN** design validation fails and the maintainer must correct the pair before the build/publication check can pass
+
+#### Scenario: Keep hosted authentication resources scoped
+- **WHEN** the account and legal pages load the shared theme
+- **THEN** they consume their same-origin generated CSS without importing the landing's remote font stylesheet or changing provider-branded buttons
+
+#### Scenario: Rebuild a brand change consistently
+- **WHEN** logo masters or shared tokens change
+- **THEN** the maintainer regenerates and commits affected native/web resources together, and stale declarations or manifest-tracked assets fail the read-only consistency check
+
+#### Scenario: Reject unsupported source assets
+- **WHEN** a color is not a six-digit sRGB value or a master SVG contains unsupported elements or transforms
+- **THEN** generation fails explicitly without accepting the input as a valid design resource
+
 ### Requirement: Reference-Aligned Visual Language
 Both native apps SHALL use the reference's Generosity wordmark, light neutral surfaces, dark readable text, orange primary/selected accents and distinct category cues. Typography, spacing, icon weight and control styling SHALL be consistent across discovery, details, needs, profile and settings. Welcome SHALL retain its separate mobile-welcome contract. Device frames and promotional content SHALL not become app UI.
 

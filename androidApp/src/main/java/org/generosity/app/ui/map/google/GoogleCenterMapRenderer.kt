@@ -2,6 +2,10 @@ package org.generosity.app.ui.map.google
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.isSystemInDarkTheme
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.ui.graphics.toArgb
+import org.generosity.app.ui.GenColors
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -45,6 +49,13 @@ object GoogleCenterMapRenderer : CenterMapRenderer {
         modifier: Modifier
     ) {
         val context = LocalContext.current
+        val selectedColor = MaterialTheme.colorScheme.primary
+        val otherColor = if (isSystemInDarkTheme()) GenColors.categoryOtherDark else GenColors.categoryOtherLight
+        val markerHues = remember(selectedColor, otherColor) {
+            listOf(selectedColor, otherColor).map { color ->
+                FloatArray(3).also { android.graphics.Color.colorToHSV(color.toArgb(), it) }[0]
+            }
+        }
         var attempt by remember { mutableIntStateOf(0) }
         val servicesAvailable = remember(context, attempt) {
             GoogleApiAvailability.getInstance().isGooglePlayServicesAvailable(context) == ConnectionResult.SUCCESS
@@ -79,9 +90,9 @@ object GoogleCenterMapRenderer : CenterMapRenderer {
                                         title = marker.title,
                                         icon = BitmapDescriptorFactory.defaultMarker(
                                             if (marker.centerId == selectedCenterId) {
-                                                BitmapDescriptorFactory.HUE_ORANGE
+                                                markerHues[0]
                                             } else {
-                                                BitmapDescriptorFactory.HUE_RED
+                                                markerHues[1]
                                             }
                                         ),
                                         onClick = {

@@ -68,7 +68,7 @@ fun GenerosityApp(
             Scaffold(
                 topBar = {
                     Surface {
-                        Row(Modifier.fillMaxWidth().statusBarsPadding().padding(horizontal = 16.dp, vertical = 8.dp)) {
+                        Row(Modifier.fillMaxWidth().statusBarsPadding().padding(horizontal = GenSpace.lg, vertical = GenSpace.sm)) {
                             BrandWordmark()
                         }
                     }
@@ -77,17 +77,17 @@ fun GenerosityApp(
                     if (!WindowInsets.isImeVisible) {
                         if (LocalDensity.current.fontScale > 1.4f) {
                             Surface {
-                                Column(Modifier.navigationBarsPadding().padding(8.dp), verticalArrangement = Arrangement.spacedBy(4.dp)) {
+                                Column(Modifier.navigationBarsPadding().padding(GenSpace.sm), verticalArrangement = Arrangement.spacedBy(GenSpace.xs)) {
                                     AppTab.entries.chunked(2).forEach { pair ->
-                                        Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                                        Row(horizontalArrangement = Arrangement.spacedBy(GenSpace.sm)) {
                                             pair.forEach { appTab ->
                                                 Row(
-                                                    Modifier.weight(1f).heightIn(min = 48.dp)
-                                                        .background(if (tab == appTab) MaterialTheme.colorScheme.primaryContainer else MaterialTheme.colorScheme.surface, RoundedCornerShape(12.dp))
+                                                    Modifier.weight(1f).heightIn(min = GenSize.androidTouch)
+                                                        .background(if (tab == appTab) MaterialTheme.colorScheme.primaryContainer else MaterialTheme.colorScheme.surface, RoundedCornerShape(GenRadius.card))
                                                         .selectable(tab == appTab, role = Role.Tab) { tab = appTab }
-                                                        .testTag("tab-" + appTab.name.lowercase()).padding(8.dp),
+                                                        .testTag("tab-" + appTab.name.lowercase()).padding(GenSpace.sm),
                                                     verticalAlignment = Alignment.CenterVertically,
-                                                    horizontalArrangement = Arrangement.spacedBy(8.dp)
+                                                    horizontalArrangement = Arrangement.spacedBy(GenSpace.sm)
                                                 ) {
                                                     AppIcon(appTab.icon, tint = MaterialTheme.colorScheme.primary)
                                                     Text(appTab.label(locale), Modifier.weight(1f), style = MaterialTheme.typography.labelMedium)
@@ -144,7 +144,7 @@ private fun DiscoveryScreen(
             state = listState,
             modifier = Modifier.testTag("discovery-scroll"),
             contentPadding = PaddingValues(16.dp),
-            verticalArrangement = Arrangement.spacedBy(16.dp)
+            verticalArrangement = Arrangement.spacedBy(GenSpace.lg)
         ) {
             item { SyncStatus(state, appState) }
             item {
@@ -155,7 +155,7 @@ private fun DiscoveryScreen(
                     modifier = Modifier.fillMaxWidth(), singleLine = true,
                     keyboardOptions = KeyboardOptions(imeAction = ImeAction.Search),
                     keyboardActions = KeyboardActions(onSearch = { keyboard?.hide() }),
-                    shape = RoundedCornerShape(12.dp),
+                    shape = RoundedCornerShape(GenRadius.card),
                     leadingIcon = { AppIcon(R.drawable.ic_search) },
                     label = { Text(TextKey.SEARCH_PLACEHOLDER.label(locale)) }
                 )
@@ -173,8 +173,8 @@ private fun DiscoveryScreen(
                 }
                 state.selectedCenter?.let { center ->
                     item(key = "selected-preview") {
-                        Surface(shape = RoundedCornerShape(12.dp), shadowElevation = 2.dp) {
-                            Column(Modifier.padding(12.dp)) {
+                        Surface(shape = RoundedCornerShape(GenRadius.card), shadowElevation = 2.dp) {
+                            Column(Modifier.padding(GenSpace.md)) {
                                 Text(localizedString(R.string.selected_center, locale), style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.primary)
                                 CenterIdentity(locale, center)
                                 TextButton(onClick = {
@@ -192,8 +192,8 @@ private fun DiscoveryScreen(
                     Surface(
                         modifier = Modifier.fillMaxWidth().clickable(role = Role.Button) { appState.selectCenter(center.id) }
                             .testTag("center-" + center.id),
-                        shape = RoundedCornerShape(12.dp)
-                    ) { Box(Modifier.padding(12.dp)) { CenterIdentity(locale, center) } }
+                        shape = RoundedCornerShape(GenRadius.card)
+                    ) { Box(Modifier.padding(GenSpace.md)) { CenterIdentity(locale, center) } }
                 }
             }
             state.selectedCenter?.let { center ->
@@ -218,24 +218,24 @@ private fun CategoryFilters(locale: SupportedLocale, selectedCategories: Set<Cen
         CenterCategory.entries.forEach { category ->
             FilterChip(
                 selected = category in selectedCategories, onClick = { onToggle(category) },
-                modifier = Modifier.heightIn(min = 48.dp),
+                modifier = Modifier.heightIn(min = GenSize.androidTouch),
                 label = { Text(category.label(locale)) },
                 leadingIcon = if (category in selectedCategories) ({ Text("✓") }) else null
             )
         }
     }
     if (LocalDensity.current.fontScale > 1.4f) {
-        FlowRow(horizontalArrangement = Arrangement.spacedBy(8.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) { chips() }
+        FlowRow(horizontalArrangement = Arrangement.spacedBy(GenSpace.sm), verticalArrangement = Arrangement.spacedBy(GenSpace.sm)) { chips() }
     } else {
-        Row(Modifier.horizontalScroll(rememberScrollState()), horizontalArrangement = Arrangement.spacedBy(8.dp)) { chips() }
+        Row(Modifier.horizontalScroll(rememberScrollState()), horizontalArrangement = Arrangement.spacedBy(GenSpace.sm)) { chips() }
     }
 }
 
 @Composable
 private fun CenterIdentity(locale: SupportedLocale, center: KindnessCenter) {
-    Row(horizontalArrangement = Arrangement.spacedBy(12.dp), verticalAlignment = Alignment.CenterVertically) {
+    Row(horizontalArrangement = Arrangement.spacedBy(GenSpace.md), verticalAlignment = Alignment.CenterVertically) {
         CategoryBadge(center.categories.firstOrNull())
-        Column(Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(4.dp)) {
+        Column(Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(GenSpace.xs)) {
             Text(center.name.resolve(locale), fontWeight = FontWeight.SemiBold)
             Text(center.address.resolve(locale), style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
             Text(center.verificationStatus.label(locale), style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
@@ -250,10 +250,10 @@ private fun CenterDetail(
     onOfferGoods: (String) -> Unit, onOfferTime: (String) -> Unit
 ) {
     Column(
-        Modifier.fillMaxWidth().background(MaterialTheme.colorScheme.surface).padding(16.dp).testTag("detail-" + center.id),
-        verticalArrangement = Arrangement.spacedBy(16.dp)
+        Modifier.fillMaxWidth().background(MaterialTheme.colorScheme.surface).padding(GenSpace.lg).testTag("detail-" + center.id),
+        verticalArrangement = Arrangement.spacedBy(GenSpace.lg)
     ) {
-        CategoryBadge(center.categories.firstOrNull(), 52)
+        CategoryBadge(center.categories.firstOrNull(), 52.dp)
         Text(center.name.resolve(locale), style = MaterialTheme.typography.headlineSmall, fontWeight = FontWeight.Bold)
         Text(center.categories.map { it.label(locale) }.joinToString(" · "), style = MaterialTheme.typography.labelLarge, color = MaterialTheme.colorScheme.primary)
         Text(center.address.resolve(locale), style = MaterialTheme.typography.bodyMedium, color = MaterialTheme.colorScheme.onSurfaceVariant)
@@ -280,11 +280,11 @@ private fun CenterDetail(
 
 @Composable
 private fun NeedRow(locale: SupportedLocale, need: CenterNeed, remoteAccount: Boolean, onOfferGoods: (String) -> Unit, onOfferTime: (String) -> Unit) {
-    Row(horizontalArrangement = Arrangement.spacedBy(12.dp)) {
-        Box(Modifier.size(40.dp).background(MaterialTheme.colorScheme.primaryContainer, RoundedCornerShape(10.dp)), contentAlignment = Alignment.Center) {
+    Row(horizontalArrangement = Arrangement.spacedBy(GenSpace.md)) {
+        Box(Modifier.size(40.dp).background(MaterialTheme.colorScheme.primaryContainer, RoundedCornerShape(GenRadius.control)), contentAlignment = Alignment.Center) {
             AppIcon(if (HelpMethod.GOODS in need.helpMethods) R.drawable.ic_gift else R.drawable.ic_clock, tint = MaterialTheme.colorScheme.onPrimaryContainer)
         }
-        Column(Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(8.dp)) {
+        Column(Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(GenSpace.sm)) {
             val priority = when (need.priority) {
                 NeedPriority.URGENT -> R.string.urgent
                 NeedPriority.HIGH -> R.string.priority_high
@@ -298,7 +298,7 @@ private fun NeedRow(locale: SupportedLocale, need: CenterNeed, remoteAccount: Bo
             need.quantityRemaining?.let { Text(localizedQuantity(R.plurals.remaining_units, it, locale), style = MaterialTheme.typography.labelLarge) }
             Text(need.helpMethods.map { it.label(locale) }.joinToString(" · "), style = MaterialTheme.typography.bodySmall)
             if (HelpMethod.MONEY in need.helpMethods) Text(TextKey.MONEY_BOUNDARY.label(locale), style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
-            FlowRow(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+            FlowRow(horizontalArrangement = Arrangement.spacedBy(GenSpace.sm)) {
                 if (HelpMethod.GOODS in need.helpMethods) {
                     Button(onClick = { onOfferGoods(need.id) }, enabled = !remoteAccount) { Text(localizedString(R.string.offer_goods_action, locale)) }
                 }
@@ -315,11 +315,11 @@ private fun ProfileScreen(state: GenerosityUiState, appState: GenerosityAppState
     val locale = state.locale
     var personalMethod by remember { mutableStateOf<HelpMethod?>(null) }
     personalMethod?.let { OfferDialog(state, appState, null, it) { personalMethod = null } }
-    Column(Modifier.fillMaxSize().verticalScroll(rememberScrollState()).padding(16.dp), verticalArrangement = Arrangement.spacedBy(20.dp)) {
+    Column(Modifier.fillMaxSize().verticalScroll(rememberScrollState()).padding(GenSpace.lg), verticalArrangement = Arrangement.spacedBy(GenSpace.xl)) {
         Text(TextKey.TAB_PROFILE.label(locale), style = MaterialTheme.typography.headlineSmall, fontWeight = FontWeight.Bold)
-        Surface(shape = RoundedCornerShape(12.dp)) {
-            Row(Modifier.fillMaxWidth().padding(16.dp), horizontalArrangement = Arrangement.spacedBy(12.dp), verticalAlignment = Alignment.CenterVertically) {
-                CategoryBadge(null, 52)
+        Surface(shape = RoundedCornerShape(GenRadius.card)) {
+            Row(Modifier.fillMaxWidth().padding(GenSpace.lg), horizontalArrangement = Arrangement.spacedBy(GenSpace.md), verticalAlignment = Alignment.CenterVertically) {
+                CategoryBadge(null, 52.dp)
                 Column(Modifier.weight(1f)) {
                     Text(if (state.profile.isRegistered) state.profile.displayName ?: TextKey.REGISTERED_PROFILE.label(locale) else TextKey.ANONYMOUS_PROFILE.label(locale),
                         fontWeight = FontWeight.SemiBold)
@@ -327,7 +327,7 @@ private fun ProfileScreen(state: GenerosityUiState, appState: GenerosityAppState
                         Text(localizedString(if (state.profile.isRegistered) R.string.auth_sign_out else R.string.auth_sign_in, locale))
                     }
                     if (!state.profile.isRegistered) {
-                        OutlinedButton(onClick = onCreate, enabled = !authBusy, modifier = Modifier.heightIn(min = 48.dp)) {
+                        OutlinedButton(onClick = onCreate, enabled = !authBusy, modifier = Modifier.heightIn(min = GenSize.androidTouch)) {
                             Text(localizedString(R.string.welcome_create, locale))
                         }
                     }
@@ -338,8 +338,8 @@ private fun ProfileScreen(state: GenerosityUiState, appState: GenerosityAppState
                 }
             }
         }
-        Surface(color = MaterialTheme.colorScheme.primary, contentColor = MaterialTheme.colorScheme.onPrimary, shape = RoundedCornerShape(12.dp)) {
-            Column(Modifier.fillMaxWidth().padding(20.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
+        Surface(color = MaterialTheme.colorScheme.primary, contentColor = MaterialTheme.colorScheme.onPrimary, shape = RoundedCornerShape(GenRadius.card)) {
+            Column(Modifier.fillMaxWidth().padding(GenSpace.xl), verticalArrangement = Arrangement.spacedBy(GenSpace.sm)) {
                 Text(localizedString(R.string.points_title, locale), style = MaterialTheme.typography.labelLarge)
                 Text(localizedString(R.string.unavailable, locale), style = MaterialTheme.typography.headlineSmall, fontWeight = FontWeight.Bold)
                 Text(TextKey.GENEROSITY_POINTS.label(locale), style = MaterialTheme.typography.bodySmall)
@@ -348,13 +348,13 @@ private fun ProfileScreen(state: GenerosityUiState, appState: GenerosityAppState
         SyncStatus(state, appState)
         if (state.canRecordContributions) {
             Text(localizedString(R.string.personal_add, locale), style = MaterialTheme.typography.titleMedium)
-            Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+            Row(horizontalArrangement = Arrangement.spacedBy(GenSpace.sm)) {
                 Button(onClick = { personalMethod = HelpMethod.GOODS }) { Text(localizedString(R.string.offer_goods_action, locale)) }
                 Button(onClick = { personalMethod = HelpMethod.TIME }) { Text(TextKey.OFFER_TIME.label(locale)) }
             }
         }
         Text(TextKey.IMPACT_TITLE.label(locale), style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.Bold)
-        FlowRow(horizontalArrangement = Arrangement.spacedBy(12.dp), verticalArrangement = Arrangement.spacedBy(12.dp)) {
+        FlowRow(horizontalArrangement = Arrangement.spacedBy(GenSpace.md), verticalArrangement = Arrangement.spacedBy(GenSpace.md)) {
             Metric(localizedString(R.string.centers_supported, locale), if (state.profile.isRegistered) localizedNumber(state.impact.centersSupported, locale) else "—")
             Metric(localizedString(R.string.needs_supported, locale), if (state.profile.isRegistered) localizedNumber(state.impact.needsSupported, locale) else "—")
         }
@@ -362,7 +362,7 @@ private fun ProfileScreen(state: GenerosityUiState, appState: GenerosityAppState
         Text(localizedString(R.string.history, locale), style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.Bold)
         if (state.contributions.isEmpty()) EmptyMessage(TextKey.CONTRIBUTION_HISTORY_EMPTY.label(locale))
         state.contributions.forEach { contribution ->
-            Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
+            Column(verticalArrangement = Arrangement.spacedBy(GenSpace.xs)) {
                 Text(contribution.title.resolve(locale), fontWeight = FontWeight.SemiBold)
                 val status = when (contribution.status) {
                     ContributionStatus.OFFERED -> R.string.contribution_offered
@@ -388,8 +388,8 @@ private fun ProfileScreen(state: GenerosityUiState, appState: GenerosityAppState
 
 @Composable
 private fun Metric(label: String, value: String) {
-    Surface(shape = RoundedCornerShape(12.dp)) {
-        Column(Modifier.widthIn(min = 140.dp, max = 220.dp).padding(16.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
+    Surface(shape = RoundedCornerShape(GenRadius.card)) {
+        Column(Modifier.widthIn(min = 140.dp, max = 220.dp).padding(GenSpace.lg), verticalArrangement = Arrangement.spacedBy(GenSpace.sm)) {
             AppIcon(R.drawable.ic_heart, tint = MaterialTheme.colorScheme.primary)
             Text(value, style = MaterialTheme.typography.headlineSmall, fontWeight = FontWeight.Bold)
             Text(label, style = MaterialTheme.typography.bodySmall)
@@ -399,24 +399,24 @@ private fun Metric(label: String, value: String) {
 
 @Composable
 private fun EmptyMessage(text: String) {
-    Text(text, Modifier.fillMaxWidth().padding(vertical = 12.dp), color = MaterialTheme.colorScheme.onSurfaceVariant, style = MaterialTheme.typography.bodyMedium)
+    Text(text, Modifier.fillMaxWidth().padding(vertical = GenSpace.md), color = MaterialTheme.colorScheme.onSurfaceVariant, style = MaterialTheme.typography.bodyMedium)
 }
 
 @Composable
 private fun SettingsScreen(state: GenerosityUiState, appState: GenerosityAppState, onLanguageSelected: (SupportedLocale?) -> Unit, savingLanguage: Boolean, languageSaveFailed: Boolean) {
     val locale = state.locale
     val preferences = state.preferences
-    Column(Modifier.fillMaxSize().verticalScroll(rememberScrollState()).padding(16.dp), verticalArrangement = Arrangement.spacedBy(16.dp)) {
+    Column(Modifier.fillMaxSize().verticalScroll(rememberScrollState()).padding(GenSpace.lg), verticalArrangement = Arrangement.spacedBy(GenSpace.lg)) {
         Text(TextKey.TAB_SETTINGS.label(locale), style = MaterialTheme.typography.headlineSmall, fontWeight = FontWeight.Bold)
         Text(localizedString(R.string.language, locale), style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.SemiBold)
-        Surface(shape = RoundedCornerShape(12.dp)) {
-            Column(Modifier.selectableGroup().padding(horizontal = 12.dp)) {
+        Surface(shape = RoundedCornerShape(GenRadius.card)) {
+            Column(Modifier.selectableGroup().padding(horizontal = GenSpace.md)) {
                 (listOf<SupportedLocale?>(null) + SupportedLocale.entries).forEach { choice ->
                     val selected = state.localePreference.selectedLocale == choice
                     val label = choice?.nativeName ?: localizedString(R.string.language_device, locale)
                     Row(Modifier.fillMaxWidth().testTag("language-" + (choice?.code ?: "system"))
                         .selectable(selected, enabled = !savingLanguage, role = Role.RadioButton) { onLanguageSelected(choice) }
-                        .padding(vertical = 8.dp), verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(12.dp)) {
+                        .padding(vertical = GenSpace.sm), verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(GenSpace.md)) {
                         RadioButton(selected, onClick = null, enabled = !savingLanguage)
                         Text(label, Modifier.weight(1f))
                     }
@@ -425,8 +425,8 @@ private fun SettingsScreen(state: GenerosityUiState, appState: GenerosityAppStat
         }
         if (languageSaveFailed) Text(localizedString(R.string.language_save_failed, locale), color = MaterialTheme.colorScheme.error)
         Text(localizedString(R.string.notifications_title, locale), style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.SemiBold)
-        Surface(shape = RoundedCornerShape(12.dp)) {
-            Column(Modifier.padding(12.dp), verticalArrangement = Arrangement.spacedBy(12.dp)) {
+        Surface(shape = RoundedCornerShape(GenRadius.card)) {
+            Column(Modifier.padding(GenSpace.md), verticalArrangement = Arrangement.spacedBy(GenSpace.md)) {
                 NotificationToggle(TextKey.NEARBY_NOTIFICATIONS.label(locale), preferences.nearbyCentersEnabled) { appState.setPreferences(preferences.copy(nearbyCentersEnabled = it)) }
                 NotificationToggle(TextKey.URGENT_NOTIFICATIONS.label(locale), preferences.urgentNeedsEnabled) { appState.setPreferences(preferences.copy(urgentNeedsEnabled = it)) }
                 NotificationToggle(TextKey.REMINDER_NOTIFICATIONS.label(locale), preferences.remindersEnabled) { appState.setPreferences(preferences.copy(remindersEnabled = it)) }
@@ -441,7 +441,7 @@ private fun SettingsScreen(state: GenerosityUiState, appState: GenerosityAppStat
 
 @Composable
 private fun NotificationToggle(label: String, checked: Boolean, onCheckedChange: (Boolean) -> Unit) {
-    Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(12.dp), verticalAlignment = Alignment.CenterVertically) {
+    Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(GenSpace.md), verticalAlignment = Alignment.CenterVertically) {
         Text(label, Modifier.weight(1f), style = MaterialTheme.typography.bodyMedium)
         Switch(checked = checked, onCheckedChange = onCheckedChange)
     }

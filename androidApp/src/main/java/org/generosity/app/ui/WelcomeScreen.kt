@@ -17,15 +17,15 @@ import org.generosity.domain.SupportedLocale
 fun WelcomeScreen(locale: SupportedLocale, busy: Boolean, failed: Boolean, onGuest: () -> Unit, onSignIn: () -> Unit, onCreate: () -> Unit) {
     GenerosityTheme {
         Surface(Modifier.fillMaxSize(), color = MaterialTheme.colorScheme.background) {
-            Column(Modifier.safeDrawingPadding().verticalScroll(rememberScrollState()).padding(28.dp), horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.spacedBy(20.dp)) {
+            Column(Modifier.safeDrawingPadding().verticalScroll(rememberScrollState()).padding(GenSpace.welcome), horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.spacedBy(GenSpace.xl)) {
                 Spacer(Modifier.height(48.dp))
-                Image(painterResource(R.drawable.generosity_mark), null, Modifier.size(136.dp))
+                Image(painterResource(R.drawable.generosity_mark), null, Modifier.size(GenSize.symbol))
                 BrandWordmark()
                 Text(localizedString(R.string.welcome_tagline, locale), style = MaterialTheme.typography.titleLarge)
                 Spacer(Modifier.height(32.dp))
-                Button(onClick = onGuest, modifier = Modifier.fillMaxWidth().heightIn(min = 48.dp)) { Text(localizedString(R.string.welcome_guest, locale)) }
-                OutlinedButton(onClick = onSignIn, enabled = !busy, modifier = Modifier.fillMaxWidth().heightIn(min = 48.dp)) { Text(localizedString(R.string.auth_sign_in, locale)) }
-                TextButton(onClick = onCreate, enabled = !busy, modifier = Modifier.fillMaxWidth().heightIn(min = 48.dp)) { Text(localizedString(R.string.welcome_create, locale)) }
+                Button(onClick = onGuest, modifier = Modifier.fillMaxWidth().heightIn(min = GenSize.androidTouch)) { Text(localizedString(R.string.welcome_guest, locale)) }
+                OutlinedButton(onClick = onSignIn, enabled = !busy, modifier = Modifier.fillMaxWidth().heightIn(min = GenSize.androidTouch)) { Text(localizedString(R.string.auth_sign_in, locale)) }
+                TextButton(onClick = onCreate, enabled = !busy, modifier = Modifier.fillMaxWidth().heightIn(min = GenSize.androidTouch)) { Text(localizedString(R.string.welcome_create, locale)) }
                 if (busy) CircularProgressIndicator()
                 if (failed) Text(localizedString(R.string.auth_failed, locale), color = MaterialTheme.colorScheme.error)
             }

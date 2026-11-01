@@ -17,7 +17,7 @@ import org.generosity.domain.*
 @Composable
 internal fun SyncStatus(state: GenerosityUiState, app: GenerosityAppState) {
     if (!state.backendConfigured) return
-    Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+    Column(verticalArrangement = Arrangement.spacedBy(GenSpace.sm)) {
         TextButton(onClick = app::onResume, enabled = !state.syncing && !state.writing) {
             Text(localizedString(if (state.syncing) R.string.sync_busy else R.string.sync_refresh, state.locale))
         }

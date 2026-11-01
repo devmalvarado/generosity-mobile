@@ -48,6 +48,7 @@ struct ContentView: View {
         }
         .onChange(of: store.state.profile.isRegistered) { registered in entered = registered }
         .tint(GenPalette.accent)
+        .font(GenTypography.font(.body))
         .environment(\.locale, Locale(identifier: locale.rawValue))
         .environment(\.layoutDirection, Locale.Language(identifier: locale.rawValue).characterDirection == .rightToLeft ? .rightToLeft : .leftToRight)
         .onChange(of: scenePhase) { phase in
@@ -82,9 +83,9 @@ private struct DiscoveryView: View {
         GeometryReader { geometry in
             ScrollViewReader { proxy in
                 ScrollView {
-                    VStack(alignment: .leading, spacing: 16) {
+                    VStack(alignment: .leading, spacing: GenSpace.lg) {
                         SyncStatusView(locale: locale, store: store)
-                        Text(L10n.text(.nearbyCenters, locale: locale)).font(.headline)
+                        Text(L10n.text(.nearbyCenters, locale: locale)).font(GenTypography.font(.headline))
                         HStack(spacing: 10) {
                             Image(systemName: "magnifyingglass").foregroundStyle(GenPalette.secondary).accessibilityHidden(true)
                             TextField(L10n.text(.searchPlaceholder, locale: locale), text: Binding(
@@ -94,8 +95,8 @@ private struct DiscoveryView: View {
                             .submitLabel(.search)
                         }
                         .padding(14).frame(minHeight: 48)
-                        .background(GenPalette.surface, in: RoundedRectangle(cornerRadius: 12))
-                        .overlay(RoundedRectangle(cornerRadius: 12).stroke(GenPalette.line))
+                        .background(GenPalette.surface, in: RoundedRectangle(cornerRadius: GenRadius.card))
+                        .overlay(RoundedRectangle(cornerRadius: GenRadius.card).stroke(GenPalette.line))
                         CategoryFilterView(
                             locale: locale, selectedCategories: store.state.selectedCategories,
                             onToggle: { store.toggleCategory($0.code) }
@@ -107,28 +108,28 @@ private struct DiscoveryView: View {
                                 onSelect: { store.selectCenter($0) }
                             )
                             .frame(height: max(200, min(480, geometry.size.height * 0.52)))
-                            .clipShape(RoundedRectangle(cornerRadius: 12))
+                            .clipShape(RoundedRectangle(cornerRadius: GenRadius.card))
                             if let center = store.state.selectedCenter {
-                                VStack(alignment: .leading, spacing: 8) {
-                                    Text(L10n.resource("selected_center", locale: locale)).font(.caption).foregroundStyle(GenPalette.accent)
+                                VStack(alignment: .leading, spacing: GenSpace.sm) {
+                                    Text(L10n.resource("selected_center", locale: locale)).font(GenTypography.font(.caption)).foregroundStyle(GenPalette.accent)
                                     CenterIdentity(locale: locale, center: center)
                                     Button(L10n.resource("view_details", locale: locale)) {
                                         withAnimation { proxy.scrollTo("center-detail", anchor: .top) }
                                     }
-                                    .buttonStyle(.bordered).frame(minHeight: 44)
+                                    .buttonStyle(.bordered).frame(minHeight: GenSize.iosTouch)
                                 }
-                                .padding(12).frame(maxWidth: .infinity, alignment: .leading)
-                                .background(GenPalette.surface, in: RoundedRectangle(cornerRadius: 12))
+                                .padding(GenSpace.md).frame(maxWidth: .infinity, alignment: .leading)
+                                .background(GenPalette.surface, in: RoundedRectangle(cornerRadius: GenRadius.card))
                             }
                         }
                         if store.state.centers.isEmpty {
-                            Text(L10n.text(.emptyCenters, locale: locale)).foregroundStyle(GenPalette.secondary).padding(.vertical, 12)
+                            Text(L10n.text(.emptyCenters, locale: locale)).foregroundStyle(GenPalette.secondary).padding(.vertical, GenSpace.md)
                         }
                         ForEach(store.state.centers, id: \.id) { center in
                             Button { store.selectCenter(center.id) } label: {
-                                CenterIdentity(locale: locale, center: center).padding(12)
+                                CenterIdentity(locale: locale, center: center).padding(GenSpace.md)
                                     .frame(maxWidth: .infinity, alignment: .leading)
-                                    .background(GenPalette.surface, in: RoundedRectangle(cornerRadius: 12))
+                                    .background(GenPalette.surface, in: RoundedRectangle(cornerRadius: GenRadius.card))
                             }
                             .buttonStyle(.plain)
                             .accessibilityIdentifier("center-\(center.id)")
@@ -141,9 +142,9 @@ private struct DiscoveryView: View {
                             )
                             .id("center-detail")
                         }
-                        Text(L10n.resource(store.state.backendConfigured ? "sync_cached" : "demo_catalog", locale: locale)).font(.caption).foregroundStyle(GenPalette.secondary)
+                        Text(L10n.resource(store.state.backendConfigured ? "sync_cached" : "demo_catalog", locale: locale)).font(GenTypography.font(.caption)).foregroundStyle(GenPalette.secondary)
                     }
-                    .padding(16)
+                    .padding(GenSpace.lg)
                 }
                 .accessibilityIdentifier("discovery-scroll")
                 .background(GenPalette.background)
@@ -161,22 +162,22 @@ private struct CategoryFilterView: View {
 
     var body: some View {
         if typeSize.isAccessibilitySize {
-            LazyVGrid(columns: [GridItem(.adaptive(minimum: 160), alignment: .leading)], alignment: .leading, spacing: 8) { chips }
+            LazyVGrid(columns: [GridItem(.adaptive(minimum: 160), alignment: .leading)], alignment: .leading, spacing: GenSpace.sm) { chips }
         } else {
-            ScrollView(.horizontal, showsIndicators: false) { HStack(spacing: 8) { chips } }
+            ScrollView(.horizontal, showsIndicators: false) { HStack(spacing: GenSpace.sm) { chips } }
         }
     }
     private var chips: some View {
         ForEach(CenterCategory.entries, id: \.code) { category in
             let selected = selectedCategories.contains(category)
             Button { onToggle(category) } label: {
-                HStack(spacing: 4) {
+                HStack(spacing: GenSpace.xs) {
                     if selected { Image(systemName: "checkmark").accessibilityHidden(true) }
                     Text(category.label(locale)).fixedSize(horizontal: false, vertical: true)
                 }
-                .font(.subheadline).padding(.horizontal, 12).frame(minHeight: 44)
+                .font(GenTypography.font(.subheadline)).padding(.horizontal, GenSpace.md).frame(minHeight: GenSize.iosTouch)
                 .foregroundStyle(selected ? GenPalette.onAccent : GenPalette.text)
-                .background(selected ? GenPalette.accent : GenPalette.surface, in: RoundedRectangle(cornerRadius: 10))
+                .background(selected ? GenPalette.accent : GenPalette.surface, in: RoundedRectangle(cornerRadius: GenRadius.control))
             }
             .buttonStyle(.plain)
             .accessibilityIdentifier("category-\(category.code)")
@@ -224,12 +225,12 @@ private struct CenterIdentity: View {
     let locale: AppLocale
     let center: KindnessCenter
     var body: some View {
-        HStack(alignment: .center, spacing: 12) {
+        HStack(alignment: .center, spacing: GenSpace.md) {
             CategoryBadge(category: center.categories.sorted { $0.ordinal < $1.ordinal }.first)
-            VStack(alignment: .leading, spacing: 4) {
-                Text(center.name.resolve(locale)).font(.subheadline.weight(.semibold)).foregroundStyle(GenPalette.text)
-                Text(center.address.resolve(locale)).font(.caption).foregroundStyle(GenPalette.secondary)
-                Text(center.verificationStatus.label(locale)).font(.caption).foregroundStyle(GenPalette.secondary)
+            VStack(alignment: .leading, spacing: GenSpace.xs) {
+                Text(center.name.resolve(locale)).font(GenTypography.font(.subheadline).weight(.semibold)).foregroundStyle(GenPalette.text)
+                Text(center.address.resolve(locale)).font(GenTypography.font(.caption)).foregroundStyle(GenPalette.secondary)
+                Text(center.verificationStatus.label(locale)).font(GenTypography.font(.caption)).foregroundStyle(GenPalette.secondary)
             }
             .frame(maxWidth: .infinity, alignment: .leading)
         }
@@ -247,22 +248,22 @@ private struct CenterDetail: View {
     @State private var contactFailed = false
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 16) {
+        VStack(alignment: .leading, spacing: GenSpace.lg) {
             CategoryBadge(category: center.categories.sorted { $0.ordinal < $1.ordinal }.first, size: 52)
-            Text(center.name.resolve(locale)).font(.title2.weight(.bold))
+            Text(center.name.resolve(locale)).font(GenTypography.font(.title2).weight(.bold))
                 .accessibilityIdentifier("detail-\(center.id)")
             Text(center.categories.sorted { $0.ordinal < $1.ordinal }.map { $0.label(locale) }.joined(separator: " · "))
-                .font(.subheadline).foregroundStyle(GenPalette.accent)
-            Text(center.address.resolve(locale)).font(.subheadline).foregroundStyle(GenPalette.secondary)
-            Text(center.description_.resolve(locale)).font(.body)
+                .font(GenTypography.font(.subheadline)).foregroundStyle(GenPalette.accent)
+            Text(center.address.resolve(locale)).font(GenTypography.font(.subheadline)).foregroundStyle(GenPalette.secondary)
+            Text(center.description_.resolve(locale)).font(GenTypography.font(.body))
             ForEach(center.contactInfo.links(), id: \.kind) { link in
                 Button(L10n.resource("contact_" + link.kind, locale: locale)) {
                     if let url = URL(string: link.url) { openURL(url) { accepted in contactFailed = !accepted } }
-                }.frame(minHeight: 44)
+                }.frame(minHeight: GenSize.iosTouch)
             }
             if contactFailed { Text(L10n.resource("contact_failed", locale: locale)).foregroundStyle(GenPalette.error) }
             Divider()
-            Text(L10n.text(.currentNeeds, locale: locale)).font(.headline)
+            Text(L10n.text(.currentNeeds, locale: locale)).font(GenTypography.font(.headline))
             if currentNeeds.isEmpty {
                 Text(L10n.text(.noCurrentNeeds, locale: locale)).foregroundStyle(GenPalette.secondary)
             }
@@ -272,14 +273,14 @@ private struct CenterDetail: View {
             }
             Button(L10n.text(.visitSignal, locale: locale), action: onVisit)
                 .disabled(visitNoted || store.state.writing)
-                .buttonStyle(.bordered).frame(minHeight: 44)
+                .buttonStyle(.bordered).frame(minHeight: GenSize.iosTouch)
             if visitNoted {
-                Text(store.state.backendConfigured ? L10n.resource("visit_saved", locale: locale) : L10n.text(.visitSignalSubmitted, locale: locale)).font(.footnote)
+                Text(store.state.backendConfigured ? L10n.resource("visit_saved", locale: locale) : L10n.text(.visitSignalSubmitted, locale: locale)).font(GenTypography.font(.footnote))
             }
-            Text(center.verificationStatus.label(locale)).font(.subheadline.weight(.semibold))
-            Text(L10n.text(.officialVerificationBoundary, locale: locale)).font(.footnote).foregroundStyle(GenPalette.secondary)
+            Text(center.verificationStatus.label(locale)).font(GenTypography.font(.subheadline).weight(.semibold))
+            Text(L10n.text(.officialVerificationBoundary, locale: locale)).font(GenTypography.font(.footnote)).foregroundStyle(GenPalette.secondary)
         }
-        .padding(16).frame(maxWidth: .infinity, alignment: .leading)
+        .padding(GenSpace.lg).frame(maxWidth: .infinity, alignment: .leading)
         .background(GenPalette.surface)
     }
 }
@@ -291,27 +292,27 @@ private struct NeedView: View {
     @State private var method = "goods"
     @State private var offering = false
     var body: some View {
-        HStack(alignment: .top, spacing: 12) {
+        HStack(alignment: .top, spacing: GenSpace.md) {
             IconTile(symbol: need.helpMethods.contains(.goods) ? "gift" : "clock", size: 40)
-            VStack(alignment: .leading, spacing: 8) {
+            VStack(alignment: .leading, spacing: GenSpace.sm) {
                 Text(L10n.resource(need.isUrgent ? "urgent" : "priority_\(need.priority.code)", locale: locale))
-                    .font(.caption.weight(.bold)).foregroundStyle(need.isUrgent ? GenPalette.error : GenPalette.accent)
-                Text(need.title.resolve(locale)).font(.subheadline.weight(.semibold))
-                Text(need.description_.resolve(locale)).font(.subheadline).foregroundStyle(GenPalette.secondary)
+                    .font(GenTypography.font(.caption).weight(.bold)).foregroundStyle(need.isUrgent ? GenPalette.error : GenPalette.accent)
+                Text(need.title.resolve(locale)).font(GenTypography.font(.subheadline).weight(.semibold))
+                Text(need.description_.resolve(locale)).font(GenTypography.font(.subheadline)).foregroundStyle(GenPalette.secondary)
                 if let remaining = need.quantityRemaining {
-                    Text(L10n.remaining(remaining.intValue, locale: locale)).font(.subheadline.weight(.medium))
+                    Text(L10n.remaining(remaining.intValue, locale: locale)).font(GenTypography.font(.subheadline).weight(.medium))
                         .accessibilityIdentifier("remaining-\(need.id)")
                 }
                 Text(need.helpMethods.sorted { $0.ordinal < $1.ordinal }.map { $0.label(locale) }.joined(separator: " · "))
-                    .font(.footnote)
+                    .font(GenTypography.font(.footnote))
                 if store.state.canRecordContributions {
                     ForEach(["goods", "time"].filter { code in need.helpMethods.contains { $0.code == code } }, id: \.self) { code in
                         Button(L10n.resource(code == "goods" ? "offer_goods_action" : "offer_time", locale: locale)) { method = code; offering = true }
-                            .buttonStyle(.bordered).frame(minHeight: 44)
+                            .buttonStyle(.bordered).frame(minHeight: GenSize.iosTouch)
                     }
-                } else { Text(L10n.resource("registration_required", locale: locale)).font(.footnote) }
+                } else { Text(L10n.resource("registration_required", locale: locale)).font(GenTypography.font(.footnote)) }
                 if need.helpMethods.contains(.money) {
-                    Text(L10n.text(.moneyBoundary, locale: locale)).font(.footnote).foregroundStyle(GenPalette.secondary)
+                    Text(L10n.text(.moneyBoundary, locale: locale)).font(GenTypography.font(.footnote)).foregroundStyle(GenPalette.secondary)
                 }
             }
             .frame(maxWidth: .infinity, alignment: .leading)
@@ -330,13 +331,13 @@ private struct ProfileView: View {
     var body: some View {
         NavigationStack {
             ScrollView {
-                VStack(alignment: .leading, spacing: 20) {
-                    HStack(spacing: 12) {
+                VStack(alignment: .leading, spacing: GenSpace.xl) {
+                    HStack(spacing: GenSpace.md) {
                         IconTile(symbol: "person", size: 52)
                         Text(state.profile.isRegistered ? state.profile.displayName ?? L10n.text(.registeredProfile, locale: locale) : L10n.text(.anonymousProfile, locale: locale))
-                            .font(.headline).frame(maxWidth: .infinity, alignment: .leading)
+                            .font(GenTypography.font(.headline)).frame(maxWidth: .infinity, alignment: .leading)
                     }
-                    .padding(16).background(GenPalette.surface, in: RoundedRectangle(cornerRadius: 12))
+                    .padding(GenSpace.lg).background(GenPalette.surface, in: RoundedRectangle(cornerRadius: GenRadius.card))
                     Button(L10n.resource(state.profile.isRegistered ? "auth_sign_out" : "auth_sign_in", locale: locale)) {
                         if state.profile.isRegistered { Task { await account.signOut(store: store) } }
                         else { account.signIn(store: store) }
@@ -344,54 +345,54 @@ private struct ProfileView: View {
                     if !state.profile.isRegistered {
                         Button(L10n.resource("welcome_create", locale: locale)) {
                             account.signIn(store: store, register: true)
-                        }.buttonStyle(.bordered).frame(minHeight: 44).disabled(account.busy)
+                        }.buttonStyle(.bordered).frame(minHeight: GenSize.iosTouch).disabled(account.busy)
                     }
                     if account.busy { ProgressView() }
                     if account.failed { Text(L10n.resource("auth_failed", locale: locale)).foregroundStyle(.red).accessibilityAddTraits(.updatesFrequently) }
-                    Text(L10n.resource("auth_scope", locale: locale)).font(.footnote)
+                    Text(L10n.resource("auth_scope", locale: locale)).font(GenTypography.font(.footnote))
                     SyncStatusView(locale: locale, store: store)
                     if state.canRecordContributions {
                         Menu(L10n.resource("personal_add", locale: locale)) {
                             Button(L10n.resource("offer_goods_action", locale: locale)) { personalMethod = "goods"; offering = true }
                             Button(L10n.resource("offer_time", locale: locale)) { personalMethod = "time"; offering = true }
-                        }.frame(minHeight: 44)
+                        }.frame(minHeight: GenSize.iosTouch)
                     }
-                    VStack(alignment: .leading, spacing: 8) {
-                        Text(L10n.resource("points_title", locale: locale)).font(.subheadline)
-                        Text(L10n.resource("unavailable", locale: locale)).font(.title2.weight(.bold))
-                        Text(L10n.text(.generosityPoints, locale: locale)).font(.footnote)
+                    VStack(alignment: .leading, spacing: GenSpace.sm) {
+                        Text(L10n.resource("points_title", locale: locale)).font(GenTypography.font(.subheadline))
+                        Text(L10n.resource("unavailable", locale: locale)).font(GenTypography.font(.title2).weight(.bold))
+                        Text(L10n.text(.generosityPoints, locale: locale)).font(GenTypography.font(.footnote))
                     }
-                    .padding(20).frame(maxWidth: .infinity, alignment: .leading)
-                    .foregroundStyle(GenPalette.onAccent).background(GenPalette.accent, in: RoundedRectangle(cornerRadius: 12))
-                    Text(L10n.resource("impact_summary", locale: locale)).font(.headline)
-                    LazyVGrid(columns: [GridItem(.adaptive(minimum: 140), alignment: .leading)], alignment: .leading, spacing: 12) {
+                    .padding(GenSpace.xl).frame(maxWidth: .infinity, alignment: .leading)
+                    .foregroundStyle(GenPalette.onAccent).background(GenPalette.accent, in: RoundedRectangle(cornerRadius: GenRadius.card))
+                    Text(L10n.resource("impact_summary", locale: locale)).font(GenTypography.font(.headline))
+                    LazyVGrid(columns: [GridItem(.adaptive(minimum: 140), alignment: .leading)], alignment: .leading, spacing: GenSpace.md) {
                         metric("centers_supported", value: state.profile.isRegistered ? L10n.number(state.impact.centersSupported, locale: locale) : "—")
                         metric("needs_supported", value: state.profile.isRegistered ? L10n.number(state.impact.needsSupported, locale: locale) : "—")
                     }
-                    Text(L10n.resource("impact_basis", locale: locale)).font(.footnote).foregroundStyle(GenPalette.secondary)
-                    Text(L10n.resource("history", locale: locale)).font(.headline)
+                    Text(L10n.resource("impact_basis", locale: locale)).font(GenTypography.font(.footnote)).foregroundStyle(GenPalette.secondary)
+                    Text(L10n.resource("history", locale: locale)).font(GenTypography.font(.headline))
                     if state.contributions.isEmpty {
                         Text(L10n.text(.contributionHistoryEmpty, locale: locale)).foregroundStyle(GenPalette.secondary)
                     }
                     ForEach(state.contributions, id: \.id) { contribution in
-                        VStack(alignment: .leading, spacing: 4) {
-                            Text(contribution.title.resolve(locale)).font(.subheadline.weight(.semibold))
+                        VStack(alignment: .leading, spacing: GenSpace.xs) {
+                            Text(contribution.title.resolve(locale)).font(GenTypography.font(.subheadline).weight(.semibold))
                             Text(L10n.resource("contribution_\(contribution.status.code)", locale: locale))
-                                .font(.footnote).foregroundStyle(GenPalette.secondary)
-                            if contribution.centerId == nil { Text(L10n.resource("personal_notice", locale: locale)).font(.footnote) }
+                                .font(GenTypography.font(.footnote)).foregroundStyle(GenPalette.secondary)
+                            if contribution.centerId == nil { Text(L10n.resource("personal_notice", locale: locale)).font(GenTypography.font(.footnote)) }
                             if contribution.status == .offered || contribution.status == .confirmed {
                                 Button(L10n.resource("contribution_cancel", locale: locale)) { store.transition(contribution.id, action: "cancel", version: contribution.version) }
-                                    .disabled(state.writing || state.syncing || !state.pendingOperations.isEmpty).frame(minHeight: 44)
+                                    .disabled(state.writing || state.syncing || !state.pendingOperations.isEmpty).frame(minHeight: GenSize.iosTouch)
                                 if contribution.centerId == nil {
                                     Button(L10n.resource("contribution_complete", locale: locale)) { store.transition(contribution.id, action: "complete", version: contribution.version) }
-                                        .disabled(state.writing || state.syncing || !state.pendingOperations.isEmpty).frame(minHeight: 44)
+                                        .disabled(state.writing || state.syncing || !state.pendingOperations.isEmpty).frame(minHeight: GenSize.iosTouch)
                                 }
                             }
                             Divider()
                         }
                     }
                 }
-                .padding(16)
+                .padding(GenSpace.lg)
             }
             .background(GenPalette.background).foregroundStyle(GenPalette.text)
             .sheet(isPresented: $offering) { OfferForm(locale: locale, store: store, need: nil, method: personalMethod) }
@@ -400,13 +401,13 @@ private struct ProfileView: View {
         }
     }
     private func metric(_ key: String, value: String) -> some View {
-        VStack(alignment: .leading, spacing: 8) {
+        VStack(alignment: .leading, spacing: GenSpace.sm) {
             Image(systemName: "heart").foregroundStyle(GenPalette.accent).accessibilityHidden(true)
-            Text(value).font(.title2.weight(.bold))
-            Text(L10n.resource(key, locale: locale)).font(.footnote)
+            Text(value).font(GenTypography.font(.title2).weight(.bold))
+            Text(L10n.resource(key, locale: locale)).font(GenTypography.font(.footnote))
         }
-        .padding(16).frame(maxWidth: .infinity, alignment: .leading)
-        .background(GenPalette.surface, in: RoundedRectangle(cornerRadius: 12))
+        .padding(GenSpace.lg).frame(maxWidth: .infinity, alignment: .leading)
+        .background(GenPalette.surface, in: RoundedRectangle(cornerRadius: GenRadius.card))
     }
 }
 
@@ -438,9 +439,9 @@ private struct SettingsView: View {
                     Toggle(isOn: $nearbyNotifications) { settingsLabel(.nearbyNotifications) }
                     Toggle(isOn: $urgentNotifications) { settingsLabel(.urgentNotifications) }
                     Toggle(isOn: $reminderNotifications) { settingsLabel(.reminderNotifications) }
-                    Text(L10n.resource("nearby_foreground_only", locale: locale)).font(.footnote)
-                    Text(L10n.resource("permissions_explanation", locale: locale)).font(.footnote)
-                    Text(L10n.resource("notifications_pending", locale: locale)).font(.footnote)
+                    Text(L10n.resource("nearby_foreground_only", locale: locale)).font(GenTypography.font(.footnote))
+                    Text(L10n.resource("permissions_explanation", locale: locale)).font(GenTypography.font(.footnote))
+                    Text(L10n.resource("notifications_pending", locale: locale)).font(GenTypography.font(.footnote))
                     if saveFailed { Text(L10n.resource("sync_failed", locale: locale)).foregroundStyle(GenPalette.error) }
                     Button(L10n.resource("request_permissions", locale: locale)) {
                         permissions.requestLocationPermission()

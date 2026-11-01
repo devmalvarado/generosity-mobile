@@ -1,12 +1,8 @@
 {
-  "source": "gen2.png",
-  "source_profile": "Display P3",
+  "source": "master/symbol.svg and master/wordmark.svg",
   "output_profile": "sRGB",
   "orange_srgb": "#F1562C",
-  "silhouette_intersection_over_union": {
-    "symbol": 0.99067,
-    "wordmark": 0.98973
-  },
+  "silhouette_intersection_over_union": null,
   "ico_sizes": [
     16,
     24,

@@ -1,6 +1,7 @@
 package org.generosity.app.ui
 
 import android.app.Activity
+import android.graphics.Typeface
 import androidx.annotation.DrawableRes
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -18,25 +19,65 @@ import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.platform.LocalView
 import androidx.core.view.WindowCompat
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.text.font.FontFamily
 import org.generosity.app.R
 import org.generosity.domain.CenterCategory
 
 private val LightColors = lightColorScheme(
-    primary = Color(0xFFC6401D), onPrimary = Color.White,
-    primaryContainer = Color(0xFFFFEDE5), onPrimaryContainer = Color(0xFF8F2C14),
-    background = Color(0xFFFAF8F5), onBackground = Color(0xFF191C22),
-    surface = Color.White, onSurface = Color(0xFF191C22),
-    surfaceVariant = Color(0xFFF2F0ED), onSurfaceVariant = Color(0xFF59616C),
-    outline = Color(0xFF757B83), outlineVariant = Color(0xFFE4E2DF)
+    primary = GenColors.accentLight,
+    onPrimary = GenColors.onAccentLight,
+    primaryContainer = GenColors.accentContainerLight,
+    onPrimaryContainer = GenColors.onAccentContainerLight,
+    background = GenColors.backgroundLight,
+    onBackground = GenColors.textLight,
+    surface = GenColors.surfaceLight,
+    onSurface = GenColors.textLight,
+    surfaceVariant = GenColors.surfaceVariantLight,
+    onSurfaceVariant = GenColors.secondaryLight,
+    outline = GenColors.outlineLight,
+    outlineVariant = GenColors.lineLight,
+    error = GenColors.errorLight,
+    onError = GenColors.onErrorLight
 )
 private val DarkColors = darkColorScheme(
-    primary = Color(0xFFFFB197), onPrimary = Color(0xFF4C1500),
-    primaryContainer = Color(0xFF592717), onPrimaryContainer = Color(0xFFFFD9CC),
-    background = Color(0xFF17191C), onBackground = Color(0xFFF7F5F2),
-    surface = Color(0xFF222529), onSurface = Color(0xFFF7F5F2),
-    surfaceVariant = Color(0xFF30343A), onSurfaceVariant = Color(0xFFB8BCC3),
-    outline = Color(0xFF9299A3), outlineVariant = Color(0xFF444950)
+    primary = GenColors.accentDark,
+    onPrimary = GenColors.onAccentDark,
+    primaryContainer = GenColors.accentContainerDark,
+    onPrimaryContainer = GenColors.onAccentContainerDark,
+    background = GenColors.backgroundDark,
+    onBackground = GenColors.textDark,
+    surface = GenColors.surfaceDark,
+    onSurface = GenColors.textDark,
+    surfaceVariant = GenColors.surfaceVariantDark,
+    onSurfaceVariant = GenColors.secondaryDark,
+    outline = GenColors.outlineDark,
+    outlineVariant = GenColors.lineDark,
+    error = GenColors.errorDark,
+    onError = GenColors.onErrorDark
 )
+
+private val AppTypography = Typography().let { base ->
+    val body = FontFamily(Typeface.create(GenType.body, Typeface.NORMAL))
+    val heading = FontFamily(Typeface.create(GenType.heading, Typeface.NORMAL))
+    base.copy(
+        displayLarge = base.displayLarge.copy(fontFamily = heading, fontSize = base.displayLarge.fontSize * GenType.scale, lineHeight = base.displayLarge.lineHeight * GenType.scale),
+        displayMedium = base.displayMedium.copy(fontFamily = heading, fontSize = base.displayMedium.fontSize * GenType.scale, lineHeight = base.displayMedium.lineHeight * GenType.scale),
+        displaySmall = base.displaySmall.copy(fontFamily = heading, fontSize = base.displaySmall.fontSize * GenType.scale, lineHeight = base.displaySmall.lineHeight * GenType.scale),
+        headlineLarge = base.headlineLarge.copy(fontFamily = heading, fontSize = base.headlineLarge.fontSize * GenType.scale, lineHeight = base.headlineLarge.lineHeight * GenType.scale),
+        headlineMedium = base.headlineMedium.copy(fontFamily = heading, fontSize = base.headlineMedium.fontSize * GenType.scale, lineHeight = base.headlineMedium.lineHeight * GenType.scale),
+        headlineSmall = base.headlineSmall.copy(fontFamily = heading, fontSize = base.headlineSmall.fontSize * GenType.scale, lineHeight = base.headlineSmall.lineHeight * GenType.scale),
+        titleLarge = base.titleLarge.copy(fontFamily = heading, fontSize = base.titleLarge.fontSize * GenType.scale, lineHeight = base.titleLarge.lineHeight * GenType.scale),
+        titleMedium = base.titleMedium.copy(fontFamily = heading, fontSize = base.titleMedium.fontSize * GenType.scale, lineHeight = base.titleMedium.lineHeight * GenType.scale),
+        titleSmall = base.titleSmall.copy(fontFamily = heading, fontSize = base.titleSmall.fontSize * GenType.scale, lineHeight = base.titleSmall.lineHeight * GenType.scale),
+        bodyLarge = base.bodyLarge.copy(fontFamily = body, fontSize = base.bodyLarge.fontSize * GenType.scale, lineHeight = base.bodyLarge.lineHeight * GenType.scale),
+        bodyMedium = base.bodyMedium.copy(fontFamily = body, fontSize = base.bodyMedium.fontSize * GenType.scale, lineHeight = base.bodyMedium.lineHeight * GenType.scale),
+        bodySmall = base.bodySmall.copy(fontFamily = body, fontSize = base.bodySmall.fontSize * GenType.scale, lineHeight = base.bodySmall.lineHeight * GenType.scale),
+        labelLarge = base.labelLarge.copy(fontFamily = body, fontSize = base.labelLarge.fontSize * GenType.scale, lineHeight = base.labelLarge.lineHeight * GenType.scale),
+        labelMedium = base.labelMedium.copy(fontFamily = body, fontSize = base.labelMedium.fontSize * GenType.scale, lineHeight = base.labelMedium.lineHeight * GenType.scale),
+        labelSmall = base.labelSmall.copy(fontFamily = body, fontSize = base.labelSmall.fontSize * GenType.scale, lineHeight = base.labelSmall.lineHeight * GenType.scale)
+    )
+}
 
 @Composable
 fun GenerosityTheme(content: @Composable () -> Unit) {
@@ -52,29 +93,35 @@ fun GenerosityTheme(content: @Composable () -> Unit) {
             }
         }
     }
-    MaterialTheme(colorScheme = if (dark) DarkColors else LightColors, content = content)
+    MaterialTheme(
+        colorScheme = if (dark) DarkColors else LightColors,
+        typography = AppTypography,
+        shapes = Shapes(small = RoundedCornerShape(GenRadius.control), medium = RoundedCornerShape(GenRadius.card), large = RoundedCornerShape(GenRadius.panel)),
+        content = content
+    )
 }
 
 @Composable
 fun BrandWordmark() {
     Image(painterResource(R.drawable.generosity_wordmark), "Generosity",
-        Modifier.size(180.dp, 36.dp).testTag("brand-wordmark"))
+        Modifier.size(GenSize.wordmarkWidth, GenSize.wordmarkHeight).testTag("brand-wordmark"))
 }
 
 @Composable
 fun AppIcon(@DrawableRes icon: Int, modifier: Modifier = Modifier, tint: Color = MaterialTheme.colorScheme.onSurfaceVariant) {
-    Icon(painterResource(icon), contentDescription = null, modifier = modifier.size(24.dp), tint = tint)
+    Icon(painterResource(icon), contentDescription = null, modifier = modifier.size(GenSize.icon), tint = tint)
 }
 
 @Composable
-fun CategoryBadge(category: CenterCategory?, size: Int = 44) {
+fun CategoryBadge(category: CenterCategory?, size: Dp = GenSize.badge) {
+    val dark = isSystemInDarkTheme()
     val color = when (category) {
-        CenterCategory.HEALTH, CenterCategory.DISABILITY_SUPPORT -> Color(0xFF357D64)
-        CenterCategory.COMMUNITY_KITCHEN, CenterCategory.OLDER_ADULTS -> Color(0xFF9A581D)
-        else -> Color(0xFF7060A5)
+        CenterCategory.HEALTH, CenterCategory.DISABILITY_SUPPORT -> if (dark) GenColors.categoryHealthDark else GenColors.categoryHealthLight
+        CenterCategory.COMMUNITY_KITCHEN, CenterCategory.OLDER_ADULTS -> if (dark) GenColors.categoryCommunityDark else GenColors.categoryCommunityLight
+        else -> if (dark) GenColors.categoryOtherDark else GenColors.categoryOtherLight
     }
-    Box(Modifier.size(size.dp).background(color.copy(alpha = .13f), RoundedCornerShape(12.dp)), contentAlignment = Alignment.Center) {
-        AppIcon(category.icon(), tint = if (isSystemInDarkTheme()) Color(0xFFD6C9FF) else color)
+    Box(Modifier.size(size).background(color.copy(alpha = .13f), RoundedCornerShape(GenRadius.card)), contentAlignment = Alignment.Center) {
+        AppIcon(category.icon(), tint = color)
     }
 }
 

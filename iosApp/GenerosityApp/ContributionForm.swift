@@ -7,9 +7,9 @@ struct SyncStatusView: View {
     @ObservedObject var store: GenerosityStore
     var body: some View {
         if store.state.backendConfigured {
-            VStack(alignment: .leading, spacing: 8) {
+            VStack(alignment: .leading, spacing: GenSpace.sm) {
                 Button(L10n.resource(store.state.syncing ? "sync_busy" : "sync_refresh", locale: locale), action: store.onResume)
-                    .disabled(store.state.syncing || store.state.writing).frame(minHeight: 44)
+                    .disabled(store.state.syncing || store.state.writing).frame(minHeight: GenSize.iosTouch)
                 if let error = store.state.syncError {
                     Text(L10n.resource(error == "unauthenticated" ? "sync_auth" : "sync_failed", locale: locale)).foregroundStyle(GenPalette.error)
                 }
@@ -17,9 +17,9 @@ struct SyncStatusView: View {
                 ForEach(store.state.pendingOperations.filter { $0.errorCode != nil }, id: \.id) { pending in
                     Text(L10n.resource("sync_rejected", locale: locale)).foregroundStyle(GenPalette.error)
                     Button(L10n.resource("sync_discard", locale: locale)) { store.discardRejectedOperation(pending.id) }
-                        .disabled(store.state.writing).frame(minHeight: 44)
+                        .disabled(store.state.writing).frame(minHeight: GenSize.iosTouch)
                 }
-            }.font(.footnote)
+            }.font(GenTypography.font(.footnote))
         }
     }
 }
@@ -44,7 +44,7 @@ struct OfferForm: View {
     var body: some View {
         NavigationStack {
             Form {
-                Text(need?.title.resolve(locale) ?? L10n.resource("personal_add", locale: locale)).font(.headline)
+                Text(need?.title.resolve(locale) ?? L10n.resource("personal_add", locale: locale)).font(GenTypography.font(.headline))
                 if method == "goods" {
                     field("offer_quantity", $quantity).keyboardType(.numberPad)
                     if let need { Text(need.quantityUnit ?? "") }
@@ -55,7 +55,7 @@ struct OfferForm: View {
                     field("offer_availability", $availability)
                 }
                 field("offer_notes", $notes)
-                if need == nil { Text(L10n.resource("personal_notice", locale: locale)).font(.footnote) }
+                if need == nil { Text(L10n.resource("personal_notice", locale: locale)).font(GenTypography.font(.footnote)) }
                 if store.state.syncError != nil { Text(L10n.resource("sync_failed", locale: locale)).foregroundStyle(GenPalette.error) }
                 Button(L10n.resource("offer_send", locale: locale)) {
                     store.submitOffer(needId: need?.id, method: method, quantity: Int32(quantity) ?? 0, minutes: Int32(minutes) ?? 0,
@@ -71,7 +71,7 @@ struct OfferForm: View {
     }
     private func field(_ key: String, _ value: Binding<String>) -> some View {
         VStack(alignment: .leading) {
-            Text(L10n.resource(key, locale: locale)).font(.caption)
+            Text(L10n.resource(key, locale: locale)).font(GenTypography.font(.caption))
             TextField(L10n.resource(key, locale: locale), text: value, axis: .vertical).accessibilityIdentifier(key)
         }
     }

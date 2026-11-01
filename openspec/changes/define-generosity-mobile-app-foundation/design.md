@@ -298,6 +298,116 @@ document intentional omissions from the concept. Do not mask controls or
 content to hide layout regressions. See the visual acceptance matrix in
 [mobile-ui-checks.md](../../../docs/testing/mobile-ui-checks.md).
 
+### Shared Design System Implementation — 2026-11-01
+
+The implemented design system is a build-time resource pipeline shared by
+Android, iOS, the public/center portal and Laravel's hosted account/legal pages.
+It extends the existing native theme helpers and web CSS components; it adds
+no UI framework, runtime configuration endpoint or dependency to the KMP domain
+module. The initial visual-direction values above are historical guidance;
+`design/tokens.json` is the authoritative implemented configuration.
+
+#### Sources and token contract
+
+| Source / section | Contract |
+| --- | --- |
+| `design/tokens.json` → `colors` | Semantic primary-action, text, surface, outline, error and category roles. Each role contains exactly two six-digit sRGB colors, ordered light/dark. |
+| `brand` | Logo color, light/dark wordmark lettering and opaque app-icon background. Logo orange and accessible action orange are deliberately separate roles. |
+| `web` | Landing editorial neutrals, map illustration colors, hover/focus, disabled and field states. These coexist with the common action/error roles. |
+| `typography` | Android body/heading system families and type scale; iOS body/heading family names and system font design; web body/heading/account stacks and optional landing font stylesheet. |
+| `spacing`, `radii`, `sizes` | Common spacing, control/card corners, wordmark/symbol bounds and minimum interaction sizes. Values map to Android dp, iOS points and CSS pixels; enlarging text does not double fixed padding. |
+| `assets/brand/master/symbol.svg`, `wordmark.svg` | Editable outlined logos. The viewBox starts at `0 0`; paths have `data-color="brand"` or `data-color="text"`. Flat paths and optional `translate(x y) scale(x y)` are supported; unsupported elements/transforms fail explicitly. |
+
+`assets/brand/source/` and `geometry.json` retain the original supplied images
+and historical tracing geometry. Ordinary regeneration never retraces the PNG
+or overwrites the master vectors. Explicit `generate-brand-assets.py
+--trace-source` is an authoring import operation, not a build prerequisite.
+
+#### Generation and platform consumption
+
+Run `scripts/generate-design-system.py` with the documented brand-authoring
+Python environment. It validates tokens, renders platform declarations and,
+when brand inputs or exported files change, invokes the existing brand exporter.
+The exporter uses the already adopted Pillow/resvg authoring dependencies;
+Potrace is required only for explicit PNG re-import. Runtime apps gain no new
+dependency.
+
+| Generated output | Consumer and behavior |
+| --- | --- |
+| `androidApp/src/main/java/org/generosity/app/ui/DesignTokens.kt` | `GenerosityTheme.kt` maps `GenColors` to Material light/dark schemes and configures Material typography/shapes. Existing Compose controls consume the theme; screen spacing and logo bounds use generated dimensions. The Google adapter derives marker hue from theme colors without exposing SDK types to shared logic. |
+| `iosApp/GenerosityApp/DesignTokens.swift` | `GenerosityTheme.swift` supplies adaptive `GenPalette` colors and the `GenTypography` helper. SwiftUI screens use semantic text roles and generated dimensions; system-owned UI keeps native rendering. |
+| `portal/assets/design-tokens.css` | Imported by `portal/styles.css`; existing button, card, field and illustration styles consume custom properties. This stylesheet may load the configured landing font service. |
+| `backend/public/auth-assets/design-tokens.css` | Loaded by `auth-styles.blade.php` for sign-in, registration, recovery, result and legal views. The generated file omits remote font imports. |
+| Native/web logo exports | Vector drawables, iOS SVG image sets, opaque launcher/store icons, SVG/PNG/ICO exports, the brand ZIP and the portal's logo/favicon/touch-icon are generated from the same masters. |
+
+The Kotlin and Swift layers remain separate native implementations; reuse is
+through configuration and platform components, not shared rendered UI. Layout
+breakpoints, map sizing constraints and domain/data state stay in their
+respective layers. Google/Apple sign-in controls retain provider-owned colors,
+logos and fonts. Map tiles, keyboards and OS dialogs are not recolored by this
+pipeline; the Google marker API accepts hue rather than exact RGB.
+
+#### Typography, appearance and accessibility
+
+Android copies Material's semantic text styles with configured body/heading
+families and scales both font size and line height, preserving system font
+scaling. iOS `system` uses native text styles with default/rounded/serif/monospaced
+design. Custom iOS fonts use an unscaled base size and SwiftUI `relativeTo`
+scaling so Dynamic Type is applied once. A new bundled font still requires its
+licensed file and platform registration; a configuration edit cannot install
+an absent font.
+
+The portal retains its editorial font stacks. Hosted account pages default to
+system fonts and use only same-origin font resources; their CSP allows
+`style-src 'self' 'unsafe-inline'` and `font-src 'self'`. No script or external
+font permission is added to the account boundary.
+
+Validation rejects malformed colors, unsupported iOS system designs, unsafe
+font configuration, Android type scales outside 0.8–2 and targets below 48dp
+Android / 44pt iOS / 44px web. Both appearances must meet 4.5:1 for the configured
+on-accent/accent, text/surface, text/background, secondary/surface and
+on-error/error pairs. This checks those text pairs, not full accessibility or
+every possible composed background. The current action pair is white on
+`#C6401D` (5.06:1); the source logo remains `#F1562C`.
+
+#### Drift prevention and release behavior
+
+`design/generated.json` records SHA-256 hashes of brand inputs and generated
+assets. Token source code/CSS is compared with freshly rendered declarations;
+brand inputs and outputs are compared with the manifest. The read-only
+`python3 scripts/generate-design-system.py --check` needs only Python's standard
+library and exits nonzero with a regeneration instruction when resources drift.
+
+The check is wired into Gradle's Android pre-build, Xcode's pre-build phase,
+the portal's pre-test script, the design-resource CI job and both publication
+workflows. Generated resources and their sources belong in the same commit.
+The portal deployment explicitly includes the generated CSS in its public-file
+allowlist; the API deployment publishes its own auth asset. Existing separate
+deployment targets and authorization boundaries remain intact.
+
+Design changes require regenerated resources, rebuilt/distributed mobile apps
+and ordinary web/API publication. They do not remotely modify installed mobile
+versions. Reverting the source and regenerated resources together restores the
+prior design without changing accounts or business data.
+
+#### Executed validation and remaining acceptance
+
+| Environment | Executed result |
+| --- | --- |
+| `Generosity_API_36` Android 16 emulator | Four UI tests passed: bilingual welcome and profile entry with enlarged text, guest profile, and discovery/language/detail navigation. Debug APK, instrumentation compilation and five JVM tests also passed. |
+| iPhone 16 Pro simulator, iOS 18.6 | Three UI tests passed: bilingual welcome, guest profile and Spanish visual tour through map/list/detail/needs/profile/settings/keyboard/empty state. Xcode simulator build passed. |
+| Chromium and WebKit | 69 portal tests passed, with one existing duplicate screenshot case intentionally skipped. Hosted account/legal rendering and CSP were additionally checked in ES/EN at 320px with account text at 200%. |
+| Generation/backend/specs | Five generator checks passed, including a temporary recolored brand export and deterministic regeneration. PHP social-auth tests passed (14 tests / 201 assertions). Strict foundation OpenSpec validation passed. |
+
+The generator tests distinguish config propagation from real rendering checks;
+local auth tests do not certify live Google/Apple authorization. Physical
+devices, complete screen-reader acceptance, newly installed font files, live
+Google map tiles and production cache behavior remain outside this validation.
+Tasks 17.11–17.13 are complete; task 17.10 remains open and the foundation is not
+ready for archival. Reproduction commands and limitations are in
+[design verification](../../../docs/testing/design-system.md) and the
+[maintainer guide](../../../docs/design-system.md).
+
 ### Contribution Authority and Units
 
 User-approved policy: users submit/cancel their own offers; assigned center

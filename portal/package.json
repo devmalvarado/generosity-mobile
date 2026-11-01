@@ -3,6 +3,7 @@
   "private": true,
   "description": "Local static preview and browser checks for the Generosity public portal. Not a production deploy.",
   "scripts": {
+    "pretest": "python3 ../scripts/generate-design-system.py --check",
     "start": "python3 -m http.server 47321 --bind 127.0.0.1",
     "test": "playwright test"
   },

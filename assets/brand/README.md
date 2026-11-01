@@ -46,9 +46,9 @@ solid white background and have no prerendered rounded corners.
   vector representation. `GenerositySymbol.imageset` is available for welcome
   work. `AppIcon.appiconset` supplies iPhone/iPad sizes plus an opaque RGB
   1024px marketing icon; the Xcode target selects `AppIcon`.
-- The web folder is a ready-to-copy kit for the portal's separate workstream.
-  Its template is not linked into the portal yet. Copy its files to the public
-  deployment root, or adjust icon URLs and `start_url` for the final route.
+- The shared generator copies the current logo, favicon and Apple touch icon
+  to `portal/assets/`. The remaining web exports and manifest are a kit for
+  future PWA work; adjust icon URLs and `start_url` before linking the manifest.
   Adding a manifest alone does not implement offline/PWA functionality.
 
 Example when the `web/` files are served at the site root:
@@ -62,21 +62,30 @@ Example when the `web/` files are served at the site root:
 
 ## Regenerate and verify
 
+The editable vector masters now live in `master/symbol.svg` and
+`master/wordmark.svg`. Change colors in `design/tokens.json`, not in exported
+images. The shared generator also updates the portal logo/favicon and native
+assets. See [the design workflow](../../docs/design-system.md).
+
 From the repository root:
 
 ```bash
 brew install potrace
 python3 -m venv /tmp/generosity-brand-venv
 /tmp/generosity-brand-venv/bin/pip install -r scripts/brand-requirements.txt
-/tmp/generosity-brand-venv/bin/python scripts/generate-brand-assets.py
+/tmp/generosity-brand-venv/bin/python scripts/generate-design-system.py
 xcodegen generate --spec iosApp/project.yml
 ```
 
 Generation uses [Potrace 1.16](https://potrace.sourceforge.net/) for smooth
 outlines and [resvg](https://resvg-py.readthedocs.io/en/latest/api.html) for PNG
 rendering. These are asset-authoring tools, not mobile runtime dependencies.
-The script checks SVGs for embedded images/font text, compares traced masks
-with the source, checks ICO sizes, iOS alpha removal and the Android safe zone.
+Potrace is needed only for explicit re-import of the original PNG with
+`generate-brand-assets.py --trace-source`; ordinary edits use the SVG masters.
+The script checks SVGs for embedded images/font text, checks ICO sizes, iOS
+alpha removal and the Android safe zone. Explicit PNG re-import also compares
+traced masks with the original; ordinary SVG regeneration does not claim a new
+raster-to-vector fidelity measurement.
 It also rebuilds the ZIP. Native compilation/runtime checks are recorded in
 the repository's [visual verification](../../docs/testing/native-visual-verification.md).
 

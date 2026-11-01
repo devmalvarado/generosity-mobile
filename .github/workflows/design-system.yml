@@ -1,0 +1,14 @@
+name: Design resources
+on:
+  pull_request:
+  push:
+    paths: [design/**, assets/brand/**, scripts/**, androidApp/**, iosApp/**, portal/**, backend/public/auth-assets/**]
+permissions:
+  contents: read
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: python3 scripts/test-design-system.py
+      - run: python3 scripts/generate-design-system.py --check

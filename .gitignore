@@ -54,3 +54,6 @@ xcuserdata/
 *.log
 *.tmp
 *.temp
+
+# Python authoring tools
+__pycache__/

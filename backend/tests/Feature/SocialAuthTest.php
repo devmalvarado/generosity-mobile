@@ -56,7 +56,9 @@ class SocialAuthTest extends TestCase
                 ->assertSee('class="provider provider-google"', false)
                 ->assertSee('class="provider provider-apple"', false)
                 ->assertSee('/auth-assets/google.png')->assertSee('/auth-assets/apple.png')
+                ->assertSee('/auth-assets/design-tokens.css')
                 ->assertDontSee('id="new-name"', false);
+            $this->assertStringContainsString("style-src 'self' 'unsafe-inline'", $response->headers->get('Content-Security-Policy'));
             $this->assertStringContainsString("img-src 'self'; font-src 'self'", $response->headers->get('Content-Security-Policy'));
         }
     }

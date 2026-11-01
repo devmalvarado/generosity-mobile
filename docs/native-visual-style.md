@@ -5,6 +5,12 @@ Map/List/Profile/Settings destinations. Reference: [user concept](design-referen
 Implementation uses native controls, typography and a small palette/helper file
 per platform; it adds no design-system dependency or business model.
 
+Update 2026-11-01: these helpers now consume generated values from
+`design/tokens.json`, also used by the portal and account pages. Logos originate
+in `assets/brand/master/`. See [shared design configuration](design-system.md)
+for editing, font support, generation and consistency checks. The historical
+implementation notes below do not describe the current backend feature status.
+
 ## Assets and hierarchy
 
 The initial landing-logo approximation has been superseded by the user's

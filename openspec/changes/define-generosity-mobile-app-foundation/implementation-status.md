@@ -1,5 +1,21 @@
 # Foundation Implementation Audit
 
+## Shared design system and simulator validation — 2026-11-01
+
+The design source, SVG masters, platform generation, native/web consumers and
+drift checks are implemented. The [technical design](design.md#shared-design-system-implementation--2026-11-01)
+records the token contract, font/appearance behavior, generated-file mapping,
+security/contrast boundaries and deployment implications. The
+[capability contract](specs/mobile-visual-alignment/spec.md) and tasks 17.11–17.13
+track this scope separately from full visual acceptance.
+
+Actual UI execution passed on Android 16 / `Generosity_API_36` (four tests) and
+iPhone 16 Pro / iOS 18.6 (three tests). This is emulator/simulator execution,
+not compilation-only evidence. Generator, browser and PHP checks and remaining
+physical-device/live-provider limitations are recorded in
+[design-system verification](../../../docs/testing/design-system.md).
+Task 17.10 remains open; the foundation is not archived.
+
 ## Adult policy and scoped access closure — 2026-11-01
 
 This entry supersedes the earlier contact/legal-draft status below. The owner

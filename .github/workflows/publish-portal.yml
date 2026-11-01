@@ -8,6 +8,7 @@ on:
       - portal/styles.css
       - portal/portal.js
       - portal/assets/**
+      - design/**
       - .github/workflows/publish-portal.yml
   workflow_dispatch:
 
@@ -19,6 +20,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+
+      - name: Check generated design resources
+        run: python3 scripts/generate-design-system.py --check
 
       - name: Wait for the account and location-intake API release
         run: |
@@ -41,10 +45,12 @@ jobs:
           mkdir -p publish/assets
           cp portal/index.html portal/styles.css portal/portal.js publish/
           cp portal/assets/apple-touch-icon.png portal/assets/favicon.png portal/assets/logo.png publish/assets/
+          cp portal/assets/design-tokens.css publish/assets/
           find publish -type f | sort > /tmp/staged.txt
           cat /tmp/staged.txt
           cat > /tmp/expected.txt << 'LIST'
           publish/assets/apple-touch-icon.png
+          publish/assets/design-tokens.css
           publish/assets/favicon.png
           publish/assets/logo.png
           publish/index.html

@@ -235,6 +235,10 @@ The Kotlin-specific evidence remains available on the preserved mockup branch.
 - [x] 17.9 Restyle equivalent SwiftUI Profile/Impact, Settings and form states; verify the same data semantics and that visual changes do not restore sample-only business logic.
 - [ ] 17.10 Record Android/iOS screenshot baselines and reference comparison using the matrix in docs/testing/mobile-ui-checks.md; test Spanish/English, small/large phones, enlarged text, keyboard/screen-reader access, supported appearance modes and failure states, and rerun navigation/flow regressions before marking visual alignment complete.
 
+- [x] 17.11 Consolidate native/web/account colors, font configuration and common dimensions in one source; migrate existing components without changing navigation or business rules.
+- [x] 17.12 Establish editable vector logo masters, shared asset export and stale-output checks in native builds, web tests and publication workflows.
+- [x] 17.13 Verify generator edits/contrast/stale outputs, Android/iOS compilation and UI regression checks, portal rendering and hosted account CSS/CSP; record physical-device limitations separately. Evidence: `docs/testing/design-system.md`.
+
 ## 18. Generosity-Only Social Sign-In
 
 - [x] 18.1 Specify Google and Apple for Generosity web/Android/iOS, explicit account linking, missing-configuration behavior and exclusion of institute-wide SSO.

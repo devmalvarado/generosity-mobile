@@ -11,6 +11,7 @@
 		2AB417C210F7DDDAA36848A5 /* GenerosityVisualTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0F7611EC10D04F452C208FB6 /* GenerosityVisualTests.swift */; };
 		3068D1D15ED9BF004CC2831B /* LocalizationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4762199ADF64A196FDD60FAB /* LocalizationTests.swift */; };
 		448B5F3C704FCD2EBEDCEAF6 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = E65BF50201A1D0402B9F07A7 /* InfoPlist.strings */; };
+		569E50B9014B2492090459A9 /* DesignTokens.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8DECFE0BD3D85C0AEB9C0400 /* DesignTokens.swift */; };
 		722BD5074D69067488EBACA8 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FBDC30DB116ADDF12CF4133 /* ContentView.swift */; };
 		839697680DBDE2594D00A52B /* GenerosityUiChecklistTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 553F5D8AAA7C55879E0C5371 /* GenerosityUiChecklistTests.swift */; };
 		8E24A613189DCB5846BE84F8 /* GenerosityTheme.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48839BCE4C89DD3B2532F207 /* GenerosityTheme.swift */; };
@@ -61,6 +62,7 @@
 		4FBDC30DB116ADDF12CF4133 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		553F5D8AAA7C55879E0C5371 /* GenerosityUiChecklistTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GenerosityUiChecklistTests.swift; sourceTree = "<group>"; };
 		58057346B63330745D033FAD /* GenerosityUITests.xctest */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.cfbundle; path = GenerosityUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		8DECFE0BD3D85C0AEB9C0400 /* DesignTokens.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DesignTokens.swift; sourceTree = "<group>"; };
 		913C043915D0438C7C5EF819 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		96DD3F095B5C18041C47D777 /* BackendBridgeTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BackendBridgeTests.swift; sourceTree = "<group>"; };
 		985FFFE5BD68ED75796DEF66 /* AccountSession.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountSession.swift; sourceTree = "<group>"; };
@@ -133,6 +135,7 @@
 				A329E8A62A3E8AF8AC06A055 /* Assets.xcassets */,
 				4FBDC30DB116ADDF12CF4133 /* ContentView.swift */,
 				CEDFF89F0D86E16CCDFF1221 /* ContributionForm.swift */,
+				8DECFE0BD3D85C0AEB9C0400 /* DesignTokens.swift */,
 				1D7757C9C78879CA45846739 /* GenerosityApp.swift */,
 				48839BCE4C89DD3B2532F207 /* GenerosityTheme.swift */,
 				F851A4489E4D677D746DAB41 /* IOSConnection.swift */,
@@ -181,6 +184,7 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 81C892B6A774E92FF7FEA764 /* Build configuration list for PBXNativeTarget "Generosity" */;
 			buildPhases = (
+				7E910DA5D1CA2D65B0A53049 /* Check design resources */,
 				7224B26DA0E7B16A32F833AD /* Sources */,
 				951F0DEBFDF59AC73153CEB6 /* Resources */,
 				6946880BC313975CEEE0F8F7 /* Frameworks */,
@@ -268,6 +272,28 @@
 		};
 /* End PBXResourcesBuildPhase section */
 
+/* Begin PBXShellScriptBuildPhase section */
+		7E910DA5D1CA2D65B0A53049 /* Check design resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			alwaysOutOfDate = 1;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			name = "Check design resources";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "python3 \"$SRCROOT/../scripts/generate-design-system.py\" --check";
+		};
+/* End PBXShellScriptBuildPhase section */
+
 /* Begin PBXSourcesBuildPhase section */
 		3EE6544CA889ED3673CAFE9A /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
@@ -286,6 +312,7 @@
 				BA8DD7E4456D4050D2C0E39F /* AccountSession.swift in Sources */,
 				722BD5074D69067488EBACA8 /* ContentView.swift in Sources */,
 				BC1277BCCE4090E9A418C12A /* ContributionForm.swift in Sources */,
+				569E50B9014B2492090459A9 /* DesignTokens.swift in Sources */,
 				E00AAC8194E6A18F0A852051 /* GenerosityApp.swift in Sources */,
 				8E24A613189DCB5846BE84F8 /* GenerosityTheme.swift in Sources */,
 				F40F44A55C388E967B436D29 /* IOSConnection.swift in Sources */,

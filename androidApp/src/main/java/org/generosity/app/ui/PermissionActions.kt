@@ -27,7 +27,7 @@ fun PlatformPermissionActions(locale: SupportedLocale) {
         onResult = { }
     )
 
-    Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+    Column(verticalArrangement = Arrangement.spacedBy(GenSpace.sm)) {
         Text(localizedString(R.string.permissions_explanation, locale))
         Button(onClick = { launcher.launch(permissions.toTypedArray()) }) {
             Text(localizedString(R.string.request_permissions, locale))

@@ -77,6 +77,10 @@ and its local email inbox at localhost:8028. No production deployment is implied
 
 ## Build and Test
 
+Brand changes are configured once in `design/tokens.json` and
+`assets/brand/master/`, then generated for Android, iOS, portal and hosted
+account pages. See [shared design configuration](docs/design-system.md).
+
 This is the consolidated working copy for `devmalvarado/generosity-mobile`.
 Use the included Gradle wrapper from this directory. Requires JDK 17 or newer
 and Android SDK platform 36. Set `sdk.dir` in the ignored `local.properties`

@@ -1,20 +1,22 @@
+@import url("assets/design-tokens.css");
+
 /* Mobile-first. Base rules are the 320px phone; min-width queries add room. */
 
 :root {
-  --paper: #FBF8F3;
-  --ink: #1C1915;
-  --ink-soft: #5C564E;
-  --line: #E4DDD2;
-  --pin: #E4572E;
-  --pin-deep: #C4431C;
-  --grove: #2F6F62;
-  --sun: #E0A106;
-  --card: #FFFFFF;
-  --shadow: 0 1px 0 rgba(28, 25, 21, .04);
-  --serif: "Fraunces", "Iowan Old Style", Georgia, serif;
-  --sans: "Outfit", "Avenir Next", "Segoe UI", sans-serif;
+  --paper: var(--gen-web-paper);
+  --ink: var(--gen-web-ink);
+  --ink-soft: var(--gen-web-ink-soft);
+  --line: var(--gen-web-line);
+  --pin: var(--gen-accent);
+  --pin-deep: var(--gen-web-accent-hover);
+  --grove: var(--gen-web-grove);
+  --sun: var(--gen-web-sun);
+  --card: var(--gen-surface);
+  --shadow: 0 1px 0 rgba(var(--gen-web-ink-rgb), .04);
+  --serif: var(--gen-font-heading);
+  --sans: var(--gen-font-body);
   --measure: 66ch;
-  --gutter: 1rem;
+  --gutter: var(--gen-space-lg);
   color-scheme: light;
 }
 
@@ -80,7 +82,7 @@ h2 { font-size: clamp(1.45rem, 6vw, 2.6rem); max-width: 22ch; }
   background: var(--ink);
   color: var(--paper);
   text-decoration: none;
-  border-radius: 999px;
+  border-radius: var(--gen-radius-pill);
 }
 
 .skip:focus {
@@ -102,7 +104,7 @@ h2 { font-size: clamp(1.45rem, 6vw, 2.6rem); max-width: 22ch; }
   align-items: center;
   gap: .5rem .75rem;
   padding: .6rem var(--gutter);
-  background: rgba(251, 248, 243, .94);
+  background: rgba(var(--gen-web-paper-rgb), .94);
   border-bottom: 1px solid var(--line);
 }
 
@@ -111,7 +113,7 @@ h2 { font-size: clamp(1.45rem, 6vw, 2.6rem); max-width: 22ch; }
   align-items: center;
   gap: .55rem;
   min-width: 0;
-  min-height: 44px;
+  min-height: var(--gen-touch);
   text-decoration: none;
   flex: 1 1 auto;
 }
@@ -133,22 +135,20 @@ h2 { font-size: clamp(1.45rem, 6vw, 2.6rem); max-width: 22ch; }
 .lang select, .menu, .solid, .ghost, .filters button {
   font: inherit;
   font-weight: 560;
-  min-height: 44px;
+  min-height: var(--gen-touch);
 }
 
 .lang select {
   width: 100%;
   max-width: 16rem;
-  height: 44px;
-  min-height: 44px;
+  height: var(--gen-touch);
+  min-height: var(--gen-touch);
   padding: 0 2rem 0 .9rem;
   border: 1.5px solid var(--line);
-  border-radius: 999px;
-  background: #fff url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath fill='%231C1915' d='M1 1.2 6 6.2 11 1.2'/%3E%3C/svg%3E") no-repeat right .7rem center;
+  border-radius: var(--gen-radius-pill);
+  background: var(--card);
   color: inherit;
-  appearance: none;
-  -webkit-appearance: none;
-  line-height: 44px;
+  line-height: var(--gen-touch);
 }
 
 .menu {
@@ -156,11 +156,11 @@ h2 { font-size: clamp(1.45rem, 6vw, 2.6rem); max-width: 22ch; }
   align-items: center;
   justify-content: center;
   margin-left: auto;
-  min-width: 44px;
+  min-width: var(--gen-touch);
   padding: .45rem 1rem;
-  background: #fff;
+  background: var(--card);
   border: 1.5px solid var(--line);
-  border-radius: 999px;
+  border-radius: var(--gen-radius-pill);
   color: inherit;
   cursor: pointer;
 }
@@ -177,7 +177,7 @@ h2 { font-size: clamp(1.45rem, 6vw, 2.6rem); max-width: 22ch; }
 .drawer a, .drawer .close-menu {
   display: flex;
   align-items: center;
-  min-height: 44px;
+  min-height: var(--gen-touch);
   padding: .35rem 0;
   text-decoration: none;
   text-align: left;
@@ -194,7 +194,7 @@ h2 { font-size: clamp(1.45rem, 6vw, 2.6rem); max-width: 22ch; }
   align-items: center;
   justify-content: center;
   padding: .65rem 1.1rem;
-  border-radius: 999px;
+  border-radius: var(--gen-radius-pill);
   text-decoration: none;
   text-align: center;
   border: 1.5px solid transparent;
@@ -202,9 +202,9 @@ h2 { font-size: clamp(1.45rem, 6vw, 2.6rem); max-width: 22ch; }
   white-space: normal;
 }
 
-.solid { background: var(--pin); color: #fff; }
+.solid { background: var(--pin); color: var(--gen-on-accent); }
 .solid:hover { background: var(--pin-deep); }
-.ghost { border-color: var(--line); background: #fff; color: var(--ink); }
+.ghost { border-color: var(--line); background: var(--card); color: var(--ink); }
 
 .hero, .loop, .needs, .split, .centers, .access, .principles, .registration, .institute {
   width: min(1240px, 100%);
@@ -232,14 +232,14 @@ input, select, textarea {
   width: 100%;
   max-width: 100%;
   min-width: 0;
-  min-height: 44px;
+  min-height: var(--gen-touch);
   font: inherit;
   font-weight: 380;
   color: inherit;
   padding: .7rem .9rem;
   border: 1.5px solid var(--line);
-  border-radius: 12px;
-  background: #fff;
+  border-radius: var(--gen-radius-card);
+  background: var(--card);
 }
 
 
@@ -248,9 +248,9 @@ input, select, textarea {
   margin: 0;
   max-width: 100%;
   background:
-    radial-gradient(circle at 50% 56%, rgba(228, 87, 46, .08), transparent 46%),
-    #F4F0E8;
-  border-radius: 28px;
+    radial-gradient(circle at 50% 56%, rgba(var(--gen-accent-rgb), .08), transparent 46%),
+    var(--gen-web-map-surface);
+  border-radius: var(--gen-radius-map);
   padding: .75rem .75rem .5rem;
 }
 
@@ -269,7 +269,7 @@ input, select, textarea {
   margin: 0;
 }
 
-.map figcaption span { display: inline-flex; align-items: center; gap: .35rem; min-height: 44px; }
+.map figcaption span { display: inline-flex; align-items: center; gap: .35rem; min-height: var(--gen-touch); }
 
 .dot { width: .7rem; height: .7rem; border-radius: 50%; display: inline-block; flex: 0 0 auto; }
 .dot.you, .dot.food { background: var(--pin); }
@@ -296,9 +296,9 @@ input, select, textarea {
 
 .filters { display: flex; flex-wrap: wrap; gap: .4rem; }
 .filters button {
-  background: #fff;
+  background: var(--card);
   border: 1.5px solid var(--line);
-  border-radius: 999px;
+  border-radius: var(--gen-radius-pill);
   padding: .45rem .9rem;
   cursor: pointer;
   color: var(--ink-soft);
@@ -312,7 +312,7 @@ input, select, textarea {
 
 .need {
   background: var(--card);
-  border-radius: 20px;
+  border-radius: var(--gen-radius-panel);
   padding: 1.15rem 1.15rem 1.25rem;
   box-shadow: var(--shadow);
   display: flex;
@@ -320,10 +320,10 @@ input, select, textarea {
   gap: .55rem;
 }
 
-.need.featured { background: #1C1915; color: #FBF8F3; }
+.need.featured { background: var(--ink); color: var(--paper); }
 .need header { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: .4rem; }
 .cause { font-size: .92rem; color: var(--grove); font-weight: 560; }
-.need.featured .cause { color: #F0B49A; }
+.need.featured .cause { color: var(--gen-web-featured-label); }
 .need h3 { font-size: 1.35rem; }
 .need .solid { align-self: stretch; margin-top: auto; }
 
@@ -341,8 +341,8 @@ input, select, textarea {
 .ways dd { margin: .2rem 0 0; color: var(--ink-soft); }
 
 .action-card, .access-card, .registration-form {
-  background: #fff;
-  border-radius: 24px;
+  background: var(--card);
+  border-radius: var(--gen-radius-feature);
   padding: 1.15rem;
   box-shadow: var(--shadow);
   display: flex;
@@ -361,7 +361,7 @@ label { display: flex; flex-direction: column; gap: .3rem; font-weight: 560; fon
   flex-direction: row;
   align-items: center;
   gap: .6rem;
-  min-height: 44px;
+  min-height: var(--gen-touch);
   font-weight: 460;
 }
 .choice input { width: 1.15rem; height: 1.15rem; min-height: 0; padding: 0; accent-color: var(--pin); }
@@ -378,7 +378,7 @@ label { display: flex; flex-direction: column; gap: .3rem; font-weight: 560; fon
 .registration-steps li { margin-block: .9rem; padding-left: .4rem; }
 .registration-form fieldset { gap: .5rem; min-width: 0; }
 .registration-optional { margin-block: .8rem; }
-.registration-optional summary { cursor: pointer; min-height: 44px; padding-block: .6rem; font-weight: 560; }
+.registration-optional summary { cursor: pointer; min-height: var(--gen-touch); padding-block: .6rem; font-weight: 560; }
 .registration-optional label { margin-top: .75rem; }
 .registration .choice { align-items: flex-start; margin-top: .6rem; }
 .registration .choice input { flex-shrink: 0; margin-top: .2rem; }
@@ -391,9 +391,9 @@ label { display: flex; flex-direction: column; gap: .3rem; font-weight: 560; fon
 }
 
 .hint, .fine { margin: 0; color: var(--ink-soft); font-size: .95rem; font-weight: 380; }
-.field-error { margin: 0; color: var(--pin-deep); font-weight: 560; font-size: .95rem; }
+.field-error { margin: 0; color: var(--gen-error); font-weight: 560; font-size: .95rem; }
 .field-error:empty { display: none; }
-[aria-invalid="true"] { border-color: var(--pin-deep); }
+[aria-invalid="true"] { border-color: var(--gen-error); }
 
 .result:empty { display: none; }
 .result {
@@ -401,7 +401,7 @@ label { display: flex; flex-direction: column; gap: .3rem; font-weight: 560; fon
   background: var(--paper);
   color: var(--ink);
   border: 1.5px solid var(--ink);
-  border-radius: 12px;
+  border-radius: var(--gen-radius-card);
   padding: .8rem 1rem;
   font-weight: 560;
 }
@@ -422,7 +422,7 @@ footer .brand { flex: 0 1 auto; }
 footer .brand img { height: 2.5rem; }
 footer p { margin: 0; color: var(--ink-soft); font-size: .95rem; flex: 1 1 16rem; }
 footer nav { display: flex; flex-wrap: wrap; gap: .35rem 1rem; }
-footer nav a { display: inline-flex; align-items: center; min-height: 44px; color: var(--ink-soft); }
+footer nav a { display: inline-flex; align-items: center; min-height: var(--gen-touch); color: var(--ink-soft); }
 
 :focus-visible { outline: 3px solid var(--pin); outline-offset: 2px; }
 
@@ -447,7 +447,7 @@ footer nav a { display: inline-flex; align-items: center; min-height: 44px; colo
   .topnav a {
     display: inline-flex;
     align-items: center;
-    min-height: 44px;
+    min-height: var(--gen-touch);
     text-decoration: none;
     color: var(--ink-soft);
   }
@@ -470,17 +470,17 @@ footer nav a { display: inline-flex; align-items: center; min-height: 44px; colo
 
 .account-actions { display: flex; flex-wrap: wrap; gap: 12px; }
 .account-actions [hidden] { display: none; }
-.account-actions button, .account-actions a { min-height: 44px; }
+.account-actions button, .account-actions a { min-height: var(--gen-touch); }
 
 /* The operational workspace starts as one column, including at 320 CSS pixels. */
 .workspace { margin: 2rem auto; padding: 1rem; max-width: 60rem; overflow-wrap: anywhere; }
 .workspace [hidden] { display: none !important; }
 .workspace label { display: block; margin-top: .75rem; }
 .workspace input:not([type=checkbox]), .workspace textarea, .workspace select { display: block; width: 100%; max-width: 100%; min-width: 0; padding: .65rem; font: inherit; }
-.workspace button, .workspace select { min-height: 44px; white-space: normal; }
+.workspace button, .workspace select { min-height: var(--gen-touch); white-space: normal; }
 .workspace button { margin: .4rem 0; padding: .65rem; }
-.workspace fieldset { min-width: 0; border: 1px solid #ddd; border-radius: 12px; padding: 1rem; }
-.workspace-list article { border: 1px solid #ddd; border-radius: 12px; padding: 1rem; margin: 1rem 0; }
+.workspace fieldset { min-width: 0; border: 1px solid var(--line); border-radius: var(--gen-radius-card); padding: 1rem; }
+.workspace-list article { border: 1px solid var(--line); border-radius: var(--gen-radius-card); padding: 1rem; margin: 1rem 0; }
 .workspace textarea { min-height: 6rem; }
 .workspace input[type=checkbox] { width: 24px; height: 24px; vertical-align: middle; }
 

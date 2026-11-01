@@ -7,9 +7,6 @@
   <meta name="description" content="Generosity, una iniciativa del Instituto de Deberes y Derechos Humanos para conectar personas, organizaciones y causas. Registra tu sede y coordina la ayuda de tu comunidad.">
   <link rel="icon" href="assets/favicon.png" type="image/png" sizes="192x192">
   <link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,560;9..144,640&family=Outfit:wght@380;460;560&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
@@ -64,10 +61,10 @@
       <figure class="map" data-i18n-aria="map.title">
         <svg viewBox="0 0 520 460">
           <title data-i18n="map.title">Ilustración de una comunidad conectada por la ayuda.</title>
-          <g class="streets" fill="none" stroke="#E4DDD2" stroke-width="10" stroke-linecap="round">
+          <g class="streets" fill="none" stroke="var(--line)" stroke-width="10" stroke-linecap="round">
             <path d="M-10 90 H530M-10 200 H530M-10 320 H530M70 -10 V470M190 -10 V470M330 -10 V470M450 -10 V470"/>
           </g>
-          <g class="blocks" fill="#EFEAE2">
+          <g class="blocks" fill="var(--gen-web-map-block)">
             <rect x="86" y="106" width="88" height="78" rx="6"/>
             <rect x="206" y="106" width="108" height="78" rx="6"/>
             <rect x="346" y="106" width="88" height="78" rx="6"/>
@@ -78,31 +75,31 @@
             <rect x="206" y="336" width="108" height="70" rx="6"/>
           </g>
           <g class="pin you" aria-hidden="true">
-            <circle cx="262" cy="258" r="34" fill="#E4572E" opacity=".14"/>
-            <circle cx="262" cy="258" r="7" fill="#E4572E"/>
+            <circle cx="262" cy="258" r="34" fill="var(--pin)" opacity=".14"/>
+            <circle cx="262" cy="258" r="7" fill="var(--pin)"/>
           </g>
           <a href="#comedor">
             <g class="pin" transform="translate(150 150)">
               <title data-i18n="map.pinFood">Conocer la causa de alimentación</title>
               <circle cx="14" cy="16" r="28" fill="transparent"/>
-              <path d="M14 2a12 12 0 0 0-5 23L14 34l5-9a12 12 0 0 0-5-23Z" fill="#E4572E"/>
-              <circle cx="14" cy="14" r="4" fill="#FBF8F3"/>
+              <path d="M14 2a12 12 0 0 0-5 23L14 34l5-9a12 12 0 0 0-5-23Z" fill="var(--pin)"/>
+              <circle cx="14" cy="14" r="4" fill="var(--paper)"/>
             </g>
           </a>
           <a href="#hogar">
             <g class="pin" transform="translate(392 188)">
               <title data-i18n="map.pinKids">Conocer la causa de infancia</title>
               <circle cx="14" cy="16" r="28" fill="transparent"/>
-              <path d="M14 2a12 12 0 0 0-5 23L14 34l5-9a12 12 0 0 0-5-23Z" fill="#2F6F62"/>
-              <circle cx="14" cy="14" r="4" fill="#FBF8F3"/>
+              <path d="M14 2a12 12 0 0 0-5 23L14 34l5-9a12 12 0 0 0-5-23Z" fill="var(--grove)"/>
+              <circle cx="14" cy="14" r="4" fill="var(--paper)"/>
             </g>
           </a>
           <a href="#puente">
             <g class="pin" transform="translate(300 360)">
               <title data-i18n="map.pinHealth">Conocer la causa de salud</title>
               <circle cx="14" cy="16" r="28" fill="transparent"/>
-              <path d="M14 2a12 12 0 0 0-5 23L14 34l5-9a12 12 0 0 0-5-23Z" fill="#E0A106"/>
-              <circle cx="14" cy="14" r="4" fill="#FBF8F3"/>
+              <path d="M14 2a12 12 0 0 0-5 23L14 34l5-9a12 12 0 0 0-5-23Z" fill="var(--sun)"/>
+              <circle cx="14" cy="14" r="4" fill="var(--paper)"/>
             </g>
           </a>
         </svg>

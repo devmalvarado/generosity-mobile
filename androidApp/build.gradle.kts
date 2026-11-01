@@ -84,3 +84,4 @@ val verifyMapProviderBoundary by tasks.registering {
     }
 }
 tasks.named("check") { dependsOn(verifyMapProviderBoundary) }
+tasks.named("preBuild") { dependsOn(rootProject.tasks.named("checkDesignSystem")) }

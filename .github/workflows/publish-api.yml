@@ -5,6 +5,7 @@ on:
     branches: [main]
     paths:
       - backend/**
+      - design/**
       - .github/workflows/publish-api.yml
       - .github/scripts/publish_api.py
   workflow_dispatch:
@@ -22,6 +23,9 @@ jobs:
     timeout-minutes: 25
     steps:
       - uses: actions/checkout@v4
+
+      - name: Check generated design resources
+        run: python3 scripts/generate-design-system.py --check
 
       - uses: shivammathur/setup-php@v2
         with:

@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
-"""Trace the supplied logo into paths, then export native/web assets from SVG."""
+"""Export the master vector geometry using design/tokens.json; optionally retrace the original PNG."""
 
-from collections import Counter
 from io import BytesIO
+import argparse
 import json
 from pathlib import Path
 import re
@@ -10,7 +10,7 @@ import struct
 import subprocess
 import tempfile
 import xml.etree.ElementTree as ET
-from zipfile import ZipFile, ZIP_DEFLATED
+from zipfile import ZipFile, ZipInfo, ZIP_DEFLATED
 
 from PIL import Image, ImageChops, ImageCms
 import resvg_py
@@ -23,10 +23,9 @@ TEXT_DARK, TEXT_LIGHT = "#000000", "#FFFFFF"
 
 def write(path, content):
     path.parent.mkdir(parents=True, exist_ok=True)
-    if isinstance(content, bytes):
+    content = content if isinstance(content, bytes) else content.encode("utf-8")
+    if not path.exists() or path.read_bytes() != content:
         path.write_bytes(content)
-    else:
-        path.write_text(content, encoding="utf-8")
 
 
 def json_file(path, data):
@@ -119,14 +118,50 @@ def android_vector(geometry, size=None, offset=(0, 0), scale=1, monochrome=False
             f'android:scaleX="{scale:.8f}" android:scaleY="{scale:.8f}">\n' + "\n".join(groups) + "\n</group>\n</vector>\n")
 
 
+def read_master(name, brand):
+    root = ET.parse(BRAND / "master" / f"{name}.svg").getroot()
+    x, y, width, height = map(float, root.attrib["viewBox"].split())
+    if x != 0 or y != 0 or width <= 0 or height <= 0:
+        raise ValueError("Master SVGs need a positive viewBox starting at 0 0")
+    paths = []
+    for node in root:
+        if node.tag == f"{{{SVG_NS}}}title":
+            continue
+        if node.tag != f"{{{SVG_NS}}}path" or node.get("data-color") not in ["brand", "text"]:
+            raise ValueError("Flatten the master SVG to paths with data-color=brand or text")
+        transform = node.get("transform", "translate(0 0) scale(1 1)")
+        match = re.fullmatch(r"translate\(([-\d.]+)[ ,]+([-\d.]+)\) scale\(([-\d.]+)[ ,]+([-\d.]+)\)", transform)
+        if not match:
+            raise ValueError("Flatten SVG transforms or use translate(x y) scale(x y)")
+        paths.append({"d": node.attrib["d"], "x": float(match[1]), "y": float(match[2]),
+                      "sx": float(match[3]), "sy": float(match[4]),
+                      "color": "text" if node.get("data-color") == "text" else brand["color"]})
+    if not paths:
+        raise ValueError("The master SVG has no paths")
+    return {"width": width, "height": height, "paths": paths}
+
+
 def main():
-    source = srgb(BRAND / "source/gen2.png")
-    orange_rgb = Counter((r, g, b) for r, g, b, a in source.get_flattened_data() if a == 255 and r > 180 and r - g > 65).most_common(1)[0][0]
-    orange = "#" + "".join(f"{channel:02X}" for channel in orange_rgb)
-    symbol, symbol_mask = trace([color_mask(source.crop((0, 0, source.width, 355)), True)], [orange])
-    lower = source.crop((0, 355, source.width, source.height))
-    wordmark, wordmark_mask = trace([color_mask(lower, True), color_mask(lower, False)], [orange, "text"])
-    json_file(BRAND / "geometry.json", {"orange_srgb": orange, "symbol": symbol, "wordmark": wordmark})
+    global TEXT_DARK, TEXT_LIGHT
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--trace-source", action="store_true", help="Re-import the original supplied PNG into the master geometry")
+    args = parser.parse_args()
+    brand = json.loads((ROOT / "design/tokens.json").read_text())["brand"]
+    TEXT_DARK, TEXT_LIGHT = brand["textLight"], brand["textDark"]
+    orange = brand["color"]
+    if args.trace_source:
+        source = srgb(BRAND / "source/gen2.png")
+        symbol, symbol_mask = trace([color_mask(source.crop((0, 0, source.width, 355)), True)], [orange])
+        lower = source.crop((0, 355, source.width, source.height))
+        wordmark, wordmark_mask = trace([color_mask(lower, True), color_mask(lower, False)], [orange, "text"])
+        json_file(BRAND / "geometry.json", {"orange_srgb": orange, "symbol": symbol, "wordmark": wordmark})
+        # Retracing is an explicit import; ordinary regeneration never overwrites masters.
+        for name, geometry in [("symbol", symbol), ("wordmark", wordmark)]:
+            root = ET.fromstring(vector(geometry, "Generosity"))
+            for node in root.findall(f"{{{SVG_NS}}}path"):
+                node.set("data-color", "text" if node.get("fill") == TEXT_DARK else "brand")
+            write(BRAND / "master" / f"{name}.svg", ET.tostring(root, encoding="unicode"))
+    symbol, wordmark = read_master("symbol", brand), read_master("wordmark", brand)
     outputs = {"symbol": vector(symbol, "Generosity symbol"),
                "wordmark": vector(wordmark, "Generosity"), "wordmark-dark": vector(wordmark, "Generosity", True)}
     # Preserve the supplied stacked composition while giving all variants transparent backgrounds.
@@ -139,7 +174,7 @@ def main():
         outputs[name] = svg(symbol["width"], symbol["height"], path_markup(symbol["paths"], monochrome=color), "Generosity symbol")
     # App-store images stay square and opaque. Platform launchers apply their own masks.
     icon_scale = 736 / symbol["height"]
-    icon = svg(1024, 1024, '<rect width="1024" height="1024" fill="#FFFFFF"/>'
+    icon = svg(1024, 1024, f'<rect width="1024" height="1024" fill="{brand["iconBackground"]}"/>'
         f'<g transform="translate({(1024-symbol["width"]*icon_scale)/2:g} 144) scale({icon_scale:g})">{path_markup(symbol["paths"])}</g>', "Generosity app icon")
     outputs["app-icon"] = icon
     for name, content in outputs.items():
@@ -180,11 +215,11 @@ def main():
         write(BRAND / "web" / filename, png(icon, size))
     # A distinct smaller mark stays within the circular maskable-icon safe region.
     mask_scale = 600 / symbol["height"]
-    maskable = svg(1024, 1024, '<rect width="1024" height="1024" fill="#FFFFFF"/>'
+    maskable = svg(1024, 1024, f'<rect width="1024" height="1024" fill="{brand["iconBackground"]}"/>'
         f'<g transform="translate({(1024-symbol["width"]*mask_scale)/2:g} 212) scale({mask_scale:g})">{path_markup(symbol["paths"])}</g>', "Generosity maskable icon")
     write(BRAND / "web/icon-maskable-512.png", png(maskable, 512))
     json_file(BRAND / "web/manifest.webmanifest", {"name": "Generosity", "short_name": "Generosity", "start_url": "./",
-        "display": "standalone", "background_color": "#FFFFFF", "theme_color": orange,
+        "display": "standalone", "background_color": brand["iconBackground"], "theme_color": orange,
         "icons": [{"src": f"icon-{size}.png", "sizes": f"{size}x{size}", "type": "image/png", "purpose": "any"} for size in [192, 512]] +
         [{"src": "icon-maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable"}]})
 
@@ -192,7 +227,7 @@ def main():
     write(res / "drawable/generosity_mark.xml", android_vector(symbol, intrinsic=(36, 48)))
     write(res / "drawable/generosity_wordmark.xml", android_vector(wordmark, intrinsic=(180, 180 * wordmark["height"] / wordmark["width"])))
     for folder, color in [("values", TEXT_DARK), ("values-night", TEXT_LIGHT)]:
-        write(res / folder / "brand_colors.xml", f'<resources><color name="generosity_wordmark_text">{color}</color><color name="generosity_icon_background">#FFFFFF</color></resources>\n')
+        write(res / folder / "brand_colors.xml", f'<resources><color name="generosity_wordmark_text">{color}</color><color name="generosity_icon_background">{brand["iconBackground"]}</color></resources>\n')
     scale = 50 / symbol["height"]
     offset = ((108 - symbol["width"] * scale) / 2, 29)
     for name, mono in [("generosity_launcher_foreground", False), ("generosity_launcher_monochrome", True)]:
@@ -222,36 +257,42 @@ def main():
         for idiom, size, scale in slots]})
 
     # Verify actual vector output against the supplied silhouettes and format contracts.
-    quality = {}
-    for name, geometry, mask in [("symbol", symbol, symbol_mask), ("wordmark", wordmark, wordmark_mask)]:
-        rendered = Image.open(BytesIO(png(vector(geometry, "Generosity"), geometry["width"]))).getchannel("A").point(lambda p: 255 if p >= 128 else 0)
-        intersection = sum(p > 0 for p in ImageChops.darker(mask, rendered).get_flattened_data())
-        union = sum(p > 0 for p in ImageChops.lighter(mask, rendered).get_flattened_data())
-        quality[name] = round(intersection / union, 5)
-        assert quality[name] > 0.985, f"Trace deviates from reference: {name} {quality[name]}"
+    quality = None
+    if args.trace_source:
+        quality = {}
+        for name, geometry, mask in [("symbol", symbol, symbol_mask), ("wordmark", wordmark, wordmark_mask)]:
+            rendered = Image.open(BytesIO(png(vector(geometry, "Generosity"), geometry["width"]))).getchannel("A").point(lambda p: 255 if p >= 128 else 0)
+            intersection = sum(p > 0 for p in ImageChops.darker(mask, rendered).get_flattened_data())
+            union = sum(p > 0 for p in ImageChops.lighter(mask, rendered).get_flattened_data())
+            quality[name] = round(intersection / union, 5)
+            assert quality[name] > 0.985, f"Trace deviates from reference: {name} {quality[name]}"
     for path in (BRAND / "svg").glob("*.svg"):
         root = ET.fromstring(path.read_text())
         assert not root.findall(f".//{{{SVG_NS}}}image") and not root.findall(f".//{{{SVG_NS}}}text")
     assert Image.open(appicon / "icon-1024.png").mode == "RGB"
     assert Image.open(BRAND / "web/favicon.ico").ico.sizes() == {(s, s) for s, _ in ico_parts}
     assert ((symbol["width"] * scale / 2) ** 2 + 25 ** 2) ** .5 < 33, "Android foreground exceeds safe circle"
-    json_file(BRAND / "verification.json", {"source": "gen2.png", "source_profile": "Display P3", "output_profile": "sRGB",
+    json_file(BRAND / "verification.json", {"source": "master/symbol.svg and master/wordmark.svg", "output_profile": "sRGB",
         "orange_srgb": orange, "silhouette_intersection_over_union": quality, "ico_sizes": [s for s, _ in ico_parts],
         "svg_contains_embedded_raster_or_font_text": False, "ios_marketing_icon_has_alpha": False})
+    # The same masters feed the public site, native headers, favicons and app icons.
+    for source, target in [("png/stacked.png", "logo.png"), ("web/favicon-32.png", "favicon.png"),
+                           ("web/apple-touch-icon.png", "apple-touch-icon.png")]:
+        write(ROOT / "portal/assets" / target, (BRAND / source).read_bytes())
     with ZipFile(BRAND / "generosity-brand-kit.zip", "w", ZIP_DEFLATED) as archive:
         for folder in ["svg", "png", "web"]:
             for path in sorted((BRAND / folder).rglob("*")):
                 if path.is_file():
-                    archive.write(path, str(path.relative_to(BRAND)))
+                    archive.writestr(ZipInfo(str(path.relative_to(BRAND))), path.read_bytes(), compress_type=ZIP_DEFLATED)
         for filename in ["README.md", "verification.json", "preview.svg", "preview.png"]:
-            archive.write(BRAND / filename, filename)
+            archive.writestr(ZipInfo(filename), (BRAND / filename).read_bytes(), compress_type=ZIP_DEFLATED)
         for pattern in ["drawable/generosity_*.xml", "values*/brand_colors.xml", "mipmap-*/ic_launcher.*"]:
             for path in sorted(res.glob(pattern)):
-                archive.write(path, "android/res/" + str(path.relative_to(res)))
+                archive.writestr(ZipInfo("android/res/" + str(path.relative_to(res))), path.read_bytes(), compress_type=ZIP_DEFLATED)
         assets = ROOT / "iosApp/GenerosityApp/Assets.xcassets"
         for path in sorted(assets.rglob("*")):
             if path.is_file():
-                archive.write(path, "ios/Assets.xcassets/" + str(path.relative_to(assets)))
+                archive.writestr(ZipInfo("ios/Assets.xcassets/" + str(path.relative_to(assets))), path.read_bytes(), compress_type=ZIP_DEFLATED)
     print(json.dumps({"output": str(BRAND), "orange": orange, "silhouette_iou": quality}, indent=2))
 
 
