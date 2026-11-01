@@ -1,6 +1,6 @@
 # Hostinger PHP backend deployment and recovery
 
-Prepared 2026-10-31. **No production deployment has been performed.** These instructions are for a dedicated Generosity site/subdomain; existing websites must keep their current document roots and data.
+Prepared 2026-10-31. The API was deployed that day at `https://api.generosity.global`. Payments stay disabled, mail uses the log driver, remote MySQL stays closed, and cron is not scheduled. These instructions remain the recovery and activation procedure for that site; existing websites must keep their current document roots and data.
 
 ## Required deployment inputs
 

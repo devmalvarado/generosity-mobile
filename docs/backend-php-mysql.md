@@ -1,6 +1,6 @@
 # Decision: PHP/MySQL authoritative backend
 
-Date: 2026-10-31. Status: selected and implemented locally; production deployment pending.
+Date: 2026-10-31. Status: selected, implemented, and published at `https://api.generosity.global`. SMTP delivery, payment processing, and Google/Apple credentials remain unconfigured.
 
 ## Decision and preservation
 
@@ -18,7 +18,7 @@ Native clients use seven-day bearer tokens in Keychain/Keystore; browser clients
 
 ## Hosting fit and limits
 
-Hostinger screenshots establish that this account can create MySQL databases/users. A prior read-only audit found PHP 8.4 CLI and required extensions. Neither proves that a selected web document root executes PHP 8.4, that a production database is configured, or that email delivery works. Verify these gates before deployment. Do not change the account-wide PHP selector without checking the other hosted sites.
+The dedicated API site now serves PHP 8.4 and a local database. Email delivery is not enabled: production mail uses the log driver. Do not change the account-wide PHP selector without checking the other hosted sites.
 
 Use ordinary PHP HTTP requests plus a database queue drained by short cron invocations. No JVM, Docker daemon, resident PHP worker, Node service, Redis server or new paid plan is required for this initial design. The development server is not a production web server. Notifications to devices, scheduled domain reminders and large imports/analytics remain future work; shared-hosting capacity must be measured before scale claims.
 

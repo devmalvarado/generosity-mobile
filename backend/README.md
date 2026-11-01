@@ -70,4 +70,4 @@ The smoke script is fixed to local Compose/loopback. It adds clearly labeled dev
 
 ## Remaining scope
 
-Mobile and portal account adapters are now implemented; catalog/contribution HTTP adapters, persistent client queues, incremental sync/cursors/tombstones, profile/preferences updates, visits, reminders, device registration, push delivery and production deployment are not implemented by this backend slice. Payment processing remains disabled. The password-reset page is a minimal English operational page; the new hosted sign-in page and native/portal account controls have Spanish/English resources.
+The API is published at https://api.generosity.global and the portal is published from `main`. Google and Apple stay disabled until server configuration exists. Mail uses the log driver, so registration mail is not delivered. Payments stay disabled. Catalog and contribution client adapters, incremental sync, profile updates, visits, reminders, device registration and push delivery are not in the published slice. The password-reset page is a minimal English operational page; the hosted sign-in page and native/portal account controls have Spanish/English resources.

@@ -1,5 +1,13 @@
 # Foundation Implementation Audit
 
+**2026-10-31 publication correction:** The account sign-in increment was merged
+to `main` as `2f71b73` and published. `https://api.generosity.global/api/v1/health`
+reported ready with payments disabled. `/.env` stayed forbidden. Google and Apple
+buttons remain disabled because no provider credentials are configured. Mail uses
+the log driver, and auth-cleanup cron is not scheduled. Tasks 7.8–7.10, 16.4 and
+18.5–18.6 stay open: documentation and hosted entry are not device acceptance,
+live provider approval, SMTP, or scheduled cleanup.
+
 **2026-10-31 Facebook/mobile-contact planning update:** The user added Facebook
 entry and private mobile numbers for selected features to the requirements.
 Specs now cover missing/unverified Facebook email, explicit linking, progressive
@@ -26,10 +34,9 @@ and instrumentation-test compilation, iOS simulator build and 4 unit tests,
 14 strict OpenSpec items passing. Composer audit reports no known advisories.
 The pre-existing missing Android `nearby_foreground_only` resource was filled to
 restore cross-platform localization parity. See [identity configuration and test
-traceability](../../../docs/social-sign-in.md). Live providers, private-relay mail,
-physical-device secure storage/browser returns and API hosting are still pending.
-The existing main-branch selective landing deployment was inspected and preserved;
-this increment performs no push, merge or production deployment. Section 18 tracks
+traceability](../../../docs/social-sign-in.md). Live providers, private-relay mail and
+physical-device secure storage/browser returns are still pending. API hosting was
+completed afterward; see the publication correction above. Section 18 tracks
 this bounded implementation and its outstanding acceptance tasks. The foundation
 remains active and must not be archived.
 
@@ -42,8 +49,8 @@ transactional goods/time offers, versioned/idempotent transitions and separately
 labeled personal help/history/impact. Native/shared Kotlin remains unchanged.
 The [architecture decision](../../../docs/backend-php-mysql.md) explicitly
 selects Laravel's first-party provider instead of the previously unspecified
-external identity adapter. No production deployment or native/portal integration
-is claimed.
+external identity adapter. That checkpoint did not itself deploy production or
+integrate the native apps; the later publication correction records what shipped.
 
 Executable evidence is in `backend/tests/Feature/ApiTest.php` (real MariaDB,
 including independent-process reservation/transition races) and
