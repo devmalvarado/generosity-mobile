@@ -58,3 +58,5 @@ Contact-only centers remain searchable by public name/category without fabricate
 coordinates. The modified discovery requirements must follow/reconcile the
 foundation's pending delta before any future archive. No main specs are synced
 or archived as part of this planning change.
+
+Category taxonomy and food-surplus rescue now have separate planning in [plan-center-taxonomy-and-food-rescue](../plan-center-taxonomy-and-food-rescue/proposal.md). They remain outside this field-only change and are not implemented.
