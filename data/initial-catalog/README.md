@@ -36,7 +36,7 @@ docker compose exec -T app php artisan catalog:import /catalog/initial-catalog/c
 
 Executed locally: 37 additions, leaving 3 pre-existing development centers and their 6 needs intact (40 local centers total). The batch itself adds no needs or staff rights. The operation is audited and repeat imports upsert the same stable IDs. Do not change IDs on later edits. Review updates before re-importing: general reconciliation with newer staff edits remains a foundation backlog item.
 
-No production import or static/backend deployment was performed. Deploy the backend validation update before loading this file or publishing the new location form. The static landing deployment does not deploy PHP. Review the three held records with the organizations before changing their load status; add them deliberately to `catalog.json` only after resolving their discrepancies. Merge the form changes with newer landing work on main before deploying, preserving that layout and its legal pages.
+Published with explicit owner approval on 2026-11-01: [API and 37-center import](https://github.com/devmalvarado/generosity-mobile/actions/runs/41367588487), followed by [landing publication](https://github.com/devmalvarado/generosity-mobile/actions/runs/41367713476) from main commit `8213725`. The backend was published first; the subsequent automatic API run did not repeat the import. The static landing deployment does not deploy PHP. Review the three held records with the organizations before changing their load status; add them deliberately to `catalog.json` only after resolving their discrepancies. The release was integrated onto current main, preserving its layout, wordmark, example needs and separate legal pages.
 
 `googleMapsUrl` is backend import/directory metadata. The `/api/v1/centers` endpoints retain it, while `/api/v1/sync/catalog` deliberately omits it to preserve strict mobile schema-v1 compatibility. Native maps continue to consume the coordinate pair without provider-specific domain types. Do not feed this backend import file directly to the strict bundled mobile reader.
 
@@ -44,7 +44,8 @@ No production import or static/backend deployment was performed. Deploy the back
 
 - Backend: `ApiTest`, `InitialCatalogTest`, `CenterApplicationTest`: 34 passing tests; catalog source/pin consistency, atomic rejection, repeated imports, missing-contact guardrails, private intake and old pending-retry compatibility.
 - Portal: `tests/center-applications.spec.js`: 16 passing Chromium/WebKit checks, ES/EN, 320/390/768/1280 CSS pixels and 200% text, coordinate pair/range validation and private pending submission.
-- Production, in-person entrance confirmation, phone availability and real-device screen readers remain unverified.
+- Production: all 37 IDs, coordinate pairs, contact values and stored Maps URLs match this batch; the public mobile snapshot remains compatible and has no invented needs. Public health is ready. The form was visually inspected live and its HTML/JS/CSS and four legal pages match the release. Two publication-script checks and generated PHP lint also passed.
+- In-person entrance confirmation, phone availability, real-device screen readers and a new authenticated production form submission remain unverified.
 
 ## Reviewable inventory
 
