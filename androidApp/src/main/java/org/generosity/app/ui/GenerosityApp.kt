@@ -3,6 +3,7 @@
 package org.generosity.app.ui
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.rememberScrollState
@@ -30,6 +31,7 @@ import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.semantics.selected
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
@@ -37,7 +39,6 @@ import androidx.compose.ui.unit.LayoutDirection
 import android.text.TextUtils
 import android.view.View
 import java.util.Locale
-import kotlinx.coroutines.launch
 import org.generosity.app.GenerosityAppState
 import org.generosity.app.GenerosityUiState
 import org.generosity.app.R
@@ -136,7 +137,23 @@ private fun DiscoveryScreen(
 ) {
     val locale = state.locale
     val listState = rememberLazyListState()
-    val scope = rememberCoroutineScope()
+    var scrollTarget by remember { mutableStateOf<String?>(null) }
+    fun selectCenter(id: String, details: Boolean = false) {
+        appState.selectCenter(id)
+        scrollTarget = if (details || !showMap) "center-detail" else "discovery-map"
+    }
+    LaunchedEffect(showMap) {
+        if (showMap && state.selectedCenter != null) scrollTarget = "discovery-map"
+    }
+    LaunchedEffect(scrollTarget, state.selectedCenter?.id) {
+        val target = scrollTarget ?: return@LaunchedEffect
+        if (state.selectedCenter != null) {
+            // Detail follows sync, search, filters, optional map/preview, then all results.
+            val index = if (target == "discovery-map") 3 else state.centers.size + if (showMap) 5 else 3
+            listState.animateScrollToItem(index)
+        }
+        scrollTarget = null
+    }
     var offer by remember { mutableStateOf<Pair<CenterNeed, HelpMethod>?>(null) }
     offer?.let { (need, method) -> OfferDialog(state, appState, need, method) { offer = null } }
     val keyboard = LocalSoftwareKeyboardController.current
@@ -180,8 +197,8 @@ private fun DiscoveryScreen(
                                 Text(localizedString(R.string.selected_center, locale), style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.primary)
                                 CenterIdentity(locale, center)
                                 TextButton(onClick = {
-                                    scope.launch { listState.animateScrollToItem(4 + state.centers.size) }
-                                }) { Text(localizedString(R.string.view_details, locale)) }
+                                    selectCenter(center.id, details = true)
+                                }, modifier = Modifier.testTag("selected-center-details")) { Text(localizedString(R.string.view_details, locale)) }
                             }
                         }
                     }
@@ -191,11 +208,23 @@ private fun DiscoveryScreen(
                 item { EmptyMessage(TextKey.EMPTY_CENTERS.label(locale)) }
             } else {
                 items(state.centers, key = { it.id }) { center ->
+                    val selected = state.selectedCenter?.id == center.id
                     Surface(
-                        modifier = Modifier.fillMaxWidth().clickable(role = Role.Button) { appState.selectCenter(center.id) }
-                            .testTag("center-" + center.id),
+                        modifier = Modifier.fillMaxWidth(),
+                        border = if (selected) BorderStroke(2.dp, MaterialTheme.colorScheme.primary) else null,
                         shape = RoundedCornerShape(GenRadius.card)
-                    ) { Box(Modifier.padding(GenSpace.md)) { CenterIdentity(locale, center) } }
+                    ) {
+                        Column {
+                            Box(Modifier.fillMaxWidth().clickable(role = Role.Button) { selectCenter(center.id) }
+                                .testTag("center-" + center.id).semantics { this.selected = selected }.padding(GenSpace.md)) {
+                                CenterIdentity(locale, center)
+                            }
+                            TextButton(onClick = { selectCenter(center.id, details = true) },
+                                modifier = Modifier.padding(horizontal = GenSpace.md).testTag("details-${center.id}")) {
+                                Text(localizedString(R.string.view_details, locale))
+                            }
+                        }
+                    }
                 }
             }
             state.selectedCenter?.let { center ->

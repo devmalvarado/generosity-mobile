@@ -37,9 +37,11 @@ iOS: SwiftUI -> existing MapKit view
   the center remains accessible in the list.
 - [GoogleCenterMapRenderer](../androidApp/src/main/java/org/generosity/app/ui/map/google/GoogleCenterMapRenderer.kt)
   alone owns Google coordinates, markers, camera, availability and SDK lifecycle.
-  Initial framing fits the first nonempty catalog result. Filters do not keep
-  snapping the user's camera back. Compose saveable state retains framing and
-  camera across map/list transitions; it is UI state, not a discovery origin.
+  Initial framing and changes to result coordinates fit the catalog, or focus
+  the selected result when it remains visible. Selection focuses that center
+  and raises its marker above others. Manual pans are retained between result
+  or selection changes; translated titles alone do not reset the camera.
+  Camera state belongs to presentation, not the user's discovery origin.
 - [MainActivity](../androidApp/src/main/java/org/generosity/app/MainActivity.kt)
   selects the concrete renderer. The screen and tests can accept another
   implementation without modifying `GenerosityAppState` or its repositories.
@@ -50,9 +52,25 @@ iOS: SwiftUI -> existing MapKit view
   `ui/map/google`. The deliberate provider package allowlist must be updated
   when introducing a real alternative adapter, not expanded to business code.
 
-The existing iOS view still uses MapKit and sample Swift models. Connecting it
-to the shared store is foundation task 5.4, not completed by this Android change.
-MapKit types must remain in native presentation when that work is implemented.
+iOS now renders the same shared catalog and selected ID through SharedBridge.
+The native `MKMapView` adapter frames the actual catalog coordinates instead of the former fixed
+Mexico City demonstration region. It focuses a selected center and fits new
+filtered results when the selection is absent. MapKit types remain in native
+presentation; camera movement does not claim to locate the user. Its coordinator
+updates annotations and camera from shared selection without a two-way SwiftUI
+region binding, avoiding stale camera updates overwriting a new selection.
+Initial framing waits for a nonzero map layout and fits projected bounds with
+48-point edge padding, recalculating after map-size changes. A newer selection
+replaces any pending initial frame. MapKit's native zoom limits can prevent an
+entire intercontinental catalog from fitting in a small view; users can pan,
+filter results or select any card to focus its marker directly.
+
+Every result card has a View details action. A card tap in map discovery
+selects its marker and scrolls back to the map; in list discovery it brings
+that center's details into view. The explicit details action always brings
+the chosen detail heading into view, including for non-first results. The
+compact selected preview uses the same action. Cards expose selected state
+visually and to accessibility services.
 
 ## Google Configuration
 
@@ -106,8 +124,8 @@ and [API key protection](https://developers.google.com/maps/api-security-best-pr
   does not certify all subsequent pans or offline areas; those require manual
   validation. The list remains available even after an initially loaded map.
 - Map gestures and marker clicks are native Google behavior. A marker sends its
-  catalog ID to shared selection and shows its title; the existing details below
-  the list use the same selected record. No provider place/business lookup is used.
+  catalog ID to shared selection and updates the selected preview; the details
+  action uses that same record. No provider place/business lookup is used.
 - `isMyLocationEnabled` is false. Browsing does not request location permission,
   fabricate a GPS fix or upload a user location trail. Current location and
   manual place search remain separate tasks 5.6-5.9. A map camera is never
@@ -149,6 +167,19 @@ localized fallback, renderer substitution, shared filters/selection, map/list
 state retention, delayed-load feedback and usable details without a map.
 The SDK-free probe deliberately does not pretend to display geographic tiles.
 
+2026-11-01 navigation correction: Android `MapDiscoveryTest` covers all result
+cards, direct detail actions, selected previews, returning from list to map,
+filtered markers and unavailable-provider fallback (six passing UI tests).
+Five Android unit tests and the map-provider boundary check pass. iOS
+`MapFramingTests` verifies distant coordinates, initial layout, immediate
+selection, manual pan retention, empty results and replacement of a pending
+frame. `testEveryCardSelectsItsPinAndOpensItsOwnDetail` and
+`testSearchHidesStaleDetailAndKeepsQueryAcrossTabs` exercise real MapKit in the
+iPhone 16 Pro simulator. The published catalog was also checked manually:
+pins render and selecting a center card focuses its geographic location.
+These checks do not validate Google tiles: the build still has no Maps key,
+and the available Android emulator is the AOSP image described above.
+
 Executed on 2026-10-26: Android debug APK build; four Android marker unit tests;
 seven Android UI tests on the API 36 AOSP emulator; 25 shared tests each on JVM
 and Android host, rerun rather than accepted from cache; SDK boundary guard;
@@ -169,4 +200,4 @@ Before closing task 5.2, verify with a restricted key and Google-enabled device:
   authoritative provider error.
 - Both languages, long titles, enlarged text, TalkBack and a small phone.
 
-No live Google tile, paid usage, GPS or new iOS runtime verification is claimed.
+No live Google tile, paid usage, physical-device or GPS verification is claimed.

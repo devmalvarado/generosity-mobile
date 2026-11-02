@@ -78,6 +78,12 @@ private struct DiscoveryView: View {
     let locale: AppLocale
     @ObservedObject var store: GenerosityStore
     let showMap: Bool
+    @State private var scrollTarget: String?
+
+    private func select(_ id: String, details: Bool = false) {
+        store.selectCenter(id)
+        scrollTarget = details || !showMap ? "center-detail" : "discovery-map"
+    }
 
     var body: some View {
         GeometryReader { geometry in
@@ -109,13 +115,15 @@ private struct DiscoveryView: View {
                             )
                             .frame(height: max(200, min(480, geometry.size.height * 0.52)))
                             .clipShape(RoundedRectangle(cornerRadius: GenRadius.card))
+                            .id("discovery-map")
                             if let center = store.state.selectedCenter {
                                 VStack(alignment: .leading, spacing: GenSpace.sm) {
                                     Text(L10n.resource("selected_center", locale: locale)).font(GenTypography.font(.caption)).foregroundStyle(GenPalette.accent)
                                     CenterIdentity(locale: locale, center: center)
                                     Button(L10n.resource("view_details", locale: locale)) {
-                                        withAnimation { proxy.scrollTo("center-detail", anchor: .top) }
+                                        select(center.id, details: true)
                                     }
+                                    .accessibilityIdentifier("selected-center-details")
                                     .buttonStyle(.bordered).frame(minHeight: GenSize.iosTouch)
                                 }
                                 .padding(GenSpace.md).frame(maxWidth: .infinity, alignment: .leading)
@@ -126,13 +134,23 @@ private struct DiscoveryView: View {
                             Text(L10n.text(.emptyCenters, locale: locale)).foregroundStyle(GenPalette.secondary).padding(.vertical, GenSpace.md)
                         }
                         ForEach(store.state.centers, id: \.id) { center in
-                            Button { store.selectCenter(center.id) } label: {
-                                CenterIdentity(locale: locale, center: center).padding(GenSpace.md)
-                                    .frame(maxWidth: .infinity, alignment: .leading)
-                                    .background(GenPalette.surface, in: RoundedRectangle(cornerRadius: GenRadius.card))
+                            let selected = store.state.selectedCenter?.id == center.id
+                            VStack(alignment: .leading, spacing: GenSpace.xs) {
+                                Button { select(center.id) } label: {
+                                    CenterIdentity(locale: locale, center: center)
+                                        .padding(GenSpace.md).contentShape(Rectangle())
+                                }
+                                .buttonStyle(.plain)
+                                .accessibilityIdentifier("center-\(center.id)")
+                                .accessibilityAddTraits(selected ? .isSelected : [])
+                                Button(L10n.resource("view_details", locale: locale)) { select(center.id, details: true) }
+                                    .accessibilityIdentifier("details-\(center.id)")
+                                    .buttonStyle(.bordered).frame(minHeight: GenSize.iosTouch)
+                                    .padding([.horizontal, .bottom], GenSpace.md)
                             }
-                            .buttonStyle(.plain)
-                            .accessibilityIdentifier("center-\(center.id)")
+                            .frame(maxWidth: .infinity, alignment: .leading)
+                            .background(GenPalette.surface, in: RoundedRectangle(cornerRadius: GenRadius.card))
+                            .overlay(RoundedRectangle(cornerRadius: GenRadius.card).stroke(selected ? GenPalette.accent : .clear, lineWidth: 2))
                         }
                         if let center = store.state.selectedCenter {
                             CenterDetail(
@@ -149,6 +167,12 @@ private struct DiscoveryView: View {
                 .accessibilityIdentifier("discovery-scroll")
                 .background(GenPalette.background)
                 .foregroundStyle(GenPalette.text)
+                .onAppear { if showMap && store.state.selectedCenter != nil { scrollTarget = "discovery-map" } }
+                .onChange(of: scrollTarget) { target in
+                    guard let target else { return }
+                    withAnimation { proxy.scrollTo(target, anchor: .top) }
+                    scrollTarget = nil
+                }
             }
         }
     }
@@ -187,37 +211,124 @@ private struct CategoryFilterView: View {
     }
 }
 
-private struct CenterMapView: View {
-    private struct Annotation: Identifiable {
-        let center: KindnessCenter
-        var id: String { center.id }
-    }
+struct CenterMapView: UIViewRepresentable {
     let locale: AppLocale
     let centers: [KindnessCenter]
     let selectedCenterId: String?
     let onSelect: (String) -> Void
-    @State private var region = MKCoordinateRegion(
-        center: CLLocationCoordinate2D(latitude: 19.4326, longitude: -99.1332),
-        span: MKCoordinateSpan(latitudeDelta: 0.04, longitudeDelta: 0.04)
-    )
 
-    var body: some View {
-        Map(coordinateRegion: $region, annotationItems: centers.map { Annotation(center: $0) }) { annotation in
-            MapAnnotation(coordinate: annotation.center.coordinate) {
-                let selected = selectedCenterId == annotation.id
-                Button { onSelect(annotation.id) } label: {
-                    Image(systemName: annotation.center.categories.sorted { $0.ordinal < $1.ordinal }.first?.symbol ?? "mappin")
-                        .font(.system(size: 17, weight: .semibold))
-                        .foregroundStyle(selected ? GenPalette.onAccent : GenPalette.text)
-                        .frame(width: 40, height: 40)
-                        .background(selected ? GenPalette.accent : GenPalette.surface, in: Circle())
-                        .overlay(Circle().stroke(GenPalette.accent, lineWidth: selected ? 3 : 1))
-                        .padding(3)
-                }
-                .accessibilityLabel(annotation.center.name.resolve(locale))
-                .accessibilityIdentifier("marker-\(annotation.id)")
-                .accessibilityAddTraits(selected ? .isSelected : [])
+    func makeCoordinator() -> Coordinator { Coordinator(self) }
+
+    func makeUIView(context: Context) -> MapCanvas {
+        let map = MapCanvas()
+        map.delegate = context.coordinator
+        map.isRotateEnabled = false
+        map.isPitchEnabled = false
+        map.accessibilityIdentifier = "center-map"
+        return map
+    }
+
+    func updateUIView(_ map: MapCanvas, context: Context) { context.coordinator.update(map, owner: self) }
+
+    final class MapCanvas: MKMapView {
+        private var targetRect: MKMapRect?
+        private var framedSize: CGSize = .zero
+        func frameRect(_ region: MKMapRect) {
+            targetRect = region
+            guard bounds.width > 0, bounds.height > 0 else { return }
+            framedSize = bounds.size
+            setVisibleMapRect(region, edgePadding: UIEdgeInsets(top: 48, left: 48, bottom: 48, right: 48), animated: false)
+        }
+        override func layoutSubviews() {
+            super.layoutSubviews()
+            if let region = targetRect, bounds.size != framedSize, bounds.width > 0, bounds.height > 0 {
+                frameRect(region)
             }
+        }
+    }
+
+    final class Annotation: NSObject, MKAnnotation {
+        let id: String
+        @objc dynamic var coordinate: CLLocationCoordinate2D
+        @objc dynamic var title: String?
+        var category: CenterCategory?
+        init(_ center: KindnessCenter, locale: AppLocale) {
+            id = center.id
+            coordinate = center.coordinate
+            title = center.name.resolve(locale)
+            category = center.categories.sorted { $0.ordinal < $1.ordinal }.first
+        }
+    }
+
+    final class Coordinator: NSObject, MKMapViewDelegate {
+        private var owner: CenterMapView
+        private var pins: [String: Annotation] = [:]
+        private var framedCoordinates: [String: [Double]] = [:]
+        private var framedSelection: String?
+        init(_ owner: CenterMapView) { self.owner = owner }
+
+        func update(_ map: MapCanvas, owner: CenterMapView) {
+            self.owner = owner
+            let centers = owner.centers.filter { CLLocationCoordinate2DIsValid($0.coordinate) }
+            let coordinates = Dictionary(uniqueKeysWithValues: centers.map { ($0.id, [$0.coordinates.latitude, $0.coordinates.longitude]) })
+            for id in pins.keys.filter({ coordinates[$0] == nil }) {
+                if let pin = pins.removeValue(forKey: id) { map.removeAnnotation(pin) }
+            }
+            for center in centers {
+                if let pin = pins[center.id] {
+                    if pin.coordinate.latitude != center.coordinates.latitude || pin.coordinate.longitude != center.coordinates.longitude {
+                        pin.coordinate = center.coordinate
+                    }
+                    pin.title = center.name.resolve(owner.locale)
+                    pin.category = center.categories.sorted { $0.ordinal < $1.ordinal }.first
+                } else {
+                    let pin = Annotation(center, locale: owner.locale)
+                    pins[center.id] = pin
+                    map.addAnnotation(pin)
+                }
+            }
+            // No two-way camera binding: MapKit must not write an old region over a new selection.
+            if coordinates != framedCoordinates || owner.selectedCenterId != framedSelection {
+                let selected = owner.selectedCenterId.flatMap { pins[$0] }
+                if let region = discoveryMapRect(coordinates: centers.map(\.coordinate), selected: selected?.coordinate) {
+                    map.frameRect(region)
+                }
+                for annotation in map.selectedAnnotations where (annotation as? Annotation)?.id != selected?.id {
+                    map.deselectAnnotation(annotation, animated: false)
+                }
+                if let selected { map.selectAnnotation(selected, animated: false) }
+                framedCoordinates = coordinates
+                framedSelection = owner.selectedCenterId
+            }
+            for pin in pins.values {
+                if let view = map.view(for: pin) as? MKMarkerAnnotationView { configure(view, pin: pin) }
+            }
+        }
+
+        private func configure(_ view: MKMarkerAnnotationView, pin: Annotation) {
+            let selected = pin.id == owner.selectedCenterId
+            view.glyphImage = UIImage(systemName: pin.category?.symbol ?? "mappin")
+            view.markerTintColor = UIColor(selected ? GenPalette.accent : (pin.category?.tint ?? GenPalette.secondary))
+            view.displayPriority = .required
+            view.canShowCallout = false
+            view.isAccessibilityElement = true
+            view.accessibilityIdentifier = "marker-\(pin.id)"
+            view.accessibilityLabel = pin.title
+            view.accessibilityTraits = selected ? [.button, .selected] : [.button]
+        }
+
+        func mapView(_ mapView: MKMapView, viewFor annotation: MKAnnotation) -> MKAnnotationView? {
+            guard let pin = annotation as? Annotation else { return nil }
+            let view = mapView.dequeueReusableAnnotationView(withIdentifier: "center") as? MKMarkerAnnotationView
+                ?? MKMarkerAnnotationView(annotation: pin, reuseIdentifier: "center")
+            view.annotation = pin
+            configure(view, pin: pin)
+            return view
+        }
+
+        func mapView(_ mapView: MKMapView, didSelect view: MKAnnotationView) {
+            guard let pin = view.annotation as? Annotation, pin.id != owner.selectedCenterId else { return }
+            owner.onSelect(pin.id)
         }
     }
 }
