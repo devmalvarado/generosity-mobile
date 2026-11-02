@@ -5,6 +5,9 @@ The 39 researched blood-service listings were originally imported only as
 that selection could not find the blood services. Discovery's shared OR-filter
 was correct; the classification and category vocabulary were incomplete.
 
+Blood is itself a connective tissue. The separate categories distinguish services,
+not biological tissue types; centers offering both services can carry both codes.
+
 The fix adds `blood_donation` with “Donación de sangre” / “Blood donation” labels
 to the shared domain and native resources. Blood services retain `health` for
 broader discovery; organ/tissue donation remains separate. Both committed
