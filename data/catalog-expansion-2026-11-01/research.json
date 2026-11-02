@@ -6191,6 +6191,19 @@
     "existingCentersUnchanged": 40,
     "existingNeedsUnchanged": 6,
     "existingMembershipsUnchanged": 3,
-    "productionPublished": false
+    "productionPublished": true
+  },
+  "productionImport": {
+    "status": "completed",
+    "date": "2026-11-01",
+    "checkedAtUtc": "2026-11-02T01:20:19.757105+00:00",
+    "addedCenters": 120,
+    "totalProductionCenters": 157,
+    "existingCentersUnchanged": 37,
+    "existingNeedsUnchanged": 0,
+    "existingMembershipsUnchanged": 0,
+    "heldRecordsExcluded": 12,
+    "sourceSha256": "9342270b1409f38a18d2bf4d69885efd0eef0519567d0781b959378dbb0dcfbf",
+    "workflowRun": "https://github.com/devmalvarado/generosity-mobile/actions/runs/41371875124"
   }
 }
