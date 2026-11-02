@@ -19,14 +19,16 @@ final class GenerosityVisualTests: XCTestCase {
         let center = app.buttons["center-kc-children-001"]
         reveal(center, app: app)
         center.tap()
+        app.buttons["detail-back"].tap()
         app.tabBars.buttons[spanish ? "Mapa" : "Map"].tap()
-        reveal(app.buttons[spanish ? "Ver detalles" : "View details"], app: app)
+        reveal(app.buttons["details-kc-children-001"], app: app)
         capture(app, prefix + "-selected-map")
-        app.buttons[spanish ? "Ver detalles" : "View details"].tap()
+        app.buttons["details-kc-children-001"].tap()
         reveal(app.staticTexts["detail-kc-children-001"], app: app)
         capture(app, prefix + "-detail")
         reveal(app.staticTexts["remaining-need-school-supplies"], app: app)
         capture(app, prefix + "-need")
+        app.buttons["detail-back"].tap()
         app.tabBars.buttons[profile].tap()
         XCTAssertTrue(app.navigationBars[profile].waitForExistence(timeout: 5))
         capture(app, prefix + "-profile")
@@ -63,15 +65,14 @@ final class GenerosityVisualTests: XCTestCase {
     }
 
     private func reveal(_ element: XCUIElement, app: XCUIApplication) {
-        XCTAssertTrue(element.waitForExistence(timeout: 5))
         for _ in 0..<24 where !element.isHittable { scroll(app, up: true) }
         XCTAssertTrue(element.isHittable)
     }
 
     private func scroll(_ app: XCUIApplication, up: Bool) {
-        // Swipe the scroll-view gutter, not the interactive map surface.
-        let start = app.coordinate(withNormalizedOffset: CGVector(dx: 0.98, dy: up ? 0.8 : 0.25))
-        let end = app.coordinate(withNormalizedOffset: CGVector(dx: 0.98, dy: up ? 0.25 : 0.8))
+        let surface = app.scrollViews["detail-scroll"].exists ? app.scrollViews["detail-scroll"] : (app.scrollViews["discovery-scroll"].exists ? app.scrollViews["discovery-scroll"] : app)
+        let start = surface.coordinate(withNormalizedOffset: CGVector(dx: 0.98, dy: up ? 0.8 : 0.25))
+        let end = surface.coordinate(withNormalizedOffset: CGVector(dx: 0.98, dy: up ? 0.25 : 0.8))
         start.press(forDuration: 0.01, thenDragTo: end)
     }
 

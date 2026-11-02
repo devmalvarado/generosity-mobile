@@ -22,6 +22,10 @@ import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.SaveableStateHolder
 import androidx.compose.runtime.saveable.rememberSaveableStateHolder
 import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.ui.window.Dialog
+import androidx.compose.ui.window.DialogProperties
+import androidx.compose.ui.platform.LocalContext
+import org.generosity.app.ui.map.searchPlaces
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalDensity
@@ -58,8 +62,11 @@ fun GenerosityApp(
     savingLanguage: Boolean = false,
     languageSaveFailed: Boolean = false,
     onSignIn: () -> Unit = {}, onSignOut: () -> Unit = {}, onCreate: () -> Unit = {},
-    authBusy: Boolean = false, authFailed: Boolean = false
+    authBusy: Boolean = false, authFailed: Boolean = false,
+    placeSearch: (suspend (String, SupportedLocale) -> List<DiscoveryArea>)? = null
 ) {
+    val context = LocalContext.current
+    val search: suspend (String, SupportedLocale) -> List<DiscoveryArea> = placeSearch ?: { query, locale -> searchPlaces(context, query, locale) }
     val state by appState.state.collectAsState()
     val locale = state.locale
     var tab by rememberSaveable { mutableStateOf(AppTab.MAP) }
@@ -119,8 +126,8 @@ fun GenerosityApp(
             ) { padding ->
                 Box(Modifier.fillMaxSize().padding(padding).imePadding()) {
                     when (tab) {
-                        AppTab.MAP -> DiscoveryScreen(state, appState, true, mapRenderer, mapState)
-                        AppTab.LIST -> DiscoveryScreen(state, appState, false, mapRenderer, mapState)
+                        AppTab.MAP -> DiscoveryScreen(state, appState, true, mapRenderer, mapState, search)
+                        AppTab.LIST -> DiscoveryScreen(state, appState, false, mapRenderer, mapState, search)
                         AppTab.PROFILE -> ProfileScreen(state, appState, onSignIn, onSignOut, onCreate, authBusy, authFailed)
                         AppTab.SETTINGS -> SettingsScreen(state, appState, onLanguageSelected, savingLanguage, languageSaveFailed)
                     }
@@ -133,118 +140,116 @@ fun GenerosityApp(
 @Composable
 private fun DiscoveryScreen(
     state: GenerosityUiState, appState: GenerosityAppState, showMap: Boolean,
-    mapRenderer: CenterMapRenderer, mapState: SaveableStateHolder
+    mapRenderer: CenterMapRenderer, mapState: SaveableStateHolder,
+    placeSearch: suspend (String, SupportedLocale) -> List<DiscoveryArea>
 ) {
     val locale = state.locale
     val listState = rememberLazyListState()
+    val keyboard = LocalSoftwareKeyboardController.current
+    var showDetail by remember { mutableStateOf(false) }
+    var showAreaSearch by remember { mutableStateOf(false) }
     var scrollTarget by remember { mutableStateOf<String?>(null) }
     fun selectCenter(id: String, details: Boolean = false) {
+        keyboard?.hide()
         appState.selectCenter(id)
-        scrollTarget = if (details || !showMap) "center-detail" else "discovery-map"
+        showDetail = details || !showMap
     }
-    LaunchedEffect(showMap) {
-        if (showMap && state.selectedCenter != null) scrollTarget = "discovery-map"
-    }
-    LaunchedEffect(scrollTarget, state.selectedCenter?.id) {
-        val target = scrollTarget ?: return@LaunchedEffect
-        if (state.selectedCenter != null) {
-            // Detail follows sync, search, filters, optional map/preview, then all results.
-            val index = if (target == "discovery-map") 3 else state.centers.size + if (showMap) 5 else 3
-            listState.animateScrollToItem(index)
-        }
+    LaunchedEffect(scrollTarget) {
+        val index = state.centers.indexOfFirst { it.id == scrollTarget }
+        if (index >= 0) listState.animateScrollToItem(index + 1)
         scrollTarget = null
     }
+    LaunchedEffect(state.discoveryArea, state.searchText, state.selectedCategories) { listState.scrollToItem(0) }
+    if (showAreaSearch) AreaSearchDialog(locale, placeSearch, {
+        appState.setDiscoveryArea(it); showAreaSearch = false
+    }, { showAreaSearch = false })
     var offer by remember { mutableStateOf<Pair<CenterNeed, HelpMethod>?>(null) }
     offer?.let { (need, method) -> OfferDialog(state, appState, need, method) { offer = null } }
-    val keyboard = LocalSoftwareKeyboardController.current
     BoxWithConstraints(Modifier.fillMaxSize()) {
-        val mapHeight = (maxHeight * .52f).coerceIn(200.dp, 480.dp)
-        LazyColumn(
-            state = listState,
-            modifier = Modifier.testTag("discovery-scroll"),
-            contentPadding = PaddingValues(16.dp),
-            verticalArrangement = Arrangement.spacedBy(GenSpace.lg)
-        ) {
-            item { SyncStatus(state, appState) }
-            item {
-                Text(TextKey.NEARBY_CENTERS.label(locale), style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.SemiBold)
-                Spacer(Modifier.height(12.dp))
+        val mapHeight = (maxHeight * .4f).coerceIn(100.dp, 300.dp)
+        Column(Modifier.fillMaxSize().padding(horizontal = GenSpace.lg), verticalArrangement = Arrangement.spacedBy(GenSpace.sm)) {
+            Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(GenSpace.sm)) {
                 OutlinedTextField(
                     value = state.searchText, onValueChange = appState::setSearchText,
-                    modifier = Modifier.fillMaxWidth(), singleLine = true,
+                    modifier = Modifier.weight(1f), singleLine = true,
                     keyboardOptions = KeyboardOptions(imeAction = ImeAction.Search),
                     keyboardActions = KeyboardActions(onSearch = { keyboard?.hide() }),
                     shape = RoundedCornerShape(GenRadius.card),
                     leadingIcon = { AppIcon(R.drawable.ic_search) },
                     label = { Text(TextKey.SEARCH_PLACEHOLDER.label(locale)) }
                 )
+                TextButton(onClick = { keyboard?.hide(); showAreaSearch = true }, modifier = Modifier.testTag("area-open")) {
+                    Text(localizedString(R.string.area_search, locale))
+                }
             }
-            item { CategoryFilters(locale, state.selectedCategories, appState::toggleCategory) }
+            CategoryFilters(locale, state.selectedCategories, appState::toggleCategory, horizontal = true)
             if (showMap) {
-                item(key = "discovery-map") {
-                    mapState.SaveableStateProvider("discovery-map") {
-                        mapRenderer.Render(
-                            markers = state.centers.toMapMarkers(locale), selectedCenterId = state.selectedCenter?.id,
-                            locale = locale, onCenterSelected = appState::selectCenter,
-                            modifier = Modifier.fillMaxWidth().height(mapHeight)
-                        )
-                    }
-                }
-                state.selectedCenter?.let { center ->
-                    item(key = "selected-preview") {
-                        Surface(shape = RoundedCornerShape(GenRadius.card), shadowElevation = 2.dp) {
-                            Column(Modifier.padding(GenSpace.md)) {
-                                Text(localizedString(R.string.selected_center, locale), style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.primary)
-                                CenterIdentity(locale, center)
-                                TextButton(onClick = {
-                                    selectCenter(center.id, details = true)
-                                }, modifier = Modifier.testTag("selected-center-details")) { Text(localizedString(R.string.view_details, locale)) }
-                            }
-                        }
-                    }
+                mapState.SaveableStateProvider("discovery-map") {
+                    mapRenderer.Render(
+                        markers = state.centers.toMapMarkers(locale), selectedCenterId = state.selectedCenter?.id,
+                        locale = locale, onCenterSelected = { id -> selectCenter(id); scrollTarget = id },
+                        modifier = Modifier.fillMaxWidth().height(mapHeight), origin = state.discoveryArea?.coordinates
+                    )
                 }
             }
-            if (state.centers.isEmpty()) {
-                item { EmptyMessage(TextKey.EMPTY_CENTERS.label(locale)) }
-            } else {
+            LazyColumn(state = listState, modifier = Modifier.weight(1f).testTag("discovery-scroll"),
+                contentPadding = PaddingValues(vertical = GenSpace.xs), verticalArrangement = Arrangement.spacedBy(GenSpace.md)) {
+                item {
+                    Column {
+                        state.discoveryArea?.let { area ->
+                            Text(localizedString(R.string.area_scope, locale) + " " + area.label, style = MaterialTheme.typography.bodySmall)
+                            TextButton(onClick = { appState.setDiscoveryArea(null) }, modifier = Modifier.testTag("area-clear")) { Text(localizedString(R.string.area_clear, locale)) }
+                        }
+                        Text(TextKey.NEARBY_CENTERS.label(locale), style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.SemiBold)
+                        SyncStatus(state, appState)
+                    }
+                }
+                if (state.centers.isEmpty()) item { EmptyMessage(TextKey.EMPTY_CENTERS.label(locale)) }
                 items(state.centers, key = { it.id }) { center ->
                     val selected = state.selectedCenter?.id == center.id
-                    Surface(
-                        modifier = Modifier.fillMaxWidth(),
-                        border = if (selected) BorderStroke(2.dp, MaterialTheme.colorScheme.primary) else null,
-                        shape = RoundedCornerShape(GenRadius.card)
-                    ) {
+                    Surface(modifier = Modifier.fillMaxWidth(), border = if (selected) BorderStroke(2.dp, MaterialTheme.colorScheme.primary) else null,
+                        shape = RoundedCornerShape(GenRadius.card)) {
                         Column {
-                            Box(Modifier.fillMaxWidth().clickable(role = Role.Button) { selectCenter(center.id) }
+                            Column(Modifier.fillMaxWidth().clickable(role = Role.Button) { selectCenter(center.id) }
                                 .testTag("center-" + center.id).semantics { this.selected = selected }.padding(GenSpace.md)) {
                                 CenterIdentity(locale, center)
+                                state.discoveryArea?.let { area ->
+                                    Text(localizedString(R.string.area_distance, locale, center.coordinates.distanceMetersTo(area.coordinates) / 1000), style = MaterialTheme.typography.bodySmall)
+                                }
                             }
-                            TextButton(onClick = { selectCenter(center.id, details = true) },
-                                modifier = Modifier.padding(horizontal = GenSpace.md).testTag("details-${center.id}")) {
+                            TextButton(onClick = { selectCenter(center.id, details = true) }, modifier = Modifier.padding(horizontal = GenSpace.md).testTag("details-${center.id}")) {
                                 Text(localizedString(R.string.view_details, locale))
                             }
                         }
                     }
                 }
+                item { Text(localizedString(if (state.backendConfigured) R.string.sync_cached else R.string.demo_catalog, locale), style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.onSurfaceVariant) }
             }
-            state.selectedCenter?.let { center ->
-                item(key = "center-detail") {
-                    CenterDetail(
-                        locale, center, state.currentNeeds,
-                        state.visitSignalCenterId == center.id || center.id in state.visitedCenterIds, state.lastRejection, !state.canRecordContributions, state.backendConfigured,
-                        { appState.signalVisit(center.id) },
-                        { id -> state.currentNeeds.firstOrNull { it.id == id }?.let { offer = it to HelpMethod.GOODS } },
-                        { id -> state.currentNeeds.firstOrNull { it.id == id }?.let { offer = it to HelpMethod.TIME } }
-                    )
+        }
+    }
+    if (showDetail) Dialog(onDismissRequest = { showDetail = false }, properties = DialogProperties(usePlatformDefaultWidth = false)) {
+        Surface(Modifier.fillMaxSize()) {
+            Column {
+                Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
+                    TextButton(onClick = { showDetail = false }, modifier = Modifier.testTag("detail-back")) { Text(localizedString(R.string.offer_cancel, locale)) }
+                    BrandWordmark()
+                }
+                Column(Modifier.weight(1f).verticalScroll(rememberScrollState()).testTag("detail-scroll")) {
+                    state.selectedCenter?.let { center ->
+                        CenterDetail(locale, center, state.currentNeeds,
+                            state.visitSignalCenterId == center.id || center.id in state.visitedCenterIds, state.lastRejection, !state.canRecordContributions, state.backendConfigured,
+                            { appState.signalVisit(center.id) },
+                            { id -> state.currentNeeds.firstOrNull { it.id == id }?.let { offer = it to HelpMethod.GOODS } },
+                            { id -> state.currentNeeds.firstOrNull { it.id == id }?.let { offer = it to HelpMethod.TIME } })
+                    } ?: EmptyMessage(TextKey.EMPTY_CENTERS.label(locale))
                 }
             }
-            item { Text(localizedString(if (state.backendConfigured) R.string.sync_cached else R.string.demo_catalog, locale), style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.onSurfaceVariant) }
         }
     }
 }
 
 @Composable
-private fun CategoryFilters(locale: SupportedLocale, selectedCategories: Set<CenterCategory>, onToggle: (CenterCategory) -> Unit) {
+private fun CategoryFilters(locale: SupportedLocale, selectedCategories: Set<CenterCategory>, onToggle: (CenterCategory) -> Unit, horizontal: Boolean = false) {
     val chips: @Composable () -> Unit = {
         CenterCategory.entries.forEach { category ->
             FilterChip(
@@ -255,7 +260,7 @@ private fun CategoryFilters(locale: SupportedLocale, selectedCategories: Set<Cen
             )
         }
     }
-    if (LocalDensity.current.fontScale > 1.4f) {
+    if (LocalDensity.current.fontScale > 1.4f && !horizontal) {
         FlowRow(horizontalArrangement = Arrangement.spacedBy(GenSpace.sm), verticalArrangement = Arrangement.spacedBy(GenSpace.sm)) { chips() }
     } else {
         Row(Modifier.horizontalScroll(rememberScrollState()), horizontalArrangement = Arrangement.spacedBy(GenSpace.sm)) { chips() }

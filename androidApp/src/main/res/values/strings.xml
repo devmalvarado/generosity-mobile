@@ -106,4 +106,14 @@
     <string name="contact_failed">No app is available to open this contact.</string>
     <string name="visit_saved">Visit saved. Guest visits stay on this device. This is not official verification.</string>
     <string name="notifications_pending">These preferences are saved on this device. Alert delivery is not available yet.</string>
+    <string name="area_search">Search area</string>
+    <string name="area_query">Neighborhood, address or city</string>
+    <string name="area_submit">Search</string>
+    <string name="area_hint">Include the city and country, then choose a result. No device location is needed.</string>
+    <string name="area_empty">No places found. Try adding the city or country.</string>
+    <string name="area_failed">Place search is unavailable. Check your connection and try again.</string>
+    <string name="area_scope">Within 10 km of</string>
+    <string name="area_clear">Clear area</string>
+    <string name="area_distance">%.1f km from selected place</string>
+    <string name="area_loading">Searching places…</string>
 </resources>

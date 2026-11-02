@@ -48,8 +48,6 @@ class VisualAlignmentTest {
         capture(label, "list")
         composeRule.onNodeWithTag("discovery-scroll").performScrollToNode(hasTestTag("center-" + center.id))
         composeRule.onNodeWithTag("center-" + center.id).performClick()
-        composeRule.onNodeWithTag("discovery-scroll").performScrollToNode(hasTestTag("detail-" + center.id))
-        composeRule.onNodeWithTag("detail-" + center.id).performScrollTo()
         capture(label, "detail")
         val priorities = if (locale == SupportedLocale.SPANISH) listOf("Urgente", "Alta", "Media", "Normal") else listOf("Urgent", "High", "Medium", "Normal")
         priorities.forEach { composeRule.onNodeWithText(it).performScrollTo().assertIsDisplayed() }
@@ -58,6 +56,7 @@ class VisualAlignmentTest {
         val rejected = if (locale == SupportedLocale.SPANISH) "Inicia sesión para registrar una aportación. Puedes explorar sin cuenta." else "Sign in to record a contribution. You can browse without an account."
         composeRule.onNodeWithText(rejected).performScrollTo().assertIsDisplayed()
         capture(label, "rejected-offer")
+        composeRule.onNodeWithTag("detail-back").performClick()
         composeRule.onNodeWithTag("tab-profile").performClick()
         capture(label, "guest-profile")
         composeRule.runOnIdle {

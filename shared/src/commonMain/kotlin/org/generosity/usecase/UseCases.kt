@@ -21,7 +21,8 @@ data class DiscoveryQuery(
     val searchText: String = "",
     val categories: Set<CenterCategory> = emptySet(),
     val location: Coordinates? = null,
-    val locale: SupportedLocale = SupportedLocale.fallback
+    val locale: SupportedLocale = SupportedLocale.fallback,
+    val radiusMeters: Double? = null
 )
 
 class DiscoverKindnessCentersUseCase(
@@ -39,7 +40,9 @@ class DiscoverKindnessCentersUseCase(
         }
 
         return query.location?.let { origin ->
-            filtered.sortedBy { it.coordinates.distanceMetersTo(origin) }
+            filtered.map { it to it.coordinates.distanceMetersTo(origin) }
+                .filter { query.radiusMeters == null || it.second <= query.radiusMeters }
+                .sortedBy { it.second }.map { it.first }
         } ?: filtered.sortedBy { it.name.resolve(query.locale) }
     }
 }

@@ -83,12 +83,14 @@ class GenerosityControllerTest {
     fun repeatedObservationAndNavigationDoNotDuplicateAnOffer() = runTest {
         Dispatchers.setMain(StandardTestDispatcher(testScheduler))
         val android = GenerosityAppState(backgroundScope)
-        val ios = GenerosityAppStateIos(GenerosityAppState(backgroundScope))
+        val iosState = GenerosityAppState(backgroundScope)
+        val ios = GenerosityAppStateIos(iosState)
         try {
             android.start()
             ios.start {}
             android.signIn("test-user", "Test user")
-            ios.signIn("test-user", "Test user")
+            // This fixture exercises local offers; native sign-in represents a real backend account.
+            iosState.signIn("test-user", "Test user")
             runCurrent()
             repeat(5) {
                 ios.stop()

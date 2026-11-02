@@ -30,7 +30,7 @@ iOS: SwiftUI -> existing MapKit view
   business rules. No map SDK dependency was added there.
 - [CenterMapRenderer](../androidApp/src/main/java/org/generosity/app/ui/map/CenterMapRenderer.kt)
   accepts only public marker IDs, localized titles, shared coordinates,
-  selected ID, selection callback, locale and a Compose modifier.
+  selected ID, optional searched-origin coordinates, selection callback, locale and a Compose modifier.
 - `toMapMarkers` projects the already-filtered results without querying a
   provider, geocoding addresses or substituting provider place IDs. Invalid
   coordinates are omitted from markers, never clamped to invented locations;
@@ -65,12 +65,40 @@ replaces any pending initial frame. MapKit's native zoom limits can prevent an
 entire intercontinental catalog from fitting in a small view; users can pan,
 filter results or select any card to focus its marker directly.
 
-Every result card has a View details action. A card tap in map discovery
-selects its marker and scrolls back to the map; in list discovery it brings
-that center's details into view. The explicit details action always brings
-the chosen detail heading into view, including for non-first results. The
-compact selected preview uses the same action. Cards expose selected state
-visually and to accessibility services.
+The map, name search and category chips stay above an independently scrolling
+result list. Map height adapts to the available screen (40%, bounded to 100–300
+points/dp). Chips remain horizontally scrollable with enlarged text. Selecting
+a card focuses its pin without moving the map; selecting a pin reveals its card.
+Every card has a View details action that opens a separate full-screen detail
+with its own scrolling and Back action. List-card taps also open that detail.
+Closing it retains list position, active filters and map selection. Cards expose
+selected state visually and to accessibility services.
+
+## Search a neighborhood, address or city
+
+Search area is separate from Search centers. An explicit submission queries
+`MKLocalSearch` (address results) on iOS and Android's `Geocoder`; no new Maps
+Places key or server endpoint is used. Native results are suggestions: the user
+chooses one of up to five full-address labels, preferably including city/country.
+The query is limited to 200 characters and lookup waits at most 15 seconds.
+Edits, dismissal and newer requests invalidate old responses. Empty/error states
+allow another search and preserve the previous catalog/discovery origin.
+
+The selected `DiscoveryArea` contains only a label and validated coordinates.
+Shared discovery filters the existing catalog to **10 km straight-line distance**,
+sorts nearest first, and intersects name and category filters. Card distances
+are explicitly from the selected place, not from the device. Clearing the area
+restores the catalog under the other filters. A successful lookup with no nearby
+catalog centers shows an empty list and frames the searched area; it does not
+invent centers or claim the area has no services. Map gestures do not change the
+search origin. Selection takes camera precedence over the origin.
+
+Search text goes to the platform's lookup provider; no GPS permission is requested.
+The selected area is session-only, never persisted or uploaded to Generosity's
+API. Android checks `Geocoder.isPresent()`, uses the asynchronous API on 33+ and
+an IO dispatcher on older supported versions. A present service can still fail;
+the AOSP emulator is not evidence of live geocoding availability on every device.
+Native place lookup remains independent of the replaceable map renderer.
 
 ## Google Configuration
 
@@ -124,11 +152,11 @@ and [API key protection](https://developers.google.com/maps/api-security-best-pr
   does not certify all subsequent pans or offline areas; those require manual
   validation. The list remains available even after an initially loaded map.
 - Map gestures and marker clicks are native Google behavior. A marker sends its
-  catalog ID to shared selection and updates the selected preview; the details
+  catalog ID to shared selection and reveals the selected card; the details
   action uses that same record. No provider place/business lookup is used.
 - `isMyLocationEnabled` is false. Browsing does not request location permission,
-  fabricate a GPS fix or upload a user location trail. Current location and
-  manual place search remain separate tasks 5.6-5.9. A map camera is never
+  fabricate a GPS fix or upload a user location trail. Current location remains pending in tasks 5.6–5.7; manual place
+  search uses an explicitly selected origin. A map camera is never
   presented as the user's location or used to create visit signals.
 - No custom Google tile cache, offline tile download or transfer of Google
   imagery/content to another renderer is implemented.
@@ -167,8 +195,27 @@ localized fallback, renderer substitution, shared filters/selection, map/list
 state retention, delayed-load feedback and usable details without a map.
 The SDK-free probe deliberately does not pretend to display geographic tiles.
 
+2026-11-01 fixed map and manual-origin update: 73 shared tests pass on JVM and
+Android host, and 76 on iOS Simulator arm64. The iOS observation/offer fixture
+now explicitly uses local demo sign-in; production bridge sign-in still blocks
+real accounts from offering against demo data. Android's nine map/navigation,
+contribution and visual tests pass; the updated place-search test also passes
+with success, failure, empty results and explicit clearing. Unit tests, provider
+boundary, localization and lint pass. The iOS checklist and both language visual
+tours pass after adapting full-screen detail navigation; the every-card test
+uses XCTest's native scroll-to-button behavior and verifies unchanged map bounds.
+Three native MapFramingTests cover layout/selection and empty searched-area bounds.
+
+Manual iOS check against the published catalog: search Coyoacán, CDMX, select
+the returned address, see a nearest result at 0.7 km and filter older-adult centers
+without losing the origin. Scrolling the card list retains the map above it.
+The native geocoder's actual outage/timeout acceptance remains open on iOS.
+Android lookup tests use an injected result/error function; no live Android
+geocoder or Google tiles are claimed on the AOSP emulator. No physical-device
+or GPS verification is claimed for this change.
+
 2026-11-01 navigation correction: Android `MapDiscoveryTest` covers all result
-cards, direct detail actions, selected previews, returning from list to map,
+cards, direct detail actions, selected cards, returning from list to map,
 filtered markers and unavailable-provider fallback (six passing UI tests).
 Five Android unit tests and the map-provider boundary check pass. iOS
 `MapFramingTests` verifies distant coordinates, initial layout, immediate

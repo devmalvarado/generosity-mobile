@@ -107,8 +107,7 @@ final class GenerosityUiChecklistTests: XCTestCase {
             app.tabBars.buttons[list].tap()
             for id in ["kc-children-001", "kc-seniors-001", "kc-health-001"] {
                 let card = app.buttons["center-\(id)"]
-                XCTAssertTrue(card.waitForExistence(timeout: 5))
-                for _ in 0..<4 where !card.isHittable { app.swipeUp() }
+                revealDiscovery(card, in: app)
                 XCTAssertTrue(card.isHittable)
                 XCTAssertEqual(card.label.contains(verified), id == "kc-health-001", card.label)
                 for oldLabel in ["Imported listing", "Ficha importada", "Visit reported by a user", "Visita reportada por un usuario"] {
@@ -150,6 +149,7 @@ final class GenerosityUiChecklistTests: XCTestCase {
         center.tap()
         XCTAssertTrue(app.staticTexts["detail-kc-children-001"].exists)
         XCTAssertEqual(app.staticTexts["remaining-need-school-supplies"].label, "15 items still needed")
+        app.buttons["detail-back"].tap()
         for _ in 0..<3 {
             app.tabBars.buttons["Map"].tap()
             XCTAssertTrue(app.buttons["category-children_support"].isSelected)
@@ -157,8 +157,11 @@ final class GenerosityUiChecklistTests: XCTestCase {
             XCTAssertFalse(app.buttons["marker-kc-seniors-001"].exists)
             app.tabBars.buttons["Settings"].tap()
             app.tabBars.buttons["List"].tap()
+            XCTAssertTrue(center.isSelected)
+            center.tap()
             XCTAssertTrue(app.staticTexts["detail-kc-children-001"].exists)
             XCTAssertEqual(app.staticTexts["remaining-need-school-supplies"].label, "15 items still needed")
+            app.buttons["detail-back"].tap()
         }
         capture(app, name: "Shared discovery - category and selected center")
     }
@@ -169,6 +172,7 @@ final class GenerosityUiChecklistTests: XCTestCase {
         XCTAssertTrue(marker.waitForExistence(timeout: 10))
         marker.tap()
         app.tabBars.buttons["List"].tap()
+        app.buttons["center-kc-children-001"].tap()
         XCTAssertTrue(app.staticTexts["detail-kc-children-001"].waitForExistence(timeout: 5))
         XCTAssertEqual(app.staticTexts["remaining-need-school-supplies"].label, "15 items still needed")
         XCTAssertTrue(app.staticTexts["Urgent"].exists)
@@ -177,43 +181,45 @@ final class GenerosityUiChecklistTests: XCTestCase {
 
     func testEveryCardSelectsItsPinAndOpensItsOwnDetail() {
         let app = launch()
-        for id in ["kc-health-001", "kc-seniors-001", "kc-children-001"] {
+        let mapFrame = app.maps.firstMatch.frame
+        app.scrollViews["discovery-scroll"].swipeUp()
+        XCTAssertEqual(app.maps.firstMatch.frame, mapFrame)
+        for id in ["kc-children-001", "kc-health-001", "kc-seniors-001"] {
             let card = app.buttons["center-\(id)"]
-            revealDiscovery(card, in: app)
+            XCTAssertEqual(app.maps.firstMatch.frame, mapFrame)
             card.tap()
             let marker = app.buttons["marker-\(id)"]
             XCTAssertTrue(marker.waitForExistence(timeout: 5))
             XCTAssertTrue(marker.isSelected)
             XCTAssertTrue(marker.isHittable)
             let details = app.buttons["details-\(id)"]
-            revealDiscovery(details, in: app)
             details.tap()
             XCTAssertTrue(app.staticTexts["detail-\(id)"].isHittable)
+            app.buttons["detail-back"].tap()
+            XCTAssertTrue(details.isHittable)
         }
         app.tabBars.buttons["List"].tap()
         let card = app.buttons["center-kc-health-001"]
-        revealDiscovery(card, in: app)
         card.tap()
         XCTAssertTrue(app.staticTexts["detail-kc-health-001"].isHittable)
+        app.buttons["detail-back"].tap()
         app.tabBars.buttons["Map"].tap()
         let marker = app.buttons["marker-kc-health-001"]
         XCTAssertTrue(marker.isSelected)
         XCTAssertTrue(marker.isHittable)
         marker.tap()
-        let preview = app.buttons["selected-center-details"]
-        revealDiscovery(preview, in: app)
+        let preview = app.buttons["details-kc-health-001"]
         preview.tap()
         XCTAssertTrue(app.staticTexts["detail-kc-health-001"].isHittable)
         capture(app, name: "Selected center detail from map")
     }
 
     private func revealDiscovery(_ element: XCUIElement, in app: XCUIApplication) {
-        XCTAssertTrue(element.waitForExistence(timeout: 5))
+        let list = app.scrollViews["discovery-scroll"]
         for _ in 0..<16 where !element.isHittable {
-            let up = element.frame.midY > app.frame.midY
-            let start = app.coordinate(withNormalizedOffset: CGVector(dx: 0.98, dy: up ? 0.8 : 0.25))
-            let end = app.coordinate(withNormalizedOffset: CGVector(dx: 0.98, dy: up ? 0.25 : 0.8))
-            start.press(forDuration: 0.01, thenDragTo: end)
+            let up = !element.exists || element.frame.midY > list.frame.midY
+            list.coordinate(withNormalizedOffset: CGVector(dx: 0.98, dy: up ? 0.8 : 0.25))
+                .press(forDuration: 0.05, thenDragTo: list.coordinate(withNormalizedOffset: CGVector(dx: 0.98, dy: up ? 0.25 : 0.8)), withVelocity: .slow, thenHoldForDuration: 0.05)
         }
         XCTAssertTrue(element.isHittable)
     }
@@ -224,6 +230,7 @@ final class GenerosityUiChecklistTests: XCTestCase {
         let center = app.buttons["center-kc-children-001"]
         XCTAssertTrue(center.waitForExistence(timeout: 5))
         center.tap()
+        app.buttons["detail-back"].tap()
         let search = app.textFields["discovery-search"]
         revealDiscovery(search, in: app)
         search.tap()

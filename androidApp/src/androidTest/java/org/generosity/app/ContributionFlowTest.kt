@@ -46,7 +46,7 @@ class ContributionFlowTest {
         ui.onNodeWithTag("tab-list").performClick()
         ui.onNodeWithTag("discovery-scroll").performScrollToNode(hasTestTag("center-kc-children-001"))
         ui.onNodeWithTag("center-kc-children-001").performClick()
-        ui.onNodeWithTag("discovery-scroll").performScrollToNode(hasText("Offer goods"))
+        ui.onNodeWithText("Offer goods").performScrollTo()
         ui.onNodeWithText("Offer goods").performScrollTo().performClick()
         ui.onNodeWithText("Quantity").performTextInput("3")
         ui.onNodeWithText("Notes (optional)").performTextInput("Niñas: útiles escolares")
@@ -58,6 +58,7 @@ class ContributionFlowTest {
         assertTrue(app.state.value.contributions.isEmpty())
         ui.runOnIdle { accept = true; app.onResume() }
         ui.waitUntil(5000) { app.state.value.contributions.size == 1 }
+        ui.onNodeWithTag("detail-back").performClick()
         ui.onNodeWithTag("tab-profile").performClick()
         ui.onNodeWithText("School supplies").performScrollTo().assertIsDisplayed()
         assertTrue(app.state.value.pendingOperations.isEmpty())

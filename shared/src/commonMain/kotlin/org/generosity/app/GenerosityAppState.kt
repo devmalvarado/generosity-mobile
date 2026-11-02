@@ -17,6 +17,7 @@ import org.generosity.data.InMemoryContributionRepository
 import org.generosity.data.InMemoryImportedCatalogDataSource
 import org.generosity.data.InMemoryUserProfileRepository
 import org.generosity.domain.currentUtcInstant
+import org.generosity.domain.DiscoveryArea
 import org.generosity.domain.CenterCategory
 import org.generosity.domain.CenterNeed
 import org.generosity.domain.Contribution
@@ -51,6 +52,7 @@ data class GenerosityUiState(
     val localePreference: LocalePreference = LocalePreference(),
     val profile: UserProfile = UserProfile(mode = UserMode.ANONYMOUS),
     val searchText: String = "",
+    val discoveryArea: DiscoveryArea? = null,
     val selectedCategories: Set<CenterCategory> = emptySet(),
     val centers: List<KindnessCenter> = emptyList(),
     val selectedCenterId: String? = null,
@@ -141,6 +143,11 @@ class GenerosityAppState(
 
     fun setSearchText(text: String) {
         update { copy(searchText = text) }
+        scope.launch { refreshCenters() }
+    }
+
+    fun setDiscoveryArea(area: DiscoveryArea?) {
+        update { copy(discoveryArea = area, selectedCenterId = null) }
         scope.launch { refreshCenters() }
     }
 
@@ -290,7 +297,9 @@ class GenerosityAppState(
             DiscoveryQuery(
                 searchText = current.searchText,
                 categories = current.selectedCategories,
-                locale = current.locale
+                locale = current.locale,
+                location = current.discoveryArea?.coordinates,
+                radiusMeters = current.discoveryArea?.radiusMeters
             )
         )
         val withLiveNeeds = discovered.map { center ->
@@ -299,7 +308,7 @@ class GenerosityAppState(
         // A slower lookup in the previous language must not replace current results.
         update {
             if (locale == current.locale && searchText == current.searchText &&
-                selectedCategories == current.selectedCategories
+                selectedCategories == current.selectedCategories && discoveryArea == current.discoveryArea
             ) copy(centers = withLiveNeeds, referenceIsoDate = clock().take(10)) else this
         }
     }
