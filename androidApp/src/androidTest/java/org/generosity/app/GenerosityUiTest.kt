@@ -10,6 +10,8 @@ import androidx.compose.ui.test.assertIsSelected
 import androidx.compose.ui.test.hasScrollAction
 import androidx.compose.ui.test.hasText
 import androidx.compose.ui.test.hasTestTag
+import androidx.compose.ui.test.hasContentDescription
+import androidx.compose.ui.test.hasAnyAncestor
 import androidx.compose.ui.test.junit4.v2.createAndroidComposeRule
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.onNodeWithTag
@@ -136,6 +138,24 @@ class GenerosityUiTest {
         composeRule.onNodeWithText("Hogar").assertIsDisplayed()
         composeRule.onNodeWithTag("discovery-scroll").performScrollToNode(hasText("Hogar Futuros Brillantes"))
         composeRule.onNodeWithText("Hogar Futuros Brillantes").assertIsDisplayed()
+    }
+
+    @Test
+    fun onlyVerifiedCentersShowAnAccessibleCheckmark() {
+        for ((language, label) in listOf("en" to "Verified", "es" to "Verificado")) {
+            composeRule.onNodeWithTag("tab-settings").performClick()
+            composeRule.onNodeWithTag("language-$language").performClick()
+            composeRule.onNodeWithTag("tab-list").performClick()
+            for (id in listOf("kc-children-001", "kc-seniors-001", "kc-health-001")) {
+                val card = "center-$id"
+                composeRule.onNodeWithTag("discovery-scroll").performScrollToNode(hasTestTag(card))
+                val badge = composeRule.onNode(hasContentDescription(label) and hasAnyAncestor(hasTestTag(card)), useUnmergedTree = true)
+                if (id == "kc-health-001") badge.assertIsDisplayed() else badge.assertDoesNotExist()
+                for (oldLabel in listOf("Imported listing", "Ficha importada", "Visit reported by a user", "Visita reportada por un usuario")) {
+                    composeRule.onNodeWithText(oldLabel).assertDoesNotExist()
+                }
+            }
+        }
     }
 
     @Test

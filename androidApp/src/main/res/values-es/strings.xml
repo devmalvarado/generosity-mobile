@@ -37,9 +37,7 @@
     <string name="category_education">Educación</string>
     <string name="category_vulnerable_families">Apoyo a familias</string>
     <string name="category_organ_tissue_donation">Donación de órganos y tejidos</string>
-    <string name="verification_imported">Ficha importada</string>
-    <string name="verification_visit_signaled">Visita reportada por un usuario</string>
-    <string name="verification_officially_verified">Verificado oficialmente</string>
+    <string name="verification_officially_verified">Verificado</string>
     <string name="view_details">Ver detalles</string>
     <string name="selected_center">Centro seleccionado</string>
     <string name="priority_normal">Normal</string>

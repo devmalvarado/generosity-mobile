@@ -229,11 +229,25 @@ private struct CenterIdentity: View {
         HStack(alignment: .center, spacing: GenSpace.md) {
             CategoryBadge(category: center.categories.sorted { $0.ordinal < $1.ordinal }.first)
             VStack(alignment: .leading, spacing: GenSpace.xs) {
-                Text(center.name.resolve(locale)).font(GenTypography.font(.subheadline).weight(.semibold)).foregroundStyle(GenPalette.text)
+                HStack(spacing: GenSpace.xs) {
+                    Text(center.name.resolve(locale)).font(GenTypography.font(.subheadline).weight(.semibold)).foregroundStyle(GenPalette.text)
+                    VerifiedCenterBadge(locale: locale, status: center.verificationStatus)
+                }
                 Text(center.address.resolve(locale)).font(GenTypography.font(.caption)).foregroundStyle(GenPalette.secondary)
-                Text(center.verificationStatus.label(locale)).font(GenTypography.font(.caption)).foregroundStyle(GenPalette.secondary)
             }
             .frame(maxWidth: .infinity, alignment: .leading)
+        }
+    }
+}
+
+private struct VerifiedCenterBadge: View {
+    let locale: AppLocale
+    let status: VerificationStatus
+    var body: some View {
+        if status == .officiallyVerified {
+            Image(systemName: "checkmark.circle.fill")
+                .foregroundStyle(GenPalette.accent)
+                .accessibilityLabel(L10n.resource("verification_officially_verified", locale: locale))
         }
     }
 }
@@ -251,8 +265,11 @@ private struct CenterDetail: View {
     var body: some View {
         VStack(alignment: .leading, spacing: GenSpace.lg) {
             CategoryBadge(category: center.categories.sorted { $0.ordinal < $1.ordinal }.first, size: 52)
-            Text(center.name.resolve(locale)).font(GenTypography.font(.title2).weight(.bold))
-                .accessibilityIdentifier("detail-\(center.id)")
+            HStack(spacing: GenSpace.xs) {
+                Text(center.name.resolve(locale)).font(GenTypography.font(.title2).weight(.bold))
+                    .accessibilityIdentifier("detail-\(center.id)")
+                VerifiedCenterBadge(locale: locale, status: center.verificationStatus)
+            }
             Text(center.categories.sorted { $0.ordinal < $1.ordinal }.map { $0.label(locale) }.joined(separator: " · "))
                 .font(GenTypography.font(.subheadline)).foregroundStyle(GenPalette.accent)
             Text(center.address.resolve(locale)).font(GenTypography.font(.subheadline)).foregroundStyle(GenPalette.secondary)
@@ -278,7 +295,6 @@ private struct CenterDetail: View {
             if visitNoted {
                 Text(store.state.backendConfigured ? L10n.resource("visit_saved", locale: locale) : L10n.text(.visitSignalSubmitted, locale: locale)).font(GenTypography.font(.footnote))
             }
-            Text(center.verificationStatus.label(locale)).font(GenTypography.font(.subheadline).weight(.semibold))
             Text(L10n.text(.officialVerificationBoundary, locale: locale)).font(GenTypography.font(.footnote)).foregroundStyle(GenPalette.secondary)
         }
         .padding(GenSpace.lg).frame(maxWidth: .infinity, alignment: .leading)

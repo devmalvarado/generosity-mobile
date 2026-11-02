@@ -147,6 +147,8 @@ complete the separate forms/history, real clock, persistence or backend tasks.
 - [ ] 9.5 Persist/queue iOS explicit visits through shared state; test saved/pending/received/failure states and no automatic upload of guest records after sign-in.
 - [ ] 9.6 Test visit storage failure, minimum evidence, permission denial, restart recovery and no promotion to official verification.
 
+- [x] 9.7 Replace public import/visit status labels with an accessible checkmark only for verified centers in Android/iOS cards, map previews and details; preserve internal provenance. Validated 2026-11-01 by Android `onlyVerifiedCentersShowAnAccessibleCheckmark` and iOS `testOnlyVerifiedCentersShowAnAccessibleCheckmark` against all three states in English/Spanish; localization and strict OpenSpec checks pass.
+
 ## 10. Verification
 
 - [x] 10.1 Add unit tests for shared discovery, filtering, needs expiration, notification preference, contribution, localization fallback, and visit-signal logic.
