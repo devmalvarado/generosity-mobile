@@ -1,0 +1,1470 @@
+{
+  "observedOn": "2026-11-01",
+  "areas": [
+    {
+      "area": "tlalpan-centro",
+      "category": "children_home",
+      "queryCount": 1,
+      "readyIds": [
+        "maps-mx-53146051f18120fb"
+      ],
+      "heldIds": [],
+      "relatedIds": [],
+      "status": "selected"
+    },
+    {
+      "area": "tlalpan-centro",
+      "category": "blood_bank",
+      "queryCount": 1,
+      "readyIds": [
+        "maps-mx-4f48aad0a94b33de"
+      ],
+      "heldIds": [],
+      "relatedIds": [],
+      "status": "selected"
+    },
+    {
+      "area": "tlalpan-centro",
+      "category": "older_adults",
+      "queryCount": 1,
+      "readyIds": [
+        "maps-mx-66229db9d5969427"
+      ],
+      "heldIds": [],
+      "relatedIds": [],
+      "status": "selected"
+    },
+    {
+      "area": "tlalpan-centro",
+      "category": "community_kitchen",
+      "queryCount": 1,
+      "readyIds": [
+        "maps-mx-f0717428793dfc2e"
+      ],
+      "heldIds": [
+        "maps-mx-025c34793d20aa82"
+      ],
+      "relatedIds": [],
+      "status": "selected"
+    },
+    {
+      "area": "guadalajara",
+      "category": "children_home",
+      "queryCount": 1,
+      "readyIds": [
+        "maps-mx-4962ec389b04e100"
+      ],
+      "heldIds": [],
+      "relatedIds": [],
+      "status": "selected"
+    },
+    {
+      "area": "guadalajara",
+      "category": "blood_bank",
+      "queryCount": 1,
+      "readyIds": [
+        "maps-mx-e16ee4006e146bcf"
+      ],
+      "heldIds": [],
+      "relatedIds": [],
+      "status": "selected"
+    },
+    {
+      "area": "guadalajara",
+      "category": "older_adults",
+      "queryCount": 1,
+      "readyIds": [
+        "maps-mx-ca4cfb47088d2785"
+      ],
+      "heldIds": [],
+      "relatedIds": [],
+      "status": "selected"
+    },
+    {
+      "area": "guadalajara",
+      "category": "community_kitchen",
+      "queryCount": 1,
+      "readyIds": [
+        "maps-mx-2ecceae6362e59cd"
+      ],
+      "heldIds": [],
+      "relatedIds": [],
+      "status": "selected"
+    },
+    {
+      "area": "monterrey",
+      "category": "children_home",
+      "queryCount": 1,
+      "readyIds": [
+        "maps-mx-e0b466364f439497"
+      ],
+      "heldIds": [],
+      "relatedIds": [],
+      "status": "selected"
+    },
+    {
+      "area": "monterrey",
+      "category": "blood_bank",
+      "queryCount": 1,
+      "readyIds": [
+        "maps-mx-ca09e7c7c35d83a3"
+      ],
+      "heldIds": [],
+      "relatedIds": [],
+      "status": "selected"
+    },
+    {
+      "area": "monterrey",
+      "category": "older_adults",
+      "queryCount": 1,
+      "readyIds": [
+        "maps-mx-cbb198157922889d"
+      ],
+      "heldIds": [],
+      "relatedIds": [],
+      "status": "selected"
+    },
+    {
+      "area": "monterrey",
+      "category": "community_kitchen",
+      "queryCount": 1,
+      "readyIds": [
+        "maps-mx-5fd2dab70286116c"
+      ],
+      "heldIds": [],
+      "relatedIds": [],
+      "status": "selected"
+    },
+    {
+      "area": "san-pedro-garza-garcia",
+      "category": "children_home",
+      "queryCount": 1,
+      "readyIds": [
+        "maps-mx-1d418cc99bd9afbe"
+      ],
+      "heldIds": [],
+      "relatedIds": [],
+      "status": "selected"
+    },
+    {
+      "area": "san-pedro-garza-garcia",
+      "category": "blood_bank",
+      "queryCount": 1,
+      "readyIds": [
+        "maps-mx-8f31508f90080768"
+      ],
+      "heldIds": [],
+      "relatedIds": [],
+      "status": "selected"
+    },
+    {
+      "area": "san-pedro-garza-garcia",
+      "category": "older_adults",
+      "queryCount": 1,
+      "readyIds": [
+        "maps-mx-0235514025d58085"
+      ],
+      "heldIds": [],
+      "relatedIds": [],
+      "status": "selected"
+    },
+    {
+      "area": "san-pedro-garza-garcia",
+      "category": "community_kitchen",
+      "queryCount": 1,
+      "readyIds": [
+        "maps-mx-4e868092c9b3e58b"
+      ],
+      "heldIds": [],
+      "relatedIds": [],
+      "status": "selected"
+    },
+    {
+      "area": "puebla",
+      "category": "children_home",
+      "queryCount": 1,
+      "readyIds": [
+        "maps-mx-4065b1b60d778a44"
+      ],
+      "heldIds": [],
+      "relatedIds": [],
+      "status": "selected"
+    },
+    {
+      "area": "puebla",
+      "category": "blood_bank",
+      "queryCount": 1,
+      "readyIds": [
+        "maps-mx-1fb23c275461f9f9"
+      ],
+      "heldIds": [],
+      "relatedIds": [],
+      "status": "selected"
+    },
+    {
+      "area": "puebla",
+      "category": "older_adults",
+      "queryCount": 1,
+      "readyIds": [
+        "maps-mx-3cfa8185f3ffe212"
+      ],
+      "heldIds": [],
+      "relatedIds": [],
+      "status": "selected"
+    },
+    {
+      "area": "puebla",
+      "category": "community_kitchen",
+      "queryCount": 1,
+      "readyIds": [],
+      "heldIds": [],
+      "relatedIds": [
+        "maps-mx-44d6bfc9093e19bb"
+      ],
+      "status": "needs_follow_up"
+    },
+    {
+      "area": "cholula",
+      "category": "children_home",
+      "queryCount": 1,
+      "readyIds": [
+        "maps-mx-34214087bf706c3a"
+      ],
+      "heldIds": [],
+      "relatedIds": [],
+      "status": "selected"
+    },
+    {
+      "area": "cholula",
+      "category": "blood_bank",
+      "queryCount": 1,
+      "readyIds": [],
+      "heldIds": [
+        "maps-mx-da1556867f2bf895"
+      ],
+      "relatedIds": [
+        "maps-mx-1fb23c275461f9f9"
+      ],
+      "status": "related_selection"
+    },
+    {
+      "area": "cholula",
+      "category": "older_adults",
+      "queryCount": 1,
+      "readyIds": [
+        "maps-mx-1d5d6c784ee3537d"
+      ],
+      "heldIds": [],
+      "relatedIds": [],
+      "status": "selected"
+    },
+    {
+      "area": "cholula",
+      "category": "community_kitchen",
+      "queryCount": 1,
+      "readyIds": [],
+      "heldIds": [
+        "maps-mx-44d6bfc9093e19bb"
+      ],
+      "relatedIds": [],
+      "status": "needs_follow_up"
+    },
+    {
+      "area": "veracruz",
+      "category": "children_home",
+      "queryCount": 1,
+      "readyIds": [
+        "maps-mx-800129467d8cf6d4"
+      ],
+      "heldIds": [],
+      "relatedIds": [],
+      "status": "selected"
+    },
+    {
+      "area": "veracruz",
+      "category": "blood_bank",
+      "queryCount": 1,
+      "readyIds": [
+        "maps-mx-085b1fadcc4ddf1f"
+      ],
+      "heldIds": [],
+      "relatedIds": [],
+      "status": "selected"
+    },
+    {
+      "area": "veracruz",
+      "category": "older_adults",
+      "queryCount": 1,
+      "readyIds": [
+        "maps-mx-86289b75146ef13d"
+      ],
+      "heldIds": [],
+      "relatedIds": [],
+      "status": "selected"
+    },
+    {
+      "area": "veracruz",
+      "category": "community_kitchen",
+      "queryCount": 1,
+      "readyIds": [
+        "maps-mx-e24b1d35bf0137eb"
+      ],
+      "heldIds": [],
+      "relatedIds": [],
+      "status": "selected"
+    },
+    {
+      "area": "boca-del-rio",
+      "category": "children_home",
+      "queryCount": 1,
+      "readyIds": [
+        "maps-mx-2df1a62aae30cb56"
+      ],
+      "heldIds": [],
+      "relatedIds": [],
+      "status": "selected"
+    },
+    {
+      "area": "boca-del-rio",
+      "category": "blood_bank",
+      "queryCount": 1,
+      "readyIds": [
+        "maps-mx-e272140733322c5e"
+      ],
+      "heldIds": [],
+      "relatedIds": [],
+      "status": "selected"
+    },
+    {
+      "area": "boca-del-rio",
+      "category": "older_adults",
+      "queryCount": 1,
+      "readyIds": [
+        "maps-mx-e9e213f13f6c43ef"
+      ],
+      "heldIds": [],
+      "relatedIds": [],
+      "status": "selected"
+    },
+    {
+      "area": "boca-del-rio",
+      "category": "community_kitchen",
+      "queryCount": 1,
+      "readyIds": [],
+      "heldIds": [
+        "maps-mx-61c66b475a7bc39f"
+      ],
+      "relatedIds": [],
+      "status": "needs_follow_up"
+    },
+    {
+      "area": "ensenada",
+      "category": "children_home",
+      "queryCount": 1,
+      "readyIds": [
+        "maps-mx-27edebffaf165fef"
+      ],
+      "heldIds": [],
+      "relatedIds": [],
+      "status": "selected"
+    },
+    {
+      "area": "ensenada",
+      "category": "blood_bank",
+      "queryCount": 1,
+      "readyIds": [
+        "maps-mx-0fdef35291bd3fc6"
+      ],
+      "heldIds": [],
+      "relatedIds": [],
+      "status": "selected"
+    },
+    {
+      "area": "ensenada",
+      "category": "older_adults",
+      "queryCount": 1,
+      "readyIds": [
+        "maps-mx-3c56e14fff7aff24"
+      ],
+      "heldIds": [],
+      "relatedIds": [],
+      "status": "selected"
+    },
+    {
+      "area": "ensenada",
+      "category": "community_kitchen",
+      "queryCount": 1,
+      "readyIds": [
+        "maps-mx-685ae69917223b69"
+      ],
+      "heldIds": [],
+      "relatedIds": [],
+      "status": "selected"
+    },
+    {
+      "area": "tijuana",
+      "category": "children_home",
+      "queryCount": 1,
+      "readyIds": [
+        "maps-mx-d6365b435cbfb20f"
+      ],
+      "heldIds": [],
+      "relatedIds": [],
+      "status": "selected"
+    },
+    {
+      "area": "tijuana",
+      "category": "blood_bank",
+      "queryCount": 1,
+      "readyIds": [
+        "maps-mx-e5f9383958e7133e"
+      ],
+      "heldIds": [],
+      "relatedIds": [],
+      "status": "selected"
+    },
+    {
+      "area": "tijuana",
+      "category": "older_adults",
+      "queryCount": 1,
+      "readyIds": [
+        "maps-mx-347c1672dea22f0a"
+      ],
+      "heldIds": [],
+      "relatedIds": [],
+      "status": "selected"
+    },
+    {
+      "area": "tijuana",
+      "category": "community_kitchen",
+      "queryCount": 1,
+      "readyIds": [
+        "maps-mx-f5944d0f5c16e669"
+      ],
+      "heldIds": [],
+      "relatedIds": [],
+      "status": "selected"
+    },
+    {
+      "area": "xalapa",
+      "category": "children_home",
+      "queryCount": 2,
+      "readyIds": [
+        "maps-mx-fb98616497a0c71b"
+      ],
+      "heldIds": [],
+      "relatedIds": [],
+      "status": "selected"
+    },
+    {
+      "area": "xalapa",
+      "category": "blood_bank",
+      "queryCount": 2,
+      "readyIds": [
+        "maps-mx-9f51c15fbda8c134"
+      ],
+      "heldIds": [],
+      "relatedIds": [],
+      "status": "selected"
+    },
+    {
+      "area": "xalapa",
+      "category": "older_adults",
+      "queryCount": 1,
+      "readyIds": [
+        "maps-mx-1439d3a5f6890937"
+      ],
+      "heldIds": [],
+      "relatedIds": [],
+      "status": "selected"
+    },
+    {
+      "area": "xalapa",
+      "category": "community_kitchen",
+      "queryCount": 3,
+      "readyIds": [],
+      "heldIds": [
+        "maps-mx-d92c51fb2e0a561e"
+      ],
+      "relatedIds": [],
+      "status": "needs_follow_up"
+    },
+    {
+      "area": "queretaro",
+      "category": "children_home",
+      "queryCount": 1,
+      "readyIds": [
+        "maps-mx-e03f421f26a16bd9"
+      ],
+      "heldIds": [],
+      "relatedIds": [],
+      "status": "selected"
+    },
+    {
+      "area": "queretaro",
+      "category": "blood_bank",
+      "queryCount": 1,
+      "readyIds": [
+        "maps-mx-2e6e7dbf46e1a231"
+      ],
+      "heldIds": [],
+      "relatedIds": [],
+      "status": "selected"
+    },
+    {
+      "area": "queretaro",
+      "category": "older_adults",
+      "queryCount": 1,
+      "readyIds": [
+        "maps-mx-a5ee940aef95b193"
+      ],
+      "heldIds": [],
+      "relatedIds": [],
+      "status": "selected"
+    },
+    {
+      "area": "queretaro",
+      "category": "community_kitchen",
+      "queryCount": 1,
+      "readyIds": [
+        "maps-mx-dfa5bfe9d679db5a"
+      ],
+      "heldIds": [],
+      "relatedIds": [],
+      "status": "selected"
+    },
+    {
+      "area": "san-luis-potosi",
+      "category": "children_home",
+      "queryCount": 1,
+      "readyIds": [
+        "maps-mx-21dd3b31d67cb144"
+      ],
+      "heldIds": [],
+      "relatedIds": [],
+      "status": "selected"
+    },
+    {
+      "area": "san-luis-potosi",
+      "category": "blood_bank",
+      "queryCount": 1,
+      "readyIds": [
+        "maps-mx-8304ec8b9be82f05"
+      ],
+      "heldIds": [],
+      "relatedIds": [],
+      "status": "selected"
+    },
+    {
+      "area": "san-luis-potosi",
+      "category": "older_adults",
+      "queryCount": 1,
+      "readyIds": [
+        "maps-mx-c5acb37a77391eec"
+      ],
+      "heldIds": [],
+      "relatedIds": [],
+      "status": "selected"
+    },
+    {
+      "area": "san-luis-potosi",
+      "category": "community_kitchen",
+      "queryCount": 1,
+      "readyIds": [
+        "maps-mx-5694dc79cc30d7ef"
+      ],
+      "heldIds": [],
+      "relatedIds": [],
+      "status": "selected"
+    },
+    {
+      "area": "guanajuato",
+      "category": "children_home",
+      "queryCount": 3,
+      "readyIds": [],
+      "heldIds": [
+        "maps-mx-c1b16511e62d43e8"
+      ],
+      "relatedIds": [],
+      "status": "needs_follow_up"
+    },
+    {
+      "area": "guanajuato",
+      "category": "blood_bank",
+      "queryCount": 3,
+      "readyIds": [
+        "maps-mx-4df6b6bffd900ad4"
+      ],
+      "heldIds": [],
+      "relatedIds": [],
+      "status": "selected"
+    },
+    {
+      "area": "guanajuato",
+      "category": "older_adults",
+      "queryCount": 3,
+      "readyIds": [],
+      "heldIds": [
+        "maps-mx-15c9bdcff75a8042"
+      ],
+      "relatedIds": [],
+      "status": "needs_follow_up"
+    },
+    {
+      "area": "guanajuato",
+      "category": "community_kitchen",
+      "queryCount": 3,
+      "readyIds": [],
+      "heldIds": [
+        "maps-mx-54214323c086c8ed"
+      ],
+      "relatedIds": [],
+      "status": "needs_follow_up"
+    },
+    {
+      "area": "leon",
+      "category": "children_home",
+      "queryCount": 1,
+      "readyIds": [
+        "maps-mx-059b79d94dc8758e"
+      ],
+      "heldIds": [],
+      "relatedIds": [],
+      "status": "selected"
+    },
+    {
+      "area": "leon",
+      "category": "blood_bank",
+      "queryCount": 1,
+      "readyIds": [
+        "maps-mx-2b417b7ec80d8804"
+      ],
+      "heldIds": [],
+      "relatedIds": [],
+      "status": "selected"
+    },
+    {
+      "area": "leon",
+      "category": "older_adults",
+      "queryCount": 1,
+      "readyIds": [
+        "maps-mx-f41ae68f86109ff8"
+      ],
+      "heldIds": [],
+      "relatedIds": [],
+      "status": "selected"
+    },
+    {
+      "area": "leon",
+      "category": "community_kitchen",
+      "queryCount": 1,
+      "readyIds": [
+        "maps-mx-50c7d0f56f36f23b"
+      ],
+      "heldIds": [],
+      "relatedIds": [],
+      "status": "selected"
+    },
+    {
+      "area": "manzanillo",
+      "category": "children_home",
+      "queryCount": 1,
+      "readyIds": [
+        "maps-mx-4c4a9f412a2ab9aa"
+      ],
+      "heldIds": [],
+      "relatedIds": [],
+      "status": "selected"
+    },
+    {
+      "area": "manzanillo",
+      "category": "blood_bank",
+      "queryCount": 1,
+      "readyIds": [
+        "maps-mx-301b38d8cf2350a2"
+      ],
+      "heldIds": [],
+      "relatedIds": [],
+      "status": "selected"
+    },
+    {
+      "area": "manzanillo",
+      "category": "older_adults",
+      "queryCount": 2,
+      "readyIds": [
+        "maps-mx-a2a77b09f7b857c4"
+      ],
+      "heldIds": [],
+      "relatedIds": [],
+      "status": "selected"
+    },
+    {
+      "area": "manzanillo",
+      "category": "community_kitchen",
+      "queryCount": 1,
+      "readyIds": [
+        "maps-mx-4eefd360a56d63ac"
+      ],
+      "heldIds": [],
+      "relatedIds": [],
+      "status": "selected"
+    },
+    {
+      "area": "puerto-vallarta",
+      "category": "children_home",
+      "queryCount": 1,
+      "readyIds": [],
+      "heldIds": [],
+      "relatedIds": [
+        "maps-mx-1e02164e0be8b0e0"
+      ],
+      "status": "related_selection"
+    },
+    {
+      "area": "puerto-vallarta",
+      "category": "blood_bank",
+      "queryCount": 1,
+      "readyIds": [
+        "maps-mx-445789c2f90474aa"
+      ],
+      "heldIds": [],
+      "relatedIds": [],
+      "status": "selected"
+    },
+    {
+      "area": "puerto-vallarta",
+      "category": "older_adults",
+      "queryCount": 1,
+      "readyIds": [
+        "maps-mx-6be0dbf5d5ac1825"
+      ],
+      "heldIds": [],
+      "relatedIds": [],
+      "status": "selected"
+    },
+    {
+      "area": "puerto-vallarta",
+      "category": "community_kitchen",
+      "queryCount": 1,
+      "readyIds": [
+        "maps-mx-09d2a61c1aeb8219"
+      ],
+      "heldIds": [],
+      "relatedIds": [],
+      "status": "selected"
+    },
+    {
+      "area": "nuevo-vallarta",
+      "category": "children_home",
+      "queryCount": 1,
+      "readyIds": [
+        "maps-mx-1e02164e0be8b0e0"
+      ],
+      "heldIds": [],
+      "relatedIds": [
+        "maps-mx-058840f014e9a35b"
+      ],
+      "status": "selected"
+    },
+    {
+      "area": "nuevo-vallarta",
+      "category": "blood_bank",
+      "queryCount": 1,
+      "readyIds": [
+        "maps-mx-085b3ee43be19791"
+      ],
+      "heldIds": [],
+      "relatedIds": [],
+      "status": "selected"
+    },
+    {
+      "area": "nuevo-vallarta",
+      "category": "older_adults",
+      "queryCount": 1,
+      "readyIds": [
+        "maps-mx-3e033b8991dffb25"
+      ],
+      "heldIds": [],
+      "relatedIds": [],
+      "status": "selected"
+    },
+    {
+      "area": "nuevo-vallarta",
+      "category": "community_kitchen",
+      "queryCount": 2,
+      "readyIds": [],
+      "heldIds": [],
+      "relatedIds": [
+        "maps-mx-bca4c1195a33edb5"
+      ],
+      "status": "related_selection"
+    },
+    {
+      "area": "bahia-de-banderas",
+      "category": "children_home",
+      "queryCount": 1,
+      "readyIds": [
+        "maps-mx-058840f014e9a35b"
+      ],
+      "heldIds": [],
+      "relatedIds": [],
+      "status": "selected"
+    },
+    {
+      "area": "bahia-de-banderas",
+      "category": "blood_bank",
+      "queryCount": 1,
+      "readyIds": [],
+      "heldIds": [
+        "maps-mx-bcbbf6d1fb7eac2a"
+      ],
+      "relatedIds": [
+        "maps-mx-085b3ee43be19791"
+      ],
+      "status": "related_selection"
+    },
+    {
+      "area": "bahia-de-banderas",
+      "category": "older_adults",
+      "queryCount": 1,
+      "readyIds": [],
+      "heldIds": [],
+      "relatedIds": [
+        "maps-mx-3e033b8991dffb25"
+      ],
+      "status": "related_selection"
+    },
+    {
+      "area": "bahia-de-banderas",
+      "category": "community_kitchen",
+      "queryCount": 2,
+      "readyIds": [
+        "maps-mx-bca4c1195a33edb5"
+      ],
+      "heldIds": [
+        "maps-mx-ee8df563315c3bc9"
+      ],
+      "relatedIds": [],
+      "status": "selected"
+    },
+    {
+      "area": "dallas",
+      "category": "children_home",
+      "queryCount": 1,
+      "readyIds": [
+        "maps-us-b05b9c733d31f4a3"
+      ],
+      "heldIds": [],
+      "relatedIds": [],
+      "status": "selected"
+    },
+    {
+      "area": "dallas",
+      "category": "blood_bank",
+      "queryCount": 1,
+      "readyIds": [
+        "maps-us-0a9b4230d532906f"
+      ],
+      "heldIds": [],
+      "relatedIds": [],
+      "status": "selected"
+    },
+    {
+      "area": "dallas",
+      "category": "older_adults",
+      "queryCount": 1,
+      "readyIds": [
+        "maps-us-fc48e02d455b3ec9"
+      ],
+      "heldIds": [],
+      "relatedIds": [],
+      "status": "selected"
+    },
+    {
+      "area": "dallas",
+      "category": "community_kitchen",
+      "queryCount": 2,
+      "readyIds": [
+        "maps-us-2c1e7c3b8b6c4ae6",
+        "maps-us-989c63c91c80520e"
+      ],
+      "heldIds": [],
+      "relatedIds": [],
+      "status": "selected"
+    },
+    {
+      "area": "austin",
+      "category": "children_home",
+      "queryCount": 1,
+      "readyIds": [
+        "maps-us-deeb5e4acd994663"
+      ],
+      "heldIds": [],
+      "relatedIds": [],
+      "status": "selected"
+    },
+    {
+      "area": "austin",
+      "category": "blood_bank",
+      "queryCount": 1,
+      "readyIds": [
+        "maps-us-320fd923c6ae27d2"
+      ],
+      "heldIds": [],
+      "relatedIds": [],
+      "status": "selected"
+    },
+    {
+      "area": "austin",
+      "category": "older_adults",
+      "queryCount": 1,
+      "readyIds": [
+        "maps-us-3578f8d6278cb51c"
+      ],
+      "heldIds": [],
+      "relatedIds": [],
+      "status": "selected"
+    },
+    {
+      "area": "austin",
+      "category": "community_kitchen",
+      "queryCount": 1,
+      "readyIds": [
+        "maps-us-7555194fdcecff5d"
+      ],
+      "heldIds": [],
+      "relatedIds": [],
+      "status": "selected"
+    },
+    {
+      "area": "el-paso",
+      "category": "children_home",
+      "queryCount": 1,
+      "readyIds": [
+        "maps-us-2f7247a5df440a1b"
+      ],
+      "heldIds": [],
+      "relatedIds": [],
+      "status": "selected"
+    },
+    {
+      "area": "el-paso",
+      "category": "blood_bank",
+      "queryCount": 2,
+      "readyIds": [
+        "maps-us-7a5c50e75e4d0caa"
+      ],
+      "heldIds": [],
+      "relatedIds": [],
+      "status": "selected"
+    },
+    {
+      "area": "el-paso",
+      "category": "older_adults",
+      "queryCount": 1,
+      "readyIds": [
+        "maps-us-35d588a2e2d0f9b9"
+      ],
+      "heldIds": [],
+      "relatedIds": [],
+      "status": "selected"
+    },
+    {
+      "area": "el-paso",
+      "category": "community_kitchen",
+      "queryCount": 2,
+      "readyIds": [
+        "maps-us-03f5238087057984"
+      ],
+      "heldIds": [],
+      "relatedIds": [],
+      "status": "selected"
+    },
+    {
+      "area": "seattle",
+      "category": "children_home",
+      "queryCount": 1,
+      "readyIds": [
+        "maps-us-62bcb3a55b78af65"
+      ],
+      "heldIds": [],
+      "relatedIds": [],
+      "status": "selected"
+    },
+    {
+      "area": "seattle",
+      "category": "blood_bank",
+      "queryCount": 1,
+      "readyIds": [
+        "maps-us-b33d88443b813f42"
+      ],
+      "heldIds": [],
+      "relatedIds": [],
+      "status": "selected"
+    },
+    {
+      "area": "seattle",
+      "category": "older_adults",
+      "queryCount": 1,
+      "readyIds": [
+        "maps-us-ffd091328052ba1a"
+      ],
+      "heldIds": [],
+      "relatedIds": [],
+      "status": "selected"
+    },
+    {
+      "area": "seattle",
+      "category": "community_kitchen",
+      "queryCount": 1,
+      "readyIds": [
+        "maps-us-d47f6d5224ab3b61"
+      ],
+      "heldIds": [],
+      "relatedIds": [],
+      "status": "selected"
+    },
+    {
+      "area": "tacoma",
+      "category": "children_home",
+      "queryCount": 1,
+      "readyIds": [
+        "maps-us-cf802f6d10cfb3f4"
+      ],
+      "heldIds": [],
+      "relatedIds": [],
+      "status": "selected"
+    },
+    {
+      "area": "tacoma",
+      "category": "blood_bank",
+      "queryCount": 1,
+      "readyIds": [
+        "maps-us-68508d5230a27952"
+      ],
+      "heldIds": [],
+      "relatedIds": [],
+      "status": "selected"
+    },
+    {
+      "area": "tacoma",
+      "category": "older_adults",
+      "queryCount": 1,
+      "readyIds": [
+        "maps-us-0c650805d4e2d1f5"
+      ],
+      "heldIds": [],
+      "relatedIds": [],
+      "status": "selected"
+    },
+    {
+      "area": "tacoma",
+      "category": "community_kitchen",
+      "queryCount": 3,
+      "readyIds": [
+        "maps-us-9f2e3f8c5f72d808"
+      ],
+      "heldIds": [
+        "maps-us-8ce2000fa8bd92d5"
+      ],
+      "relatedIds": [],
+      "status": "selected"
+    },
+    {
+      "area": "washington-dc",
+      "category": "children_home",
+      "queryCount": 1,
+      "readyIds": [
+        "maps-us-ed5b4ead33fa1e4c"
+      ],
+      "heldIds": [],
+      "relatedIds": [],
+      "status": "selected"
+    },
+    {
+      "area": "washington-dc",
+      "category": "blood_bank",
+      "queryCount": 1,
+      "readyIds": [
+        "maps-us-6425949efafba8e8"
+      ],
+      "heldIds": [],
+      "relatedIds": [],
+      "status": "selected"
+    },
+    {
+      "area": "washington-dc",
+      "category": "older_adults",
+      "queryCount": 1,
+      "readyIds": [
+        "maps-us-45f9b0a282be8f23"
+      ],
+      "heldIds": [],
+      "relatedIds": [],
+      "status": "selected"
+    },
+    {
+      "area": "washington-dc",
+      "category": "community_kitchen",
+      "queryCount": 1,
+      "readyIds": [
+        "maps-us-df6bd42e8fe9a485"
+      ],
+      "heldIds": [],
+      "relatedIds": [],
+      "status": "selected"
+    },
+    {
+      "area": "baltimore",
+      "category": "children_home",
+      "queryCount": 1,
+      "readyIds": [
+        "maps-us-040a44a500c8116f"
+      ],
+      "heldIds": [],
+      "relatedIds": [],
+      "status": "selected"
+    },
+    {
+      "area": "baltimore",
+      "category": "blood_bank",
+      "queryCount": 1,
+      "readyIds": [
+        "maps-us-3633ec95564f386f"
+      ],
+      "heldIds": [],
+      "relatedIds": [],
+      "status": "selected"
+    },
+    {
+      "area": "baltimore",
+      "category": "older_adults",
+      "queryCount": 1,
+      "readyIds": [
+        "maps-us-9aefd3c42d33abe9"
+      ],
+      "heldIds": [],
+      "relatedIds": [],
+      "status": "selected"
+    },
+    {
+      "area": "baltimore",
+      "category": "community_kitchen",
+      "queryCount": 1,
+      "readyIds": [
+        "maps-us-f8d726faf5b77805"
+      ],
+      "heldIds": [],
+      "relatedIds": [],
+      "status": "selected"
+    },
+    {
+      "area": "los-angeles",
+      "category": "children_home",
+      "queryCount": 1,
+      "readyIds": [
+        "maps-us-83a6e784a7ad85a8"
+      ],
+      "heldIds": [],
+      "relatedIds": [],
+      "status": "selected"
+    },
+    {
+      "area": "los-angeles",
+      "category": "blood_bank",
+      "queryCount": 1,
+      "readyIds": [
+        "maps-us-13cb05a960f1b76e"
+      ],
+      "heldIds": [],
+      "relatedIds": [],
+      "status": "selected"
+    },
+    {
+      "area": "los-angeles",
+      "category": "older_adults",
+      "queryCount": 1,
+      "readyIds": [
+        "maps-us-e86759976c1c259c"
+      ],
+      "heldIds": [],
+      "relatedIds": [],
+      "status": "selected"
+    },
+    {
+      "area": "los-angeles",
+      "category": "community_kitchen",
+      "queryCount": 1,
+      "readyIds": [
+        "maps-us-c65061b6b12ff557"
+      ],
+      "heldIds": [],
+      "relatedIds": [],
+      "status": "selected"
+    },
+    {
+      "area": "anaheim",
+      "category": "children_home",
+      "queryCount": 1,
+      "readyIds": [
+        "maps-us-54892f83916bc72e"
+      ],
+      "heldIds": [],
+      "relatedIds": [],
+      "status": "selected"
+    },
+    {
+      "area": "anaheim",
+      "category": "blood_bank",
+      "queryCount": 1,
+      "readyIds": [
+        "maps-us-3583545ed14745e2"
+      ],
+      "heldIds": [],
+      "relatedIds": [],
+      "status": "selected"
+    },
+    {
+      "area": "anaheim",
+      "category": "older_adults",
+      "queryCount": 1,
+      "readyIds": [
+        "maps-us-daa9f412692d29e2"
+      ],
+      "heldIds": [],
+      "relatedIds": [],
+      "status": "selected"
+    },
+    {
+      "area": "anaheim",
+      "category": "community_kitchen",
+      "queryCount": 1,
+      "readyIds": [
+        "maps-us-ebd674f5c53925d9"
+      ],
+      "heldIds": [],
+      "relatedIds": [],
+      "status": "selected"
+    },
+    {
+      "area": "madrid",
+      "category": "children_home",
+      "queryCount": 1,
+      "readyIds": [
+        "maps-es-3e1db4fdfb7be952"
+      ],
+      "heldIds": [],
+      "relatedIds": [],
+      "status": "selected"
+    },
+    {
+      "area": "madrid",
+      "category": "blood_bank",
+      "queryCount": 1,
+      "readyIds": [
+        "maps-es-b4c69b1793149979"
+      ],
+      "heldIds": [],
+      "relatedIds": [],
+      "status": "selected"
+    },
+    {
+      "area": "madrid",
+      "category": "older_adults",
+      "queryCount": 1,
+      "readyIds": [
+        "maps-es-d0dd6794f04c5a15"
+      ],
+      "heldIds": [],
+      "relatedIds": [],
+      "status": "selected"
+    },
+    {
+      "area": "madrid",
+      "category": "community_kitchen",
+      "queryCount": 1,
+      "readyIds": [
+        "maps-es-f08270975e3cdeef"
+      ],
+      "heldIds": [],
+      "relatedIds": [],
+      "status": "selected"
+    },
+    {
+      "area": "lugo",
+      "category": "children_home",
+      "queryCount": 1,
+      "readyIds": [
+        "maps-es-747ecc6d7c7459c3"
+      ],
+      "heldIds": [],
+      "relatedIds": [],
+      "status": "selected"
+    },
+    {
+      "area": "lugo",
+      "category": "blood_bank",
+      "queryCount": 2,
+      "readyIds": [
+        "maps-es-929eb6a16213fee9"
+      ],
+      "heldIds": [],
+      "relatedIds": [],
+      "status": "selected"
+    },
+    {
+      "area": "lugo",
+      "category": "older_adults",
+      "queryCount": 1,
+      "readyIds": [
+        "maps-es-15d60c051d3d0494"
+      ],
+      "heldIds": [],
+      "relatedIds": [],
+      "status": "selected"
+    },
+    {
+      "area": "lugo",
+      "category": "community_kitchen",
+      "queryCount": 1,
+      "readyIds": [
+        "maps-es-c797193d8e676a3d"
+      ],
+      "heldIds": [],
+      "relatedIds": [],
+      "status": "selected"
+    },
+    {
+      "area": "roma",
+      "category": "children_home",
+      "queryCount": 1,
+      "readyIds": [
+        "maps-it-fad185c5eb9b0403"
+      ],
+      "heldIds": [],
+      "relatedIds": [],
+      "status": "selected"
+    },
+    {
+      "area": "roma",
+      "category": "blood_bank",
+      "queryCount": 1,
+      "readyIds": [
+        "maps-it-3ad5ddf96bee67ca"
+      ],
+      "heldIds": [],
+      "relatedIds": [],
+      "status": "selected"
+    },
+    {
+      "area": "roma",
+      "category": "older_adults",
+      "queryCount": 1,
+      "readyIds": [
+        "maps-it-32836584b1e5a15b"
+      ],
+      "heldIds": [],
+      "relatedIds": [],
+      "status": "selected"
+    },
+    {
+      "area": "roma",
+      "category": "community_kitchen",
+      "queryCount": 1,
+      "readyIds": [],
+      "heldIds": [
+        "maps-it-9e9c1502f50398b5"
+      ],
+      "relatedIds": [],
+      "status": "needs_follow_up"
+    },
+    {
+      "area": "vaticano",
+      "category": "children_home",
+      "queryCount": 1,
+      "readyIds": [
+        "maps-it-a632f4bfe9ea2d04"
+      ],
+      "heldIds": [],
+      "relatedIds": [],
+      "status": "selected"
+    },
+    {
+      "area": "vaticano",
+      "category": "blood_bank",
+      "queryCount": 1,
+      "readyIds": [
+        "maps-it-71883cf7a6e97f2a"
+      ],
+      "heldIds": [],
+      "relatedIds": [],
+      "status": "selected"
+    },
+    {
+      "area": "vaticano",
+      "category": "older_adults",
+      "queryCount": 1,
+      "readyIds": [
+        "maps-it-d8fc59175c638f99"
+      ],
+      "heldIds": [],
+      "relatedIds": [],
+      "status": "selected"
+    },
+    {
+      "area": "vaticano",
+      "category": "community_kitchen",
+      "queryCount": 4,
+      "readyIds": [
+        "maps-it-42b751b81ae26d51"
+      ],
+      "heldIds": [],
+      "relatedIds": [],
+      "status": "selected"
+    },
+    {
+      "area": "londres",
+      "category": "children_home",
+      "queryCount": 1,
+      "readyIds": [
+        "maps-gb-00e8093052697093"
+      ],
+      "heldIds": [],
+      "relatedIds": [],
+      "status": "selected"
+    },
+    {
+      "area": "londres",
+      "category": "blood_bank",
+      "queryCount": 1,
+      "readyIds": [
+        "maps-gb-ded01c55d594e8b1"
+      ],
+      "heldIds": [],
+      "relatedIds": [],
+      "status": "selected"
+    },
+    {
+      "area": "londres",
+      "category": "older_adults",
+      "queryCount": 1,
+      "readyIds": [
+        "maps-gb-31117c5ad66910b3"
+      ],
+      "heldIds": [],
+      "relatedIds": [],
+      "status": "selected"
+    },
+    {
+      "area": "londres",
+      "category": "community_kitchen",
+      "queryCount": 1,
+      "readyIds": [
+        "maps-gb-975517a34cd3789e"
+      ],
+      "heldIds": [],
+      "relatedIds": [],
+      "status": "selected"
+    }
+  ]
+}

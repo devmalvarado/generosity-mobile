@@ -19,6 +19,16 @@ discrepancies remain in its research inventory only. All imported records have
 `verificationStatus: imported` and empty needs; source listings do not establish
 official verification, free services or admission availability.
 
+The [33-zone expansion](../data/catalog-expansion-2026-11-01/README.md) adds a
+separate 132-record research inventory and a reviewed 120-center batch, with
+12 exclusions. It covers Mexico, the United States and European search areas,
+including explicit Rome alternatives for Vatican searches. Stable IDs derive
+from observed Google feature IDs; missing place IDs are not fabricated. Funding
+origin, service distinctions and sources stay in the research inventory until
+the full directory contract is implemented. The batch retains the same import
+schema and broad app categories; public office and food-pantry descriptions do
+not promise residential admission or prepared meals.
+
 The backend importer accepts optional `googleMapsUrl` metadata alongside the
 mobile-v1 fields. It must be an HTTPS Google Maps place/share URL (google.com/maps,
 www.google.com/maps, maps.google.com/maps, maps.app.goo.gl or goo.gl/maps), without
