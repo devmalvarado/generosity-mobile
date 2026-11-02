@@ -76,4 +76,14 @@ class BloodDonationCategoryTest extends TestCase
         $this->getJson('/api/v1/sync/catalog')->assertOk()->assertJsonPath('catalog.centers.0.categories', ['health']);
         $this->getJson('/api/v1/sync/catalog?category_version=2')->assertOk()->assertJsonPath('catalog.centers.0.categories', ['blood_donation']);
     }
+
+    public function test_rollback_preserves_a_reviewed_center_already_correct_before_migration(): void
+    {
+        $center = Center::create(['id' => 'mx-hospital-angeles-acoxpa-e042ef', 'details' => ['categories' => ['blood_donation', 'health']]]);
+        $before = $center->refresh()->toArray();
+        $migration = require database_path('migrations/2026_11_02_000001_classify_reviewed_blood_donation_centers.php');
+        $migration->up();
+        $migration->down();
+        $this->assertSame($before, $center->fresh()->toArray());
+    }
 }
