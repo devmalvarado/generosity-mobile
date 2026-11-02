@@ -77,100 +77,126 @@ private struct DiscoveryView: View {
     let locale: AppLocale
     @ObservedObject var store: GenerosityStore
     let showMap: Bool
+    @State private var showDetail = false
+    @State private var showAreaSearch = false
     @State private var scrollTarget: String?
+    @FocusState private var searching: Bool
 
     private func select(_ id: String, details: Bool = false) {
+        searching = false
         store.selectCenter(id)
-        scrollTarget = details || !showMap ? "center-detail" : "discovery-map"
+        showDetail = details || !showMap
     }
 
     var body: some View {
         GeometryReader { geometry in
-            ScrollViewReader { proxy in
-                ScrollView {
-                    VStack(alignment: .leading, spacing: 16) {
-                        SyncStatusView(locale: locale, store: store)
-                        Text(L10n.text(.nearbyCenters, locale: locale)).font(.headline)
-                        HStack(spacing: 10) {
-                            Image(systemName: "magnifyingglass").foregroundStyle(GenPalette.secondary).accessibilityHidden(true)
-                            TextField(L10n.text(.searchPlaceholder, locale: locale), text: Binding(
-                                get: { store.state.searchText }, set: store.setSearchText
-                            ))
-                            .accessibilityIdentifier("discovery-search")
-                            .submitLabel(.search)
-                        }
-                        .padding(14).frame(minHeight: 48)
-                        .background(GenPalette.surface, in: RoundedRectangle(cornerRadius: 12))
-                        .overlay(RoundedRectangle(cornerRadius: 12).stroke(GenPalette.line))
-                        CategoryFilterView(
-                            locale: locale, selectedCategories: store.state.selectedCategories,
-                            onToggle: { store.toggleCategory($0.code) }
-                        )
-                        if showMap {
-                            CenterMapView(
-                                locale: locale, centers: store.state.centers,
-                                selectedCenterId: store.state.selectedCenter?.id,
-                                onSelect: { store.selectCenter($0) }
-                            )
-                            .frame(height: max(200, min(480, geometry.size.height * 0.52)))
-                            .clipShape(RoundedRectangle(cornerRadius: 12))
-                            .id("discovery-map")
-                            if let center = store.state.selectedCenter {
-                                VStack(alignment: .leading, spacing: 8) {
-                                    Text(L10n.resource("selected_center", locale: locale)).font(.caption).foregroundStyle(GenPalette.accent)
-                                    CenterIdentity(locale: locale, center: center)
-                                    Button(L10n.resource("view_details", locale: locale)) {
-                                        select(center.id, details: true)
-                                    }
-                                    .accessibilityIdentifier("selected-center-details")
-                                    .buttonStyle(.bordered).frame(minHeight: 44)
-                                }
-                                .padding(12).frame(maxWidth: .infinity, alignment: .leading)
-                                .background(GenPalette.surface, in: RoundedRectangle(cornerRadius: 12))
-                            }
-                        }
-                        if store.state.centers.isEmpty {
-                            Text(L10n.text(.emptyCenters, locale: locale)).foregroundStyle(GenPalette.secondary).padding(.vertical, 12)
-                        }
-                        ForEach(store.state.centers, id: \.id) { center in
-                            let selected = store.state.selectedCenter?.id == center.id
-                            VStack(alignment: .leading, spacing: 4) {
-                                Button { select(center.id) } label: {
-                                    CenterIdentity(locale: locale, center: center)
-                                        .padding(12).contentShape(Rectangle())
-                                }
-                                .buttonStyle(.plain)
-                                .accessibilityIdentifier("center-\(center.id)")
-                                .accessibilityAddTraits(selected ? .isSelected : [])
-                                Button(L10n.resource("view_details", locale: locale)) { select(center.id, details: true) }
-                                    .accessibilityIdentifier("details-\(center.id)")
-                                    .buttonStyle(.bordered).frame(minHeight: 44)
-                                    .padding([.horizontal, .bottom], 12)
-                            }
-                            .frame(maxWidth: .infinity, alignment: .leading)
-                            .background(GenPalette.surface, in: RoundedRectangle(cornerRadius: 12))
-                            .overlay(RoundedRectangle(cornerRadius: 12).stroke(selected ? GenPalette.accent : .clear, lineWidth: 2))
-                        }
-                        if let center = store.state.selectedCenter {
-                            CenterDetail(
-                                locale: locale, center: center, store: store, currentNeeds: store.state.currentNeeds,
-                                visitNoted: store.state.visitSignalCenterId == center.id || store.state.visitedCenterIds.contains(center.id),
-                                onVisit: { store.signalVisit(center.id) }
-                            )
-                            .id("center-detail")
-                        }
-                        Text(L10n.resource(store.state.backendConfigured ? "sync_cached" : "demo_catalog", locale: locale)).font(.caption).foregroundStyle(GenPalette.secondary)
+            VStack(spacing: 8) {
+                HStack(spacing: 8) {
+                    Image(systemName: "magnifyingglass").foregroundStyle(GenPalette.secondary).accessibilityHidden(true)
+                    TextField(L10n.text(.searchPlaceholder, locale: locale), text: Binding(
+                        get: { store.state.searchText }, set: store.setSearchText
+                    ))
+                    .focused($searching)
+                    .accessibilityIdentifier("discovery-search")
+                    .submitLabel(.search)
+                    .onSubmit { searching = false }
+                    Button { searching = false; showAreaSearch = true } label: {
+                        Label(L10n.resource("area_search", locale: locale), systemImage: "map")
+                            .font(.caption).frame(minHeight: 44)
                     }
-                    .padding(16)
+                    .accessibilityLabel(L10n.resource("area_search", locale: locale))
+                    .accessibilityIdentifier("area-open")
                 }
-                .accessibilityIdentifier("discovery-scroll")
-                .background(GenPalette.background)
-                .foregroundStyle(GenPalette.text)
-                .onAppear { if showMap && store.state.selectedCenter != nil { scrollTarget = "discovery-map" } }
-                .onChange(of: scrollTarget) { target in
-                    guard let target else { return }
-                    withAnimation { proxy.scrollTo(target, anchor: .top) }
-                    scrollTarget = nil
+                .padding(12).frame(minHeight: 44)
+                .background(GenPalette.surface, in: RoundedRectangle(cornerRadius: 12))
+                .overlay(RoundedRectangle(cornerRadius: 12).stroke(GenPalette.line))
+                CategoryFilterView(locale: locale, selectedCategories: store.state.selectedCategories,
+                                   onToggle: { store.toggleCategory($0.code) }, horizontal: true)
+                if showMap {
+                    CenterMapView(locale: locale, centers: store.state.centers,
+                                  selectedCenterId: store.state.selectedCenter?.id,
+                                  onSelect: { id in select(id); scrollTarget = id }, origin: store.state.discoveryArea?.coordinates)
+                        .frame(height: max(100, min(300, geometry.size.height * 0.4)))
+                        .clipShape(RoundedRectangle(cornerRadius: 12))
+                }
+                ScrollViewReader { proxy in
+                    ScrollView {
+                        LazyVStack(alignment: .leading, spacing: 12) {
+                            if let area = store.state.discoveryArea {
+                                Text(L10n.resource("area_scope", locale: locale) + " " + area.label)
+                                    .font(.caption)
+                                Button(L10n.resource("area_clear", locale: locale)) { store.setDiscoveryArea(nil) }
+                                    .frame(minHeight: 44).accessibilityIdentifier("area-clear")
+                            }
+                            Text(L10n.text(.nearbyCenters, locale: locale)).font(.headline)
+                            SyncStatusView(locale: locale, store: store)
+                            if store.state.centers.isEmpty {
+                                Text(L10n.text(.emptyCenters, locale: locale)).foregroundStyle(GenPalette.secondary)
+                            }
+                            ForEach(store.state.centers, id: \.id) { center in
+                                let selected = store.state.selectedCenter?.id == center.id
+                                VStack(alignment: .leading, spacing: 4) {
+                                    Button { select(center.id) } label: {
+                                        VStack(alignment: .leading, spacing: 4) {
+                                            CenterIdentity(locale: locale, center: center)
+                                            if let area = store.state.discoveryArea {
+                                                Text(String(format: L10n.resource("area_distance", locale: locale), locale: Locale(identifier: locale.rawValue), area.distanceKilometersTo(coordinates: center.coordinates)))
+                                                    .font(.caption)
+                                            }
+                                        }
+                                            .padding(12).contentShape(Rectangle())
+                                    }
+                                    .buttonStyle(.plain)
+                                    .accessibilityIdentifier("center-\(center.id)")
+                                    .accessibilityAddTraits(selected ? .isSelected : [])
+                                    Button(L10n.resource("view_details", locale: locale)) { select(center.id, details: true) }
+                                        .accessibilityIdentifier("details-\(center.id)")
+                                        .buttonStyle(.bordered).frame(minHeight: 44)
+                                        .padding([.horizontal, .bottom], 12)
+                                }
+                                .frame(maxWidth: .infinity, alignment: .leading)
+                                .background(GenPalette.surface, in: RoundedRectangle(cornerRadius: 12))
+                                .overlay(RoundedRectangle(cornerRadius: 12).stroke(selected ? GenPalette.accent : .clear, lineWidth: 2))
+                                .id(center.id)
+                            }
+                            Text(L10n.resource(store.state.backendConfigured ? "sync_cached" : "demo_catalog", locale: locale))
+                                .font(.caption).foregroundStyle(GenPalette.secondary)
+                        }.padding(.vertical, 4).id("results-top")
+                    }
+                    .accessibilityIdentifier("discovery-scroll")
+                    .onChange(of: store.state.discoveryArea) { _ in proxy.scrollTo("results-top", anchor: .top) }
+                    .onChange(of: store.state.searchText) { _ in proxy.scrollTo("results-top", anchor: .top) }
+                    .onChange(of: store.state.selectedCategories) { _ in proxy.scrollTo("results-top", anchor: .top) }
+                    .onChange(of: scrollTarget) { target in
+                        guard let target else { return }
+                        withAnimation { proxy.scrollTo(target, anchor: .top) }
+                        scrollTarget = nil
+                    }
+                }
+                .frame(maxHeight: .infinity)
+            }
+            .padding(.horizontal, 16).padding(.top, 8)
+            .background(GenPalette.background).foregroundStyle(GenPalette.text)
+        }
+        .sheet(isPresented: $showAreaSearch) { AreaSearchView(locale: locale, onSelect: store.setDiscoveryArea) }
+        .fullScreenCover(isPresented: $showDetail) {
+            NavigationStack {
+                ScrollView {
+                    if let center = store.state.selectedCenter {
+                        CenterDetail(locale: locale, center: center, store: store, currentNeeds: store.state.currentNeeds,
+                                     visitNoted: store.state.visitSignalCenterId == center.id || store.state.visitedCenterIds.contains(center.id),
+                                     onVisit: { store.signalVisit(center.id) })
+                    } else { Text(L10n.text(.emptyCenters, locale: locale)) }
+                }
+                .accessibilityIdentifier("detail-scroll")
+                .background(GenPalette.background).foregroundStyle(GenPalette.text)
+                .navigationBarTitleDisplayMode(.inline)
+                .toolbar {
+                    ToolbarItem(placement: .navigationBarLeading) {
+                        Button(L10n.resource("offer_cancel", locale: locale)) { showDetail = false }
+                            .accessibilityIdentifier("detail-back")
+                    }
+                    ToolbarItem(placement: .principal) { BrandWordmark() }
                 }
             }
         }
@@ -181,10 +207,11 @@ private struct CategoryFilterView: View {
     let locale: AppLocale
     let selectedCategories: Set<CenterCategory>
     let onToggle: (CenterCategory) -> Void
+    var horizontal = false
     @Environment(\.dynamicTypeSize) private var typeSize
 
     var body: some View {
-        if typeSize.isAccessibilitySize {
+        if typeSize.isAccessibilitySize && !horizontal {
             LazyVGrid(columns: [GridItem(.adaptive(minimum: 160), alignment: .leading)], alignment: .leading, spacing: 8) { chips }
         } else {
             ScrollView(.horizontal, showsIndicators: false) { HStack(spacing: 8) { chips } }
@@ -215,6 +242,7 @@ struct CenterMapView: UIViewRepresentable {
     let centers: [KindnessCenter]
     let selectedCenterId: String?
     let onSelect: (String) -> Void
+    var origin: Coordinates? = nil
 
     func makeCoordinator() -> Coordinator { Coordinator(self) }
 
@@ -264,6 +292,7 @@ struct CenterMapView: UIViewRepresentable {
         private var pins: [String: Annotation] = [:]
         private var framedCoordinates: [String: [Double]] = [:]
         private var framedSelection: String?
+        private var framedOrigin: Coordinates?
         init(_ owner: CenterMapView) { self.owner = owner }
 
         func update(_ map: MapCanvas, owner: CenterMapView) {
@@ -287,9 +316,9 @@ struct CenterMapView: UIViewRepresentable {
                 }
             }
             // No two-way camera binding: MapKit must not write an old region over a new selection.
-            if coordinates != framedCoordinates || owner.selectedCenterId != framedSelection {
+            if coordinates != framedCoordinates || owner.selectedCenterId != framedSelection || owner.origin != framedOrigin {
                 let selected = owner.selectedCenterId.flatMap { pins[$0] }
-                if let region = discoveryMapRect(coordinates: centers.map(\.coordinate), selected: selected?.coordinate) {
+                if let region = discoveryMapRect(coordinates: centers.map(\.coordinate), selected: selected?.coordinate, origin: owner.origin.map { CLLocationCoordinate2D(latitude: $0.latitude, longitude: $0.longitude) }) {
                     map.frameRect(region)
                 }
                 for annotation in map.selectedAnnotations where (annotation as? Annotation)?.id != selected?.id {
@@ -298,6 +327,7 @@ struct CenterMapView: UIViewRepresentable {
                 if let selected { map.selectAnnotation(selected, animated: false) }
                 framedCoordinates = coordinates
                 framedSelection = owner.selectedCenterId
+                framedOrigin = owner.origin
             }
             for pin in pins.values {
                 if let view = map.view(for: pin) as? MKMarkerAnnotationView { configure(view, pin: pin) }

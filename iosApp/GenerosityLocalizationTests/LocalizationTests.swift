@@ -26,6 +26,17 @@ final class LocalizationTests: XCTestCase {
 }
 
 final class MapFramingTests: XCTestCase {
+    func testSelectedSearchAreaFramesEmptyResultsAndSelectionTakesPrecedence() throws {
+        let origin = CLLocationCoordinate2D(latitude: 19.35, longitude: -99.16)
+        let area = try XCTUnwrap(discoveryMapRect(coordinates: [], selected: nil, origin: origin))
+        XCTAssertTrue(area.contains(MKMapPoint(origin)))
+        XCTAssertEqual(area.width / MKMapPointsPerMeterAtLatitude(origin.latitude), 20_000, accuracy: 1)
+        let center = CLLocationCoordinate2D(latitude: 19.37, longitude: -99.17)
+        let selected = try XCTUnwrap(discoveryMapRect(coordinates: [center], selected: center, origin: origin))
+        XCTAssertEqual(selected.width / MKMapPointsPerMeterAtLatitude(center.latitude), 5_000, accuracy: 1)
+        XCTAssertTrue(selected.contains(MKMapPoint(center)))
+    }
+
     @MainActor
     func testNativeMapUpdatesPinsAndCameraWithoutStaleRegionFeedback() {
         let centers = BundledKindnessCatalog.shared.centers()

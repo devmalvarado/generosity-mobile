@@ -41,7 +41,8 @@ object GoogleCenterMapRenderer : CenterMapRenderer {
         selectedCenterId: String?,
         locale: SupportedLocale,
         onCenterSelected: (String) -> Unit,
-        modifier: Modifier
+        modifier: Modifier,
+        origin: org.generosity.domain.Coordinates?
     ) {
         val context = LocalContext.current
         var attempt by remember { mutableIntStateOf(0) }
@@ -91,14 +92,22 @@ object GoogleCenterMapRenderer : CenterMapRenderer {
                                 }
                             }
                         }
-                        LaunchedEffect(loaded, markers.sortedBy { it.centerId }.map { it.coordinates }, selectedCenterId) {
-                            if (loaded && markers.isNotEmpty()) {
+                        LaunchedEffect(loaded, markers.sortedBy { it.centerId }.map { it.coordinates }, selectedCenterId, origin) {
+                            if (loaded && (markers.isNotEmpty() || origin != null)) {
                                 val positions = markers.map { it.toLatLng() }.distinct()
                                 val focus = markers.firstOrNull { it.centerId == selectedCenterId }?.toLatLng()
-                                val update = if (focus != null || positions.size == 1) {
+                                val update = if (focus != null || (origin == null && positions.size == 1)) {
                                     CameraUpdateFactory.newCameraPosition(
                                         CameraPosition.fromLatLngZoom(focus ?: positions.single(), 13f)
                                     )
+                                } else if (origin != null) {
+                                    val areaPositions = (positions + LatLng(origin.latitude, origin.longitude)).distinct()
+                                    if (areaPositions.size == 1) CameraUpdateFactory.newLatLngZoom(areaPositions.single(), 11f)
+                                    else {
+                                        val bounds = LatLngBounds.builder()
+                                        areaPositions.forEach(bounds::include)
+                                        CameraUpdateFactory.newLatLngBounds(bounds.build(), 48)
+                                    }
                                 } else {
                                     val bounds = LatLngBounds.builder()
                                     positions.forEach(bounds::include)

@@ -111,3 +111,15 @@
 
 "visit_saved" = "Visit saved. Guest visits stay on this device. This is not official verification.";
 "notifications_pending" = "These preferences are saved on this device. Alert delivery is not available yet.";
+
+// Manual area discovery
+"area_search" = "Search area";
+"area_query" = "Neighborhood, address or city";
+"area_submit" = "Search";
+"area_hint" = "Include the city and country, then choose a result. No device location is needed.";
+"area_empty" = "No places found. Try adding the city or country.";
+"area_failed" = "Place search is unavailable. Check your connection and try again.";
+"area_scope" = "Within 10 km of";
+"area_clear" = "Clear area";
+"area_distance" = "%.1f km from selected place";
+"area_loading" = "Searching places…";

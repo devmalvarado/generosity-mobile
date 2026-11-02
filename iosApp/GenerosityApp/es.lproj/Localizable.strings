@@ -111,3 +111,15 @@
 
 "visit_saved" = "Visita guardada. Las visitas de invitado permanecen en este dispositivo. No constituye verificación oficial.";
 "notifications_pending" = "Estas preferencias se guardan en este dispositivo. La entrega de alertas todavía no está disponible.";
+
+// Manual area discovery
+"area_search" = "Buscar zona";
+"area_query" = "Colonia, dirección o ciudad";
+"area_submit" = "Buscar";
+"area_hint" = "Incluye la ciudad y el país; después elige un resultado. No se necesita la ubicación del dispositivo.";
+"area_empty" = "No se encontraron lugares. Prueba agregando la ciudad o el país.";
+"area_failed" = "La búsqueda de lugares no está disponible. Revisa tu conexión e inténtalo de nuevo.";
+"area_scope" = "A menos de 10 km de";
+"area_clear" = "Quitar zona";
+"area_distance" = "A %.1f km del lugar seleccionado";
+"area_loading" = "Buscando lugares…";

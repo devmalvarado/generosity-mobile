@@ -6,6 +6,16 @@ import kotlin.math.pow
 import kotlin.math.sin
 import kotlin.math.sqrt
 
+/** A selected public place, not the device location. Session-only discovery scope. */
+data class DiscoveryArea(val label: String, val coordinates: Coordinates) {
+    init {
+        require(label.isNotBlank() && label.length <= 500)
+        require(coordinates.latitude in -90.0..90.0 && coordinates.longitude in -180.0..180.0)
+    }
+    fun distanceKilometersTo(coordinates: Coordinates): Double = this.coordinates.distanceMetersTo(coordinates) / 1000
+    val radiusMeters: Double get() = 10_000.0
+}
+
 private const val EARTH_RADIUS_METERS = 6_371_000.0
 
 /**

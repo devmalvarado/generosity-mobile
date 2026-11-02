@@ -59,13 +59,19 @@ Both apps SHALL render a geographic map with pan, zoom and selectable center mar
 
 #### Scenario: Every result has direct detail access
 - **WHEN** a user chooses View details on any result card, including a result other than the first
-- **THEN** the app selects that exact center and brings its detail heading into view without requiring the user to scroll through the remaining catalog
-- **AND** the selected map preview opens the same detail record
+- **THEN** the app selects that exact center and opens its detail heading in a separate full-screen view without scrolling through the remaining catalog
+- **AND** returning from details preserves the card-list position, map selection and filters
 
 #### Scenario: Card selection is reflected on the map
 - **WHEN** a user selects a result card in map discovery or returns to the map after selecting a center in the list
-- **THEN** the app brings the map into view, centers its camera on that center and distinguishes the selected marker and card
-- **AND** a list-card tap brings the same center's details into view
+- **THEN** the map stays fixed above the independently scrolling cards, centers its camera on that center and distinguishes the selected marker and card
+- **AND** a list-card tap opens the same center's separate detail view
+
+#### Scenario: Scroll cards without moving the map
+- **WHEN** the user scrolls the result cards
+- **THEN** the map and discovery controls remain fixed and usable
+- **AND** selecting a marker reveals its matching card in the list
+- **AND** the opened detail view scrolls independently and offers an accessible Back action
 
 #### Scenario: Catalog coordinates are outside the demonstration area
 - **WHEN** a nonempty catalog first loads or search/category results change
@@ -102,6 +108,23 @@ The app SHALL request location in context, use an actual permitted location fix 
 
 ### Requirement: Manual Discovery Origin
 Users SHALL be able to browse the map and select a searched place as a discovery origin without GPS permission. The app SHALL distinguish distance from that selected place from distance to the user. Failed or empty place searches SHALL preserve existing results and allow retry.
+
+#### Scenario: Choose any address as origin
+- **WHEN** the user submits a neighborhood, street address or city in Search area
+- **THEN** the native provider returns up to five selectable address suggestions, independently of catalog-name search
+- **AND** only selecting a suggestion updates discovery, using valid coordinates and a 10 km straight-line radius
+- **AND** name/category filters remain active and results are ordered by distance from that place
+
+#### Scenario: Clear area or find no nearby centers
+- **WHEN** the selected address has no matching centers within 10 km
+- **THEN** the app frames that area with an empty catalog-results message, without inventing locations
+- **AND** clearing the area restores results under the existing name/category filters
+
+#### Scenario: Lookup fails or is superseded
+- **WHEN** the provider returns no places, fails or exceeds 15 seconds
+- **THEN** the app explains the outcome and permits retry without replacing the previous origin/results
+- **AND** responses to edited, dismissed or superseded queries cannot replace newer suggestions
+- **AND** submitted queries are at most 200 characters and the chosen area is session-only
 
 #### Scenario: Search a city without GPS
 - **WHEN** location is denied and the user selects a valid searched city

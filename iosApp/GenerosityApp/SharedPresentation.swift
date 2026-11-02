@@ -1,14 +1,14 @@
 import MapKit
 import Shared
 
-func discoveryMapRect(coordinates: [CLLocationCoordinate2D], selected: CLLocationCoordinate2D?) -> MKMapRect? {
+func discoveryMapRect(coordinates: [CLLocationCoordinate2D], selected: CLLocationCoordinate2D?, origin: CLLocationCoordinate2D? = nil) -> MKMapRect? {
     let valid = coordinates.filter { CLLocationCoordinate2DIsValid($0) }
-    guard !valid.isEmpty else { return nil }
-    if let focus = selected ?? (valid.count == 1 ? valid.first : nil), CLLocationCoordinate2DIsValid(focus) {
+    if let focus = selected ?? origin ?? (valid.count == 1 ? valid.first : nil), CLLocationCoordinate2DIsValid(focus) {
         let point = MKMapPoint(focus)
-        let radius = 2_500 * MKMapPointsPerMeterAtLatitude(focus.latitude)
+        let radius = (selected == nil && origin != nil ? 10_000.0 : 2_500.0) * MKMapPointsPerMeterAtLatitude(focus.latitude)
         return MKMapRect(x: point.x - radius, y: point.y - radius, width: radius * 2, height: radius * 2)
     }
+    guard !valid.isEmpty else { return nil }
     return valid.map { MKMapPoint($0) }.reduce(MKMapRect.null) { rect, point in
         rect.union(MKMapRect(x: point.x, y: point.y, width: 1, height: 1))
     }

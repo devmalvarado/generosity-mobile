@@ -15,6 +15,9 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.test.assertIsDisplayed
+import androidx.compose.ui.test.getUnclippedBoundsInRoot
+import org.generosity.domain.DiscoveryArea
+import org.generosity.domain.Coordinates
 import androidx.compose.ui.test.hasClickAction
 import androidx.compose.ui.test.hasScrollAction
 import androidx.compose.ui.test.hasTestTag
@@ -59,28 +62,32 @@ class MapDiscoveryTest {
     fun everyCardSelectsItsPinAndOpensItsOwnDetail() {
         launch()
         val ids = app.state.value.centers.map { it.id }
+        val mapBounds = composeRule.onNodeWithTag("renderer-probe").getUnclippedBoundsInRoot()
         for (id in ids.reversed()) {
             composeRule.onNodeWithTag("discovery-scroll").performScrollToNode(hasTestTag("center-$id"))
             composeRule.onNodeWithTag("center-$id").performClick()
             composeRule.onNodeWithTag("renderer-probe").assertIsDisplayed()
             composeRule.runOnIdle { assertEquals(id, probe.selectedCenterId) }
+            assertEquals(mapBounds, composeRule.onNodeWithTag("renderer-probe").getUnclippedBoundsInRoot())
             composeRule.onNodeWithTag("discovery-scroll").performScrollToNode(hasTestTag("details-$id"))
             composeRule.onNodeWithTag("details-$id").performClick()
             val name = app.state.value.selectedCenter!!.name.resolve(SupportedLocale.ENGLISH)
             composeRule.onNode(hasText(name) and hasAnyAncestor(hasTestTag("detail-$id"))).assertIsDisplayed()
+            composeRule.onNodeWithTag("detail-back").performClick()
         }
         composeRule.onNodeWithTag("tab-list").performClick()
         val id = ids.last()
         composeRule.onNodeWithTag("discovery-scroll").performScrollToNode(hasTestTag("center-$id"))
         composeRule.onNodeWithTag("center-$id").performClick()
         composeRule.onNodeWithTag("detail-$id").assertIsDisplayed()
+        composeRule.onNodeWithTag("detail-back").performClick()
         composeRule.onNodeWithTag("tab-map").performClick()
         composeRule.onNodeWithTag("renderer-probe").assertIsDisplayed()
         composeRule.runOnIdle { assertEquals(id, probe.selectedCenterId) }
         val other = ids.first()
         composeRule.onNodeWithTag("marker-$other").performClick()
-        composeRule.onNodeWithTag("discovery-scroll").performScrollToNode(hasTestTag("selected-center-details"))
-        composeRule.onNodeWithTag("selected-center-details").performClick()
+        composeRule.onNodeWithTag("discovery-scroll").performScrollToNode(hasTestTag("details-$other"))
+        composeRule.onNodeWithTag("details-$other").performClick()
         composeRule.onNodeWithTag("detail-$other").assertIsDisplayed()
     }
 
@@ -98,9 +105,10 @@ class MapDiscoveryTest {
         composeRule.runOnIdle { assertEquals(marker.centerId, app.state.value.selectedCenterId) }
         composeRule.onNodeWithText("List").performClick()
         composeRule.onNodeWithTag("discovery-scroll").performScrollToNode(hasText(marker.title))
-        composeRule.onNode(hasText(marker.title) and hasClickAction()).assertIsDisplayed()
-        composeRule.onNodeWithTag("discovery-scroll").performScrollToNode(hasText("Current needs"))
+        composeRule.onNodeWithTag("center-${marker.centerId}").performClick()
+        composeRule.onNodeWithText("Current needs").performScrollTo()
         composeRule.onNodeWithText("Current needs").assertIsDisplayed()
+        composeRule.onNodeWithTag("detail-back").performClick()
         composeRule.onNodeWithText("Map").performClick()
         showMap()
         composeRule.runOnIdle {
@@ -148,7 +156,7 @@ class MapDiscoveryTest {
         val title = app.state.value.centers.first().name.resolve(SupportedLocale.ENGLISH)
         composeRule.onNodeWithTag("discovery-scroll").performScrollToNode(hasText(title))
         composeRule.onNodeWithText(title).performClick()
-        composeRule.onNodeWithTag("discovery-scroll").performScrollToNode(hasText("Current needs"))
+        composeRule.onNodeWithText("Current needs").performScrollTo()
         composeRule.onNodeWithText("Current needs").assertIsDisplayed()
     }
 
@@ -169,6 +177,41 @@ class MapDiscoveryTest {
         composeRule.onNodeWithText("Reintentar").assertDoesNotExist()
     }
 
+    @Test
+    fun placeSearchRequiresSelectionPreservesAreaOnFailureAndCanClear() {
+        var fail = false
+        var queryReceived = ""
+        val place = DiscoveryArea("Coyoacán, México", Coordinates(19.35, -99.16))
+        composeRule.setContent { GenerosityApp(app, probe, placeSearch = { query, _ ->
+            queryReceived = query
+            if (fail) error("offline")
+            if (query == "No results") emptyList() else listOf(place)
+        }) }
+        composeRule.runOnIdle { app.start() }
+        composeRule.onNodeWithTag("area-open").performClick()
+        composeRule.onNodeWithTag("area-query").performTextInput("Coyoacán México")
+        composeRule.onNodeWithTag("area-submit").performClick()
+        composeRule.onNodeWithTag("area-result-0").assertIsDisplayed()
+        composeRule.runOnIdle { assertEquals("Coyoacán México", queryReceived); assertEquals(null, app.state.value.discoveryArea) }
+        composeRule.onNodeWithTag("area-result-0").performClick()
+        composeRule.runOnIdle { assertEquals(place, app.state.value.discoveryArea); assertEquals(place.coordinates, probe.origin); fail = true }
+        composeRule.onNodeWithTag("area-open").performClick()
+        composeRule.onNodeWithTag("area-query").performTextInput("Unknown")
+        composeRule.onNodeWithTag("area-submit").performClick()
+        composeRule.onNodeWithText("Place search is unavailable. Check your connection and try again.").assertIsDisplayed()
+        composeRule.onNodeWithText("Back").performClick()
+        composeRule.runOnIdle { assertEquals(place, app.state.value.discoveryArea); fail = false }
+        composeRule.onNodeWithTag("area-open").performClick()
+        composeRule.onNodeWithTag("area-query").performTextInput("No results")
+        composeRule.onNodeWithTag("area-submit").performClick()
+        composeRule.onNodeWithText("No places found. Try adding the city or country.").assertIsDisplayed()
+        composeRule.onNodeWithText("Back").performClick()
+        composeRule.runOnIdle { assertEquals(place, app.state.value.discoveryArea) }
+        composeRule.onNodeWithTag("discovery-scroll").performScrollToNode(hasTestTag("area-clear"))
+        composeRule.onNodeWithTag("area-clear").performClick()
+        composeRule.runOnIdle { assertEquals(null, app.state.value.discoveryArea); assertEquals(3, app.state.value.centers.size) }
+    }
+
     private fun launch(unavailable: Boolean = false) {
         probe.unavailable = unavailable
         composeRule.setContent { GenerosityApp(app, probe) }
@@ -176,7 +219,7 @@ class MapDiscoveryTest {
     }
 
     private fun showMap() {
-        composeRule.onNodeWithTag("discovery-scroll").performScrollToNode(hasTestTag("renderer-probe"))
+        composeRule.onNodeWithTag("renderer-probe").assertIsDisplayed()
     }
 }
 
@@ -184,6 +227,7 @@ private class ProbeMapRenderer : CenterMapRenderer {
     var markers = emptyList<CenterMapMarker>()
     var selectedCenterId: String? = null
     var unavailable = false
+    var origin: Coordinates? = null
 
     @Composable
     override fun Render(
@@ -191,10 +235,11 @@ private class ProbeMapRenderer : CenterMapRenderer {
         selectedCenterId: String?,
         locale: SupportedLocale,
         onCenterSelected: (String) -> Unit,
-        modifier: Modifier
+        modifier: Modifier,
+        origin: org.generosity.domain.Coordinates?
     ) {
         var cameraEdits by rememberSaveable { mutableIntStateOf(0) }
-        SideEffect { this.markers = markers; this.selectedCenterId = selectedCenterId }
+        SideEffect { this.markers = markers; this.selectedCenterId = selectedCenterId; this.origin = origin }
         Column(modifier.testTag("renderer-probe")) {
             if (unavailable) {
                 MapUnavailable(locale)

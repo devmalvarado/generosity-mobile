@@ -61,6 +61,8 @@ class GenerosityAppStateIos(
 
     fun setDeviceLanguages(codes: List<String>) = state.setDeviceLanguages(codes)
 
+    fun setDiscoveryArea(area: org.generosity.domain.DiscoveryArea?) = state.setDiscoveryArea(area)
+
     fun setSearchText(text: String) = state.setSearchText(text)
 
     fun toggleCategory(code: String) {

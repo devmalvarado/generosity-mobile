@@ -69,11 +69,24 @@ replace iOS sample discovery; the later task 5.4 update records that integration
 - [x] 5.5 Verify anonymous users can browse, filter, and open center details without registration.
 - [ ] 5.6 Feed permission-gated current location into Android discovery and test browsing after denial or revocation.
 - [ ] 5.7 Feed permission-gated current location into iOS discovery and test browsing after denial or revocation.
-- [ ] 5.8 Add Android manual place search without GPS; test selected-origin distance labels, empty/error results and preserved filters.
+- [x] 5.8 Add Android manual place search without GPS; test selected-origin distance labels, empty/error results and preserved filters.
 - [ ] 5.9 Add iOS manual place search without GPS; test selected-origin distance labels, empty/error results and preserved filters.
 - [ ] 5.10 Show Android phone/email/web actions; test missing fields, unsupported schemes, unavailable handlers and anonymous access.
 - [ ] 5.11 Show iOS phone/email/web actions; test missing fields, unsupported schemes, unavailable handlers and anonymous access.
-- [x] 5.12 Give every Android/iOS result direct detail access; scroll to the exact selected detail, synchronize card/pin selection and frame catalog coordinates or the selected center. Validate non-first cards, list/map transitions and far-away/empty results; keep live Google-provider acceptance separate until a key is configured.
+- [x] 5.12 Give every Android/iOS result direct detail access; open the exact selected detail, synchronize card/pin selection and frame catalog coordinates or the selected center. Validate non-first cards, list/map transitions and far-away/empty results; keep live Google-provider acceptance separate until a key is configured.
+
+- [x] 5.13 Keep map/search/category controls fixed above independently scrolling cards; open details separately and preserve selection/list position on Back. Validate native UI tests and manual geocoding; retain task 5.2 for real Google-provider acceptance.
+
+Tasks 5.8–5.9 and 5.13 update (2026-11-01): both native apps now use a fixed
+map/header, separately scrolling cards and full-screen details with Back.
+Search area uses native geocoding, explicit suggestion selection, a shared
+10 km radius, distance ordering and unchanged name/category filters. Android
+contract/UI tests cover successful, empty and failed lookup without GPS, plus
+clearing the origin. iOS live Coyoacán lookup, distance labels, category filtering
+and card/pin/detail navigation were verified in the simulator. Task 5.9 remains
+open specifically for deterministic iOS lookup-error/timeout acceptance; its
+implementation is present. Current GPS and real Google tiles remain separate.
+See [behavior and evidence](../../../docs/native-maps.md).
 
 Task 5.2 implementation update (2026-10-26): the Google adapter, neutral renderer,
 configuration, boundary guard and automated contract/fallback tests now exist.
@@ -236,7 +249,7 @@ The Kotlin-specific evidence remains available on the preserved mockup branch.
 - [x] 17.2 Apply the native visual roles to Android theme, existing navigation and reusable controls; verify Map/List/Profile/Settings and supported appearance modes remain usable with unchanged actions.
 - [x] 17.3 Apply the equivalent roles to SwiftUI theme, existing tabs and reusable controls; verify the same destinations and platform-appropriate appearance/accessibility behavior.
 - [ ] 17.4 Align Android discovery search/categories/map selection and center preview; test existing filter/query retention, list fallback, safe insets and map attribution without treating an unavailable-map state or test renderer as working cartography.
-- [x] 17.5 Align iOS discovery composition and selection preview; verify the same behavior on small/large phones without retaining a fixed-height map merely for layout convenience.
+- [x] 17.5 Align iOS discovery composition and selection preview; verify the same behavior on small/large phones with an adaptive map viewport and independently scrolling cards.
 - [x] 17.6 Restyle Android center details/current-need rows and supported help actions; test long content, absent photos, all priorities, rejected offers and unchanged contact/visit access.
 - [x] 17.7 Restyle the equivalent SwiftUI detail/need surfaces; test identical hierarchy, state handling and readable non-color urgency cues without introducing a new needs feed.
 - [x] 17.8 Restyle Android Profile/Impact, Settings and existing form states; verify labeled units/provenance, guest/empty/unavailable states and no invented points, duration, balances or achievement panels.
