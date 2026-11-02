@@ -2,7 +2,7 @@
 
 Researched on 2026-11-01: **33 requested zones**, **156 Google Maps searches**, covering all **132 zone/category combinations**. This is an initial selection, not an exhaustive census or an endorsement. Searches include municipal surroundings; the actual address determines the location, not the query text.
 
-**132 place records: 120 eligible for directory import, 12 held for review.** The 120 were imported into the local development backend; this expansion has **not been published to production**. The previous 37-record public batch is unchanged.
+**132 place records: 120 published, 12 held for review.** The owner approved publication on 2026-11-01. Production now contains **157 centers**, including the unchanged previous 37-record public batch. The 120 were also imported into the local development backend. See [publication and acceptance evidence](../../docs/releases/catalog-expansion-2026-11-01.md).
 
 ## Files
 
@@ -113,11 +113,11 @@ docker compose exec -T app composer test -- --filter='CatalogExpansionTest|Initi
 
 Validation: **4 tests, 3,375 assertions passed** on isolated `generosity_test`, including source-pin consistency, all search combinations, held-record exclusions, repeated import, unchanged previous batch and the strict mobile response contract. Additional checks found no place-ID or coordinate duplicates with the prior 40 researched records, validated international dialing formats, and checked coarse country coordinate bounds. Country bounds do not validate municipal boundaries or exact entrances.
 
-No application code, schema, landing layout or dependencies changed. Production publication requires the separate reviewed release/import step. Do not overwrite a published record from a stale source: source ownership and reconciliation remain pending in foundation task 11.5.
+No application code, schema, landing layout or dependencies changed. The separate reviewed release/import step completed successfully, preserving the previous production records and excluding all 12 held records. Do not overwrite a published record from a stale source: source ownership and reconciliation remain pending in foundation task 11.5.
 
 ## Reviewable location inventory
 
-Coordinates are latitude, longitude. `Ready` records have been loaded locally; `Held` records have not. Funding is unknown for all rows. Detailed contacts, source findings and notes are in `research.json`.
+Coordinates are latitude, longitude. `Ready` is the review eligibility label: those records have been loaded locally and published; `Held` records have not. Funding is unknown for all rows. Detailed contacts, source findings and notes are in `research.json`.
 
 | Country | Search zone | Category | Organization | Public address | Latitude, longitude | Maps | Load |
 | --- | --- | --- | --- | --- | --- | --- | --- |
