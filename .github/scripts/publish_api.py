@@ -8,6 +8,8 @@ has no migrate:fresh path.
 """
 
 import os
+import json
+import hashlib
 import secrets
 import ssl
 import sys
@@ -89,8 +91,15 @@ def private_files():
     return files
 
 
-def build_zip(destination):
+def build_zip(destination, import_initial_catalog=False):
     files = private_files()
+    if import_initial_catalog:
+        catalog = Path("data/initial-catalog/catalog.json")
+        document = json.loads(catalog.read_text())
+        centers = document.get("centers", [])
+        if document.get("schemaVersion") != 1 or len(centers) != 37 or len({c["id"] for c in centers}) != 37 or any(c["verificationStatus"] != "imported" or c["needs"] for c in centers):
+            raise SystemExit("initial catalog must contain exactly 37 distinct imported-only listings without needs")
+        files.append((catalog, "data/initial-catalog.json"))
     with zipfile.ZipFile(destination, "w", compression=zipfile.ZIP_DEFLATED) as archive:
         for path, rel in files:
             name = f"private/{rel}"
@@ -148,7 +157,33 @@ def main():
 
     with tempfile.TemporaryDirectory() as temporary:
         archive_path = Path(temporary) / "api-private.zip"
-        names = build_zip(archive_path)
+        import_initial_catalog = os.environ.get("IMPORT_INITIAL_CATALOG", "false") == "true"
+        names = build_zip(archive_path, import_initial_catalog)
+        catalog_step = ""
+        if import_initial_catalog:
+            digest = hashlib.sha256(Path("data/initial-catalog/catalog.json").read_bytes()).hexdigest()
+            # Explicit workflow action only; keep a private rollback snapshot and refuse overwrites.
+            catalog_step = r"""
+require $private . '/vendor/autoload.php';
+$app = require $private . '/bootstrap/app.php';
+$app->make(Illuminate\Contracts\Console\Kernel::class)->bootstrap();
+$catalogFile = $private . '/data/initial-catalog.json';
+if (!hash_equals('DIGEST', hash_file('sha256', $catalogFile))) { throw new RuntimeException('catalog_digest_mismatch'); }
+$catalog = json_decode(file_get_contents($catalogFile), true, 512, JSON_THROW_ON_ERROR);
+Illuminate\Support\Facades\DB::transaction(function () use ($catalog, $private) {
+    $ids = array_column($catalog['centers'], 'id');
+    $existing = App\Models\Center::whereIn('id', $ids)->lockForUpdate()->get();
+    if ($existing->isNotEmpty()) { throw new RuntimeException('initial_catalog_ids_already_exist_review_before_retry'); }
+    $backup = $private . '/.deployments/initial-catalog-' . gmdate('YmdHis') . '-' . bin2hex(random_bytes(4));
+    if (!mkdir($backup, 0700, true)) { throw new RuntimeException('catalog_backup_failed'); }
+    $snapshot = json_encode(['batchIds' => $ids, 'existingBatchCenters' => $existing->toArray(), 'totalCentersBefore' => App\Models\Center::count(), 'totalNeedsBefore' => App\Models\Need::count(), 'sourceSha256' => 'DIGEST'], JSON_THROW_ON_ERROR | JSON_PRETTY_PRINT);
+    if (file_put_contents($backup . '/before.json', $snapshot) === false || !chmod($backup . '/before.json', 0600)) { throw new RuntimeException('catalog_backup_failed'); }
+    $needsBefore = App\Models\Need::count();
+    app(App\Services\CatalogImport::class)->run($catalog, 'github-initial-catalog-DIGEST');
+    if (App\Models\Center::whereIn('id', $ids)->count() !== 37 || App\Models\Need::count() !== $needsBefore) { throw new RuntimeException('catalog_postcondition_failed'); }
+});
+echo "initial_catalog_imported=37\n";
+""".replace("DIGEST", digest)
         token = secrets.token_hex(32)
         script_name = "_r" + secrets.token_hex(8) + ".php"
         script = f"""<?php
@@ -214,6 +249,7 @@ foreach (array(array('migrate', '--force'), array('config:cache'), array('route:
         exit;
     }}
 }}
+{catalog_step}
 @unlink(__FILE__);
 echo "cleaned\\n";
 """
