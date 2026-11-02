@@ -1,0 +1,33 @@
+name: Publish reviewed catalog expansion
+
+on:
+  workflow_dispatch:
+    inputs:
+      confirm_expansion:
+        description: "Publish the reviewed 120-center 2026-11-01 batch (insert only)"
+        type: boolean
+        default: false
+
+permissions:
+  contents: read
+
+concurrency:
+  group: publish-api
+  cancel-in-progress: false
+
+jobs:
+  publish:
+    if: inputs.confirm_expansion
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - name: Validate reviewed dataset and publication guards
+        run: python3 .github/scripts/test_publish_catalog.py
+      - name: Publish catalog without replacing application files
+        env:
+          CONFIRM_CATALOG_EXPANSION: 'true'
+          API_FTP_SERVER: ${{ secrets.API_FTP_SERVER }}
+          API_FTP_USERNAME: ${{ secrets.API_FTP_USERNAME }}
+          API_FTP_PASSWORD: ${{ secrets.API_FTP_PASSWORD }}
+        run: python3 .github/scripts/publish_catalog.py
