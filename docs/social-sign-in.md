@@ -218,10 +218,22 @@ The landing separately displayed a failure loading center applications and the
 center workspace. Google authentication and logout succeeded despite those
 messages; this does not establish portal-workspace acceptance.
 
-Real provider cancellation, linking, native return, restart and expiry remain
-unverified. The physical iPhone 14 Pro was paired but screen-locked when native
-acceptance was attempted; no Android device was connected. Foundation task 18.5
-remains open; Apple credentials and acceptance also remain pending.
+Physical iPhone acceptance used the installed `org.generosity.app` build 0.1.0 (1)
+on an iPhone 14 Pro with iOS 27.0.1, in dark mode. After the owner unlocked it,
+Profile → Sign in opened the system authentication session and reached Google's
+account chooser. The owner completed the separate passkey challenge on the
+phone. The browser returned to the native app and Profile displayed the same
+Google account. Terminating and relaunching the app preserved that signed-in
+profile. Signing out returned to Welcome; an account-scoped, read-only backend
+check found one user and zero remaining native sessions. Cancelling a subsequent
+iOS system sign-in permission dialog returned to Welcome without signing in.
+The phone was left at Welcome after these checks.
+
+This tests cancellation before opening the hosted browser, not Google's own
+consent-denial callback. Live provider cancellation, explicit existing-account
+linking and token expiry remain unverified, as do Android and Apple acceptance.
+No Android device was connected. Foundation task 18.5 remains open; Apple
+credentials also remain pending.
 
 ## Acceptance and test cases
 
@@ -237,7 +249,7 @@ remains open; Apple credentials and acceptance also remain pending.
 
 Validated locally on 2026-10-31: backend suite; 58 shared JVM tests; 5 Android unit tests and debug/instrumentation-test compilation; iOS simulator build and 4 unit tests; 39 portal tests passed with one existing WebKit screenshot-only skip; English/Spanish localization consistency; strict OpenSpec validation. Generated portal screenshots were refreshed by its existing tests. Exact backend totals are recorded in the foundation implementation audit.
 
-**Not certified:** real Google/Apple consent screens, private relay delivery, physical-device browser return and secure-storage behavior, API/HTTPS/CORS deployment, real end-to-end identity across all three clients, account deletion/revocation lifecycle, App Store acceptance. These remain open tasks; do not archive the foundation or advertise live provider sign-in based only on local tests.
+**Remaining live acceptance:** Apple credentials/consent and private relay delivery; Google consent denial and explicit linking; Android browser return/restart/logout and real token expiry; complete identity behavior across all three clients; account deletion/provider-revocation lifecycle and App Store acceptance. Google web consent/sign-in/logout/re-entry, iPhone return/restart/logout, iOS entry cancellation and the published API health/security checks have evidence in the activation checkpoint. Do not archive the foundation or generalize those results to untested clients or providers.
 
 ## Primary references
 

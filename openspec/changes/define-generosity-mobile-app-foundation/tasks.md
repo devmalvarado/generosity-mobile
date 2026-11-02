@@ -332,8 +332,11 @@ credentials only on the private server and verified API health and enabled hoste
 entry. Corrected and published the exact-provider CSP form redirect allowance;
 75 backend tests / 5,187 assertions passed. Real Google consent, web sign-in,
 logout and repeat sign-in passed; one verified account, one Google identity and
-no center roles were confirmed. External / Testing remains selected. Live
-cancellation/linking, native acceptance and Apple configuration remain pending. See the
+no center roles were confirmed. On a physical iPhone 14 Pro, Google return,
+session restoration after process restart, logout/revocation and cancelling the
+iOS sign-in permission dialog passed. External / Testing remains selected.
+Google consent denial/linking, token expiry, Android acceptance and Apple
+configuration remain pending. See the
 [activation checkpoint](../../../docs/social-sign-in.md#google-activation-checkpoint--2026-11-02).
 
 - [x] 18.6 Deploy the API to api.generosity.global with HTTPS, secure host-only sessions, exact Generosity CORS/stateful origins, real database/SMTP and scheduled auth cleanup; verify the existing main-only landing workflow remains separate.
