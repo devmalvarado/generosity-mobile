@@ -9,7 +9,22 @@ The public landing SHALL offer a mobile-first Spanish/English application for on
 #### Scenario: Provide minimum location details
 - **WHEN** a representative prepares an application
 - **THEN** organization name, location name, type of support and activities, country, city, representative name/role and both declarations are required
-- **AND** legal name, region, postal code, public service address, phone and website are optional
+- **AND** legal name, region, postal code, public service address, Google Maps link, latitude/longitude, phone and website are optional
+
+#### Scenario: Describe a public service location
+- **WHEN** a representative prepares a location application on a phone
+- **THEN** public address, Google Maps link, latitude and longitude are visible in the location section in Spanish and English
+- **AND** guidance distinguishes a place/entrance pin from viewport coordinates and permits unknown or protected locations to be omitted
+
+#### Scenario: Validate and privately retain location data
+- **WHEN** location data is submitted
+- **THEN** both coordinates are supplied together, latitude is within -90 to 90, longitude within -180 to 180, and a supplied link is an HTTPS Google Maps place/share URL without credentials
+- **AND** invalid hosts, unsafe schemes and incomplete pairs are rejected without publishing a center
+- **AND** accepted coordinates retain decimal precision in private application details, while receipts expose no location data
+
+#### Scenario: Retry an application created before location fields existed
+- **WHEN** a previous pending request is resent without coordinates or with the new optional fields empty
+- **THEN** canonicalization preserves its original operation hash and receipt instead of returning a conflict or creating a duplicate
 
 ### Requirement: Verified Private Intake Receipts
 The server SHALL require a verified Generosity account and use its verified contact email. Accepted applications SHALL return a private pending reference visible only in the applicant's paginated history. Retries SHALL preserve the operation and body without duplicates. Submission SHALL grant no publication, staff or verification rights. Initial intake SHALL not claim that approval or review notifications exist before implementation.

@@ -1,14 +1,41 @@
 # Imported Kindness Center Catalog Format
 
-The initial mobile foundation consumes a validated bundled Kindness Center
-catalog before a live backend exists. As of 2026-10-31, both apps load schema
-version 1 through the shared repository. The bundled document is the only labeled demonstration fixture.
+The mobile foundation consumes schema version 1 through the shared repository,
+with backend refresh and a validated bundled fallback. The bundled document is
+the only labeled demonstration fixture. Real initial data is imported into the
+backend separately, as documented below.
 `SampleImportedCatalog` reads that same document. It is not a
 published catalog and does not establish that any center is a verified real
 organization. `data/sample-kindness-centers.json` is a separate labeled sample
 file, not the document the apps load.
 
 ## Format
+
+### Initial real-directory batch and backend source metadata
+
+The [initial researched catalog](../data/initial-catalog/README.md) contains 40
+public-source candidates and a 37-center backend import. Three location
+discrepancies remain in its research inventory only. All imported records have
+`verificationStatus: imported` and empty needs; source listings do not establish
+official verification, free services or admission availability.
+
+The backend importer accepts optional `googleMapsUrl` metadata alongside the
+mobile-v1 fields. It must be an HTTPS Google Maps place/share URL (google.com/maps,
+www.google.com/maps, maps.google.com/maps, maps.app.goo.gl or goo.gl/maps), without
+embedded credentials. The backend stores it in center details and returns it
+through `/api/v1/centers`. `/api/v1/sync/catalog` intentionally omits this backend
+extension: existing mobile parsers reject unknown fields. The batch file is for
+the backend importer, not the bundled mobile reader. This keeps provider-specific
+source metadata out of the native business/map boundary.
+
+A contactless backend import is allowed only for an imported discovery-only
+listing with this Maps reference and zero needs. A stronger verification status
+or any need still requires public contact. Missing fields are not synthesized.
+Coordinates retain the source place-pin precision and do not prove that an
+entrance was checked in person. Research notes and secondary-source schedules
+stay in the separate inventory; they are not published as current intake rules.
+
+### Mobile schema
 
 Schema version 1 is a JSON object with integer `schemaVersion` equal to `1`
 and a top-level `centers` array. Any other version, a missing version, or an

@@ -56,11 +56,32 @@ local browser. These checks do not replace real-device accessibility acceptance.
 
 ## Remaining release and workflow work
 
-Deploy the PHP code and new additive `create_center_applications` migration before
-the three static landing files. The current selective main-branch workflow only
-publishes landing files/assets; it never applies PHP migrations. Publishing this
-intake has not been requested. Preserve existing production data; do not use the
-migration's destructive rollback after accepting real applications.
+### Location intake update — 2026-11-01
+
+Address is now visible beside the optional Google Maps URL and coordinate pair.
+Unknown/protected location values can remain absent. Both coordinates are required
+when either is supplied, with numeric latitude -90..90 and longitude -180..180.
+The API validates HTTPS Maps hosts/paths without fetching or resolving submitted
+URLs. No geocoding or short-link expansion is performed. Accepted values remain
+private JSON details and do not grant public listing or verification rights.
+Blank new fields are omitted from canonicalization so pre-update pending requests
+retain their operation hashes and duplicate fingerprints. Numeric representations
+of the same pair are normalized without rounding geographic precision.
+
+`CenterApplicationTest` covers persistence, canonical retries, old hashes, range,
+pair and host/credential rejection. `center-applications.spec.js` covers visible
+fields, client validation, exact decimal payloads, language changes and the
+existing 320/390/768/1280px, 200%-text checks in Chromium and WebKit. The location
+update passed 16 browser checks and the targeted backend suite. No additional
+database migration is required for these JSON details. Deploy the backend first.
+
+### Release procedure
+
+The original intake and its additive migration were published with the
+[account/portal release](../releases/account-portal-2026-11-01.md). This new location
+field increment is prepared locally and still needs backend-first publication.
+No new migration is needed. The selective landing workflow does not deploy PHP.
+Preserve accepted applications; do not roll back their table destructively.
 
 Before accepting real applications, finalize the privacy/retention notice and the
 process/person responsible for reviewing and responding. No retention duration or

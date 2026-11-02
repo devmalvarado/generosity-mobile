@@ -16,7 +16,7 @@ class CatalogImport
     {
         Validator::make($catalog, [
             'schemaVersion' => 'required|integer|in:1', 'centers' => 'required|array|max:10000',
-            'centers.*' => 'array:id,name,description,address,categories,coordinates,contact,verificationStatus,importedAtIsoDate,needs',
+            'centers.*' => 'array:id,name,description,address,categories,coordinates,contact,googleMapsUrl,verificationStatus,importedAtIsoDate,needs',
             'centers.*.id' => 'required|string|max:100|regex:/^[a-z0-9][a-z0-9-]*$/|distinct:strict',
         ])->validate();
         $needIds = [];
@@ -30,11 +30,14 @@ class CatalogImport
                 'coordinates.latitude' => 'required|numeric|between:-90,90', 'coordinates.longitude' => 'required|numeric|between:-180,180',
                 'contact' => 'required|array:phone,email,website', 'contact.phone' => 'nullable|string|max:100',
                 'contact.email' => 'nullable|email|max:254', 'contact.website' => 'nullable|url:http,https|max:2048',
+                'googleMapsUrl' => CatalogRules::googleMapsUrl(),
                 'verificationStatus' => 'required|in:imported,visit_signaled,officially_verified',
                 'importedAtIsoDate' => 'required|date_format:Y-m-d', 'needs' => 'present|array|max:1000',
                 'needs.*' => 'array:id,centerId,title,description,helpMethods,urgent,expiresOnIsoDate,quantityRequired,quantityCommitted,unit,status,category,priority,publishedOnIsoDate',
             ])->validate();
-            if (! array_filter($validated['contact'])) {
+            // Initial directory-only listings may lack contact; they cannot claim verification or solicit help.
+            if (! array_filter($validated['contact']) && ! ($validated['verificationStatus'] === 'imported'
+                && ! empty($validated['googleMapsUrl']) && $center['needs'] === [])) {
                 throw ValidationException::withMessages(['contact' => 'At least one public contact is required.']);
             }
             $validated['coordinates'] = array_map('floatval', $validated['coordinates']);

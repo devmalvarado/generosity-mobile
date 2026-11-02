@@ -1,0 +1,1152 @@
+{
+  "schemaVersion": 1,
+  "centers": [
+    {
+      "id": "mx-casa-hogar-amparo-i-a-p-56fb2f",
+      "name": {
+        "es": "Casa Hogar Amparo I.A.P.",
+        "en": "Casa Hogar Amparo I.A.P."
+      },
+      "description": {
+        "es": "Casa hogar para niñas, niños o adolescentes. Información de fuentes públicas, pendiente de confirmar con el centro. Consulta horarios, requisitos y posibles cuotas antes de acudir.",
+        "en": "Residential support for children or adolescents. Public-source listing, pending confirmation with the center. Check hours, eligibility and any fees before visiting."
+      },
+      "address": {
+        "es": "Ignacio Allende 177, Del Carmen, Coyoacán, 04100 Ciudad de México, CDMX",
+        "en": "Ignacio Allende 177, Del Carmen, Coyoacán, 04100 Ciudad de México, CDMX"
+      },
+      "categories": [
+        "children_support"
+      ],
+      "coordinates": {
+        "latitude": 19.3562351,
+        "longitude": -99.1627481
+      },
+      "contact": {
+        "phone": "+525556586781",
+        "email": "casahogaramparoiap@gmail.com",
+        "website": "https://casahogaramparo.org/"
+      },
+      "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=19.3562351%2C-99.1627481&query_place_id=ChIJG5-pT8H_0YURRoOVOsm2q_w",
+      "verificationStatus": "imported",
+      "importedAtIsoDate": "2026-11-01",
+      "needs": []
+    },
+    {
+      "id": "mx-casa-hogar-santa-ines-a-c-05b30e",
+      "name": {
+        "es": "CASA HOGAR SANTA INÉS A.C.",
+        "en": "CASA HOGAR SANTA INÉS A.C."
+      },
+      "description": {
+        "es": "Casa hogar para niñas, niños o adolescentes. Información de fuentes públicas, pendiente de confirmar con el centro. Consulta horarios, requisitos y posibles cuotas antes de acudir.",
+        "en": "Residential support for children or adolescents. Public-source listing, pending confirmation with the center. Check hours, eligibility and any fees before visiting."
+      },
+      "address": {
+        "es": "Av. Real San Lucas 55, San Lucas, Coyoacán, 04030 Ciudad de México, CDMX",
+        "en": "Av. Real San Lucas 55, San Lucas, Coyoacán, 04030 Ciudad de México, CDMX"
+      },
+      "categories": [
+        "children_support"
+      ],
+      "coordinates": {
+        "latitude": 19.3487145,
+        "longitude": -99.1539795
+      },
+      "contact": {
+        "phone": "+525555497102",
+        "email": null,
+        "website": null
+      },
+      "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=19.3487145%2C-99.1539795&query_place_id=ChIJZVmlNND_0YUROEQRPhBp7CM",
+      "verificationStatus": "imported",
+      "importedAtIsoDate": "2026-11-01",
+      "needs": []
+    },
+    {
+      "id": "mx-casa-cuna-tlalpan-efa650",
+      "name": {
+        "es": "Casa Cuna Tlalpan",
+        "en": "Casa Cuna Tlalpan"
+      },
+      "description": {
+        "es": "Casa hogar para niñas, niños o adolescentes. Información de fuentes públicas, pendiente de confirmar con el centro. Consulta horarios, requisitos y posibles cuotas antes de acudir.",
+        "en": "Residential support for children or adolescents. Public-source listing, pending confirmation with the center. Check hours, eligibility and any fees before visiting."
+      },
+      "address": {
+        "es": "Calz. de Tlalpan 1677, San Diego Churubusco, Coyoacán, 04120 Ciudad de México, CDMX",
+        "en": "Calz. de Tlalpan 1677, San Diego Churubusco, Coyoacán, 04120 Ciudad de México, CDMX"
+      },
+      "categories": [
+        "children_support"
+      ],
+      "coordinates": {
+        "latitude": 19.356457,
+        "longitude": -99.144475
+      },
+      "contact": {
+        "phone": "+525530032200",
+        "email": null,
+        "website": null
+      },
+      "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=19.356457%2C-99.144475&query_place_id=ChIJ23jqoDT-0YURNtBk0VXLxsY",
+      "verificationStatus": "imported",
+      "importedAtIsoDate": "2026-11-01",
+      "needs": []
+    },
+    {
+      "id": "mx-casa-hogar-para-varones-cahova-dif-nacional-bf12f0",
+      "name": {
+        "es": "Casa Hogar Para Varones CAHOVA DIF Nacional",
+        "en": "Casa Hogar Para Varones CAHOVA DIF Nacional"
+      },
+      "description": {
+        "es": "Casa hogar para niñas, niños o adolescentes. Información de fuentes públicas, pendiente de confirmar con el centro. Consulta horarios, requisitos y posibles cuotas antes de acudir.",
+        "en": "Residential support for children or adolescents. Public-source listing, pending confirmation with the center. Check hours, eligibility and any fees before visiting."
+      },
+      "address": {
+        "es": "Cjon. del Río 33, Santa Catarina, Coyoacán, 04010 Ciudad de México, CDMX",
+        "en": "Cjon. del Río 33, Santa Catarina, Coyoacán, 04010 Ciudad de México, CDMX"
+      },
+      "categories": [
+        "children_support"
+      ],
+      "coordinates": {
+        "latitude": 19.3508282,
+        "longitude": -99.1779068
+      },
+      "contact": {
+        "phone": "+525530032200",
+        "email": null,
+        "website": null
+      },
+      "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=19.3508282%2C-99.1779068&query_place_id=ChIJYTySxe__0YURNV_CkjqNiTA",
+      "verificationStatus": "imported",
+      "importedAtIsoDate": "2026-11-01",
+      "needs": []
+    },
+    {
+      "id": "mx-albergue-infantil-ines-maria-gasca-a-ed3a50",
+      "name": {
+        "es": "Albergue Infantil Inés María Gasca A",
+        "en": "Albergue Infantil Inés María Gasca A"
+      },
+      "description": {
+        "es": "Casa hogar para niñas, niños o adolescentes. Información de fuentes públicas, pendiente de confirmar con el centro. Consulta horarios, requisitos y posibles cuotas antes de acudir.",
+        "en": "Residential support for children or adolescents. Public-source listing, pending confirmation with the center. Check hours, eligibility and any fees before visiting."
+      },
+      "address": {
+        "es": "Gobernador José Ceballos 16, San Miguel Chapultepec I Sección, Miguel Hidalgo, 11850 Ciudad de México, CDMX",
+        "en": "Gobernador José Ceballos 16, San Miguel Chapultepec I Sección, Miguel Hidalgo, 11850 Ciudad de México, CDMX"
+      },
+      "categories": [
+        "children_support"
+      ],
+      "coordinates": {
+        "latitude": 19.410128,
+        "longitude": -99.186807
+      },
+      "contact": {
+        "phone": "+525574644391",
+        "email": "albergueimg@gmail.com",
+        "website": "https://albergueimg.org/"
+      },
+      "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=19.410128%2C-99.186807&query_place_id=ChIJ4VIMVl7_0YURpuVMBt2Kczo",
+      "verificationStatus": "imported",
+      "importedAtIsoDate": "2026-11-01",
+      "needs": []
+    },
+    {
+      "id": "mx-casa-cuna-la-paz-6ba3da",
+      "name": {
+        "es": "CASA CUNA \"LA PAZ\"",
+        "en": "CASA CUNA \"LA PAZ\""
+      },
+      "description": {
+        "es": "Casa hogar para niñas, niños o adolescentes. Información de fuentes públicas, pendiente de confirmar con el centro. Consulta horarios, requisitos y posibles cuotas antes de acudir.",
+        "en": "Residential support for children or adolescents. Public-source listing, pending confirmation with the center. Check hours, eligibility and any fees before visiting."
+      },
+      "address": {
+        "es": "Zamora 53, Colonia Condesa, Cuauhtémoc, 06140 Ciudad de México, CDMX",
+        "en": "Zamora 53, Colonia Condesa, Cuauhtémoc, 06140 Ciudad de México, CDMX"
+      },
+      "categories": [
+        "children_support"
+      ],
+      "coordinates": {
+        "latitude": 19.4177516,
+        "longitude": -99.1774237
+      },
+      "contact": {
+        "phone": "+525555532437",
+        "email": null,
+        "website": null
+      },
+      "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=19.4177516%2C-99.1774237&query_place_id=ChIJuYeFFUX_0YURG6nyX0Ujn-I",
+      "verificationStatus": "imported",
+      "importedAtIsoDate": "2026-11-01",
+      "needs": []
+    },
+    {
+      "id": "mx-casa-hogar-dulce-refugio-e8b871",
+      "name": {
+        "es": "Casa Hogar Dulce Refugio",
+        "en": "Casa Hogar Dulce Refugio"
+      },
+      "description": {
+        "es": "Casa hogar para niñas, niños o adolescentes. Información de fuentes públicas, pendiente de confirmar con el centro. Consulta horarios, requisitos y posibles cuotas antes de acudir.",
+        "en": "Residential support for children or adolescents. Public-source listing, pending confirmation with the center. Check hours, eligibility and any fees before visiting."
+      },
+      "address": {
+        "es": "El Mocho 511, Ojocaliente III, 20196 Aguascalientes, Ags.",
+        "en": "El Mocho 511, Ojocaliente III, 20196 Aguascalientes, Ags."
+      },
+      "categories": [
+        "children_support"
+      ],
+      "coordinates": {
+        "latitude": 21.876702,
+        "longitude": -102.24588
+      },
+      "contact": {
+        "phone": "+524491831988",
+        "email": "casadulcerefugio@gmail.com",
+        "website": "https://dulcerefugio.mx/"
+      },
+      "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=21.876702%2C-102.24588&query_place_id=ChIJ5dR7U_jxKYQRizNMZHErsEk",
+      "verificationStatus": "imported",
+      "importedAtIsoDate": "2026-11-01",
+      "needs": []
+    },
+    {
+      "id": "mx-hogar-de-la-nina-casimira-arteaga-0b9564",
+      "name": {
+        "es": "Hogar de la niña Casimira Arteaga",
+        "en": "Hogar de la niña Casimira Arteaga"
+      },
+      "description": {
+        "es": "Casa hogar para niñas, niños o adolescentes. Información de fuentes públicas, pendiente de confirmar con el centro. Consulta horarios, requisitos y posibles cuotas antes de acudir.",
+        "en": "Residential support for children or adolescents. Public-source listing, pending confirmation with the center. Check hours, eligibility and any fees before visiting."
+      },
+      "address": {
+        "es": "Av Arqueros 202, Gómez Portugal, 20250 Aguascalientes, Ags.",
+        "en": "Av Arqueros 202, Gómez Portugal, 20250 Aguascalientes, Ags."
+      },
+      "categories": [
+        "children_support"
+      ],
+      "coordinates": {
+        "latitude": 21.8707213,
+        "longitude": -102.270018
+      },
+      "contact": {
+        "phone": "+524499708030",
+        "email": "hogar_casimira@yahoo.com.mx",
+        "website": null
+      },
+      "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=21.8707213%2C-102.270018&query_place_id=ChIJNTIDQuLtKYQRVxasXlWlgT0",
+      "verificationStatus": "imported",
+      "importedAtIsoDate": "2026-11-01",
+      "needs": []
+    },
+    {
+      "id": "mx-casa-del-nino-villa-de-la-asuncion-35d76c",
+      "name": {
+        "es": "Casa del Niño Villa de La Asunción",
+        "en": "Casa del Niño Villa de La Asunción"
+      },
+      "description": {
+        "es": "Casa hogar para niñas, niños o adolescentes. Información de fuentes públicas, pendiente de confirmar con el centro. Consulta horarios, requisitos y posibles cuotas antes de acudir.",
+        "en": "Residential support for children or adolescents. Public-source listing, pending confirmation with the center. Check hours, eligibility and any fees before visiting."
+      },
+      "address": {
+        "es": "Dr Salvador Quezada Limon 501, Curtidores, 20040 Aguascalientes, Ags.",
+        "en": "Dr Salvador Quezada Limon 501, Curtidores, 20040 Aguascalientes, Ags."
+      },
+      "categories": [
+        "children_support"
+      ],
+      "coordinates": {
+        "latitude": 21.8865954,
+        "longitude": -102.3208647
+      },
+      "contact": {
+        "phone": "+524499165313",
+        "email": null,
+        "website": null
+      },
+      "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=21.8865954%2C-102.3208647&query_place_id=ChIJG-2D0ZXuKYQRMH9sn8aQkHc",
+      "verificationStatus": "imported",
+      "importedAtIsoDate": "2026-11-01",
+      "needs": []
+    },
+    {
+      "id": "mx-hospital-angeles-acoxpa-e042ef",
+      "name": {
+        "es": "Hospital Angeles Acoxpa",
+        "en": "Hospital Angeles Acoxpa"
+      },
+      "description": {
+        "es": "Banco de sangre o servicio de donación de sangre. Información de fuentes públicas, pendiente de confirmar con el centro. Consulta horarios, requisitos y posibles cuotas antes de acudir.",
+        "en": "Blood bank or blood donation service. Public-source listing, pending confirmation with the center. Check hours, eligibility and any fees before visiting."
+      },
+      "address": {
+        "es": "Calz Acoxpa 430, Coapa, Ex-Hacienda Coapa, Tlalpan, 14308 Ciudad de México, CDMX",
+        "en": "Calz Acoxpa 430, Coapa, Ex-Hacienda Coapa, Tlalpan, 14308 Ciudad de México, CDMX"
+      },
+      "categories": [
+        "health"
+      ],
+      "coordinates": {
+        "latitude": 19.2999185,
+        "longitude": -99.1351929
+      },
+      "contact": {
+        "phone": "+525556795000",
+        "email": null,
+        "website": "https://hospitalangeles.com/acoxpa"
+      },
+      "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=19.2999185%2C-99.1351929&query_place_id=ChIJe8ykdK8BzoURm1qTr4fQAB4",
+      "verificationStatus": "imported",
+      "importedAtIsoDate": "2026-11-01",
+      "needs": []
+    },
+    {
+      "id": "mx-servicios-hematologicos-e6c809",
+      "name": {
+        "es": "Servicios Hematológicos",
+        "en": "Servicios Hematológicos"
+      },
+      "description": {
+        "es": "Banco de sangre o servicio de donación de sangre. Información de fuentes públicas, pendiente de confirmar con el centro. Consulta horarios, requisitos y posibles cuotas antes de acudir.",
+        "en": "Blood bank or blood donation service. Public-source listing, pending confirmation with the center. Check hours, eligibility and any fees before visiting."
+      },
+      "address": {
+        "es": "Vito Alessio Robles 23, Agrícola, Florida, Álvaro Obregón, 01030 Ciudad de México, CDMX",
+        "en": "Vito Alessio Robles 23, Agrícola, Florida, Álvaro Obregón, 01030 Ciudad de México, CDMX"
+      },
+      "categories": [
+        "health"
+      ],
+      "coordinates": {
+        "latitude": 19.3505155,
+        "longitude": -99.1856241
+      },
+      "contact": {
+        "phone": "+525555433760",
+        "email": null,
+        "website": "https://servicioshematologicos.mx/"
+      },
+      "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=19.3505155%2C-99.1856241&query_place_id=ChIJywSpCXT_0YURPy09SxsAu88",
+      "verificationStatus": "imported",
+      "importedAtIsoDate": "2026-11-01",
+      "needs": []
+    },
+    {
+      "id": "mx-banco-de-sangre-instituto-nacional-de-pediatria-ff6d51",
+      "name": {
+        "es": "Banco de sangre Instituto Nacional de Pediatría",
+        "en": "Banco de sangre Instituto Nacional de Pediatría"
+      },
+      "description": {
+        "es": "Banco de sangre o servicio de donación de sangre. Información de fuentes públicas, pendiente de confirmar con el centro. Consulta horarios, requisitos y posibles cuotas antes de acudir.",
+        "en": "Blood bank or blood donation service. Public-source listing, pending confirmation with the center. Check hours, eligibility and any fees before visiting."
+      },
+      "address": {
+        "es": "Av. del Imán 1261, Insurgentes Cuicuilco, Coyoacán, 04530 Ciudad de México, CDMX",
+        "en": "Av. del Imán 1261, Insurgentes Cuicuilco, Coyoacán, 04530 Ciudad de México, CDMX"
+      },
+      "categories": [
+        "health"
+      ],
+      "coordinates": {
+        "latitude": 19.3053431,
+        "longitude": -99.1852912
+      },
+      "contact": {
+        "phone": null,
+        "email": null,
+        "website": "https://www.pediatria.gob.mx/"
+      },
+      "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=19.3053431%2C-99.1852912&query_place_id=ChIJHUEEAgABzoURRH9WFyUKBDA",
+      "verificationStatus": "imported",
+      "importedAtIsoDate": "2026-11-01",
+      "needs": []
+    },
+    {
+      "id": "mx-banco-de-sangre-perinatologia-412949",
+      "name": {
+        "es": "Banco de sangre perinatologia",
+        "en": "Banco de sangre perinatologia"
+      },
+      "description": {
+        "es": "Banco de sangre o servicio de donación de sangre. Información de fuentes públicas, pendiente de confirmar con el centro. Consulta horarios, requisitos y posibles cuotas antes de acudir.",
+        "en": "Blood bank or blood donation service. Public-source listing, pending confirmation with the center. Check hours, eligibility and any fees before visiting."
+      },
+      "address": {
+        "es": "C. Montes Urales 800, Lomas - Virreyes, Lomas de Chapultepec IV Secc, Miguel Hidalgo, 11000 Ciudad de México, CDMX",
+        "en": "C. Montes Urales 800, Lomas - Virreyes, Lomas de Chapultepec IV Secc, Miguel Hidalgo, 11000 Ciudad de México, CDMX"
+      },
+      "categories": [
+        "health"
+      ],
+      "coordinates": {
+        "latitude": 19.4231684,
+        "longitude": -99.2054048
+      },
+      "contact": {
+        "phone": "+525555209900",
+        "email": null,
+        "website": "https://inper.mx/"
+      },
+      "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=19.4231684%2C-99.2054048&query_place_id=ChIJAagtT_EB0oURWEsn7SZ9GuQ",
+      "verificationStatus": "imported",
+      "importedAtIsoDate": "2026-11-01",
+      "needs": []
+    },
+    {
+      "id": "mx-banco-de-sangre-cruz-roja-cdmx-ca6d74",
+      "name": {
+        "es": "Banco de Sangre Cruz Roja CDMX",
+        "en": "Banco de Sangre Cruz Roja CDMX"
+      },
+      "description": {
+        "es": "Banco de sangre o servicio de donación de sangre. Información de fuentes públicas, pendiente de confirmar con el centro. Consulta horarios, requisitos y posibles cuotas antes de acudir.",
+        "en": "Blood bank or blood donation service. Public-source listing, pending confirmation with the center. Check hours, eligibility and any fees before visiting."
+      },
+      "address": {
+        "es": "Benito Pérez Galdós 149, Polanco, Col. Irrigación, Miguel Hidalgo, 11510 Ciudad de México, CDMX",
+        "en": "Benito Pérez Galdós 149, Polanco, Col. Irrigación, Miguel Hidalgo, 11510 Ciudad de México, CDMX"
+      },
+      "categories": [
+        "health"
+      ],
+      "coordinates": {
+        "latitude": 19.4371121,
+        "longitude": -99.2087891
+      },
+      "contact": {
+        "phone": "+525591312492",
+        "email": null,
+        "website": "https://donacionsangrecruzrojamexicana.org.mx/"
+      },
+      "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=19.4371121%2C-99.2087891&query_place_id=ChIJQW_5GBkC0oURQ2xGwUlM3eM",
+      "verificationStatus": "imported",
+      "importedAtIsoDate": "2026-11-01",
+      "needs": []
+    },
+    {
+      "id": "mx-hemocel-64facc",
+      "name": {
+        "es": "Hemocel",
+        "en": "Hemocel"
+      },
+      "description": {
+        "es": "Banco de sangre o servicio de donación de sangre. Información de fuentes públicas, pendiente de confirmar con el centro. Consulta horarios, requisitos y posibles cuotas antes de acudir.",
+        "en": "Blood bank or blood donation service. Public-source listing, pending confirmation with the center. Check hours, eligibility and any fees before visiting."
+      },
+      "address": {
+        "es": "República de Ecuador 808, Santa Elena, 20230 Aguascalientes, Ags.",
+        "en": "República de Ecuador 808, Santa Elena, 20230 Aguascalientes, Ags."
+      },
+      "categories": [
+        "health"
+      ],
+      "coordinates": {
+        "latitude": 21.870492,
+        "longitude": -102.3041367
+      },
+      "contact": {
+        "phone": "+524499131951",
+        "email": null,
+        "website": "https://hemocel.com/"
+      },
+      "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=21.870492%2C-102.3041367&query_place_id=ChIJy-W9z4HuKYQRXbkZG4VTzuA",
+      "verificationStatus": "imported",
+      "importedAtIsoDate": "2026-11-01",
+      "needs": []
+    },
+    {
+      "id": "mx-centro-estatal-de-transfusion-sanguinea-cets-ebac62",
+      "name": {
+        "es": "Centro Estatal De Transfusión Sanguinea (CETS)",
+        "en": "Centro Estatal De Transfusión Sanguinea (CETS)"
+      },
+      "description": {
+        "es": "Banco de sangre o servicio de donación de sangre. Información de fuentes públicas, pendiente de confirmar con el centro. Consulta horarios, requisitos y posibles cuotas antes de acudir.",
+        "en": "Blood bank or blood donation service. Public-source listing, pending confirmation with the center. Check hours, eligibility and any fees before visiting."
+      },
+      "address": {
+        "es": "Artillero Mier 903, Morelos, Desarrollo Especial Centro de Morelos, 20270 Aguascalientes, Ags.",
+        "en": "Artillero Mier 903, Morelos, Desarrollo Especial Centro de Morelos, 20270 Aguascalientes, Ags."
+      },
+      "categories": [
+        "health"
+      ],
+      "coordinates": {
+        "latitude": 21.8574227,
+        "longitude": -102.25496
+      },
+      "contact": {
+        "phone": "+524499775211",
+        "email": null,
+        "website": null
+      },
+      "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=21.8574227%2C-102.25496&query_place_id=ChIJRxacivbtKYQRxMs9u23lL2g",
+      "verificationStatus": "imported",
+      "importedAtIsoDate": "2026-11-01",
+      "needs": []
+    },
+    {
+      "id": "mx-banco-de-sangre-vida-sc-ce8bb4",
+      "name": {
+        "es": "Banco de Sangre Vida SC",
+        "en": "Banco de Sangre Vida SC"
+      },
+      "description": {
+        "es": "Banco de sangre o servicio de donación de sangre. Información de fuentes públicas, pendiente de confirmar con el centro. Consulta horarios, requisitos y posibles cuotas antes de acudir.",
+        "en": "Blood bank or blood donation service. Public-source listing, pending confirmation with the center. Check hours, eligibility and any fees before visiting."
+      },
+      "address": {
+        "es": "Talamantes 410-interior 37, Barrio de San Marcos, 20070 Aguascalientes, Ags.",
+        "en": "Talamantes 410-interior 37, Barrio de San Marcos, 20070 Aguascalientes, Ags."
+      },
+      "categories": [
+        "health"
+      ],
+      "coordinates": {
+        "latitude": 21.8795847,
+        "longitude": -102.3078706
+      },
+      "contact": {
+        "phone": "+524495761690",
+        "email": null,
+        "website": null
+      },
+      "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=21.8795847%2C-102.3078706&query_place_id=ChIJVe7IAqbvKYQR6C4wNv_-FTM",
+      "verificationStatus": "imported",
+      "importedAtIsoDate": "2026-11-01",
+      "needs": []
+    },
+    {
+      "id": "mx-casa-hogar-jardin-de-vida-26910c",
+      "name": {
+        "es": "CASA HOGAR JARDIN DE VIDA",
+        "en": "CASA HOGAR JARDIN DE VIDA"
+      },
+      "description": {
+        "es": "Residencia o casa hogar para personas mayores. Información de fuentes públicas, pendiente de confirmar con el centro. Consulta horarios, requisitos y posibles cuotas antes de acudir.",
+        "en": "Residential care for older adults. Public-source listing, pending confirmation with the center. Check hours, eligibility and any fees before visiting."
+      },
+      "address": {
+        "es": "28 de Diciembre 67 COL, Coapa, Emiliano Zapata, Coyoacán, 04815 Ciudad de México, CDMX",
+        "en": "28 de Diciembre 67 COL, Coapa, Emiliano Zapata, Coyoacán, 04815 Ciudad de México, CDMX"
+      },
+      "categories": [
+        "older_adults"
+      ],
+      "coordinates": {
+        "latitude": 19.3261168,
+        "longitude": -99.1372012
+      },
+      "contact": {
+        "phone": "+525552042739",
+        "email": null,
+        "website": "https://asilojardindevida.com/"
+      },
+      "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=19.3261168%2C-99.1372012&query_place_id=ChIJyeK9GGMBzoUR4UqK3FTgeXo",
+      "verificationStatus": "imported",
+      "importedAtIsoDate": "2026-11-01",
+      "needs": []
+    },
+    {
+      "id": "mx-asilo-de-ancianos-san-martin-de-porres-8eb065",
+      "name": {
+        "es": "Asilo De Ancianos San Martín De Porres",
+        "en": "Asilo De Ancianos San Martín De Porres"
+      },
+      "description": {
+        "es": "Residencia o casa hogar para personas mayores. Información de fuentes públicas, pendiente de confirmar con el centro. Consulta horarios, requisitos y posibles cuotas antes de acudir.",
+        "en": "Residential care for older adults. Public-source listing, pending confirmation with the center. Check hours, eligibility and any fees before visiting."
+      },
+      "address": {
+        "es": "Canal de Miramontes 2258, Coapa, Avante, Coyoacán, 04460 Ciudad de México, CDMX",
+        "en": "Canal de Miramontes 2258, Coapa, Avante, Coyoacán, 04460 Ciudad de México, CDMX"
+      },
+      "categories": [
+        "older_adults"
+      ],
+      "coordinates": {
+        "latitude": 19.3291416,
+        "longitude": -99.1366
+      },
+      "contact": {
+        "phone": "+525553361231",
+        "email": null,
+        "website": "https://asiloancianossanmartindeporres.net/"
+      },
+      "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=19.3291416%2C-99.1366&query_place_id=ChIJ-TltVHIBzoURu91pdT3Lwu8",
+      "verificationStatus": "imported",
+      "importedAtIsoDate": "2026-11-01",
+      "needs": []
+    },
+    {
+      "id": "mx-residencia-fatima-eb971d",
+      "name": {
+        "es": "Residencia Fátima",
+        "en": "Residencia Fátima"
+      },
+      "description": {
+        "es": "Residencia o casa hogar para personas mayores. Información de fuentes públicas, pendiente de confirmar con el centro. Consulta horarios, requisitos y posibles cuotas antes de acudir.",
+        "en": "Residential care for older adults. Public-source listing, pending confirmation with the center. Check hours, eligibility and any fees before visiting."
+      },
+      "address": {
+        "es": "Av. Miguel Ángel de Quevedo 566-B, Santa Catarina, Coyoacán, 04000 Ciudad de México, CDMX",
+        "en": "Av. Miguel Ángel de Quevedo 566-B, Santa Catarina, Coyoacán, 04000 Ciudad de México, CDMX"
+      },
+      "categories": [
+        "older_adults"
+      ],
+      "coordinates": {
+        "latitude": 19.3453226,
+        "longitude": -99.1672165
+      },
+      "contact": {
+        "phone": "+525556586746",
+        "email": "residenciafatimacoyoacan@gmail.com",
+        "website": "https://residenciafatima.org.mx/"
+      },
+      "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=19.3453226%2C-99.1672165&query_place_id=ChIJCTxhxvr_0YURFj4xpuCo27g",
+      "verificationStatus": "imported",
+      "importedAtIsoDate": "2026-11-01",
+      "needs": []
+    },
+    {
+      "id": "mx-casa-hogar-nuestra-senora-del-camino-d9c5cc",
+      "name": {
+        "es": "Casa Hogar Nuestra Señora del Camino",
+        "en": "Casa Hogar Nuestra Señora del Camino"
+      },
+      "description": {
+        "es": "Residencia o casa hogar para personas mayores. Información de fuentes públicas, pendiente de confirmar con el centro. Consulta horarios, requisitos y posibles cuotas antes de acudir.",
+        "en": "Residential care for older adults. Public-source listing, pending confirmation with the center. Check hours, eligibility and any fees before visiting."
+      },
+      "address": {
+        "es": "Blvd. Adolfo López Mateos 190, Lomas de San Ángel Inn, Álvaro Obregón, 01060 Ciudad de México, CDMX",
+        "en": "Blvd. Adolfo López Mateos 190, Lomas de San Ángel Inn, Álvaro Obregón, 01060 Ciudad de México, CDMX"
+      },
+      "categories": [
+        "older_adults"
+      ],
+      "coordinates": {
+        "latitude": 19.3457065,
+        "longitude": -99.201992
+      },
+      "contact": {
+        "phone": "+525556162716",
+        "email": null,
+        "website": "https://instagram.com/fundacionaa"
+      },
+      "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=19.3457065%2C-99.201992&query_place_id=ChIJrfIXlA8A0oUR6D0dcN268yM",
+      "verificationStatus": "imported",
+      "importedAtIsoDate": "2026-11-01",
+      "needs": []
+    },
+    {
+      "id": "mx-residencia-san-francisco-b875b0",
+      "name": {
+        "es": "Residencia San Francisco",
+        "en": "Residencia San Francisco"
+      },
+      "description": {
+        "es": "Residencia o casa hogar para personas mayores. Información de fuentes públicas, pendiente de confirmar con el centro. Consulta horarios, requisitos y posibles cuotas antes de acudir.",
+        "en": "Residential care for older adults. Public-source listing, pending confirmation with the center. Check hours, eligibility and any fees before visiting."
+      },
+      "address": {
+        "es": "C. Gobernador Gregorio V. Gelati 20, San Miguel Chapultepec I Sección, Miguel Hidalgo, 11850 Ciudad de México, CDMX",
+        "en": "C. Gobernador Gregorio V. Gelati 20, San Miguel Chapultepec I Sección, Miguel Hidalgo, 11850 Ciudad de México, CDMX"
+      },
+      "categories": [
+        "older_adults"
+      ],
+      "coordinates": {
+        "latitude": 19.4112751,
+        "longitude": -99.1848171
+      },
+      "contact": {
+        "phone": null,
+        "email": null,
+        "website": "https://residenciasanfrancisco.org.mx/"
+      },
+      "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=19.4112751%2C-99.1848171&query_place_id=ChIJkZ9Hml7_0YUR05iC_uBVKIE",
+      "verificationStatus": "imported",
+      "importedAtIsoDate": "2026-11-01",
+      "needs": []
+    },
+    {
+      "id": "mx-residencial-del-bosque-bae97c",
+      "name": {
+        "es": "Residencial del Bosque",
+        "en": "Residencial del Bosque"
+      },
+      "description": {
+        "es": "Residencia o casa hogar para personas mayores. Información de fuentes públicas, pendiente de confirmar con el centro. Consulta horarios, requisitos y posibles cuotas antes de acudir.",
+        "en": "Residential care for older adults. Public-source listing, pending confirmation with the center. Check hours, eligibility and any fees before visiting."
+      },
+      "address": {
+        "es": "Gobernador José Ceballos 25, San Miguel Chapultepec I Sección, Miguel Hidalgo, 11850 Ciudad de México, CDMX",
+        "en": "Gobernador José Ceballos 25, San Miguel Chapultepec I Sección, Miguel Hidalgo, 11850 Ciudad de México, CDMX"
+      },
+      "categories": [
+        "older_adults"
+      ],
+      "coordinates": {
+        "latitude": 19.409844,
+        "longitude": -99.187284
+      },
+      "contact": {
+        "phone": "+525526364545",
+        "email": null,
+        "website": "https://residenciadelbosque.com/"
+      },
+      "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=19.409844%2C-99.187284&query_place_id=ChIJSTMEq1__0YUR8UuuTTSpocs",
+      "verificationStatus": "imported",
+      "importedAtIsoDate": "2026-11-01",
+      "needs": []
+    },
+    {
+      "id": "mx-asilo-hogar-cosio-ducoing-i-a-p-f8fca4",
+      "name": {
+        "es": "Asilo Hogar Cosio Ducoing I.A.P.",
+        "en": "Asilo Hogar Cosio Ducoing I.A.P."
+      },
+      "description": {
+        "es": "Residencia o casa hogar para personas mayores. Información de fuentes públicas, pendiente de confirmar con el centro. Consulta horarios, requisitos y posibles cuotas antes de acudir.",
+        "en": "Residential care for older adults. Public-source listing, pending confirmation with the center. Check hours, eligibility and any fees before visiting."
+      },
+      "address": {
+        "es": "Av. Montes Pirineos 750, Lomas de Chapultepec, Miguel Hidalgo, 11000 Ciudad de México, CDMX",
+        "en": "Av. Montes Pirineos 750, Lomas de Chapultepec, Miguel Hidalgo, 11000 Ciudad de México, CDMX"
+      },
+      "categories": [
+        "older_adults"
+      ],
+      "coordinates": {
+        "latitude": 19.4207871,
+        "longitude": -99.2156699
+      },
+      "contact": {
+        "phone": "+525552825689",
+        "email": null,
+        "website": "https://asilocosioducoing.org.mx/"
+      },
+      "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=19.4207871%2C-99.2156699&query_place_id=ChIJhZ15TowB0oURO54Lhsl4qAQ",
+      "verificationStatus": "imported",
+      "importedAtIsoDate": "2026-11-01",
+      "needs": []
+    },
+    {
+      "id": "mx-casa-hogar-cuicacalli-520938",
+      "name": {
+        "es": "Casa Hogar Cuicacalli",
+        "en": "Casa Hogar Cuicacalli"
+      },
+      "description": {
+        "es": "Residencia o casa hogar para personas mayores. Información de fuentes públicas, pendiente de confirmar con el centro. Consulta horarios, requisitos y posibles cuotas antes de acudir.",
+        "en": "Residential care for older adults. Public-source listing, pending confirmation with the center. Check hours, eligibility and any fees before visiting."
+      },
+      "address": {
+        "es": "República de Ecuador 309, Las Américas, 20230 Aguascalientes, Ags.",
+        "en": "República de Ecuador 309, Las Américas, 20230 Aguascalientes, Ags."
+      },
+      "categories": [
+        "older_adults"
+      ],
+      "coordinates": {
+        "latitude": 21.8697512,
+        "longitude": -102.2985703
+      },
+      "contact": {
+        "phone": "+524492383138",
+        "email": null,
+        "website": null
+      },
+      "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=21.8697512%2C-102.2985703&query_place_id=ChIJkah6Y9XtKYQRMhnBOZBHdiE",
+      "verificationStatus": "imported",
+      "importedAtIsoDate": "2026-11-01",
+      "needs": []
+    },
+    {
+      "id": "mx-estancia-de-vida-nuestra-senora-de-guadalupe-a-c-7ed852",
+      "name": {
+        "es": "ESTANCIA DE VIDA NUESTRA SEÑORA DE GUADALUPE A.C.",
+        "en": "ESTANCIA DE VIDA NUESTRA SEÑORA DE GUADALUPE A.C."
+      },
+      "description": {
+        "es": "Residencia o casa hogar para personas mayores. Información de fuentes públicas, pendiente de confirmar con el centro. Consulta horarios, requisitos y posibles cuotas antes de acudir.",
+        "en": "Residential care for older adults. Public-source listing, pending confirmation with the center. Check hours, eligibility and any fees before visiting."
+      },
+      "address": {
+        "es": "La Soledad 207, El Llanito, 20240 Aguascalientes, Ags.",
+        "en": "La Soledad 207, El Llanito, 20240 Aguascalientes, Ags."
+      },
+      "categories": [
+        "older_adults"
+      ],
+      "coordinates": {
+        "latitude": 21.8771583,
+        "longitude": -102.2877286
+      },
+      "contact": {
+        "phone": "+524499179374",
+        "email": "estanciadevida2010@gmail.com",
+        "website": null
+      },
+      "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=21.8771583%2C-102.2877286&query_place_id=ChIJ9bSyNHfuKYQRfvhBAoiQXVI",
+      "verificationStatus": "imported",
+      "importedAtIsoDate": "2026-11-01",
+      "needs": []
+    },
+    {
+      "id": "mx-casa-hogar-divino-maestro-7e4dba",
+      "name": {
+        "es": "Casa hogar divino maestro",
+        "en": "Casa hogar divino maestro"
+      },
+      "description": {
+        "es": "Residencia o casa hogar para personas mayores. Información de fuentes públicas, pendiente de confirmar con el centro. Consulta horarios, requisitos y posibles cuotas antes de acudir.",
+        "en": "Residential care for older adults. Public-source listing, pending confirmation with the center. Check hours, eligibility and any fees before visiting."
+      },
+      "address": {
+        "es": "C. Juan de Montoro 406, Zona Centro, 20000 Aguascalientes, Ags.",
+        "en": "C. Juan de Montoro 406, Zona Centro, 20000 Aguascalientes, Ags."
+      },
+      "categories": [
+        "older_adults"
+      ],
+      "coordinates": {
+        "latitude": 21.8819255,
+        "longitude": -102.2897626
+      },
+      "contact": {
+        "phone": "+524493676054",
+        "email": null,
+        "website": null
+      },
+      "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=21.8819255%2C-102.2897626&query_place_id=ChIJrzhkImPvKYQRvZrAuWUxzOQ",
+      "verificationStatus": "imported",
+      "importedAtIsoDate": "2026-11-01",
+      "needs": []
+    },
+    {
+      "id": "mx-comedor-comunitario-alimentate-527c05",
+      "name": {
+        "es": "Comedor Comunitario \"Aliméntate\"",
+        "en": "Comedor Comunitario \"Aliméntate\""
+      },
+      "description": {
+        "es": "Comedor comunitario o servicio de apoyo alimentario. Información de fuentes públicas, pendiente de confirmar con el centro. Consulta horarios, requisitos y posibles cuotas antes de acudir.",
+        "en": "Community kitchen or food assistance service. Public-source listing, pending confirmation with the center. Check hours, eligibility and any fees before visiting."
+      },
+      "address": {
+        "es": "And. Rafaela López Aguado Mz 42 Lt 4, Coapa, Carmen Serdán, Coyoacán, 04480 Ciudad de México, CDMX",
+        "en": "And. Rafaela López Aguado Mz 42 Lt 4, Coapa, Carmen Serdán, Coyoacán, 04480 Ciudad de México, CDMX"
+      },
+      "categories": [
+        "community_kitchen"
+      ],
+      "coordinates": {
+        "latitude": 19.3198541,
+        "longitude": -99.1098616
+      },
+      "contact": {
+        "phone": null,
+        "email": null,
+        "website": null
+      },
+      "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=19.3198541%2C-99.1098616&query_place_id=ChIJT7NSVPIBzoURukteyfZeMV8",
+      "verificationStatus": "imported",
+      "importedAtIsoDate": "2026-11-01",
+      "needs": []
+    },
+    {
+      "id": "mx-nuestro-comedor-santa-ursula-3c015d",
+      "name": {
+        "es": "Nuestro Comedor Santa Ursula",
+        "en": "Nuestro Comedor Santa Ursula"
+      },
+      "description": {
+        "es": "Comedor comunitario o servicio de apoyo alimentario. Información de fuentes públicas, pendiente de confirmar con el centro. Consulta horarios, requisitos y posibles cuotas antes de acudir.",
+        "en": "Community kitchen or food assistance service. Public-source listing, pending confirmation with the center. Check hours, eligibility and any fees before visiting."
+      },
+      "address": {
+        "es": "San León 126-136, Pedregal de Sta Úrsula, Coyoacán, 04600 Ciudad de México, CDMX",
+        "en": "San León 126-136, Pedregal de Sta Úrsula, Coyoacán, 04600 Ciudad de México, CDMX"
+      },
+      "categories": [
+        "community_kitchen"
+      ],
+      "coordinates": {
+        "latitude": 19.3131867,
+        "longitude": -99.148225
+      },
+      "contact": {
+        "phone": null,
+        "email": null,
+        "website": "https://vapormicuenta.org/"
+      },
+      "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=19.3131867%2C-99.148225&query_place_id=ChIJR9wD9UoAzoURfXenmwTq-vg",
+      "verificationStatus": "imported",
+      "importedAtIsoDate": "2026-11-01",
+      "needs": []
+    },
+    {
+      "id": "mx-comedor-comunitario-belmont-c457a8",
+      "name": {
+        "es": "Comedor Comunitario Belmont",
+        "en": "Comedor Comunitario Belmont"
+      },
+      "description": {
+        "es": "Comedor comunitario o servicio de apoyo alimentario. Información de fuentes públicas, pendiente de confirmar con el centro. Consulta horarios, requisitos y posibles cuotas antes de acudir.",
+        "en": "Community kitchen or food assistance service. Public-source listing, pending confirmation with the center. Check hours, eligibility and any fees before visiting."
+      },
+      "address": {
+        "es": "Cjon. San Miguel 29, San Diego Churubusco, Coyoacán, 04120 Ciudad de México, CDMX",
+        "en": "Cjon. San Miguel 29, San Diego Churubusco, Coyoacán, 04120 Ciudad de México, CDMX"
+      },
+      "categories": [
+        "community_kitchen"
+      ],
+      "coordinates": {
+        "latitude": 19.3532767,
+        "longitude": -99.149511
+      },
+      "contact": {
+        "phone": null,
+        "email": null,
+        "website": null
+      },
+      "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=19.3532767%2C-99.149511&query_place_id=ChIJv6GZSsz_0YURZCULhByiYlM",
+      "verificationStatus": "imported",
+      "importedAtIsoDate": "2026-11-01",
+      "needs": []
+    },
+    {
+      "id": "mx-comedor-popular-las-reynas-del-sur-ad77c7",
+      "name": {
+        "es": "Comedor Popular Las Reynas Del Sur",
+        "en": "Comedor Popular Las Reynas Del Sur"
+      },
+      "description": {
+        "es": "Comedor comunitario o servicio de apoyo alimentario. Información de fuentes públicas, pendiente de confirmar con el centro. Consulta horarios, requisitos y posibles cuotas antes de acudir.",
+        "en": "Community kitchen or food assistance service. Public-source listing, pending confirmation with the center. Check hours, eligibility and any fees before visiting."
+      },
+      "address": {
+        "es": "C. Ilama 56, Pedregal de Santo Domingo, Coyoacán, 04369 Ciudad de México, CDMX",
+        "en": "C. Ilama 56, Pedregal de Santo Domingo, Coyoacán, 04369 Ciudad de México, CDMX"
+      },
+      "categories": [
+        "community_kitchen"
+      ],
+      "coordinates": {
+        "latitude": 19.3269906,
+        "longitude": -99.1714215
+      },
+      "contact": {
+        "phone": null,
+        "email": null,
+        "website": null
+      },
+      "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=19.3269906%2C-99.1714215&query_place_id=ChIJfX2NuBkAzoURsag7aKl09QM",
+      "verificationStatus": "imported",
+      "importedAtIsoDate": "2026-11-01",
+      "needs": []
+    },
+    {
+      "id": "mx-comedor-popular-como-agua-para-chocolate-3879b3",
+      "name": {
+        "es": "Comedor Popular Como Agua para Chocolate",
+        "en": "Comedor Popular Como Agua para Chocolate"
+      },
+      "description": {
+        "es": "Comedor comunitario o servicio de apoyo alimentario. Información de fuentes públicas, pendiente de confirmar con el centro. Consulta horarios, requisitos y posibles cuotas antes de acudir.",
+        "en": "Community kitchen or food assistance service. Public-source listing, pending confirmation with the center. Check hours, eligibility and any fees before visiting."
+      },
+      "address": {
+        "es": "Canacuate 4, Pedregal de Santo Domingo, Coyoacán, 04369 Ciudad de México, CDMX",
+        "en": "Canacuate 4, Pedregal de Santo Domingo, Coyoacán, 04369 Ciudad de México, CDMX"
+      },
+      "categories": [
+        "community_kitchen"
+      ],
+      "coordinates": {
+        "latitude": 19.3260296,
+        "longitude": -99.1650711
+      },
+      "contact": {
+        "phone": null,
+        "email": null,
+        "website": null
+      },
+      "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=19.3260296%2C-99.1650711&query_place_id=ChIJWY96KiMAzoURBGKgMVVYlgo",
+      "verificationStatus": "imported",
+      "importedAtIsoDate": "2026-11-01",
+      "needs": []
+    },
+    {
+      "id": "mx-comedor-comunitario-401-0dd319",
+      "name": {
+        "es": "Comedor Comunitario 401",
+        "en": "Comedor Comunitario 401"
+      },
+      "description": {
+        "es": "Comedor comunitario o servicio de apoyo alimentario. Información de fuentes públicas, pendiente de confirmar con el centro. Consulta horarios, requisitos y posibles cuotas antes de acudir.",
+        "en": "Community kitchen or food assistance service. Public-source listing, pending confirmation with the center. Check hours, eligibility and any fees before visiting."
+      },
+      "address": {
+        "es": "C. Canario 109, Bellavista, Álvaro Obregón, 01140 Ciudad de México, CDMX",
+        "en": "C. Canario 109, Bellavista, Álvaro Obregón, 01140 Ciudad de México, CDMX"
+      },
+      "categories": [
+        "community_kitchen"
+      ],
+      "coordinates": {
+        "latitude": 19.3979365,
+        "longitude": -99.1927405
+      },
+      "contact": {
+        "phone": null,
+        "email": null,
+        "website": null
+      },
+      "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=19.3979365%2C-99.1927405&query_place_id=ChIJ10mRqtkB0oURX133kGCEJcI",
+      "verificationStatus": "imported",
+      "importedAtIsoDate": "2026-11-01",
+      "needs": []
+    },
+    {
+      "id": "mx-manos-a-la-olla-63b323",
+      "name": {
+        "es": "Manos a la olla",
+        "en": "Manos a la olla"
+      },
+      "description": {
+        "es": "Comedor comunitario o servicio de apoyo alimentario. Información de fuentes públicas, pendiente de confirmar con el centro. Consulta horarios, requisitos y posibles cuotas antes de acudir.",
+        "en": "Community kitchen or food assistance service. Public-source listing, pending confirmation with the center. Check hours, eligibility and any fees before visiting."
+      },
+      "address": {
+        "es": "Lago Onega 94, Ahuehuetes Anáhuac, Miguel Hidalgo, 11450 Ciudad de México, CDMX",
+        "en": "Lago Onega 94, Ahuehuetes Anáhuac, Miguel Hidalgo, 11450 Ciudad de México, CDMX"
+      },
+      "categories": [
+        "community_kitchen"
+      ],
+      "coordinates": {
+        "latitude": 19.449925,
+        "longitude": -99.1884883
+      },
+      "contact": {
+        "phone": null,
+        "email": null,
+        "website": null
+      },
+      "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=19.449925%2C-99.1884883&query_place_id=ChIJuZZSYsn50YURGiYd3LlLKgw",
+      "verificationStatus": "imported",
+      "importedAtIsoDate": "2026-11-01",
+      "needs": []
+    },
+    {
+      "id": "mx-comedor-comunitario-el-abuelo-2ce601",
+      "name": {
+        "es": "Comedor Comunitario El Abuelo",
+        "en": "Comedor Comunitario El Abuelo"
+      },
+      "description": {
+        "es": "Comedor comunitario o servicio de apoyo alimentario. Información de fuentes públicas, pendiente de confirmar con el centro. Consulta horarios, requisitos y posibles cuotas antes de acudir.",
+        "en": "Community kitchen or food assistance service. Public-source listing, pending confirmation with the center. Check hours, eligibility and any fees before visiting."
+      },
+      "address": {
+        "es": "Prol. Libertad 607, Centro, 20000 Aguascalientes, Ags.",
+        "en": "Prol. Libertad 607, Centro, 20000 Aguascalientes, Ags."
+      },
+      "categories": [
+        "community_kitchen"
+      ],
+      "coordinates": {
+        "latitude": 21.8877771,
+        "longitude": -102.2995644
+      },
+      "contact": {
+        "phone": "+524491251054",
+        "email": null,
+        "website": null
+      },
+      "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=21.8877771%2C-102.2995644&query_place_id=ChIJBzH29mHuKYQR6rYNPb5eIiE",
+      "verificationStatus": "imported",
+      "importedAtIsoDate": "2026-11-01",
+      "needs": []
+    },
+    {
+      "id": "mx-comedor-comunitario-san-martin-de-tours-347710",
+      "name": {
+        "es": "Comedor Comunitario San Martin de Tours",
+        "en": "Comedor Comunitario San Martin de Tours"
+      },
+      "description": {
+        "es": "Comedor comunitario o servicio de apoyo alimentario. Información de fuentes públicas, pendiente de confirmar con el centro. Consulta horarios, requisitos y posibles cuotas antes de acudir.",
+        "en": "Community kitchen or food assistance service. Public-source listing, pending confirmation with the center. Check hours, eligibility and any fees before visiting."
+      },
+      "address": {
+        "es": "2a. Privada Prol. Delicias, Ojo de Agua, 20260 Aguascalientes, Ags.",
+        "en": "2a. Privada Prol. Delicias, Ojo de Agua, 20260 Aguascalientes, Ags."
+      },
+      "categories": [
+        "community_kitchen"
+      ],
+      "coordinates": {
+        "latitude": 21.8651372,
+        "longitude": -102.2769265
+      },
+      "contact": {
+        "phone": null,
+        "email": null,
+        "website": null
+      },
+      "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=21.8651372%2C-102.2769265&query_place_id=ChIJp1g_amztKYQRStuRgWjuGNw",
+      "verificationStatus": "imported",
+      "importedAtIsoDate": "2026-11-01",
+      "needs": []
+    },
+    {
+      "id": "mx-casa-hogar-sumando-por-ti-121f36",
+      "name": {
+        "es": "Casa Hogar Sumando por Ti",
+        "en": "Casa Hogar Sumando por Ti"
+      },
+      "description": {
+        "es": "Casa hogar para niñas, niños o adolescentes. Información de fuentes públicas, pendiente de confirmar con el centro. Consulta horarios, requisitos y posibles cuotas antes de acudir.",
+        "en": "Residential support for children or adolescents. Public-source listing, pending confirmation with the center. Check hours, eligibility and any fees before visiting."
+      },
+      "address": {
+        "es": "Nicolás Bravo 4, Santa María Tepepan, Xochimilco, 16020 Ciudad de México, CDMX",
+        "en": "Nicolás Bravo 4, Santa María Tepepan, Xochimilco, 16020 Ciudad de México, CDMX"
+      },
+      "categories": [
+        "children_support"
+      ],
+      "coordinates": {
+        "latitude": 19.2779809,
+        "longitude": -99.1338603
+      },
+      "contact": {
+        "phone": null,
+        "email": null,
+        "website": "https://sumandoporti.org/"
+      },
+      "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=19.2779809%2C-99.1338603&query_place_id=ChIJ16tGcBABzoUR9wVY2YLWXh0",
+      "verificationStatus": "imported",
+      "importedAtIsoDate": "2026-11-01",
+      "needs": []
+    }
+  ]
+}

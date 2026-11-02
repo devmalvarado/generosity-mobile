@@ -245,6 +245,15 @@
               <label for="application-country"><span data-i18n="application.country">País *</span><input id="application-country" name="country" autocomplete="country-name" maxlength="100" required></label>
               <label for="application-city"><span data-i18n="application.city">Ciudad o localidad *</span><input id="application-city" name="city" autocomplete="address-level2" maxlength="100" required></label>
             </div>
+            <label for="application-address" data-i18n="application.address">Dirección de atención al público (omite ubicaciones protegidas)</label>
+            <textarea id="application-address" name="address" rows="2" autocomplete="street-address" maxlength="500" aria-describedby="application-location-hint"></textarea>
+            <label for="application-google_maps_url" data-i18n="application.google_maps_url">Enlace de Google Maps</label>
+            <input id="application-google_maps_url" name="google_maps_url" type="url" maxlength="2048" placeholder="https://maps.app.goo.gl/…" pattern="https://.+" aria-describedby="application-location-hint">
+            <div class="pair">
+              <label for="application-latitude"><span data-i18n="application.latitude">Latitud</span><input id="application-latitude" name="latitude" type="number" min="-90" max="90" step="any" placeholder="19.350000" aria-describedby="application-location-hint"></label>
+              <label for="application-longitude"><span data-i18n="application.longitude">Longitud</span><input id="application-longitude" name="longitude" type="number" min="-180" max="180" step="any" placeholder="-99.160000" aria-describedby="application-location-hint"></label>
+            </div>
+            <p id="application-location-hint" class="fine" data-i18n="application.locationHint">Comparte la ficha del lugar en Google Maps. Para las coordenadas, selecciona el punto exacto de entrada y copia primero la latitud y después la longitud; no uses las del centro de la pantalla. Si no las conoces o la ubicación es protegida, deja estos datos vacíos. Si indicas coordenadas, escribe ambas.</p>
             <h4 data-i18n="application.contact">3. Contacto de la organización</h4>
             <label for="application-contact_name" data-i18n="application.contact_name">Tu nombre *</label>
             <input id="application-contact_name" name="contact_name" autocomplete="name" maxlength="160" required>
@@ -256,7 +265,6 @@
               <label for="application-legal_name" data-i18n="application.legal_name">Nombre legal</label><input id="application-legal_name" name="legal_name" maxlength="200">
               <label for="application-region" data-i18n="application.region">Estado, provincia o región</label><input id="application-region" name="region" autocomplete="address-level1" maxlength="100">
               <label for="application-postal_code" data-i18n="application.postal_code">Código postal</label><input id="application-postal_code" name="postal_code" autocomplete="postal-code" maxlength="20">
-              <label for="application-address" data-i18n="application.address">Dirección de atención al público (omite ubicaciones protegidas)</label><textarea id="application-address" name="address" rows="2" autocomplete="street-address" maxlength="500"></textarea>
               <label for="application-phone" data-i18n="application.phone">Teléfono con código de país</label><input id="application-phone" name="phone" type="tel" autocomplete="tel" maxlength="40">
               <label for="application-website" data-i18n="application.website">Sitio web oficial</label><input id="application-website" name="website" type="url" autocomplete="url" maxlength="2048" placeholder="https://" pattern="https?://.+">
             </details>

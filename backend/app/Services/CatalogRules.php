@@ -6,6 +6,21 @@ use Closure;
 
 class CatalogRules
 {
+    public static function googleMapsUrl(): array
+    {
+        return ['bail', 'nullable', 'string', 'url:https', 'max:2048', function (string $attribute, mixed $value, Closure $fail) {
+            $url = parse_url($value);
+            $host = strtolower($url['host'] ?? '');
+            $path = $url['path'] ?? '';
+            $valid = (in_array($host, ['google.com', 'www.google.com', 'maps.google.com'], true) && preg_match('~^/maps(?:/|$)~', $path))
+                || ($host === 'maps.app.goo.gl' && strlen($path) > 1)
+                || ($host === 'goo.gl' && str_starts_with($path, '/maps/'));
+            if (! $valid || isset($url['user']) || isset($url['pass'])) {
+                $fail('Use a Google Maps place or share URL.');
+            }
+        }];
+    }
+
     public static function localized(): array
     {
         return ['required', 'array', 'min:1', 'max:20', function (string $attribute, mixed $value, Closure $fail) {
