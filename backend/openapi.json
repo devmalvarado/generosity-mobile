@@ -1223,9 +1223,28 @@
           },
           "503": {
             "description": "Snapshot exceeds supported limit; retain last known data"
+          },
+          "422": {
+            "description": "Unsupported category_version"
           }
         },
-        "security": []
+        "security": [],
+        "parameters": [
+          {
+            "name": "category_version",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "enum": [
+                1,
+                2
+              ],
+              "default": 1
+            },
+            "description": "Use 2 to receive blood_donation categories. Omitted/1 maps blood_donation to health for legacy native readers; the JSON schema remains version 1."
+          }
+        ]
       }
     },
     "/sync/account": {

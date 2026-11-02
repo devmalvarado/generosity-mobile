@@ -116,7 +116,7 @@ fun AppIcon(@DrawableRes icon: Int, modifier: Modifier = Modifier, tint: Color =
 fun CategoryBadge(category: CenterCategory?, size: Dp = GenSize.badge) {
     val dark = isSystemInDarkTheme()
     val color = when (category) {
-        CenterCategory.HEALTH, CenterCategory.DISABILITY_SUPPORT -> if (dark) GenColors.categoryHealthDark else GenColors.categoryHealthLight
+        CenterCategory.BLOOD_DONATION, CenterCategory.HEALTH, CenterCategory.DISABILITY_SUPPORT -> if (dark) GenColors.categoryHealthDark else GenColors.categoryHealthLight
         CenterCategory.COMMUNITY_KITCHEN, CenterCategory.OLDER_ADULTS -> if (dark) GenColors.categoryCommunityDark else GenColors.categoryCommunityLight
         else -> if (dark) GenColors.categoryOtherDark else GenColors.categoryOtherLight
     }
@@ -126,7 +126,7 @@ fun CategoryBadge(category: CenterCategory?, size: Dp = GenSize.badge) {
 }
 
 fun CenterCategory?.icon(): Int = when (this) {
-    CenterCategory.HEALTH, CenterCategory.ORGAN_TISSUE_DONATION -> R.drawable.ic_health
+    CenterCategory.BLOOD_DONATION, CenterCategory.HEALTH, CenterCategory.ORGAN_TISSUE_DONATION -> R.drawable.ic_health
     CenterCategory.EDUCATION -> R.drawable.ic_education
     CenterCategory.COMMUNITY_KITCHEN -> R.drawable.ic_food
     CenterCategory.ADDICTION_RECOVERY -> R.drawable.ic_heart

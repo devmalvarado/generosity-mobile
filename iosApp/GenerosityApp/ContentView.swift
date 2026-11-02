@@ -165,6 +165,7 @@ private struct CategoryFilterView: View {
             LazyVGrid(columns: [GridItem(.adaptive(minimum: 160), alignment: .leading)], alignment: .leading, spacing: GenSpace.sm) { chips }
         } else {
             ScrollView(.horizontal, showsIndicators: false) { HStack(spacing: GenSpace.sm) { chips } }
+                .accessibilityIdentifier("category-filters")
         }
     }
     private var chips: some View {

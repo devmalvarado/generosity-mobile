@@ -50,6 +50,7 @@ struct BrandWordmark: View {
 extension CenterCategory {
     var symbol: String {
         switch self {
+        case .bloodDonation: return "drop.fill"
         case .health, .organTissueDonation: return "cross.case"
         case .education: return "graduationcap"
         case .communityKitchen: return "fork.knife"
@@ -60,7 +61,7 @@ extension CenterCategory {
     }
     var tint: Color {
         switch self {
-        case .health, .disabilitySupport: return GenPalette.categoryHealth
+        case .bloodDonation, .health, .disabilitySupport: return GenPalette.categoryHealth
         case .communityKitchen, .olderAdults: return GenPalette.categoryCommunity
         default: return GenPalette.categoryOther
         }

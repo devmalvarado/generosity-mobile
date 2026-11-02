@@ -101,6 +101,25 @@ final class GenerosityUiChecklistTests: XCTestCase {
         XCTAssertTrue(app.buttons["center-kc-children-001"].waitForExistence(timeout: 5))
     }
 
+    func testBloodDonationFilterIsSeparateAndLocalized() {
+        let app = launch()
+        app.tabBars.buttons["List"].tap()
+        let blood = app.buttons["category-blood_donation"]
+        let filters = app.scrollViews["category-filters"]
+        filters.coordinate(withNormalizedOffset: CGVector(dx: 0.9, dy: 0.5)).press(forDuration: 0.1,
+            thenDragTo: filters.coordinate(withNormalizedOffset: CGVector(dx: 0.2, dy: 0.5)))
+        XCTAssertEqual(blood.label, "Blood donation")
+        blood.tap()
+        XCTAssertTrue(blood.isSelected)
+        XCTAssertFalse(app.buttons["center-kc-children-001"].exists)
+        XCTAssertFalse(app.buttons["center-kc-health-001"].exists)
+        app.tabBars.buttons["Settings"].tap()
+        app.buttons["Español"].tap()
+        app.tabBars.buttons["Lista"].tap()
+        XCTAssertEqual(app.buttons["category-blood_donation"].label, "Donación de sangre")
+        capture(app, name: "Blood donation filter - Spanish")
+    }
+
     func testSharedCategorySelectionSurvivesRepeatedNavigation() {
         let app = launch()
         app.tabBars.buttons["List"].tap()

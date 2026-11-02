@@ -82,6 +82,7 @@ fun CenterCategory.label(locale: SupportedLocale): String = localizedString(when
     CenterCategory.CHILDREN_SUPPORT -> R.string.category_children_support
     CenterCategory.OLDER_ADULTS -> R.string.category_older_adults
     CenterCategory.DISABILITY_SUPPORT -> R.string.category_disability_support
+    CenterCategory.BLOOD_DONATION -> R.string.category_blood_donation
     CenterCategory.HEALTH -> R.string.category_health
     CenterCategory.ADDICTION_RECOVERY -> R.string.category_addiction_recovery
     CenterCategory.COMMUNITY_KITCHEN -> R.string.category_community_kitchen

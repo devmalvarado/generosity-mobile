@@ -1,5 +1,10 @@
 # Initial public-source center catalog
 
+Classification correction: the eight reviewed blood-service records now include
+`blood_donation` alongside `health`. The original publication used only `health`;
+its recorded digest remains historical. See the [catalog contract](../../docs/imported-catalog-format.md)
+for legacy-client compatibility. Research sources and other imported fields are unchanged.
+
 Researched on 2026-11-01 in Google Maps, with supplementary institutional sources where available. This is an initial selection, not a complete census or an endorsement. Search areas: Coapa, central Coyoacán, UNAM/Ciudad Universitaria, San Miguel Chapultepec and surrounding neighborhoods, and Aguascalientes capital. All four categories were searched in each area (20 searches plus one Coapa refinement).
 
 ## Files and coverage

@@ -218,7 +218,7 @@ private fun CategoryFilters(locale: SupportedLocale, selectedCategories: Set<Cen
         CenterCategory.entries.forEach { category ->
             FilterChip(
                 selected = category in selectedCategories, onClick = { onToggle(category) },
-                modifier = Modifier.heightIn(min = GenSize.androidTouch),
+                modifier = Modifier.heightIn(min = GenSize.androidTouch).testTag("category-${category.code}"),
                 label = { Text(category.label(locale)) },
                 leadingIcon = if (category in selectedCategories) ({ Text("✓") }) else null
             )

@@ -25,7 +25,7 @@ class CatalogImport
             $validated = Validator::make($center, [
                 'id' => 'required|string|max:100', 'name' => CatalogRules::localized(),
                 'description' => CatalogRules::localized(), 'address' => CatalogRules::localized(),
-                'categories' => 'required|array|min:1|max:30', 'categories.*' => 'required|in:children_support,older_adults,disability_support,health,addiction_recovery,community_kitchen,education,vulnerable_families,organ_tissue_donation|distinct',
+                'categories' => 'required|array|min:1|max:30', 'categories.*' => 'required|in:children_support,older_adults,disability_support,blood_donation,health,addiction_recovery,community_kitchen,education,vulnerable_families,organ_tissue_donation|distinct',
                 'coordinates' => 'required|array:latitude,longitude',
                 'coordinates.latitude' => 'required|numeric|between:-90,90', 'coordinates.longitude' => 'required|numeric|between:-180,180',
                 'contact' => 'required|array:phone,email,website', 'contact.phone' => 'nullable|string|max:100',

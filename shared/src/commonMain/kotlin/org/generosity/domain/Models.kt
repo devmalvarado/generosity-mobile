@@ -84,6 +84,7 @@ enum class CenterCategory(val code: String) {
     CHILDREN_SUPPORT("children_support"),
     OLDER_ADULTS("older_adults"),
     DISABILITY_SUPPORT("disability_support"),
+    BLOOD_DONATION("blood_donation"),
     HEALTH("health"),
     ADDICTION_RECOVERY("addiction_recovery"),
     COMMUNITY_KITCHEN("community_kitchen"),
