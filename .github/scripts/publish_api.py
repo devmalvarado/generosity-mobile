@@ -234,7 +234,7 @@ if (!is_executable($bin)) {{
     exit;
 }}
 $private = $root . '/private';
-foreach (array(array('migrate', '--force'), array('config:cache'), array('route:cache'), array('view:cache')) as $args) {{
+foreach (array(array('migrate', '--force'), array('config:cache'), array('auth:check-portal'), array('route:cache'), array('view:cache')) as $args) {{
     $parts = array_merge(array($bin, $private . '/artisan'), $args);
     $cmd = 'cd ' . escapeshellarg($private) . ' && ' . implode(' ', array_map('escapeshellarg', $parts)) . ' 2>&1';
     $out = array();

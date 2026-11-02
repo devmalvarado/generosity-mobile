@@ -52,8 +52,9 @@ URLs, tokens, passwords or raw email bodies in reports or Git.
 
 ## Original production user-experience findings
 
-These were observed on the previously published release. They are corrected in
-the local release below; production still requires deployment and a fresh check.
+These were observed on the original release. The corrections below were published
+on 2026-11-01 and rechecked against actual production mail on 2026-11-02; see
+the current acceptance entry below.
 
 1. **Spanish does not carry through to email and reset.** Spanish hosted registration
    and recovery produced English emails; the reset page is hard-coded in English.
@@ -139,4 +140,32 @@ make this suite pass.
 
 The ordinary `npm test` portal suite is separate and uses API fixtures: **67 passed, 1 intentional duplicate-screenshot skip** across Chromium/WebKit. OpenSpec strict validation passed all 16 items. See the
 [prepared publication sequence](../releases/account-portal-2026-11-01.md).
-No new production-email delivery, physical-device return or deployment is claimed.
+That November 1 local run did not establish production-email delivery or physical
+return. The subsequent production check below supersedes its deployment status.
+
+## Production recheck — 2026-11-02
+
+Repeated the actual hosted registration → queued Hostinger verification email →
+verified sign-in → recovery email → password reset → sign-in sequence. The
+notification mailbox had no account before this run. Only the newly created
+`Generosity auth QA 20261102` account was changed and then removed with its
+sessions, tokens, reset row and handoffs; existing users/business records were
+unchanged. Both mail types arrived through the scheduled worker in Spanish.
+
+- Signed verification links rejected tampering and expiry, verified the account,
+  and rendered **Correo verificado** with an **Iniciar sesión** action. Reopening
+  a valid link remained idempotent; unverified login was rejected.
+- The actual reset link rendered a Spanish, non-cacheable, no-referrer form.
+  A mismatching confirmation returned a visible Spanish 422 error without echoing
+  the password; missing CSRF returned 419 and an invalid reset token returned 422.
+- Successful reset rendered **Contraseña actualizada** with an **Iniciar sesión**
+  action, revoked the prior bearer token and browser session, rejected the old
+  password, accepted the new password and rejected consumed-token replay.
+- Cleanup ended with zero queued and failed jobs. No password, cookie, raw email,
+  signed URL or token is retained in repository evidence. The private test harness
+  was adjusted to the current separate registration/sign-in forms; its initial
+  lookup failure was not an application failure.
+
+These are live HTTP/form/mail checks, not physical-device completion of a reset.
+The backend regression suite now passes **77 tests / 5,194 assertions**. Physical
+mail-app → reset → native sign-in remains an explicit acceptance item.

@@ -35,21 +35,32 @@ keyboard and screen-reader acceptance remain open.
 
 ## Publication
 
-The [2026-11-01 release candidate](../docs/releases/account-portal-2026-11-01.md)
-stages portal/API source separately. Its workflow waits for the intake route and
-corrected account UI before uploading. Legal/operator inputs and production
-acceptance remain required; this preparation publishes nothing by itself.
+The [2026-11-02 release](../docs/releases/critical-foundation-2026-11-02.md)
+published the account workspace and application tracker after their API routes
+and additive migrations. Real Google web sign-in reads the account's own
+applications and assigned-center state. Review decisions remain unavailable
+until an operator configures the reviewer allowlist. A real center pilot still
+requires the center, responsible account and actual need.
 
 The existing main-branch deployment publishes only `index.html`, `styles.css`,
 `portal.js` and `assets/` when those paths change. It does not deploy the backend,
-upload the repository or delete the rest of the site. No deployment is performed
-by these changes. Keep dependencies, tests, screenshots and server secrets out of
-the web root. Production privacy/terms destinations still need approved content.
+upload the repository or delete the rest of the site. Keep dependencies, tests,
+screenshots and server secrets out of the web root. Published legal destinations
+are hosted by the API.
 
 The new intake additionally needs its PHP routes/controller and
 `2026_11_01_000003_create_center_applications.php` migration released before the
 landing form is published. These are not part of the static deployment workflow.
-No production application or migration has been created by this local work.
+The review tracker additionally uses migration `2026_11_02_000002`; both migrations
+are published. Requests do not publish centers or grant membership automatically.
+
+Hostinger caches CSS/JS for a week. `index.html` references `styles.css` and
+`portal.js` with `?v=` followed by the first 12 hexadecimal SHA-256 characters of
+each file. The stylesheet imports `assets/design-tokens.css` the same way. Update
+references from the innermost asset outward whenever a file changes and run the
+portal tests; a check rejects stale versions and missing design colors. This
+prevents cached old scripts from failing against new HTML. Upload assets before
+HTML during manual releases.
 
 See [center portal documentation](../docs/center-portal.md) and
 [integration status](../docs/testing/backend-integration.md).

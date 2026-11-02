@@ -32,6 +32,10 @@ Route::prefix('v1')->group(function () {
     Route::middleware(['auth:sanctum', 'verified'])->group(function () {
         Route::get('me/center-applications', [\App\Http\Controllers\CenterApplicationController::class, 'index']);
         Route::post('center-applications', [\App\Http\Controllers\CenterApplicationController::class, 'store'])->middleware('throttle:center-applications');
+        Route::get('center-applications/{application}', [\App\Http\Controllers\CenterApplicationController::class, 'show'])->middleware('throttle:center-application-cases')->whereUuid('application');
+        Route::post('center-applications/{application}/decision', [\App\Http\Controllers\CenterApplicationController::class, 'decide'])->middleware('throttle:center-application-reviews')->whereUuid('application');
+        Route::post('center-applications/{application}/acceptance', [\App\Http\Controllers\CenterApplicationController::class, 'acceptMembership'])->middleware('throttle:center-application-reviews')->whereUuid('application');
+        Route::post('center-applications/{application}/withdrawal', [\App\Http\Controllers\CenterApplicationController::class, 'withdraw'])->middleware('throttle:center-application-reviews')->whereUuid('application');
         Route::get('sync/account', [ClientSyncController::class, 'account']);
         Route::get('staff/centers', [ClientSyncController::class, 'staffCenters']);
         Route::get('me', fn (Request $request) => ['user' => $request->user()]);

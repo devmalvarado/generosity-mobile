@@ -187,7 +187,8 @@ complete the separate forms/history, real clock, persistence or backend tasks.
 - [x] 7.15 Implement shared registered-user offer validation and confirmed/fulfilled-only impact aggregation with focused tests.
 - [x] 7.16 Extend shared records with units, planned/actual duration, provenance, sync state and versioned event history; test incompatible units, missing metrics and cancelled/pending exclusion.
 - [x] 7.17 Implement and locally verify the account-email UX corrections: queued Spanish/English mail, localized browser success/invalid/expired-link screens and visible validation errors without retained passwords; preserve JSON API contracts and native PKCE context. Serialized queue, HTTP and Chromium/WebKit evidence is in [account-email journeys](../../../docs/testing/account-email-journeys.md).
-- [ ] 7.18 Publish the tested account-email release, repeat actual Hostinger email links and complete registration/recovery on physical Android/iOS and the live portal; record delivery and native-return acceptance separately from the local task 7.17 evidence.
+- [x] 7.18a Publish the tested account-email release and repeat actual Hostinger verification/recovery links, localized validation/success, token single-use and session revocation through live hosted forms. Completed 2026-11-02; evidence in account-email journeys.
+- [ ] 7.18b Complete mail-app-to-native registration/recovery on physical Android/iOS and record native return separately from the live HTTP/form acceptance.
 
 ## 8. Notifications and Reminders
 
@@ -278,6 +279,12 @@ The Kotlin-specific evidence remains available on the preserved mockup branch.
 - [ ] 15.2 Run restart/offline/reconnect, account switching and concurrent capacity scenarios across both apps; verify isolation, no duplicates and correct cancellation accounting.
 - [ ] 15.3 Run opted-in reminder/urgent/nearby delivery and denial/revocation scenarios on both platforms; record actual platform limitations without claiming unsupported background guarantees.
 
+15.1–15.2 partial evidence (2026-11-02): the local HTTP smoke passed with
+separate donor/staff identities, real cookies/CSRF, publication, offer replay,
+confirmation/fulfillment and matching history, capacity/cancellation, restart and
+isolated database restore. The native pilot and device offline/account-switching
+matrix remain open; no real pilot center/need has been supplied.
+
 ## 16. Mobile-First Center Web Portal
 
 - [ ] 16.1 Review and consolidate the provided landing source/assets into canonical `portal/` without deleting the PoC; document asset provenance, local preview/test commands and browser deployment/session choices without adding an unnecessary UI framework.
@@ -335,13 +342,24 @@ logout and repeat sign-in passed; one verified account, one Google identity and
 no center roles were confirmed. On a physical iPhone 14 Pro, Google return,
 session restoration after process restart, logout/revocation and cancelling the
 iOS sign-in permission dialog passed. External / Testing remains selected.
+Repeated return, process restart, logout and system-dialog cancellation on the
+physical iPhone 17 with iOS 27.2 passed. Registration and recovery screens are
+reachable; actual mail-app-to-native completion remains separate in 7.18b.
 Google consent denial/linking, token expiry, Android acceptance and Apple
 configuration remain pending. See the
 [activation checkpoint](../../../docs/social-sign-in.md#google-activation-checkpoint--2026-11-02).
 
 - [x] 18.6 Deploy the API to api.generosity.global with HTTPS, secure host-only sessions, exact Generosity CORS/stateful origins, real database/SMTP and scheduled auth cleanup; verify the existing main-only landing workflow remains separate.
 
-18.6 evidence, rechecked 2026-11-01: health is 200, `/.env` is 403, and the cron scripts are not web-reachable. The session cookie has no `Domain`, and is `Secure`, `HttpOnly` and `SameSite=Lax`. CORS allows only `https://generosity.global` with credentials. `routes/console.php` schedules hourly handoff cleanup plus daily Sanctum and reset pruning; hPanel runs that scheduler every minute. Hostinger SMTP delivered one approved test message to Gmail Inbox. The subsequent [account-email review](../../../docs/testing/account-email-journeys.md) passed live backend/security journeys; task 7.17 now closes their user-facing gaps locally; task 7.18 retains publication and production/device acceptance.
+18.6 evidence, rechecked 2026-11-01: health is 200, `/.env` is 403, and the cron scripts are not web-reachable. The session cookie has no `Domain`, and is `Secure`, `HttpOnly` and `SameSite=Lax`. CORS allows only `https://generosity.global` with credentials. `routes/console.php` schedules hourly handoff cleanup plus daily Sanctum and reset pruning; hPanel runs that scheduler every minute. Hostinger SMTP delivered one approved test message to Gmail Inbox. The subsequent [account-email review](../../../docs/testing/account-email-journeys.md) passed live backend/security journeys; task 7.17 closed the user-facing gaps; 7.18a now records the repeated live email/form acceptance and 7.18b retains physical-device completion.
+18.6 follow-up (2026-11-02): fixed the empty production Sanctum stateful list.
+Real Google web login now reads private application history and assigned-center
+state correctly; no memberships were granted. Added a regression-tested
+`auth:check-portal` deployment guard. Published the protected application review
+routes, additive migration and landing tracker; reviewer IDs remain unconfigured
+and the real center pilot requires owner-supplied details. See
+[release evidence](../../../docs/releases/critical-foundation-2026-11-02.md).
+
 - [ ] 18.7 Add Facebook server configuration and authorization adapter using the existing hosted entry/session boundaries; test app-bound identity validation, denied permission, invalid state, wrong browser, expiry, replay and unavailable configuration without adding native provider SDKs.
 - [ ] 18.8 Add pending email completion for social identities without trusted verified email; test absent/unverified email, existing-email collisions, explicit linking without provider email and no account merge or premature protected access.
 - [ ] 18.9 Expose Facebook through hosted web/native entry with Spanish/English states; test cancellation, existing-account resolution, linking, PKCE handoff and unchanged guest access across web, Android and iOS.

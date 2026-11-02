@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Services\CatalogRules;
+use App\Services\CenterApplicationReview;
 use App\Services\Mutation;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -14,7 +15,7 @@ class CenterApplicationController extends Controller
     {
         return DB::table('center_applications')->where('user_id', $request->user()->id)
             ->orderByDesc('created_at')->orderBy('id')->paginate(10)
-            ->through(fn ($row) => $this->summary($row));
+            ->through(fn ($row) => CenterApplicationReview::summary($row));
     }
 
     public function store(Request $request)
@@ -38,14 +39,16 @@ class CenterApplicationController extends Controller
             'website' => 'nullable|url:http,https|max:2048',
             'representation_confirmed' => 'required|accepted',
             'contact_consent' => 'required|accepted',
-            'user_id' => 'prohibited', 'status' => 'prohibited',
+            'claimed_center_id' => 'nullable|string|max:100|regex:/^[a-z0-9][a-z0-9-]*$/|exists:centers,id',
+            'user_id' => 'prohibited', 'status' => 'prohibited', 'roles' => 'prohibited',
+            'account_id' => 'prohibited', 'membership' => 'prohibited',
             'verified' => 'prohibited', 'center_id' => 'prohibited', 'contact_email' => 'prohibited',
         ]);
         foreach (['legal_name', 'region', 'postal_code', 'address', 'phone', 'website'] as $optional) {
             $data[$optional] ??= null;
         }
         // Preserve fingerprints and pending retries created before location fields existed.
-        foreach (['google_maps_url', 'latitude', 'longitude'] as $optional) {
+        foreach (['google_maps_url', 'latitude', 'longitude', 'claimed_center_id'] as $optional) {
             if (($data[$optional] ?? null) === null) {
                 unset($data[$optional]);
             }
@@ -63,27 +66,41 @@ class CenterApplicationController extends Controller
             $existing = DB::table('center_applications')->where('user_id', $request->user()->id)
                 ->where('fingerprint', $fingerprint)->first();
             if ($existing) {
-                return response()->json(['application' => $this->summary($existing)], 200);
+                return response()->json(['application' => CenterApplicationReview::summary($existing)], 200);
+            }
+            if (isset($data['claimed_center_id'])) {
+                CenterApplicationReview::lockClaimedCenter($data['claimed_center_id']);
             }
             $record = [
                 'id' => (string) Str::uuid(), 'user_id' => $request->user()->id,
                 'contact_email' => $request->user()->email,
                 'details' => json_encode($data, JSON_THROW_ON_ERROR), 'fingerprint' => $fingerprint,
-                'status' => 'pending', 'consent_version' => 'site-application-v1',
+                'status' => 'pending', 'version' => 1, 'consent_version' => 'site-application-v1',
                 'created_at' => now(), 'updated_at' => now(),
             ];
             DB::table('center_applications')->insert($record);
 
-            return response()->json(['application' => $this->summary((object) $record)], 201);
+            return response()->json(['application' => CenterApplicationReview::summary((object) $record)], 201);
         });
     }
 
-    private function summary(object $row): array
+    public function show(Request $request, string $application)
     {
-        $details = json_decode($row->details, true, 512, JSON_THROW_ON_ERROR);
+        return CenterApplicationReview::show($request, $application);
+    }
 
-        return ['id' => $row->id, 'organization_name' => $details['organization_name'],
-            'site_name' => $details['site_name'], 'status' => $row->status,
-            'submitted_at' => (string) $row->created_at];
+    public function decide(Request $request, string $application)
+    {
+        return CenterApplicationReview::decide($request, $application);
+    }
+
+    public function acceptMembership(Request $request, string $application)
+    {
+        return CenterApplicationReview::accept($request, $application);
+    }
+
+    public function withdraw(Request $request, string $application)
+    {
+        return CenterApplicationReview::withdraw($request, $application);
     }
 }

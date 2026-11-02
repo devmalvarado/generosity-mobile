@@ -42,7 +42,7 @@ Open the verification link from Mailpit and log in. API tokens expire after seve
 
 ## Operators and catalog imports
 
-Only a trusted shell operator can provision center staff; users cannot self-assign. The operator label and process file-owner UID are audited, and membership does not change official verification.
+A trusted shell operator can provision center staff directly; users cannot self-assign or approve their own application. A reviewed application creates membership only after an independent reviewer names an existing center, a verified account and the staff role, and that account accepts. Review stays unavailable while `CENTER_APPLICATION_REVIEWER_IDS` is empty. Membership does not change official verification, tax eligibility or provider onboarding.
 
 ```sh
 docker compose exec app php artisan center:staff center-id staff@example.org --operator=operator-name

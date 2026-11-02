@@ -1,4 +1,4 @@
-@import url("assets/design-tokens.css");
+@import url("assets/design-tokens.css?v=72a9fb8775aa");
 
 /* Mobile-first. Base rules are the 320px phone; min-width queries add room. */
 
@@ -385,6 +385,11 @@ label { display: flex; flex-direction: column; gap: .3rem; font-weight: 560; fon
 #registration-history { margin-top: 1.5rem; padding: 1rem; border: 1px solid var(--line); border-radius: 16px; }
 #registration-list { padding-left: 1.2rem; overflow-wrap: anywhere; }
 #registration-list li { margin-block: .8rem; }
+#registration-list .registration-action { display: flex; flex-direction: column; gap: .35rem; margin-top: .35rem; }
+#registration-list summary { display: flex; align-items: center; min-height: var(--gen-touch); cursor: pointer; }
+#registration-list textarea { width: 100%; max-width: 100%; font: inherit; padding: .55rem .7rem; }
+#registration-history button { min-height: var(--gen-touch); }
+#registration-action-retry { margin-top: .5rem; }
 #registration-result { overflow-wrap: anywhere; }
 @media (min-width: 60rem) {
   .registration { grid-template-columns: minmax(0, .8fr) minmax(0, 1.2fr); gap: 3rem; align-items: start; }

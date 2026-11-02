@@ -3,7 +3,9 @@
 Date: 2026-10-31 (America/Monterrey). Branch: `codex/backend-php-mysql`.
 The API catalog/account sync increment is published with `1adf57a`. Native and
 portal checks below are local evidence, not a live three-client release.
-The center workspace is not on the live landing until its files reach `main`.
+The original local results below are historical. The workspace is now published;
+its production stateful-session configuration was corrected and checked on
+2026-11-02. See [current acceptance](../releases/critical-foundation-2026-11-02.md).
 
 ## Implemented boundaries
 
@@ -19,7 +21,7 @@ The center workspace is not on the live landing until its files reach `main`.
 | Hosted account entry | Registration, recovery and verification resend preserve native PKCE/client/locale context | `backend/tests/Feature/SocialAuthTest.php` |
 | Welcome/contact | Guest/sign-in/create-account routing; localized brand assets; only validated phone/email/http(s) contact actions | Native welcome tests, `ContactLinkTest.kt` |
 
-Public example forms/cards remain labeled samples. Only the authenticated center
+The current public cards describe causes; they do not publish fabricated needs. Only the authenticated center
 workspace writes to the API. Release native roots use the API; deterministic
 catalogs are limited to debug/test entry points. The portal tests stub API responses;
 backend tests and the HTTP smoke separately exercise real Laravel/MariaDB behavior.
@@ -159,3 +161,22 @@ Still open:
 
 Broad foundation tasks remain unchecked where any of their acceptance conditions
 are missing. Do not archive a change based only on structural validation.
+
+## HTTP integration follow-up — 2026-11-02
+
+`backend/scripts/smoke.py` now refuses a non-local runtime or a mail transport
+other than local Mailpit. It uses separate donor/staff accounts, actual hosted
+cookie login and CSRF, and verifies protected center access, published need,
+repeat offer, forbidden donor confirmation, staff confirmation/fulfillment,
+matching account history/unit, capacity exhaustion and idempotent cancellation.
+It then verifies visits, actual duration, application restart and replay, followed
+by a temporary database restore whose business-table dump matches byte-for-byte.
+The full script passed; no production center or need was fabricated.
+
+Configure local `.env` before this check with
+`SANCTUM_STATEFUL_DOMAINS=localhost:47321,127.0.0.1:47321`,
+`CORS_ALLOWED_ORIGINS=http://localhost:47321,http://127.0.0.1:47321`, and
+`GENEROSITY_PORTAL_URL=http://localhost:47321/#acceso`, then clear the local config
+cache. This is HTTP integration evidence, not native UI/offline acceptance.
+`shared:jvmTest` and `androidApp:testDebugUnitTest` resolved successfully but were
+up-to-date in this run; they are not a new physical Android execution.

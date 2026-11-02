@@ -103,7 +103,7 @@ real Google/Apple authorization remain separate acceptance checks.
 
 No Google or Apple credentials were available during implementation. Do not put secrets in the repository, app resources, portal JavaScript or chat.
 
-1. The API is deployed at `https://api.generosity.global`, with only the public front controller exposed. The catalog/account sync routes and their migrations are included. Adding Google/Apple credentials still needs only the private `.env` and a configuration refresh, not another code deploy. The portal center workspace is not on the live landing until its files are published from `main`. Add provider values only to the existing private `.env`, then refresh cached configuration. Provider sign-in refuses plain HTTP. Local fixture tests do not require provider credentials.
+1. The API is deployed at `https://api.generosity.global`, with only the public front controller exposed. The catalog/account sync routes and their migrations are included. Adding provider credentials needs only the private `.env` and a configuration refresh, not another code deploy. The portal workspace is also published; the November 2 follow-up corrected its Sanctum session configuration. Add provider values only to the existing private `.env`, then refresh cached configuration. Provider sign-in refuses plain HTTP. Local fixture tests do not require provider credentials.
 2. Set server-only configuration:
 
    ```dotenv
@@ -132,7 +132,10 @@ No Google or Apple credentials were available during implementation. Do not put 
 5. Native builds default to `https://api.generosity.global`. Android accepts an HTTPS-only `-PgenerosityApiUrl=https://...` build property. iOS uses `GENEROSITY_API_URL` from `project.yml`/Xcode build settings. No provider secrets belong in either app.
 6. Redact authorization callback query strings, form bodies and handoff codes in hosting/CDN access logs. Application exception redaction cannot remove data already logged by infrastructure. Confirm signing keys, `.env` and Composer sources are not publicly readable.
 
-The already-existing `origin/main:.github/workflows/publish-portal.yml` remains separate: it stages only the landing HTML/CSS/JS and three explicit public asset files for FTPS. This change modifies the existing portal files, not that workflow, and does not publish the API or the repository. No push/merge/deployment was performed for this integration.
+The existing `.github/workflows/publish-portal.yml` remains separate: it stages
+only landing HTML/CSS/JS and explicit public assets, including generated design
+tokens, for FTPS. It does not publish the API or repository. The November 2
+release published the scoped portal/API changes directly over SSH.
 
 ## Google activation checkpoint — 2026-11-02
 
@@ -214,9 +217,12 @@ account. A read-only, account-scoped backend check confirmed one verified user,
 one Google identity and zero center memberships. No password, passkey, provider
 token or authorization code was copied into the evidence.
 
-The landing separately displayed a failure loading center applications and the
-center workspace. Google authentication and logout succeeded despite those
-messages; this does not establish portal-workspace acceptance.
+The landing initially failed to load applications and the center workspace.
+The 2026-11-02 follow-up found an empty `SANCTUM_STATEFUL_DOMAINS` in production.
+After setting the exact `generosity.global` origin and rebuilding config, real
+Google sign-in displayed the correct empty applications and unassigned-center
+states. The deployment command `auth:check-portal` now rejects this missing
+session/CORS configuration. Assigned-center pilot acceptance is still separate.
 
 Physical iPhone acceptance used the installed `org.generosity.app` build 0.1.0 (1)
 on an iPhone 14 Pro with iOS 27.0.1, in dark mode. After the owner unlocked it,
@@ -228,6 +234,19 @@ profile. Signing out returned to Welcome; an account-scoped, read-only backend
 check found one user and zero remaining native sessions. Cancelling a subsequent
 iOS system sign-in permission dialog returned to Welcome without signing in.
 The phone was left at Welcome after these checks.
+
+The same Google return, process-restart restoration, logout and system-dialog
+cancellation passed on the physical iPhone 17 with iOS 27.2 on November 2.
+Profile showed the same account after restart. Guest Profile exposes both Sign
+in and Create account; the hosted registration and expandable password recovery
+forms were visibly reachable. These screen checks did not submit a personal
+password reset. Actual mail-link submission was checked separately through the
+controlled live HTTP account journey. Device Hub captures are retained locally
+under `build/acceptance-2026-11-02/`; they are not public website assets.
+A scoped server check after logout confirmed zero remaining native tokens and
+zero center memberships. Four existing Android instrumented entry tests also
+passed freshly on the Google API 34 emulator; they intercept browser launch and
+do not establish real Android Google authorization.
 
 This tests cancellation before opening the hosted browser, not Google's own
 consent-denial callback. Live provider cancellation, explicit existing-account

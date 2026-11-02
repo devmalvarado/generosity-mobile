@@ -110,7 +110,9 @@ changes no domain, DNS or other website. The branch includes the relevant existi
   An empty catalog is honest; do not publish examples to manufacture a working
   pilot. Intake can be tested without a full catalog.
 
-Google/Apple credentials remain absent; email/password is the available entry.
+At that release, provider credentials were absent. Google was activated and
+checked on 2026-11-02; email/password remains available. Apple is blocked on the
+institute membership. See [current acceptance](critical-foundation-2026-11-02.md).
 The dedicated `/kindness-center` route remains task 16.13; the prepared workspace
 uses `#acceso`/`#center-workspace`. Account deletion implementation and full store
 publication are separate gates, not completed by these registration fixes.

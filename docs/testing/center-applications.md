@@ -1,7 +1,9 @@
 # Initial organization/location intake
 
-Prepared locally on 2026-11-01, on `codex/backend-php-mysql`. Not published and no
-production application or database migration was performed.
+Initial intake was prepared on 2026-11-01 on `codex/backend-php-mysql` and
+deployed that day. See the release notes below. The 2026-11-02 review routes and additive migration `2026_11_02_000002`
+were subsequently deployed with the [critical-foundation release](../releases/critical-foundation-2026-11-02.md).
+Review decisions remain unavailable because no reviewer IDs have been appointed.
 
 ## Contract
 
@@ -88,9 +90,46 @@ Preserve accepted applications; do not roll back their table destructively.
 
 Before accepting real applications, finalize the privacy/retention notice and the
 process/person responsible for reviewing and responding. No retention duration or
-review turnaround was invented. Full claim/review/approval/rejection/withdrawal,
-evidence handling, duplicate disputes and invitations remain in OpenSpec tasks
-2.1–2.5. Only the smaller initial-intake task 2.6 is implemented locally.
+review turnaround was invented.
 
-Still unverified: production browser round trip, real-device screen reader and
-keyboard acceptance. No synthetic request was sent to the live API.
+### Review routes — 2026-11-02
+
+`POST /api/v1/center-applications` accepts optional `claimed_center_id`. The
+center must already exist and is not modified. Submission still creates no
+membership and no verification.
+
+`GET /api/v1/center-applications/{application}` is limited to reviewer account
+IDs in `CENTER_APPLICATION_REVIEWER_IDS`. An empty value returns 503
+`review_unavailable` and does not reveal the application. The applicant cannot
+read or decide their own case. The payload omits reviewer identity and other
+applicants' evidence.
+
+`POST /api/v1/center-applications/{application}/decision` records
+`request_changes`, `reject` or `approve` with rationale. Approval must name an
+existing center, a verified account and the staff role. It does not create
+membership, publish a center, or grant verification, tax eligibility or provider
+onboarding. Staff of the named center cannot decide it.
+
+`POST /api/v1/center-applications/{application}/acceptance` is only for the
+named account. Acceptance creates that staff membership and does not change the
+center. `POST /api/v1/center-applications/{application}/withdrawal` is only for
+the applicant, retains the application and decision rows, and does not revoke an
+accepted membership. No review email is sent. No retention period is selected,
+so these rows are not purged. Do not drop `center_application_decisions` in
+production.
+
+Evidence uploads, dispute merges and staff invitations remain open in tasks
+2.1–2.5. The landing tracker, published on 2026-11-02, names the five states
+in Spanish and English, renders rationale as text, and calls withdrawal or
+acceptance only when the receipt has a version and the signed-in account is
+allowed to act. It does not upload evidence, send a notice, or state a retention
+period. A named recipient who is not the applicant still has no list. Browser
+checks fixture the API; they are not a production round trip. Reviewer IDs were
+not selected, so production decisions stay unavailable until that configuration
+exists outside git. The Node contract branch does not include these routes.
+
+Current regression: **77 backend tests / 5,194 assertions** and **77 portal tests
+passed**, with one intentional duplicate WebKit screenshot skip. Production Google
+session reads now work; no synthetic application was submitted. The real pilot
+submission/decision/acceptance round trip, screen reader and keyboard acceptance
+remain unverified.

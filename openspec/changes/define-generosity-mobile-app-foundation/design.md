@@ -568,6 +568,13 @@ This explicitly excludes SSO for other institute platforms. The subsequent user
 decision below adds Facebook to planned scope; Microsoft remains deferred.
 
 Web uses host-only HttpOnly cookies, exact CORS/stateful origins and CSRF.
+Deployment runs `auth:check-portal` after caching configuration: the portal origin
+must match Sanctum and credentialed CORS, including any non-default local port.
+The landing versions its CSS/JS URLs with the first 12 SHA-256 characters of each
+file. A browser test checks the references against source bytes. This prevents
+Hostinger's week-long asset cache from mixing old scripts with newly deployed
+HTML; manual releases upload assets before HTML.
+This prevents successful provider login from masking an unusable center workspace.
 Apple's cross-site POST uses a separate five-minute encrypted browser-binding
 cookie with Secure/HttpOnly/SameSite=None. Google/Apple state and nonce are random,
 server-stored and consumed transactionally before token exchange. Native clients
@@ -578,8 +585,9 @@ Do not auto-link equal emails or infer center roles. Link identities only after
 explicit consent in a recently authenticated Generosity web session.
 
 See [implementation/configuration/evidence](../../../docs/social-sign-in.md).
-Provider credentials and live acceptance are still pending. Native account entry
-is connected; catalog/history/contribution synchronization remains separate work.
+Google credentials and web/iOS sign-in were activated on 2026-11-02; Apple awaits
+the institute's Developer membership. Remaining provider and native pilot checks
+are tracked separately from implemented catalog/history synchronization.
 
 ### Facebook and progressive mobile contact decision — 2026-10-31
 

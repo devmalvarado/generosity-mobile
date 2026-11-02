@@ -25,15 +25,21 @@ session, CSRF and idempotency boundary. `GET /api/v1/me/center-applications` lis
 only the current applicant's receipt summaries, ten per page. Requests remain
 private and pending; submission never creates a published center or membership.
 The browser preserves an uncertain submission across reloads and clears private
-data on account changes. Existing-center claims, documentary evidence, independent
-review, approval and withdrawal are still pending. See
-[intake verification](testing/center-applications.md).
+data on account changes. An optional existing-center id is sent only when filled
+and is described as recorded only when the receipt echoes it. The applicant list
+names pending, changes-requested, approved, rejected and withdrawn in Spanish and
+English, shows rationale as text, and can withdraw or accept when the receipt
+includes a version and the current account is the one allowed to act. It does not
+upload evidence, send a notice, or state a response time or retention period. A
+named recipient who is not the applicant has no tracker. Review stays unavailable
+until reviewer account IDs are configured outside git. Documentary evidence and
+dispute resolution remain pending. See [intake verification](testing/center-applications.md).
 
 ## Implemented flow
 
 1. Open the hosted account page from the landing. Sign in with email, or a configured provider.
 2. The browser uses the API's host-only HttpOnly session cookie. Requests include credentials, exact-origin CORS and CSRF for mutations; no bearer token is stored in the landing.
-3. `/api/v1/staff/centers` returns only assigned centers. No membership means no editor. Membership is provisioned by the existing operator command, never inferred from a social login.
+3. `/api/v1/staff/centers` returns only assigned centers. No membership means no editor. Membership requires an operator grant or approved review followed by acceptance from the named account; it is never inferred from a social login.
 4. Select a center, browse paginated needs, create a draft, publish, edit or close a need. Spanish/English content is preserved independently of interface language; other existing translations are retained on edit.
 5. Browse contributions and confirm/fulfill another person's contribution. Time completion accepts an explicit actual duration; planned duration is never silently counted as performed work.
 6. Mutations carry UUID idempotency keys and version checks. The browser saves one uncertain submission in account-bound session storage before sending, and retries the exact body/key after a lost response or tab reload. Rejected changes retain the editor input. Changing accounts/signing out clears private drafts and pending browser data.
@@ -77,3 +83,17 @@ acceptance remains pending; no other site's files were changed.
 See [integration status](testing/backend-integration.md),
 [authentication](social-sign-in.md), and
 [foundation tasks](../openspec/changes/define-generosity-mobile-app-foundation/tasks.md).
+
+### Session and review release — 2026-11-02
+
+Published the additive review migration and API routes before the three changed
+portal files. No credentials or existing business rows were changed. The empty
+reviewer allowlist keeps decisions disabled until an authorized reviewer is named.
+Production still contains 157 centers, no needs and no staff memberships; the
+owner has not yet supplied the pilot center, responsible account and actual need.
+
+Corrected `SANCTUM_STATEFUL_DOMAINS` to `generosity.global`, preserving host-only
+cookies and exact credentialed CORS. Real Google web access now loads the empty
+application history and no-assigned-center workspace. `php artisan auth:check-portal`
+checks the configured portal against Sanctum and CORS during API deployment.
+See [release and rollback](releases/critical-foundation-2026-11-02.md).

@@ -1,5 +1,7 @@
 const { test, expect } = require("@playwright/test");
 const path = require("path");
+const { readFileSync } = require("fs");
+const { createHash } = require("crypto");
 
 const WIDTHS = [320, 360, 390, 768, 1280];
 test.beforeEach(async ({ page }) => {
@@ -7,6 +9,23 @@ test.beforeEach(async ({ page }) => {
 });
 
 const BASE = "http://127.0.0.1:47321/";
+
+test("HTML versions the CSS and script by their contents", async ({ page }) => {
+  await page.goto("/");
+  for (const [file, selector, attribute] of [
+    ['styles.css', 'link[rel=stylesheet]', 'href'],
+    ['portal.js', 'script[src]', 'src']
+  ]) {
+    const version = createHash('sha256').update(readFileSync(path.join(__dirname, '..', file))).digest('hex').slice(0, 12);
+    await expect(page.locator(selector)).toHaveAttribute(attribute, file + '?v=' + version);
+  }
+  const tokens = readFileSync(path.join(__dirname, '../assets/design-tokens.css'));
+  const tokenVersion = createHash('sha256').update(tokens).digest('hex').slice(0, 12);
+  expect(readFileSync(path.join(__dirname, '../styles.css'), 'utf8')).toContain('assets/design-tokens.css?v=' + tokenVersion);
+  const paper = tokens.toString().match(/--gen-web-paper: (#[0-9A-Fa-f]{6});/)[1];
+  const rgb = [1, 3, 5].map(i => parseInt(paper.slice(i, i + 2), 16));
+  await expect(page.locator('body')).toHaveCSS('background-color', 'rgb(' + rgb.join(', ') + ')');
+});
 
 async function overflow(page) {
   return page.evaluate(() => {

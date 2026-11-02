@@ -33,6 +33,20 @@ account change. The backend migration and landing require separate releases;
 privacy/retention information and the operational review process remain release
 decisions. See [verification and scope](../../../docs/testing/center-applications.md).
 
+On 2026-11-02 the API gained claim, independent decision, recipient acceptance
+and withdrawal routes. A claim stores an existing center ID and does not change
+that center. Approval names an existing center, a verified account and the
+existing staff role, then waits for that account to accept before any membership
+exists. It does not publish a center or grant verification, tax eligibility or
+provider onboarding. Review returns `review_unavailable` while
+`CENTER_APPLICATION_REVIEWER_IDS` is empty; no reviewer, retention period or
+turnaround was selected. Decision rows are retained and are not purged.
+No review email is sent. Evidence upload, dispute merge and staff invitations
+remain unimplemented. The landing tracker names the five states and can withdraw
+or accept from the applicant's own versioned receipt; it does not upload
+evidence, send a notice, or state a retention period. A named recipient who is
+not the applicant still has no tracker.
+
 ## Goals / Non-Goals
 
 **Goals:** give deferred product functions testable ownership and lifecycle

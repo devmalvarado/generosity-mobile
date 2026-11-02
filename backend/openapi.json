@@ -1417,7 +1417,179 @@
             }
           }
         },
-        "description": "Requires a verified account and Idempotency-Key; browser sessions also require CSRF. Limited to five submission attempts per account per minute. Exact same-account applications are deduplicated even with a new key. Does not modify the public catalog, grant membership or verify the organization."
+        "description": "Requires a verified account and Idempotency-Key; browser sessions also require CSRF. Limited to five submission attempts per account per minute. Exact same-account applications are deduplicated even with a new key. Does not modify the public catalog, grant membership or verify the organization. Optional claimed_center_id references an existing catalog center and leaves that center unchanged."
+      }
+    },
+    "/center-applications/{application}": {
+      "get": {
+        "summary": "Read one private application for independent review",
+        "operationId": "readCenterApplicationCase",
+        "description": "Verified reviewers named by CENTER_APPLICATION_REVIEWER_IDS only. Empty configuration returns 503 review_unavailable and does not reveal the application. Accounts that are not configured reviewers, including the applicant, receive 404. A configured reviewer who is the applicant receives 403 self_review_forbidden. The response omits reviewer identities and other applicants' evidence; possible_duplicate is only a boolean. No review email is sent.",
+        "parameters": [
+          {
+            "name": "application",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string", "format": "uuid" }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Private case for an independent reviewer",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/CenterApplicationCase" }
+              }
+            }
+          },
+          "default": {
+            "description": "Stable error codes include review_unavailable, self_review_forbidden, forbidden, not_found and rate_limited. HTTP 401/403/404/429/500/503.",
+            "headers": {
+              "Retry-After": { "schema": { "type": "string" }, "description": "Present when rate limited" }
+            },
+            "content": {
+              "application/json": { "schema": { "$ref": "#/components/schemas/Error" } }
+            }
+          }
+        }
+      }
+    },
+    "/center-applications/{application}/decision": {
+      "post": {
+        "summary": "Record an independent review decision",
+        "operationId": "decideCenterApplication",
+        "description": "Unavailable (503 review_unavailable) until CENTER_APPLICATION_REVIEWER_IDS names verified reviewer account IDs outside git. An applicant cannot decide their own request, even with another operational role. Staff of the claimed or named center cannot decide it. Approval must name an existing center, a verified account and the staff role; it records that grant and does not create membership, publish a center, or grant verification, tax eligibility or provider onboarding. Request-changes and rejection record rationale only. No review email is sent. Rationale is retained; no retention period is selected.",
+        "parameters": [
+          {
+            "name": "application",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string", "format": "uuid" }
+          },
+          {
+            "name": "Idempotency-Key",
+            "in": "header",
+            "required": true,
+            "schema": { "type": "string", "format": "uuid" }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/CenterApplicationDecisionInput" }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Decision recorded. Approval still requires recipient acceptance before membership exists.",
+            "content": {
+              "application/json": { "schema": { "$ref": "#/components/schemas/CenterApplicationReceipt" } }
+            }
+          },
+          "default": {
+            "description": "Stable error codes include review_unavailable, self_review_forbidden, represented_review_forbidden, center_unavailable, account_unavailable, invalid_transition, version_conflict and operation_reused. HTTP 401/403/404/409/422/429/500/503.",
+            "headers": {
+              "Retry-After": { "schema": { "type": "string" }, "description": "Present when rate limited" }
+            },
+            "content": {
+              "application/json": { "schema": { "$ref": "#/components/schemas/Error" } }
+            }
+          }
+        }
+      }
+    },
+    "/center-applications/{application}/acceptance": {
+      "post": {
+        "summary": "Accept a named staff grant",
+        "operationId": "acceptCenterApplication",
+        "description": "Only the verified account named by the current approval can accept, using the approval version. Acceptance creates that account's staff membership and does not modify the center, its verification, tax eligibility or provider onboarding. A missing catalog center leaves the approval unchanged and grants nothing. Repeating acceptance does not duplicate membership. This is not organization verification.",
+        "parameters": [
+          {
+            "name": "application",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string", "format": "uuid" }
+          },
+          {
+            "name": "Idempotency-Key",
+            "in": "header",
+            "required": true,
+            "schema": { "type": "string", "format": "uuid" }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/CenterApplicationAcceptanceInput" }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Membership granted, or the same acceptance returned again",
+            "content": {
+              "application/json": { "schema": { "$ref": "#/components/schemas/CenterApplicationReceipt" } }
+            }
+          },
+          "default": {
+            "description": "Stable error codes include not_found, center_unavailable, version_conflict and operation_reused. HTTP 401/403/404/409/422/429/500.",
+            "headers": {
+              "Retry-After": { "schema": { "type": "string" }, "description": "Present when rate limited" }
+            },
+            "content": {
+              "application/json": { "schema": { "$ref": "#/components/schemas/Error" } }
+            }
+          }
+        }
+      }
+    },
+    "/center-applications/{application}/withdrawal": {
+      "post": {
+        "summary": "Withdraw the applicant's own request",
+        "operationId": "withdrawCenterApplication",
+        "description": "Only the applicant can withdraw a pending, changes-requested or not-yet-accepted approval. The application and every decision row remain. Withdrawal does not revoke an accepted membership and does not purge records; no retention period is selected.",
+        "parameters": [
+          {
+            "name": "application",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string", "format": "uuid" }
+          },
+          {
+            "name": "Idempotency-Key",
+            "in": "header",
+            "required": true,
+            "schema": { "type": "string", "format": "uuid" }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/CenterApplicationWithdrawalInput" }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Withdrawn without deleting the application or its decision records",
+            "content": {
+              "application/json": { "schema": { "$ref": "#/components/schemas/CenterApplicationReceipt" } }
+            }
+          },
+          "default": {
+            "description": "Stable error codes include not_found, invalid_transition, version_conflict and operation_reused. HTTP 401/403/404/409/422/429/500.",
+            "headers": {
+              "Retry-After": { "schema": { "type": "string" }, "description": "Present when rate limited" }
+            },
+            "content": {
+              "application/json": { "schema": { "$ref": "#/components/schemas/Error" } }
+            }
+          }
+        }
       }
     },
     "/me/center-applications": {
@@ -3075,9 +3247,15 @@
           "contact_consent": {
             "type": "boolean",
             "const": true
+          },
+          "claimed_center_id": {
+            "type": ["string", "null"],
+            "maxLength": 100,
+            "pattern": "^[a-z0-9][a-z0-9-]*$",
+            "description": "Optional reference to an existing catalog center. The center is not modified."
           }
         },
-        "description": "Private application for one location. The verified account supplies the contact email. user_id, contact_email, status, verified and center_id cannot be supplied. No publication or staff rights are granted."
+        "description": "Private application for one location. The verified account supplies the contact email. user_id, contact_email, status, verified, center_id, roles, account_id and membership cannot be supplied. No publication or staff rights are granted."
       },
       "CenterApplication": {
         "type": "object",
@@ -3086,6 +3264,7 @@
           "organization_name",
           "site_name",
           "status",
+          "version",
           "submitted_at"
         ],
         "properties": {
@@ -3101,13 +3280,80 @@
           },
           "status": {
             "type": "string",
-            "enum": [
-              "pending"
-            ]
+            "enum": ["pending", "changes_requested", "approved", "rejected", "withdrawn"]
           },
+          "version": { "type": "integer", "minimum": 1 },
           "submitted_at": {
             "type": "string",
             "description": "UTC submission timestamp."
+          },
+          "claimed_center_id": { "type": "string" },
+          "decision": { "$ref": "#/components/schemas/CenterApplicationDecision" },
+          "center_id": { "type": "string", "description": "Present only after approval. Not a published-center creation." },
+          "account_id": { "type": "integer" },
+          "roles": { "type": "array", "items": { "type": "string", "const": "staff" }, "maxItems": 1 },
+          "acceptance_required": { "type": "boolean" },
+          "accepted_at": { "type": "string" }
+        }
+      },
+      "CenterApplicationDecisionInput": {
+        "type": "object",
+        "required": ["decision", "rationale", "version"],
+        "properties": {
+          "decision": { "type": "string", "enum": ["approve", "request_changes", "reject"] },
+          "rationale": { "type": "string", "minLength": 1, "maxLength": 2000 },
+          "version": { "type": "integer", "minimum": 1 },
+          "center_id": { "type": "string", "maxLength": 100, "pattern": "^[a-z0-9][a-z0-9-]*$", "description": "Required for approve. Must already exist. Not created or modified here." },
+          "account_id": { "type": "integer", "minimum": 1, "description": "Required for approve. The verified account that must accept." },
+          "roles": { "type": "array", "items": { "type": "string", "const": "staff" }, "minItems": 1, "maxItems": 1, "description": "Required for approve. Only the existing staff membership can be named." }
+        },
+        "description": "verified, status, user_id, operator, tax_eligible and provider_recipient are prohibited."
+      },
+      "CenterApplicationAcceptanceInput": {
+        "type": "object",
+        "required": ["version"],
+        "properties": { "version": { "type": "integer", "minimum": 1 } },
+        "description": "The recipient cannot change the center, account, roles, verification, tax eligibility or provider onboarding."
+      },
+      "CenterApplicationWithdrawalInput": {
+        "type": "object",
+        "required": ["version"],
+        "properties": {
+          "version": { "type": "integer", "minimum": 1 },
+          "rationale": { "type": ["string", "null"], "maxLength": 2000 }
+        }
+      },
+      "CenterApplicationDecision": {
+        "type": "object",
+        "required": ["action", "recorded_at"],
+        "properties": {
+          "action": { "type": "string", "enum": ["approve", "request_changes", "reject", "withdraw", "accept"] },
+          "rationale": { "type": ["string", "null"] },
+          "center_id": { "type": ["string", "null"] },
+          "account_id": { "type": ["integer", "null"] },
+          "roles": { "type": ["array", "null"], "items": { "type": "string", "const": "staff" } },
+          "recorded_at": { "type": "string" }
+        },
+        "description": "Reviewer identity is not included."
+      },
+      "CenterApplicationCase": {
+        "type": "object",
+        "required": ["application"],
+        "properties": {
+          "application": {
+            "type": "object",
+            "required": ["id", "applicant_id", "contact_email", "status", "version", "submitted_at", "details", "possible_duplicate", "decisions"],
+            "properties": {
+              "id": { "type": "string", "format": "uuid" },
+              "applicant_id": { "type": "integer" },
+              "contact_email": { "type": "string" },
+              "status": { "type": "string" },
+              "version": { "type": "integer" },
+              "submitted_at": { "type": "string" },
+              "details": { "type": "object" },
+              "possible_duplicate": { "type": "boolean" },
+              "decisions": { "type": "array", "items": { "$ref": "#/components/schemas/CenterApplicationDecision" } }
+            }
           }
         }
       },

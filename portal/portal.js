@@ -650,27 +650,45 @@
       step1:'Cuéntanos quiénes son y qué apoyo ofrecen.', step2:'Envía la solicitud desde tu cuenta Generosity con correo verificado.', step3:'Recibe un folio y consulta tu solicitud pendiente de revisión.',
       private:'Los datos de esta solicitud son privados. No publiques datos de personas beneficiarias ni domicilios protegidos. El envío no publica la sede, no la verifica ni concede permisos para administrarla.', existing:'Ya tengo un centro asignado', formTitle:'Registrar una sede', required:'Los campos marcados con * son obligatorios. Puedes preparar el formulario antes de iniciar sesión; conserva esta pestaña abierta.',
       organization:'1. Tu organización', organization_name:'Nombre de la organización *', activities:'Tipo de centro y actividades *', activitiesHint:'Por ejemplo: comedor comunitario, albergue, atención de salud o capacitación. Describe a quiénes apoyan.', location:'2. La sede', site_name:'Nombre de la sede *', country:'País *', city:'Ciudad o localidad *', contact:'3. Contacto de la organización', contact_name:'Tu nombre *', contact_role:'Cargo o relación con la organización *', emailHint:'Usaremos el correo verificado de tu cuenta para contactarte sobre esta solicitud.',
-      google_maps_url:'Enlace de Google Maps', latitude:'Latitud', longitude:'Longitud', locationHint:'Comparte la ficha del lugar en Google Maps. Para las coordenadas, selecciona el punto exacto de entrada y copia primero la latitud y después la longitud; no uses las del centro de la pantalla. Si no las conoces o la ubicación es protegida, deja estos datos vacíos. Si indicas coordenadas, escribe ambas.',
+      google_maps_url:'Enlace de Google Maps', latitude:'Latitud', longitude:'Longitud', locationHint:'Comparte la ficha del lugar en Google Maps. Para las coordenadas, selecciona el punto exacto de entrada y copia primero la latitud y después la longitud; no uses las del centro de la pantalla. Si no las conoces o la ubicación es protegida, deja estos datos vacíos. Si indicas coordenadas, escribe ambas.', claimed_center_id:'Identificador de un centro ya publicado (opcional)', claimHint:'Solo si pides representar un centro que ya está en el catálogo. Escribe su identificador, por ejemplo comedor-centro. Enviar la solicitud no modifica esa ficha, no la publica y no concede acceso para administrarla.',
       optional:'Agregar datos opcionales', legal_name:'Nombre legal', region:'Estado, provincia o región', postal_code:'Código postal', address:'Dirección de atención al público (omite ubicaciones protegidas)', phone:'Teléfono con código de país', website:'Sitio web oficial', representation:'Declaro que represento a esta organización. *', consent:'Autorizo que Generosity guarde estos datos para revisar la solicitud y contactarme sobre ella. *',
       signIn:'Iniciar sesión ↗', create:'Crear cuenta ↗', submit:'Enviar solicitud', retry:'Reintentar el mismo envío', history:'Mis solicitudes de sedes', refresh:'Actualizar solicitudes', guest:'Inicia sesión o crea una cuenta con correo verificado para enviar. El formulario permanecerá en esta pestaña.', verify:'Verifica el correo de tu cuenta antes de enviar la solicitud.', signed:'La solicitud se enviará desde tu cuenta: ', unavailable:'No se pudo comprobar tu sesión. Conservamos el formulario; comprueba la conexión en el acceso de cuentas.',
-      invalid:'Revisa los campos marcados y confirma ambas declaraciones.', sending:'Enviando solicitud…', pending:'No pudimos confirmar el resultado. Conservamos el mismo envío para que puedas reintentarlo sin duplicarlo.', saved:'Solicitud recibida. Pendiente de revisión; la sede aún no está publicada. Folio: ', denied:'Tu sesión necesita actualizarse. Inicia sesión y reintenta el mismo envío.', rejected:'El servidor rechazó el envío. Revisa los datos antes de volver a enviarlo.', unsafe:'Este navegador no pudo guardar el envío pendiente. No se envió nada.', loading:'Consultando tus solicitudes…', empty:'Todavía no has enviado solicitudes de sedes.', listFailed:'No se pudieron consultar tus solicitudes. Puedes actualizar para volver a intentarlo.', status_pending:'Pendiente de revisión', status_other:'Consulta al equipo de Generosity', reference:'Folio: '
+      invalid:'Revisa los campos marcados y confirma ambas declaraciones.', sending:'Enviando solicitud…', pending:'No pudimos confirmar el resultado. Conservamos el mismo envío para que puedas reintentarlo sin duplicarlo.', saved:'Solicitud recibida. Pendiente de revisión; la sede aún no está publicada. Folio: ', saved_claim:'Solicitud recibida. Pendiente de revisión. La referencia al centro existente quedó registrada; esa ficha no cambió y no se concedió acceso para administrarla. Folio: ', claim_unconfirmed:'Solicitud recibida como pendiente, pero el servidor no confirmó la referencia al centro existente. Esa referencia no quedó registrada. Folio: ', claim_unavailable:'No se encontró un centro publicado con ese identificador. No se envió la solicitud y no se modificó el catálogo.', denied:'Tu sesión necesita actualizarse. Inicia sesión y reintenta el mismo envío.', rejected:'El servidor rechazó el envío. Revisa los datos antes de volver a enviarlo.', unsafe:'Este navegador no pudo guardar el envío pendiente. No se envió nada.', loading:'Consultando tus solicitudes…', empty:'Todavía no has enviado solicitudes de sedes.', listFailed:'No se pudieron consultar tus solicitudes. Puedes actualizar para volver a intentarlo.', historyNote:'Esta lista muestra el estado que devuelve el servidor. No hay un plazo de respuesta publicado y esta página no envía un aviso. Retirar una solicitud conserva el folio y las notas ya registradas; no hay un plazo de conservación publicado.', status_pending:'Pendiente de revisión', status_changes_requested:'Se solicitaron cambios', status_approved:'Aprobada', status_approved_waiting:'Aprobada. El acceso de personal todavía no está activo.', status_accepted:'Acceso de personal aceptado. Esto no verifica la organización.', status_rejected:'No aceptada', status_withdrawn:'Retirada', status_other:'Estado no reconocido. Actualiza la lista.', claimed:'Centro referido: ', named_center:'Centro nombrado: ', rationale_approve:'Nota de la aprobación:', rationale_request_changes:'Cambios solicitados:', rationale_reject:'Motivo:', rationale_withdraw:'Nota al retirar:', rationale_other:'Nota registrada:', reference:'Folio: ', withdraw:'Retirar solicitud', withdraw_note:'Nota opcional', withdraw_hint:'Retirar no borra el folio ni las notas ya registradas y no revoca un acceso ya aceptado.', withdraw_confirm:'Confirmar retiro', accept:'Aceptar acceso de personal', accept_hint:'Aceptar crea solo el acceso de personal nombrado. No verifica la organización, no cambia la ficha pública y no habilita pagos.', accept_other:'La aprobación nombra a otra cuenta. Solo esa cuenta puede aceptar el acceso de personal.', accept_unavailable:'Esta aprobación no se puede aceptar desde esta página.', retry_action:'Reintentar la misma acción', acting:'Enviando…', action_pending:'No pudimos confirmar el resultado. Reintenta la misma acción para no duplicarla.', action_conflict:'Otro cambio actualizó esta solicitud. Actualiza la lista antes de volver a intentarlo.', action_denied:'Tu sesión necesita actualizarse. Inicia sesión y reintenta la misma acción.', action_unavailable:'Esta acción no está disponible en el servidor. No se cambió la solicitud.', action_center_unavailable:'El centro nombrado no está disponible. No se concedió acceso.', action_rejected:'El servidor rechazó la acción. Actualiza la lista antes de volver a intentarlo.', action_accepted:'Aceptaste el acceso de personal. Esto no verifica la organización ni habilita pagos.', action_withdrawn:'Solicitud retirada. El folio y las notas registradas se conservan.', action_unconfirmed:'El servidor respondió, pero no confirmó el cambio. Actualiza la lista.'
     },
     en: {
       nav:'Register a location', eyebrow:'For organizations', title:'Your organization helps. Let’s help more people find it.', lead:'Apply to register a location. If you have several, submit one application for each location.',
       step1:'Tell us who you are and the support you provide.', step2:'Submit through your Generosity account with a verified email.', step3:'Receive a reference number and track your application while it awaits review.',
       private:'Application details are private. Do not include beneficiary information or protected addresses. Submitting does not publish or verify the location, or grant access to manage it.', existing:'I already have an assigned center', formTitle:'Register a location', required:'Fields marked * are required. You can fill out the form before signing in; keep this tab open.',
       organization:'1. Your organization', organization_name:'Organization name *', activities:'Type of center and activities *', activitiesHint:'For example: community kitchen, shelter, health care or training. Describe the people you support.', location:'2. The location', site_name:'Location name *', country:'Country *', city:'City or town *', contact:'3. Organization contact', contact_name:'Your name *', contact_role:'Role or relationship to the organization *', emailHint:'We will use your account’s verified email to contact you about this application.',
-      google_maps_url:'Google Maps link', latitude:'Latitude', longitude:'Longitude', locationHint:'Share the place listing in Google Maps. For coordinates, select the exact entrance pin and copy latitude first, then longitude; do not use the map viewport coordinates. Leave these fields blank if unknown or the location is protected. If providing coordinates, enter both.',
+      google_maps_url:'Google Maps link', latitude:'Latitude', longitude:'Longitude', locationHint:'Share the place listing in Google Maps. For coordinates, select the exact entrance pin and copy latitude first, then longitude; do not use the map viewport coordinates. Leave these fields blank if unknown or the location is protected. If providing coordinates, enter both.', claimed_center_id:'Identifier of an already published center (optional)', claimHint:'Only if you are asking to represent a center already in the catalog. Enter its identifier, for example community-kitchen. Submitting does not change that listing, publish it, or grant access to manage it.',
       optional:'Add optional details', legal_name:'Legal name', region:'State, province or region', postal_code:'Postal code', address:'Public service address (omit protected locations)', phone:'Phone number with country code', website:'Official website', representation:'I confirm that I represent this organization. *', consent:'I authorize Generosity to store these details to review the application and contact me about it. *',
       signIn:'Sign in ↗', create:'Create account ↗', submit:'Submit application', retry:'Retry the same submission', history:'My location applications', refresh:'Refresh applications', guest:'Sign in or create an account with a verified email to submit. Your form will remain in this tab.', verify:'Verify your account’s email before submitting.', signed:'Submitting from your account: ', unavailable:'We could not check your session. Your form is preserved; check the connection in account access.',
-      invalid:'Review the marked fields and confirm both declarations.', sending:'Submitting application…', pending:'We could not confirm the outcome. The same submission is saved so you can retry without creating a duplicate.', saved:'Application received and pending review. The location is not published yet. Reference: ', denied:'Your session needs to be refreshed. Sign in and retry the same submission.', rejected:'The server rejected the submission. Review the details before submitting again.', unsafe:'This browser could not save the pending submission. Nothing was sent.', loading:'Loading your applications…', empty:'You have not submitted any location applications yet.', listFailed:'Could not load your applications. Refresh to try again.', status_pending:'Pending review', status_other:'Contact the Generosity team', reference:'Reference: '
+      invalid:'Review the marked fields and confirm both declarations.', sending:'Submitting application…', pending:'We could not confirm the outcome. The same submission is saved so you can retry without creating a duplicate.', saved:'Application received and pending review. The location is not published yet. Reference: ', saved_claim:'Application received and pending review. The existing-center reference was recorded; that listing was not changed and no access to manage it was granted. Reference: ', claim_unconfirmed:'Application received as pending, but the server did not confirm the existing-center reference. That reference was not recorded. Reference: ', claim_unavailable:'No published center was found with that identifier. The application was not submitted and the catalog was not changed.', denied:'Your session needs to be refreshed. Sign in and retry the same submission.', rejected:'The server rejected the submission. Review the details before submitting again.', unsafe:'This browser could not save the pending submission. Nothing was sent.', loading:'Loading your applications…', empty:'You have not submitted any location applications yet.', listFailed:'Could not load your applications. Refresh to try again.', historyNote:'This list shows the state returned by the server. No response time is published, and this page does not send a notice. Withdrawing an application keeps the reference and notes already recorded; no retention period is published.', status_pending:'Pending review', status_changes_requested:'Changes requested', status_approved:'Approved', status_approved_waiting:'Approved. Staff access is not active yet.', status_accepted:'Staff access accepted. This does not verify the organization.', status_rejected:'Not accepted', status_withdrawn:'Withdrawn', status_other:'Unrecognized state. Refresh the list.', claimed:'Referred center: ', named_center:'Named center: ', rationale_approve:'Approval note:', rationale_request_changes:'Changes requested:', rationale_reject:'Reason:', rationale_withdraw:'Withdrawal note:', rationale_other:'Recorded note:', reference:'Reference: ', withdraw:'Withdraw application', withdraw_note:'Optional note', withdraw_hint:'Withdrawing does not delete the reference or notes already recorded, and does not revoke access that was already accepted.', withdraw_confirm:'Confirm withdrawal', accept:'Accept staff access', accept_hint:'Accepting creates only the named staff access. It does not verify the organization, change the public listing, or enable payments.', accept_other:'The approval names another account. Only that account can accept staff access.', accept_unavailable:'This approval cannot be accepted from this page.', retry_action:'Retry the same action', acting:'Sending…', action_pending:'We could not confirm the outcome. Retry the same action so it is not duplicated.', action_conflict:'Another change updated this application. Refresh the list before trying again.', action_denied:'Your session needs to be refreshed. Sign in and retry the same action.', action_unavailable:'This action is not available on the server. The application was not changed.', action_center_unavailable:'The named center is not available. No access was granted.', action_rejected:'The server rejected the action. Refresh the list before trying again.', action_accepted:'You accepted staff access. This does not verify the organization or enable payments.', action_withdrawn:'Application withdrawn. The reference and recorded notes are kept.', action_unconfirmed:'The server responded, but did not confirm the change. Refresh the list.'
     }
   };
   ['es','en'].forEach(function (lang) { Object.keys(applicationCopy[lang]).forEach(function (key) { copy[lang]['application.' + key] = applicationCopy[lang][key]; }); });
-  var application = { owner:null, pending:null, busy:false, loading:false, page:1, last:1, items:[], status:'', reference:'', listStatus:'', generation:0 };
+  var application = { owner:null, pending:null, busy:false, loading:false, page:1, last:1, items:[], status:'', reference:'', listStatus:'', action:null, actionBusy:false, actionStatus:'', notes:{}, generation:0 };
   var registrationForm = el('site-registration');
   function applicationText(key) { return key ? t('application.' + key) : ''; }
   function applicationStorage(owner) { return 'generosity.application.pending.' + owner; }
+  function applicationActionStorage(owner) { return 'generosity.application.action.' + owner; }
+  function applicationId(value) { return typeof value === 'string' && /^[0-9a-f-]{36}$/.test(value); }
+  function applicationVersion(item) { return !!item && applicationId(item.id) && Number.isInteger(item.version) && item.version >= 1; }
+  function sameAccount(item) { return !!(accountUser && item && /^[0-9]+$/.test(String(item.account_id)) && String(item.account_id) === String(accountUser.id)); }
+  function staffGrant(item) { return !!(item && Array.isArray(item.roles) && item.roles.length === 1 && item.roles[0] === 'staff'); }
+  function canWithdraw(item) {
+    if (!applicationVersion(item) || item.accepted_at) return false;
+    if (item.status === 'pending' || item.status === 'changes_requested') return true;
+    return item.status === 'approved' && item.acceptance_required === true;
+  }
+  function canAccept(item) {
+    return applicationVersion(item) && item.status === 'approved' && item.acceptance_required === true && !item.accepted_at && staffGrant(item) && sameAccount(item);
+  }
+  function statusLabel(item) {
+    if (item.status === 'approved' && item.accepted_at) return 'status_accepted';
+    if (item.status === 'approved' && item.acceptance_required === true) return 'status_approved_waiting';
+    return ['pending', 'changes_requested', 'approved', 'rejected', 'withdrawn'].indexOf(item.status) >= 0 ? 'status_' + item.status : 'status_other';
+  }
   function applicationReady() { return accountStatus === 'auth.signedIn' && accountCsrf && accountUser && accountUser.email_verified_at; }
   function syncApplications() {
     if (!application) return;
@@ -678,9 +696,10 @@
     if (application.owner !== owner) {
       if (application.owner) {
         try { sessionStorage.removeItem(applicationStorage(application.owner)); } catch (_) { /* Still clear another account's private view. */ }
+        try { sessionStorage.removeItem(applicationActionStorage(application.owner)); } catch (_) { /* A late action must not follow the next account. */ }
         registrationForm.reset();
       }
-      application = { owner:owner, pending:null, busy:false, loading:false, page:1, last:1, items:[], status:'', reference:'', listStatus:'', generation:application.generation + 1 };
+      application = { owner:owner, pending:null, busy:false, loading:false, page:1, last:1, items:[], status:'', reference:'', listStatus:'', action:null, actionBusy:false, actionStatus:'', notes:{}, generation:application.generation + 1 };
       clearApplicationErrors();
       if (owner) {
         try {
@@ -694,6 +713,12 @@
             });
           }
         } catch (_) { application.status = 'unsafe'; }
+        try {
+          var savedAction = JSON.parse(sessionStorage.getItem(applicationActionStorage(owner)) || 'null');
+          if (savedAction && savedAction.owner === owner && /^[0-9a-f-]{36}$/.test(savedAction.key) && applicationId(savedAction.id) && (savedAction.kind === 'withdraw' || savedAction.kind === 'accept') && Number.isInteger(savedAction.version) && savedAction.version >= 1 && (savedAction.rationale === undefined || typeof savedAction.rationale === 'string')) {
+            application.action = savedAction; application.actionStatus = 'action_pending';
+          }
+        } catch (_) { application.actionStatus = 'unsafe'; }
         if (applicationReady()) loadApplications();
       }
     }
@@ -710,19 +735,115 @@
     el('registration-create').href = el('registration-sign-in').href + '&screen=register';
     el('registration-session').textContent = ready ? applicationText('signed') + accountUser.email
       : applicationText(accountStatus === 'auth.failed' ? 'unavailable' : accountUser ? 'verify' : 'guest');
-    el('registration-result').textContent = applicationText(application.status) + (application.status === 'saved' ? application.reference : '');
+    var showsReference = application.status === 'saved' || application.status === 'saved_claim' || application.status === 'claim_unconfirmed';
+    el('registration-result').textContent = applicationText(application.status) + (showsReference ? application.reference : '');
     el('registration-history').hidden = !ready;
     el('registration-history-status').textContent = applicationText(application.listStatus);
+    el('registration-action-status').textContent = applicationText(application.actionStatus);
+    el('registration-action-retry').hidden = !application.action;
+    el('registration-action-retry').disabled = !application.action || application.actionBusy || !ready;
     el('registration-refresh').disabled = application.loading || !ready;
     el('registration-prev').disabled = application.loading || application.page <= 1;
     el('registration-next').disabled = application.loading || application.page >= application.last;
     el('registration-list').replaceChildren();
     application.items.forEach(function (item) {
-      var row = node('li', item.organization_name + ' · ' + item.site_name);
-      row.append(node('p', applicationText(item.status === 'pending' ? 'status_pending' : 'status_other')));
-      row.append(node('small', applicationText('reference') + item.id));
+      var organization = typeof item.organization_name === 'string' ? item.organization_name : '';
+      var site = typeof item.site_name === 'string' ? item.site_name : '';
+      var row = node('li', organization + ' · ' + site);
+      row.append(node('p', applicationText(statusLabel(item))));
+      if (typeof item.claimed_center_id === 'string' && item.claimed_center_id) row.append(node('p', applicationText('claimed') + item.claimed_center_id));
+      if (item.status === 'approved' && typeof item.center_id === 'string' && item.center_id) row.append(node('p', applicationText('named_center') + item.center_id));
+      var rationale = item.decision && typeof item.decision.rationale === 'string' ? item.decision.rationale.trim() : '';
+      if (rationale) {
+        var actionName = item.decision && item.decision.action;
+        var rationaleKey = ['approve', 'request_changes', 'reject', 'withdraw'].indexOf(actionName) >= 0 ? 'rationale_' + actionName : 'rationale_other';
+        row.append(node('p', applicationText(rationaleKey) + ' ' + rationale));
+      }
+      if (typeof item.id === 'string') row.append(node('small', applicationText('reference') + item.id));
+      if (!application.action && item.status === 'approved' && item.acceptance_required === true && !item.accepted_at) {
+        if (canAccept(item)) row.append(acceptControl(item));
+        else row.append(node('p', applicationText(/^[0-9]+$/.test(String(item.account_id || '')) && !sameAccount(item) ? 'accept_other' : 'accept_unavailable')));
+      }
+      if (!application.action && canWithdraw(item)) row.append(withdrawControl(item));
       el('registration-list').append(row);
     });
+  }
+  function acceptControl(item) {
+    var box = node('div', ''); box.className = 'registration-action';
+    box.append(node('p', applicationText('accept_hint')));
+    var button = node('button', applicationText('accept'));
+    button.type = 'button'; button.className = 'solid';
+    button.disabled = application.actionBusy || application.loading || !applicationReady();
+    button.addEventListener('click', function () { beginApplicationAction('accept', item); });
+    box.append(button);
+    return box;
+  }
+  function withdrawControl(item) {
+    var box = node('div', ''); box.className = 'registration-action';
+    var details = document.createElement('details');
+    var summary = document.createElement('summary'); summary.textContent = applicationText('withdraw'); details.append(summary);
+    var label = node('label', applicationText('withdraw_note'));
+    var note = document.createElement('textarea'); note.maxLength = 2000; note.rows = 2; note.value = application.notes[item.id] || '';
+    note.addEventListener('input', function () { application.notes[item.id] = note.value; });
+    label.append(note); details.append(label);
+    details.append(node('p', applicationText('withdraw_hint')));
+    var button = node('button', applicationText('withdraw_confirm'));
+    button.type = 'button'; button.className = 'ghost';
+    button.disabled = application.actionBusy || application.loading || !applicationReady();
+    button.addEventListener('click', function () { beginApplicationAction('withdraw', item, note.value.trim()); });
+    details.append(button); box.append(details);
+    return box;
+  }
+  function clearApplicationAction() {
+    if (application.owner) { try { sessionStorage.removeItem(applicationActionStorage(application.owner)); } catch (_) { /* A rejected action must not stay retryable. */ } }
+    application.action = null;
+  }
+  function beginApplicationAction(kind, item, rationale) {
+    if (application.action || application.actionBusy || !applicationReady() || !applicationVersion(item)) return;
+    if (kind === 'accept' && !canAccept(item)) return;
+    if (kind === 'withdraw' && !canWithdraw(item)) return;
+    var action = { owner:application.owner, id:item.id, kind:kind, version:item.version };
+    if (kind === 'withdraw' && rationale) action.rationale = rationale.slice(0, 2000);
+    try {
+      action.key = crypto.randomUUID();
+      sessionStorage.setItem(applicationActionStorage(application.owner), JSON.stringify(action));
+    } catch (_) { application.actionStatus = 'unsafe'; renderApplication(); return; }
+    application.action = action;
+    sendApplicationAction(action);
+  }
+  async function sendApplicationAction(action) {
+    if (!action || action.owner !== application.owner || !applicationReady() || application.actionBusy) return;
+    var generation = application.generation;
+    application.actionBusy = true; application.actionStatus = 'acting'; renderApplication();
+    try {
+      var body = { version:action.version };
+      if (action.kind === 'withdraw' && action.rationale) body.rationale = action.rationale;
+      var response = await fetch(apiOrigin + '/api/v1/center-applications/' + encodeURIComponent(action.id) + (action.kind === 'accept' ? '/acceptance' : '/withdrawal'), { method:'POST', credentials:'include', cache:'no-store', signal:AbortSignal.timeout(15000), headers:{Accept:'application/json', 'Content-Type':'application/json', 'X-CSRF-TOKEN':accountCsrf, 'Idempotency-Key':action.key}, body:JSON.stringify(body) });
+      var data = {};
+      try { data = await response.json(); } catch (_) { data = {}; }
+      if (generation !== application.generation) return;
+      if (!response.ok) {
+        if ([400,404,409,422].includes(response.status)) {
+          clearApplicationAction();
+          var code = data.error && data.error.code;
+          application.actionStatus = response.status === 404 ? 'action_unavailable' : code === 'center_unavailable' ? 'action_center_unavailable' : code === 'version_conflict' || code === 'invalid_transition' || response.status === 409 ? 'action_conflict' : 'action_rejected';
+        } else application.actionStatus = [401,403,419].includes(response.status) ? 'action_denied' : 'action_pending';
+        return;
+      }
+      if (!data.application || data.application.id !== action.id) throw new Error('Invalid receipt');
+      clearApplicationAction();
+      var confirmed = action.kind === 'withdraw' ? data.application.status === 'withdrawn' : !!(data.application.accepted_at || data.application.acceptance_required === false);
+      application.actionStatus = confirmed ? (action.kind === 'withdraw' ? 'action_withdrawn' : 'action_accepted') : 'action_unconfirmed';
+      var index = application.items.findIndex(function (item) { return item.id === data.application.id; });
+      if (index >= 0) application.items[index] = data.application;
+      await loadApplications();
+    } catch (_) { if (generation === application.generation) application.actionStatus = 'action_pending'; }
+    finally {
+      if (generation === application.generation) {
+        application.actionBusy = false; renderApplication();
+        if (application.actionStatus && application.actionStatus !== 'acting') el('registration-action-status').focus();
+      }
+    }
   }
   async function loadApplications() {
     if (!applicationReady() || application.loading) return;
@@ -761,10 +882,13 @@
       var invalid = Array.from(registrationForm.elements).filter(function (field) { return field.willValidate && !field.checkValidity(); });
       var latitude = registrationForm.elements.namedItem('latitude'), longitude = registrationForm.elements.namedItem('longitude');
       if (!!latitude.value !== !!longitude.value) invalid.push(latitude.value ? longitude : latitude);
+      var claim = registrationForm.elements.namedItem('claimed_center_id');
+      if (claim.value.trim() && !/^[a-z0-9][a-z0-9-]*$/.test(claim.value.trim())) invalid.push(claim);
       if (invalid.length) { applicationErrors(invalid.map(function (field) { return field.name; })); return; }
       var body = {};
       Array.from(registrationForm.elements).forEach(function (field) {
-        if (field.name) body[field.name] = field.type === 'checkbox' ? field.checked : field.value.trim() || null;
+        if (!field.name || (field.name === 'claimed_center_id' && !field.value.trim())) return;
+        body[field.name] = field.type === 'checkbox' ? field.checked : field.value.trim() || null;
       });
       try {
         var pending = { owner:application.owner, key:crypto.randomUUID(), body:body };
@@ -782,16 +906,20 @@
         if ([400,404,409,422].includes(response.status)) {
           try { sessionStorage.removeItem(applicationStorage(application.owner)); } catch (_) { /* A rejected replay remains safe if storage is unavailable. */ }
           application.pending = null;
-          application.status = 'rejected';
+          var code = data.error && data.error.code;
+          application.status = code === 'center_unavailable' ? 'claim_unavailable' : 'rejected';
           application.busy = false;
           renderApplication();
           if (response.status === 422) applicationErrors(Object.keys(data.error && data.error.details || {}));
+          else if (code === 'center_unavailable') applicationErrors(['claimed_center_id']);
         } else application.status = [401,403,419].includes(response.status) ? 'denied' : 'pending';
         return;
       }
       if (!data.application || typeof data.application.id !== 'string' || data.application.status !== 'pending') throw new Error('Invalid receipt');
       try { sessionStorage.removeItem(applicationStorage(application.owner)); } catch (_) { /* Replaying an acknowledged key cannot create another application. */ }
-      application.pending = null; application.status = 'saved'; application.reference = data.application.id;
+      var claimed = submission.body.claimed_center_id;
+      application.pending = null; application.reference = data.application.id;
+      application.status = claimed && data.application.claimed_center_id !== claimed ? 'claim_unconfirmed' : claimed ? 'saved_claim' : 'saved';
       registrationForm.reset(); application.page = 1;
       el('registration-result').focus();
       await loadApplications();
@@ -799,6 +927,7 @@
     finally { if (generation === application.generation) { application.busy = false; renderApplication(); } }
   });
   el('registration-refresh').addEventListener('click', loadApplications);
+  el('registration-action-retry').addEventListener('click', function () { sendApplicationAction(application.action); });
   ['prev','next'].forEach(function (direction) { el('registration-' + direction).addEventListener('click', function () { application.page += direction === 'next' ? 1 : -1; loadApplications(); }); });
 
   var stored = readStored();
