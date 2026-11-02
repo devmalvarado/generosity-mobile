@@ -1,6 +1,6 @@
 # Generosity social sign-in
 
-Decision: 2026-10-31. Google and **Sign in with Apple** are the initial implemented social providers, pending live credentials. Apple is the user-facing name, not “iCloud login”. The user subsequently added Facebook to planned scope; Microsoft remains deferred. Identity is exclusively for Generosity web, Android and iOS; it is not SSO for the institute's other platforms.
+Decision: 2026-10-31. Google and **Sign in with Apple** are the initial implemented social providers. Google credentials were activated on 2026-11-02; see the live acceptance checkpoint below. Apple credentials remain pending. Apple is the user-facing name, not “iCloud login”. The user subsequently added Facebook to planned scope; Microsoft remains deferred. Identity is exclusively for Generosity web, Android and iOS; it is not SSO for the institute's other platforms.
 
 ## Planned Facebook and mobile contact extension
 
@@ -127,12 +127,101 @@ No Google or Apple credentials were available during implementation. Do not put 
    ```
 
    Keep the session domain unset: the API cookie must not be shared with unrelated sites. Add development origins explicitly only in a development environment. Run the existing scheduler cron; no resident PHP worker is needed for this flow.
-3. In a Generosity Google Cloud project, configure the OAuth consent screen, production domain and required privacy/terms URLs. Create a **Web application** OAuth client. Register exactly `https://api.generosity.global/auth/google/callback`. Supply its ID/secret to the backend; scopes are `openid email profile`. While the consent configuration is in testing, authorize the intended test users.
+3. In a Generosity Google Cloud project, configure the OAuth consent screen, production domain and required privacy/terms URLs. Create a **Web application** OAuth client. Register exactly `https://api.generosity.global/auth/google/callback`. Supply its ID/secret to the backend; scopes are `openid email profile`. Google exempts requests limited to these basic identity scopes from the testing-user allowlist and seven-day authorization expiry. Testing status is therefore not an application-level access restriction. Reassess this if scopes change; see [Google's audience rules](https://support.google.com/cloud/answer/15549945?hl=en).
 4. In Apple Developer, enable Sign in with Apple on the primary app ID and create/group the **Services ID** used by this hosted browser flow. Configure `api.generosity.global` and return URL `https://api.generosity.global/auth/apple/callback`. Create the signing key, keep its `.p8` outside the web root, and configure Team ID, Key ID and Services ID. Configure approved email sender domains for Apple's private email relay before relying on recovery mail. Live Apple acceptance is required on both mobile platforms and web.
 5. Native builds default to `https://api.generosity.global`. Android accepts an HTTPS-only `-PgenerosityApiUrl=https://...` build property. iOS uses `GENEROSITY_API_URL` from `project.yml`/Xcode build settings. No provider secrets belong in either app.
 6. Redact authorization callback query strings, form bodies and handoff codes in hosting/CDN access logs. Application exception redaction cannot remove data already logged by infrastructure. Confirm signing keys, `.env` and Composer sources are not publicly readable.
 
 The already-existing `origin/main:.github/workflows/publish-portal.yml` remains separate: it stages only the landing HTML/CSS/JS and three explicit public asset files for FTPS. This change modifies the existing portal files, not that workflow, and does not publish the API or the repository. No push/merge/deployment was performed for this integration.
+
+## Google activation checkpoint — 2026-11-02
+
+The existing `generosity-v01` Google Cloud project already hosts the Android Maps
+SDK configuration. Its Google Auth Platform was not configured when inspected.
+After explicit owner approval, an Owner-role invitation was sent to the
+institute-designated Google account. The owner completed the required two-step
+verification and accepted the invitation. Access to `generosity-v01` and OAuth
+configuration with that institutional account were verified. The existing
+personal owner and service-account grants were preserved.
+
+Branding was configured while signed in with the institutional account: Google's
+support-email selector accepts the active account or a Google Group that account
+manages, not an arbitrary contact address. Following explicit approval of Google's
+API Services User Data Policy and client creation, these values were saved:
+
+| Field | Value |
+| --- | --- |
+| App name | `Generosity` |
+| Audience | External; Testing |
+| Support/developer contact | Institute-designated Google account |
+| Homepage | `https://generosity.global/` |
+| Privacy policy | `https://api.generosity.global/legal/privacy?locale=es` |
+| Terms | `https://api.generosity.global/legal/terms?locale=es` |
+| Authorized domain | `generosity.global` |
+| Existing logo asset | `assets/brand/web/icon-512.png` |
+| Client type | Web application, used only by the backend |
+| Client name | `Generosity backend` |
+| Authorized redirect URI | `https://api.generosity.global/auth/google/callback` |
+| Requested scopes | `openid email profile`; equivalent `userinfo.email` / `userinfo.profile` entries saved in Data Access, with no sensitive or restricted scopes |
+| Authorized JavaScript origins | None required for this server authorization-code flow |
+
+The legal endpoints returned HTTP 200 and API health returned `ready` during
+preparation. Google's [branding requirements](https://support.google.com/cloud/answer/15549049?hl=en)
+also require domain verification and verification of displayed branding where
+applicable; uploading the logo does not establish approval.
+
+The `Generosity backend` web client was created and its credential download was
+transferred directly over SSH to the institute's private API application. Only
+`GOOGLE_CLIENT_ID` and `GOOGLE_CLIENT_SECRET` were changed in the server environment;
+Laravel configuration was refreshed and compared with the uploaded credential
+without printing secret values. The environment and configuration cache are
+owner-only. The temporary local download was deleted after successful server
+verification. No provider secrets were added to the repository or native clients.
+
+Rollback: the previous environment is preserved on the server at
+`private/.google-oauth.p5SVFK/env.before-google`, relative to the API domain directory.
+Restore it with owner-only permissions and rebuild Laravel's configuration cache
+to disable this activation. Do not download or publish that backup.
+
+Verified after activation: API health is HTTP 200 / `ready`, `/.env` is HTTP 403,
+the private credential path is HTTP 404, and the hosted Spanish account entry
+enables **Continue with Google** while Apple remains disabled. Google Console
+still reports External / Testing. The basic identity-scope exception described
+above means Testing is not a closed pilot access control.
+
+The first live attempt exposed a CSP restriction: Chrome blocked the form POST's
+redirect because `form-action` allowed only the API origin. The correction adds
+only `https://accounts.google.com` and `https://appleid.apple.com`; scripts,
+framing, base URLs, cookies and CSRF protections remain unchanged. See
+[MDN's redirect behavior note](https://developer.mozilla.org/en-US/docs/Web/HTTP/Reference/Headers/Content-Security-Policy/form-action).
+The regression assertion failed before the change and passed afterward. The
+complete local backend suite passed: **75 tests / 5,187 assertions**. Local tests
+use isolated MariaDB and simulated provider responses, never live credentials.
+
+Only that `form-action` replacement was published, with original-file hash
+verification, PHP syntax validation and atomic replacement. The prior production
+`style-src 'unsafe-inline'` was preserved; local source already additionally
+permits same-origin styles from the separate design-system work. Public HTTP
+checks confirmed the new policy and API `ready`. The private original is
+`private/.google-oauth.p5SVFK/BrowserAuthBoundary.before-csp.php`; restoring that
+file rolls back this code correction independently of the provider environment.
+
+After the correction, Chrome reached Google's account chooser. The owner
+completed Google's passkey challenge personally, then the approved basic-profile
+consent returned to the landing, which displayed the signed-in account. Signing
+out returned the landing to guest mode; a second Google sign-in restored the same
+account. A read-only, account-scoped backend check confirmed one verified user,
+one Google identity and zero center memberships. No password, passkey, provider
+token or authorization code was copied into the evidence.
+
+The landing separately displayed a failure loading center applications and the
+center workspace. Google authentication and logout succeeded despite those
+messages; this does not establish portal-workspace acceptance.
+
+Real provider cancellation, linking, native return, restart and expiry remain
+unverified. The physical iPhone 14 Pro was paired but screen-locked when native
+acceptance was attempted; no Android device was connected. Foundation task 18.5
+remains open; Apple credentials and acceptance also remain pending.
 
 ## Acceptance and test cases
 

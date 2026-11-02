@@ -84,6 +84,10 @@ The backend SHALL exchange codes at fixed Google/Apple endpoints and verify allo
 - **WHEN** the signature, issuer, audience, nonce, browser binding or attempt expiry is invalid
 - **THEN** the backend rejects authentication without creating an account, linking an identity or granting a session
 
+#### Scenario: Hosted form redirects to a configured provider
+- **WHEN** the user submits the protected hosted form for Google or Apple
+- **THEN** the browser security policy permits the redirect to that provider's exact HTTPS authorization origin, while keeping same-origin form submission, CSRF protection and the existing script and framing restrictions; arbitrary external origins are not allowed
+
 ### Requirement: Stable Identity and Explicit Linking
 Identity SHALL use provider and stable subject, never email or phone alone. New accounts SHALL require email verified by a trusted provider claim or Generosity's email-verification flow before protected operations. Apple private-relay addresses SHALL be accepted. Linking SHALL require an explicit action in a Generosity session authenticated within five minutes. Identity ownership SHALL NOT move between accounts.
 

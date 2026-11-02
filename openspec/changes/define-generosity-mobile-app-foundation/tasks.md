@@ -324,6 +324,18 @@ screen-reader, text-size/locale and failure-state acceptance in 17.10 stays open
 - [x] 18.3 Implement HttpOnly browser sessions, exact-origin CORS, CSRF and mobile-first account entry in the existing portal; test guest, signed-in, unavailable and failed-logout states in Chromium/WebKit.
 - [x] 18.4 Implement native PKCE handoff and secure session storage adapters; remove Android's fixed sample login and gate remote accounts from demo contribution writes; compile both clients and test PKCE/callback/shared-state boundaries.
 - [ ] 18.5 Configure Google Cloud OAuth consent/client credentials and Apple Developer Services ID/key/domain; complete live authorization, cancellation, account linking, private relay, restart, expiry and logout on web and physical Android/iOS devices.
+
+18.5 partial activation (2026-11-02): confirmed institutional account access to
+`generosity-v01`; saved approved OAuth branding, legal links and basic identity
+scopes; created the web client with the exact backend callback; installed Google
+credentials only on the private server and verified API health and enabled hosted
+entry. Corrected and published the exact-provider CSP form redirect allowance;
+75 backend tests / 5,187 assertions passed. Real Google consent, web sign-in,
+logout and repeat sign-in passed; one verified account, one Google identity and
+no center roles were confirmed. External / Testing remains selected. Live
+cancellation/linking, native acceptance and Apple configuration remain pending. See the
+[activation checkpoint](../../../docs/social-sign-in.md#google-activation-checkpoint--2026-11-02).
+
 - [x] 18.6 Deploy the API to api.generosity.global with HTTPS, secure host-only sessions, exact Generosity CORS/stateful origins, real database/SMTP and scheduled auth cleanup; verify the existing main-only landing workflow remains separate.
 
 18.6 evidence, rechecked 2026-11-01: health is 200, `/.env` is 403, and the cron scripts are not web-reachable. The session cookie has no `Domain`, and is `Secure`, `HttpOnly` and `SameSite=Lax`. CORS allows only `https://generosity.global` with credentials. `routes/console.php` schedules hourly handoff cleanup plus daily Sanctum and reset pruning; hPanel runs that scheduler every minute. Hostinger SMTP delivered one approved test message to Gmail Inbox. The subsequent [account-email review](../../../docs/testing/account-email-journeys.md) passed live backend/security journeys; task 7.17 now closes their user-facing gaps locally; task 7.18 retains publication and production/device acceptance.

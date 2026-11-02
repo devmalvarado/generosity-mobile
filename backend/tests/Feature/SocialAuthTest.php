@@ -60,6 +60,7 @@ class SocialAuthTest extends TestCase
                 ->assertDontSee('id="new-name"', false);
             $this->assertStringContainsString("style-src 'self' 'unsafe-inline'", $response->headers->get('Content-Security-Policy'));
             $this->assertStringContainsString("img-src 'self'; font-src 'self'", $response->headers->get('Content-Security-Policy'));
+            $this->assertStringContainsString("form-action 'self' https://accounts.google.com https://appleid.apple.com;", $response->headers->get('Content-Security-Policy'));
         }
     }
 
@@ -239,6 +240,9 @@ class SocialAuthTest extends TestCase
     private function begin(array $context = [], string $provider = 'google'): array
     {
         $response = $this->post('/auth/'.$provider.'/start', $context + ['adult_confirmed' => true, 'terms_accepted' => true, 'privacy_acknowledged' => true, 'policy_version' => \App\Services\AccountPolicy::VERSION, ])->assertRedirect();
+        preg_match('/(?:^|; )form-action ([^;]+)/', $response->headers->get('Content-Security-Policy'), $directive);
+        $destination = parse_url($response->headers->get('Location'));
+        $this->assertContains($destination['scheme'].'://'.$destination['host'], explode(' ', $directive[1]));
         parse_str(parse_url($response->headers->get('Location'), PHP_URL_QUERY), $query);
         $cookie = $response->getCookie($this->cookieName($query['state']));
         $this->assertTrue($cookie->isSecure());

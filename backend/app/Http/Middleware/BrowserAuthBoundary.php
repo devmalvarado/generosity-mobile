@@ -20,7 +20,8 @@ class BrowserAuthBoundary
         $response->headers->set('Cache-Control', 'no-store');
         $response->headers->set('Referrer-Policy', 'no-referrer');
         $response->headers->set('X-Content-Type-Options', 'nosniff');
-        $response->headers->set('Content-Security-Policy', "default-src 'none'; img-src 'self'; font-src 'self'; style-src 'self' 'unsafe-inline'; form-action 'self'; frame-ancestors 'none'; base-uri 'none'");
+        // Chrome also checks form-action on the POST redirect to the identity provider.
+        $response->headers->set('Content-Security-Policy', "default-src 'none'; img-src 'self'; font-src 'self'; style-src 'self' 'unsafe-inline'; form-action 'self' https://accounts.google.com https://appleid.apple.com; frame-ancestors 'none'; base-uri 'none'");
 
         return $response;
     }
