@@ -67,15 +67,42 @@ replace iOS sample discovery; the later task 5.4 update records that integration
 - [x] 5.3 Build the iOS discovery map and list screens using SwiftUI.
 - [x] 5.4 Connect iOS discovery/details to SharedBridge with bounded subscriptions; test equivalent inputs on both platforms and repeated navigation without duplicate actions.
 - [x] 5.5 Verify anonymous users can browse, filter, and open center details without registration.
-- [ ] 5.6 Feed permission-gated current location into Android discovery and test browsing after denial or revocation.
-- [ ] 5.7 Feed permission-gated current location into iOS discovery and test browsing after denial or revocation.
+- [x] 5.6 Feed permission-gated current location into Android discovery and test browsing after denial or revocation.
+- [x] 5.7 Feed permission-gated current location into iOS discovery and test browsing after denial or revocation.
 - [x] 5.8 Add Android manual place search without GPS; test selected-origin distance labels, empty/error results and preserved filters.
 - [ ] 5.9 Add iOS manual place search without GPS; test selected-origin distance labels, empty/error results and preserved filters.
 - [ ] 5.10 Show Android phone/email/web actions; test missing fields, unsupported schemes, unavailable handlers and anonymous access.
 - [ ] 5.11 Show iOS phone/email/web actions; test missing fields, unsupported schemes, unavailable handlers and anonymous access.
-- [x] 5.12 Give every Android/iOS result direct detail access; open the exact selected detail, synchronize card/pin selection and frame catalog coordinates or the selected center. Validate non-first cards, list/map transitions and far-away/empty results; keep live Google-provider acceptance separate until a key is configured.
+- [x] 5.12 Give every Android/iOS result direct detail access; open the exact selected detail, synchronize card/pin selection and frame catalog coordinates or the selected center. Validate non-first cards, list/map transitions and far-away/empty results; track remaining live Google-provider acceptance separately in 5.2.
 
 - [x] 5.13 Keep map/search/category controls fixed above independently scrolling cards; open details separately and preserve selection/list position on Back. Validate native UI tests and manual geocoding; retain task 5.2 for real Google-provider acceptance.
+- [x] 5.14 Open the selected center in Google Maps and native/device maps from iOS/Android details; validate exact coordinates, localization, invalid destinations, unavailable handlers and permission-independent access.
+
+Task 5.6 update (2026-11-02): native Android single-fix location now drives the
+shared 10 km filter, nearest ordering, map origin and distance labels. Automatic
+entry uses existing foreground permission; explicit requests accept approximate
+access. Denial, disabled services and timeout retain manual browsing; returning
+from Settings retries, and manual choices cancel/ignore late fixes. Eight unit
+tests and two emulator UI cases passed, together with the eight map-discovery
+regressions. Native approximate-permission acquisition, automatic entry and
+quick restart with the recent OS fix were verified using emulator GPS and live
+Google tiles. Older task-5.6 pending notes below are superseded by this update.
+Physical Android GPS validation remains a release check; see
+[location implementation](../../../docs/native-maps.md#android-current-location--2026-11-02).
+
+Task 5.14 update (2026-11-01): iOS uses native Apple map items and Google HTTPS
+URLs; Android uses geo intents with an HTTPS fallback plus an explicit Google
+action. Two iOS destination tests, two iOS UI tests (including the denied-GPS
+explanation), and four Android instrumented tests passed. Android UI tests capture
+real detail-button intents for first/non-first centers in both languages. SDK
+boundary and localization checks pass. See [external map actions](../../../docs/native-maps.md#external-map-actions--2026-11-01).
+
+Physical follow-up: both iPhones received the signed update; Google Maps on the
+14 Pro displayed the chosen center's coordinate marker. Apple's first-run setup
+still prevents final destination acceptance. Automatic GPS refresh now preserves
+an open detail, including an expired/moved origin, while catalog removals and
+explicit area changes remain authoritative. Two shared regressions passed as
+part of 75 JVM tests. See [physical QA and limitations](../../../docs/testing/native-visual-verification.md#physical-ios-follow-up--2026-11-01).
 
 Tasks 5.8–5.9 and 5.13 update (2026-11-01): both native apps now use a fixed
 map/header, separately scrolling cards and full-screen details with Back.
@@ -85,8 +112,34 @@ contract/UI tests cover successful, empty and failed lookup without GPS, plus
 clearing the origin. iOS live Coyoacán lookup, distance labels, category filtering
 and card/pin/detail navigation were verified in the simulator. Task 5.9 remains
 open specifically for deterministic iOS lookup-error/timeout acceptance; its
-implementation is present. Current GPS and real Google tiles remain separate.
+implementation is present. Android GPS and real Google tiles remain separate.
 See [behavior and evidence](../../../docs/native-maps.md).
+
+Task 5.7 update (2026-11-01): iOS now obtains a foreground, permission-gated
+Core Location fix and uses the shared 10 km discovery filter and distance order.
+Map/list show Use my location, an origin marker, localized distances and
+approximate/denied/unavailable states. Manual search cancels pending acquisition;
+coordinates remain session-only. Seven location tests, three map tests and three
+simulator UI tests passed, including grant/denial dialogs, revocation, stale fixes,
+timeout, manual override, language switching and existing card/pin/detail flows.
+The signed update is installed and launched on both connected iPhones. Physical
+iPhone 14 Pro acceptance confirmed nearby distances and matching map/list results
+after location permission was enabled. The iPhone 17's GPS scope, nearby distances,
+map/list and second-center detail were subsequently observed through QuickTime
+in light/English appearance. Live Coyoacán lookup and return to the device origin
+also passed on the dark/Spanish iPhone 14 Pro. Android task 5.6 and iOS
+lookup-error task 5.9 remain open.
+
+Task 5.2 live-provider update (2026-11-01): the locally configured development
+key is restricted to Maps SDK for Android and the matching package/debug SHA-1.
+APK build, signature and provider-boundary checks pass. Android 16 Google APIs
+remains affected by service/keyboard ANRs; Android 14 Google APIs responds.
+Its legacy-renderer crash was fixed with the optional Apache HTTP manifest
+library. Live tiles/attribution, pan/zoom, card/pin synchronization, non-first
+detail and Back preserving selection/list position passed visually on Android
+14. Live provider/network failure and recovery, filtered map/list parity and
+remaining device/inset acceptance keep 5.2/17.4 open. Android GPS remains in 5.6;
+see [setup evidence](../../../docs/native-maps.md#android-development-configuration-verified--2026-11-01).
 
 Task 5.2 implementation update (2026-10-26): the Google adapter, neutral renderer,
 configuration, boundary guard and automated contract/fallback tests now exist.
@@ -257,6 +310,12 @@ The Kotlin-specific evidence remains available on the preserved mockup branch.
 - [x] 17.11 Consolidate native/web/account colors, font configuration and common dimensions in one source; migrate existing components without changing navigation or business rules.
 - [x] 17.12 Establish editable vector logo masters, shared asset export and stale-output checks in native builds, web tests and publication workflows.
 - [x] 17.13 Verify generator edits/contrast/stale outputs, Android/iOS compilation and UI regression checks, portal rendering and hosted account CSS/CSP; record physical-device limitations separately. Evidence: `docs/testing/design-system.md`.
+
+Physical visual follow-up (2026-11-01): dark/Spanish iPhone 14 Pro and
+light/English iPhone 17 map/list/detail were inspected. The area-search button's
+dark-mode foreground was corrected using the existing design-system role and
+verified on the 14 Pro. This adds targeted real-device evidence to 17.13; full
+screen-reader, text-size/locale and failure-state acceptance in 17.10 stays open.
 
 ## 18. Generosity-Only Social Sign-In
 

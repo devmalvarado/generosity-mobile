@@ -1,5 +1,109 @@
 # Foundation Implementation Audit
 
+## Android current-location discovery — 2026-11-02
+
+Task 5.6 is implemented with native foreground single-fix acquisition, a 15-second
+timeout and the existing shared 10 km discovery filter. Automatic entry respects
+existing permission; explicit requests accept approximate access. Permission
+denial, disabled services and stale/invalid samples leave manual discovery usable;
+Settings return retries. Manual choices and backgrounding cancel requests, late
+callbacks cannot replace a manual area, and origin refresh preserves open details.
+Coordinates remain in memory and are not sent to Generosity's API or saved.
+
+Eight new unit tests, two new Android 14 Compose cases and eight map-discovery
+regressions passed. APK assembly, lint, localization and provider-boundary checks
+passed. Physical Android GPS and vendor-specific permission behavior remain release
+acceptance items; the foundation remains open. See
+[implementation and evidence](../../../docs/native-maps.md#android-current-location--2026-11-02).
+
+Manual native-provider checks also passed with simulated GPS and approximate
+permission: system permission flow, live map origin/nearby cards, automatic entry
+and quick restart using a fresh OS cache. Stale/throttled results show unavailable
+feedback. This update supersedes older notes below that list task 5.6 as pending.
+
+## Android Google Maps development setup — 2026-11-01
+
+The development key is configured in ignored local properties. Its Google Cloud
+application/API restrictions and the debug APK's package/signing certificate
+match. APK assembly, signature verification and the map-provider boundary check
+passed. The owner approved the SDK license and the Google APIs ARM64 emulator
+was installed with the app. After a software-rendering System UI ANR, a cold boot
+with host GPU and reduced resolution reached the launcher. Input remained
+unresponsive according to the owner; Android service/keyboard ANRs persisted.
+The alternative Android 14 Google APIs ARM64 emulator responds correctly.
+Its first live map exposed Maps SDK 20's missing optional Apache HTTP library
+with older Play Services. Declaring `org.apache.http.legacy` in the manifest
+fixed that crash; rebuild, merged-manifest and boundary checks passed.
+Live tiles/attribution, pan/zoom, card-to-pin selection, another pin revealing
+its card, non-first-center details and Back retaining selection/list position
+were then visually verified. The updated process log showed no fatal exception
+or Maps authorization failure.
+See [configuration and evidence](../../../docs/native-maps.md#android-development-configuration-verified--2026-11-01).
+
+Tasks 5.2/17.4 remain open for live provider/network failure and recovery,
+filtered map/list parity and remaining device/inset acceptance. Android GPS
+(5.6), physical Android validation and release signing configuration are not
+completed by this development-key setup. No credential value is committed.
+
+## Physical iOS appearance and GPS/detail regression — 2026-11-01
+
+The physical iPhone 14 Pro (dark/Spanish) and iPhone 17 (light/English) were
+inspected with live nearby data. Map/list/detail, wordmark variants and readable
+native controls were checked; the 14 Pro also exercised guest profile/history,
+Settings, live Coyoacán search and return to the device origin. Evidence and
+device-specific coverage are in [physical visual verification](../../../docs/testing/native-visual-verification.md#physical-ios-follow-up--2026-11-01).
+
+The search submit button now uses the design system's `onAccent` foreground.
+An expired GPS fix on foreground return no longer clears an open center detail:
+automatic origin updates preserve selection, refresh from the catalog and
+discard removed records; manual area changes still clear selection. This
+contract is recorded in the discovery spec. Two regression tests were added;
+all 75 shared JVM tests passed, along with Android Kotlin compilation, shared
+framework generation and signed iOS device build/verification. Both phones
+received the update and were observed running it. These targeted checks do
+not close the full task 17.10 acceptance matrix or Apple's first-run map setup.
+On the updated 14 Pro, Google Maps displayed the selected hospital's marker;
+returning after more than 120 seconds preserved its full detail, confirming
+the expired-fix regression on physical hardware.
+
+## External map actions and denied-location feedback — 2026-11-01
+
+Task 5.14 adds Google Maps and Apple Maps actions to iOS center details, plus
+Google Maps and device-map actions on Android. Coordinates are validated and
+passed from the selected center, without device GPS, credentials or side effects
+on visits/contributions. Android falls back to an HTTPS map when no geo handler
+exists. Missing handlers leave the detail usable with localized feedback.
+
+Eight targeted tests passed: two iOS destination checks, two simulator UI checks
+and four Android instrumented checks. Localization and map-provider boundaries
+also passed. Tapping Use my location after denial now explicitly explains how
+to enable access; the phone's initial denied permission caused the reported no-op.
+Physical iPhone 14 Pro browsing subsequently showed real nearby distances and
+consistent map/list results after authorization. See [technical scope](../../../docs/native-maps.md#external-map-actions--2026-11-01).
+The signed update is installed on both iPhones. Physical iPhone 14 Pro validation
+confirmed Google Maps opens the selected center's coordinate marker. Apple Maps
+launches but stops at its first-run introduction; completion of that introduction
+remains a manual acceptance item. The iPhone 17's map/list and second-center
+detail were subsequently observed through QuickTime in light appearance.
+
+## iOS current-location discovery — 2026-11-01
+
+Task 5.7 now uses the existing `PermissionService` to obtain a single authorized
+device fix and pass it to shared nearby discovery. The same origin drives map,
+list, 10 km filtering, distance ordering and localized labels. Failure and denial
+preserve manual browsing; switching to a manual area ignores late GPS callbacks.
+No new dependency, background tracking, location persistence or API upload was added.
+
+Thirteen targeted tests passed in the iOS 18.6 simulator, plus localization and
+strict OpenSpec validation. The signed build was verified and installed on both
+connected iPhones, preserving data. Both launch successfully; a subsequent iPhone
+14 Pro check confirmed actual nearby results after permission was enabled.
+The iPhone 17's GPS scope, nearby distances, map/list and second-center detail
+were also observed through QuickTime; Device Hub cannot mirror that OS version.
+See [technical limits and test scope](../../../docs/native-maps.md#ios-current-location--2026-11-01).
+Android GPS, the remaining Google-provider acceptance and iOS manual-lookup error cases
+remain separate pending tasks; the foundation is not ready for archive.
+
 ## Shared design system and simulator validation — 2026-11-01
 
 The design source, SVG masters, platform generation, native/web consumers and

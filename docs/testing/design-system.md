@@ -30,8 +30,19 @@ Reproduce generation checks using the [design workflow](../design-system.md).
 at `127.0.0.1:8088` and the portal's installed Playwright dependencies. It only
 reads hosted pages; it neither submits credentials nor sends mail.
 
-Physical devices, all screen-reader journeys, newly supplied/bundled font
+At the initial simulator review, physical devices, all screen-reader journeys, newly supplied/bundled font
 files, real Google map tiles and production cache/deployment behavior were not
 revalidated. The larger visual acceptance matrix remains open in foundation
 task 17.10. Native releases still need rebuilding and distribution; web assets
 need their ordinary separate portal/API publication.
+
+## Physical iOS follow-up — 2026-11-01
+
+The iPhone 14 Pro (dark, Spanish) and iPhone 17 (light, English) were subsequently
+inspected with the live catalog. The theme follows each device's appearance;
+both wordmark variants, cards, category colors and center details were readable.
+The area-search submit button needed the existing `GenPalette.onAccent` role
+instead of the platform's default foreground; the corrected enabled button
+was visually checked on the physical iPhone 14 Pro. No new theme token was needed.
+See [physical-device journeys and limits](native-visual-verification.md#physical-ios-follow-up--2026-11-01).
+This targeted check does not close the screen-reader/full-matrix task 17.10.

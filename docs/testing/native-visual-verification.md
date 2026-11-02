@@ -173,3 +173,54 @@ xcodebuild -project iosApp/Generosity.xcodeproj -scheme Generosity \
 iOS keeps screenshots as XCTest attachments in the resulting `.xcresult`.
 Use `simctl ui <device> appearance` and `content_size` to record/change test
 conditions, then restore them. Do not interact with a device while tests run.
+
+## Physical iOS follow-up — 2026-11-01
+
+Targeted acceptance used the live catalog in anonymous mode on the owner's
+connected phones. Appearance and language preferences were preserved. This
+entry supersedes earlier physical-device limitations only for the cases below;
+the historical simulator fixtures/results above remain a separate baseline.
+
+| Device | Conditions | Observed journeys |
+| --- | --- | --- |
+| iPhone 14 Pro / iOS 27.0.1 | Dark, Spanish; Device Hub control | Current-location map/list and distance labels; independently scrolling cards; a later card's detail and Back; guest profile/history and Settings; live Coyoacán area lookup and return to device location; external Google Maps destination |
+| iPhone 17 / iOS 26.6.1 | Light, English; QuickTime preview, owner-operated taps | Current-location map/list and distance labels; second card opens Hospital Zambrano Hellion TecSalud detail; long heading/address, category, contact/map actions and empty needs; updated build launches to the nearby map |
+
+Both use the device appearance: white wordmark on dark surfaces and black
+wordmark on light surfaces. Category colors, body text, map attribution and
+navigation labels remained readable at the devices' existing text sizes.
+The 14 Pro retained its map/header while only the cards scrolled; selecting a
+later card opened the correct detail and Back retained selection/list position.
+No calls, visit reports, donations or account mutations were submitted.
+
+Two defects were corrected during this check:
+
+1. The enabled area-search button used white text over the pale dark-mode accent.
+   It now uses the existing `GenPalette.onAccent` role. The signed update was
+   installed and the corrected dark text was observed on the physical 14 Pro.
+2. Returning from an external app after the GPS fix expired could clear the
+   selected center and leave an empty detail. This was observed during the 17's
+   Apple Maps journey. Automatic origin refresh now preserves the selected
+   detail while refreshing its catalog data, even outside the new search radius.
+   Explicit area changes still clear selection; removed catalog centers are
+   not retained. Two shared regression tests cover these boundaries.
+
+Verification after the changes: 75 shared JVM tests passed (zero failures,
+errors or skipped tests), including both new regressions; Android Kotlin
+compilation and shared XCFramework generation passed. The signed iOS device
+build and strict code-signature verification passed. The update was installed
+on both phones without uninstalling or clearing their data. The 14 Pro's
+updated detail opened the hospital's coordinate marker in installed Google Maps.
+After leaving Generosity in the background for more than 120 seconds (the fix's
+maximum age), tapping the system return link preserved the hospital's full detail
+on the 14 Pro instead of showing the former empty state.
+The 17 initially locked before launch, then the owner unlocked/opened it and
+its updated nearby map was independently observed through QuickTime.
+
+Apple Maps reached first-run setup (observed on the 14 Pro; reported by the
+owner on the 17). Setup/privacy permission was left unchanged, so Apple's final
+destination rendering remains unverified. Android hardware/live Google tiles,
+VoiceOver/TalkBack journeys, expanded text-size/locale combinations and iOS
+lookup errors/timeouts were not covered here. Tasks 17.10, 5.2, 5.6 and 5.9
+remain open. No screenshot containing the owner's location or personal device
+content is committed as a repository baseline.
