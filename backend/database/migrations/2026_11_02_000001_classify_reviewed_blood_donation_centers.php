@@ -51,19 +51,22 @@ return new class extends Migration
 
     public function up(): void
     {
-        $this->classify(true);
+        $this->classify(true, self::IDS);
     }
 
     public function down(): void
     {
-        $this->classify(false);
+        $audit = DB::table('operator_audits')->where('operator', 'migration-blood-donation-category')
+            ->where('action', 'blood_category_added')->orderByDesc('id')->first();
+        $changed = $audit ? json_decode($audit->details, true, 512, JSON_THROW_ON_ERROR)['previousCategories'] : [];
+        $this->classify(false, array_keys($changed));
     }
 
-    private function classify(bool $add): void
+    private function classify(bool $add, array $ids): void
     {
-        DB::transaction(function () use ($add) {
+        DB::transaction(function () use ($add, $ids) {
             $before = [];
-            foreach (Center::whereIn('id', self::IDS)->lockForUpdate()->get() as $center) {
+            foreach (Center::whereIn('id', $ids)->lockForUpdate()->get() as $center) {
                 $details = $center->details;
                 $categories = $details['categories'];
                 if (! in_array('health', $categories, true) || in_array('blood_donation', $categories, true) === $add) {
