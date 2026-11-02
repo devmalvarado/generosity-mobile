@@ -7,9 +7,15 @@ Classify centers with stable localized category codes and keep classification di
 ### Requirement: Stable multi-category classification
 The catalog SHALL support approved stable codes with Spanish/English labels for the requested foster-home, nursing-home, disability, addictions, health, community-kitchen, blood-donation, migrant-shelter, homeless-shelter, medical-dispensary and training/education categories. Existing categories SHALL remain readable through a versioned migration. Multiple categories SHALL be allowed; category membership SHALL NOT certify service capacity, medicine authorization or official verification.
 
-#### Scenario: Blood donation is distinct
+#### Scenario: Biological classification does not imply a service
+- **GIVEN** blood is a connective tissue
+- **WHEN** blood and organ/tissue donation appear as separate filters
+- **THEN** the distinction describes services and does not imply that blood is not a tissue
+- **AND** a center offering both services can carry both codes when supported by source evidence
+
+#### Scenario: Blood donation is a specific service
 - **WHEN** a center is classified as blood donation
-- **THEN** discovery shows that localized category without relabeling it as organ/tissue donation or assuming that it accepts donors at all hours
+- **THEN** discovery shows that localized category without automatically classifying it as an organ or other-tissue donation service or assuming that it accepts donors at all hours
 
 #### Scenario: Blood filter uses explicit source classification
 - **WHEN** a user selects `blood_donation` (Donación de sangre / Blood donation)

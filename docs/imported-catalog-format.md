@@ -142,7 +142,11 @@ Categories:
 - `vulnerable_families`
 - `organ_tissue_donation`
 
-`blood_donation` is distinct from organ/tissue donation. The 39 reviewed blood
+Blood is a connective tissue. `blood_donation` and `organ_tissue_donation` are
+separate service filters, not mutually exclusive biological classifications:
+a blood bank is not automatically an organ or other-tissue donation service.
+A center can have both codes when both services are explicitly documented.
+The 39 reviewed blood
 service listings also retain `health` for broad health discovery. This is an
 explicit classification, never inferred from a center name or all health sites.
 The initial publication used only `health`; a targeted audited migration adds

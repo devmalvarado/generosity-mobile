@@ -3,7 +3,10 @@
 Use stable versioned category codes with Spanish/English resources; preserve old
 codes and import compatibility until an explicit migration maps each center.
 Classification is multi-valued and distinct from services/capacity/admission rules.
-Blood donation must not silently become organ/tissue donation. Shelter locations
+Blood is a connective tissue; the separate filters describe donation services,
+not biological exclusions. A blood bank must not silently be classified as an
+organ or other-tissue donation service; centers with both documented services
+can have both codes. Shelter locations
 may require a public referral point instead of a sensitive residential address.
 
 Food offers record quantities, units, source, preparation/collection timing,
