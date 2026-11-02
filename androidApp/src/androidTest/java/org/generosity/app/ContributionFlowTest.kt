@@ -28,7 +28,7 @@ class ContributionFlowTest {
             override fun newOperationId() = java.util.UUID.randomUUID().toString()
             override fun send(request: ApiRequest, completion: (ApiResponse) -> Unit) {
                 val response = when {
-                    request.path.endsWith("/catalog") -> ApiResponse(200, """{"catalog":${BundledKindnessCatalog.JSON},"updatedAt":"2026-11-01T00:00:00Z"}""")
+                    request.path == "/api/v1/sync/catalog?category_version=2" -> ApiResponse(200, """{"catalog":${BundledKindnessCatalog.JSON},"updatedAt":"2026-11-01T00:00:00Z"}""")
                     request.method == "POST" -> {
                         requestBody = request.body
                         if (firstKey == null) firstKey = request.operationId else assertEquals(firstKey, request.operationId)

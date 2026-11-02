@@ -26,7 +26,7 @@ including explicit Rome alternatives for Vatican searches. Stable IDs derive
 from observed Google feature IDs; missing place IDs are not fabricated. Funding
 origin, service distinctions and sources stay in the research inventory until
 the full directory contract is implemented. The batch retains the same import
-schema and broad app categories; public office and food-pantry descriptions do
+schema; public office and food-pantry descriptions do
 not promise residential admission or prepared meals.
 
 The backend importer accepts optional `googleMapsUrl` metadata alongside the
@@ -135,11 +135,27 @@ Categories:
 - `older_adults`
 - `disability_support`
 - `health`
+- `blood_donation`
 - `addiction_recovery`
 - `community_kitchen`
 - `education`
 - `vulnerable_families`
 - `organ_tissue_donation`
+
+`blood_donation` is distinct from organ/tissue donation. The 39 reviewed blood
+service listings also retain `health` for broad health discovery. This is an
+explicit classification, never inferred from a center name or all health sites.
+The initial publication used only `health`; a targeted audited migration adds
+the specific category and increments changed center versions without replacing
+their other data. The batch JSON files now contain the corrected categories;
+historical release digests still identify the original published commits.
+
+Updated native apps request `/api/v1/sync/catalog?category_version=2` to receive
+`blood_donation`. Omitted/1 projects that code to `health` (deduplicated) so old
+strict readers continue to accept the entire snapshot. Invalid versions return
+422. This negotiates the category vocabulary; `schemaVersion` remains 1 and
+unknown properties/codes are still rejected by the reader. Directory endpoints
+return the stored categories. New builds are required for the new filter.
 
 Help methods:
 

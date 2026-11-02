@@ -39,7 +39,7 @@ class BackendStore(private val connection: AppConnection) : KindnessCenterReposi
     override suspend fun save(need: CenterNeed): Unit = error("Only the backend can mutate a remote need")
 
     suspend fun refreshCatalog() = mutex.withLock {
-        val raw = request(ApiRequest("GET", "/api/v1/sync/catalog", null, null, null))
+        val raw = request(ApiRequest("GET", "/api/v1/sync/catalog?category_version=2", null, null, null))
         val accepted = parseCatalog(raw)
         connection.write("catalog", raw)
         catalog = accepted

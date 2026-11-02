@@ -139,6 +139,20 @@ class GenerosityUiTest {
     }
 
     @Test
+    fun bloodDonationFilterIsSeparateFromOrganDonation() {
+        composeRule.onNodeWithTag("tab-list").performClick()
+        composeRule.onNodeWithTag("category-blood_donation").performScrollTo().performClick().assertIsSelected()
+        composeRule.onNodeWithText("Bright Futures Home").assertDoesNotExist()
+        composeRule.onNodeWithText("Open Health Bridge").assertDoesNotExist()
+        composeRule.onNodeWithTag("tab-map").performClick()
+        composeRule.onNodeWithTag("category-blood_donation").performScrollTo().assertIsSelected()
+        composeRule.onNodeWithTag("tab-settings").performClick()
+        composeRule.onNodeWithTag("language-es").performClick()
+        composeRule.onNodeWithTag("tab-list").performClick()
+        composeRule.onNodeWithText("Donación de sangre").performScrollTo().assertIsDisplayed()
+    }
+
+    @Test
     fun sharedCategoryAndNeedDetailSurviveRepeatedNavigation() {
         composeRule.onNodeWithTag("tab-list").performClick()
         composeRule.onNodeWithText("Support for children").performClick()

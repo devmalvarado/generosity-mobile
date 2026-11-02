@@ -47,6 +47,7 @@
         "en": "Av. San Fernando 22, Belisario Domínguez Secc 16, Tlalpan, 14080 Ciudad de México, CDMX"
       },
       "categories": [
+        "blood_donation",
         "health"
       ],
       "coordinates": {
@@ -171,6 +172,7 @@
         "en": "C. Juan Álvarez 945, Artesanos, 44200 Guadalajara, Jal."
       },
       "categories": [
+        "blood_donation",
         "health"
       ],
       "coordinates": {
@@ -295,6 +297,7 @@
         "en": "Avenida Hermosillo 3363, Mitras Centro, 64460 Monterrey, N.L."
       },
       "categories": [
+        "blood_donation",
         "health"
       ],
       "coordinates": {
@@ -419,6 +422,7 @@
         "en": "Av. Batallón de San Patricio 112, Real San Agustín, 66278 San Pedro Garza García, N.L."
       },
       "categories": [
+        "blood_donation",
         "health"
       ],
       "coordinates": {
@@ -543,6 +547,7 @@
         "en": "C. 7 Sur 1510, Centro, 72000 Heroica Puebla de Zaragoza, Pue."
       },
       "categories": [
+        "blood_donation",
         "health"
       ],
       "coordinates": {
@@ -698,6 +703,7 @@
         "en": "Av. Cuauhtémoc 623, entre Arrillaga y JF Molina, Pinos, 91870 Veracruz, Ver."
       },
       "categories": [
+        "blood_donation",
         "health"
       ],
       "coordinates": {
@@ -822,6 +828,7 @@
         "en": "Blvd. Adolfo Ruiz Cortines S/N, Costa Verde, 94294 Boca del Río, Ver."
       },
       "categories": [
+        "blood_donation",
         "health"
       ],
       "coordinates": {
@@ -915,6 +922,7 @@
         "en": "C. Segunda 1765-int. 2A y, Obrera, 22830 Ensenada, B.C."
       },
       "categories": [
+        "blood_donation",
         "health"
       ],
       "coordinates": {
@@ -1039,6 +1047,7 @@
         "en": "Gonzalez ortega, C. Benito Juárez 2da, 22000 Tijuana, B.C."
       },
       "categories": [
+        "blood_donation",
         "health"
       ],
       "coordinates": {
@@ -1163,6 +1172,7 @@
         "en": "José Antonio García Jimeno 1000, Jardines de la Hacienda, 76188 Santiago de Querétaro, Qro."
       },
       "categories": [
+        "blood_donation",
         "health"
       ],
       "coordinates": {
@@ -1287,6 +1297,7 @@
         "en": "C. Rosa Blanca 120, El Rosedal, 78120 San Luis Potosí, S.L.P."
       },
       "categories": [
+        "blood_donation",
         "health"
       ],
       "coordinates": {
@@ -1442,6 +1453,7 @@
         "en": "Blvd. Juan Alonso de Torres 4725 - A, San José del Potrero, Residencial el Carmen, 37296 León de los Aldama, Gto."
       },
       "categories": [
+        "blood_donation",
         "health"
       ],
       "coordinates": {
@@ -1566,6 +1578,7 @@
         "en": "Ejido, Av Elías Zamora S/N, Nuevo Salahua, 28869 Manzanillo, Col."
       },
       "categories": [
+        "blood_donation",
         "health"
       ],
       "coordinates": {
@@ -1628,6 +1641,7 @@
         "en": "Av Los Tules 140, Díaz Ordaz, 48310 Puerto Vallarta, Jal."
       },
       "categories": [
+        "blood_donation",
         "health"
       ],
       "coordinates": {
@@ -1752,6 +1766,7 @@
         "en": "Paseo de los Cocoteros 55, Nautico Turistico, 63735 Nuevo Nayarit, Nay."
       },
       "categories": [
+        "blood_donation",
         "health"
       ],
       "coordinates": {
@@ -1845,6 +1860,7 @@
         "en": "4201 Gaston Ave #110, Dallas, TX 75246, Estados Unidos"
       },
       "categories": [
+        "blood_donation",
         "health"
       ],
       "coordinates": {
@@ -1969,6 +1985,7 @@
         "en": "4300 N Lamar Blvd, Austin, TX 78756, Estados Unidos"
       },
       "categories": [
+        "blood_donation",
         "health"
       ],
       "coordinates": {
@@ -2124,6 +2141,7 @@
         "en": "424 S Mesa Hills Dr, El Paso, TX 79912, Estados Unidos"
       },
       "categories": [
+        "blood_donation",
         "health"
       ],
       "coordinates": {
@@ -2217,6 +2235,7 @@
         "en": "921 Terry Ave, Seattle, WA 98104, Estados Unidos"
       },
       "categories": [
+        "blood_donation",
         "health"
       ],
       "coordinates": {
@@ -2341,6 +2360,7 @@
         "en": "2207 N Pearl St, Tacoma, WA 98407, Estados Unidos"
       },
       "categories": [
+        "blood_donation",
         "health"
       ],
       "coordinates": {
@@ -2434,6 +2454,7 @@
         "en": "1730 E St NW, Washington, DC 20006, Estados Unidos"
       },
       "categories": [
+        "blood_donation",
         "health"
       ],
       "coordinates": {
@@ -2558,6 +2579,7 @@
         "en": "4700 Mt Hope Dr, Baltimore, MD 21215, Estados Unidos"
       },
       "categories": [
+        "blood_donation",
         "health"
       ],
       "coordinates": {
@@ -2682,6 +2704,7 @@
         "en": "4650 Sunset Blvd, Los Angeles, CA 90027, Estados Unidos"
       },
       "categories": [
+        "blood_donation",
         "health"
       ],
       "coordinates": {
@@ -2806,6 +2829,7 @@
         "en": "1379 S Harbor Blvd, Fullerton, CA 92832, Estados Unidos"
       },
       "categories": [
+        "blood_donation",
         "health"
       ],
       "coordinates": {
@@ -2930,6 +2954,7 @@
         "en": "esquina con Avenida de las Comunidades, Av. de la Democracia, s/n, Vicálvaro, 28032 Madrid, España"
       },
       "categories": [
+        "blood_donation",
         "health"
       ],
       "coordinates": {
@@ -3147,6 +3172,7 @@
         "en": "Via Bernardino Ramazzini, 15, 00151 Roma RM, Italia"
       },
       "categories": [
+        "blood_donation",
         "health"
       ],
       "coordinates": {
@@ -3240,6 +3266,7 @@
         "en": "Lungotevere in Sassia, 1, 00186 Roma RM, Italia"
       },
       "categories": [
+        "blood_donation",
         "health"
       ],
       "coordinates": {
@@ -3333,6 +3360,7 @@
         "en": "26 Margaret St, London W1W 8NB, Reino Unido"
       },
       "categories": [
+        "blood_donation",
         "health"
       ],
       "coordinates": {
@@ -3488,6 +3516,7 @@
         "en": "Av Miguel Alemán 103, Federal, 91170 Xalapa-Enríquez, Ver."
       },
       "categories": [
+        "blood_donation",
         "health"
       ],
       "coordinates": {
@@ -3550,6 +3579,7 @@
         "en": "Carretera Guanajuato - Silao Kilómetro 6.5, Los Alcaldes, 36250 Guanajuato, Gto."
       },
       "categories": [
+        "blood_donation",
         "health"
       ],
       "coordinates": {
@@ -3581,6 +3611,7 @@
         "en": "Rúa Dr. Ulises Romero, 1, 27003 Lugo, España"
       },
       "categories": [
+        "blood_donation",
         "health"
       ],
       "coordinates": {

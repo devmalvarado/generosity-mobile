@@ -1,5 +1,11 @@
 # Expanded public-source center catalog
 
+Classification correction: the 31 reviewed blood-service records now include
+`blood_donation` alongside `health`. The original publication used only `health`;
+its recorded digest remains historical. See the [catalog contract](../../docs/imported-catalog-format.md)
+for legacy-client compatibility. Research sources and all other imported fields
+are unchanged.
+
 Researched on 2026-11-01: **33 requested zones**, **156 Google Maps searches**, covering all **132 zone/category combinations**. This is an initial selection, not an exhaustive census or an endorsement. Searches include municipal surroundings; the actual address determines the location, not the query text.
 
 **132 place records: 120 published, 12 held for review.** The owner approved publication on 2026-11-01. Production now contains **157 centers**, including the unchanged previous 37-record public batch. The 120 were also imported into the local development backend. See [publication and acceptance evidence](../../docs/releases/catalog-expansion-2026-11-01.md).

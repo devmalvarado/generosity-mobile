@@ -295,6 +295,7 @@
         "en": "Calz Acoxpa 430, Coapa, Ex-Hacienda Coapa, Tlalpan, 14308 Ciudad de México, CDMX"
       },
       "categories": [
+        "blood_donation",
         "health"
       ],
       "coordinates": {
@@ -326,6 +327,7 @@
         "en": "Vito Alessio Robles 23, Agrícola, Florida, Álvaro Obregón, 01030 Ciudad de México, CDMX"
       },
       "categories": [
+        "blood_donation",
         "health"
       ],
       "coordinates": {
@@ -357,6 +359,7 @@
         "en": "Av. del Imán 1261, Insurgentes Cuicuilco, Coyoacán, 04530 Ciudad de México, CDMX"
       },
       "categories": [
+        "blood_donation",
         "health"
       ],
       "coordinates": {
@@ -388,6 +391,7 @@
         "en": "C. Montes Urales 800, Lomas - Virreyes, Lomas de Chapultepec IV Secc, Miguel Hidalgo, 11000 Ciudad de México, CDMX"
       },
       "categories": [
+        "blood_donation",
         "health"
       ],
       "coordinates": {
@@ -419,6 +423,7 @@
         "en": "Benito Pérez Galdós 149, Polanco, Col. Irrigación, Miguel Hidalgo, 11510 Ciudad de México, CDMX"
       },
       "categories": [
+        "blood_donation",
         "health"
       ],
       "coordinates": {
@@ -450,6 +455,7 @@
         "en": "República de Ecuador 808, Santa Elena, 20230 Aguascalientes, Ags."
       },
       "categories": [
+        "blood_donation",
         "health"
       ],
       "coordinates": {
@@ -481,6 +487,7 @@
         "en": "Artillero Mier 903, Morelos, Desarrollo Especial Centro de Morelos, 20270 Aguascalientes, Ags."
       },
       "categories": [
+        "blood_donation",
         "health"
       ],
       "coordinates": {
@@ -512,6 +519,7 @@
         "en": "Talamantes 410-interior 37, Barrio de San Marcos, 20070 Aguascalientes, Ags."
       },
       "categories": [
+        "blood_donation",
         "health"
       ],
       "coordinates": {

@@ -6,9 +6,26 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import org.generosity.app.GenerosityAppState
 import org.generosity.data.*
 import org.generosity.domain.*
+import org.generosity.usecase.DiscoverKindnessCentersUseCase
+import org.generosity.usecase.DiscoveryQuery
 import kotlin.test.*
 
 class BackendStoreTest {
+    @Test fun bloodDonationRefreshPersistsAndFiltersSeparatelyFromHealthAndOrgans() = runTest {
+        val document = ApiJson.parse(BundledKindnessCatalog.JSON)
+        val rows = document.objects("centers")
+        val blood = rows.last() + mapOf("id" to "blood-bank", "categories" to listOf("blood_donation", "health"), "needs" to emptyList<Any>())
+        val platform = Connection()
+        platform.response = ApiResponse(200, ApiJson.encode(mapOf("catalog" to mapOf("schemaVersion" to 1, "centers" to rows + blood))))
+        BackendStore(platform).refreshCatalog()
+        assertEquals("/api/v1/sync/catalog?category_version=2", platform.requests.single().path)
+        val discovery = DiscoverKindnessCentersUseCase(BackendStore(platform))
+        assertEquals(listOf("blood-bank"), discovery(DiscoveryQuery(categories = setOf(CenterCategory.BLOOD_DONATION))).map { it.id })
+        assertEquals(listOf(rows.last().text("id")), discovery(DiscoveryQuery(categories = setOf(CenterCategory.ORGAN_TISSUE_DONATION))).map { it.id })
+        assertEquals(2, discovery(DiscoveryQuery(categories = setOf(CenterCategory.HEALTH))).size)
+        assertEquals(2, discovery(DiscoveryQuery(categories = setOf(CenterCategory.BLOOD_DONATION, CenterCategory.CHILDREN_SUPPORT))).size)
+    }
+
     private class Connection : AppConnection {
         val disk = mutableMapOf<String, String>()
         val requests = mutableListOf<ApiRequest>()
@@ -105,7 +122,7 @@ class BackendStoreTest {
         val platform = Connection()
         val raw = """{"user":{"id":1},"contributions":[{"id":"offer-a","user_id":1,"title":{"es":"Alimentos"},"center_id":"center-a","need_id":"need-a","method":"goods","status":"fulfilled","quantity":2,"quantity_unit":"packs","created_at":"2026-11-01T00:00:00Z","version":3}]}"""
         platform.disk["account-1"] = raw
-        platform.handler = { request -> if (request.path.endsWith("/catalog")) ApiResponse(200, """{"catalog":{"schemaVersion":1,"centers":[]},"updatedAt":"2026-11-01T00:00:00Z"}""") else ApiResponse(401, "{}") }
+        platform.handler = { request -> if (request.path == "/api/v1/sync/catalog?category_version=2") ApiResponse(200, """{"catalog":{"schemaVersion":1,"centers":[]},"updatedAt":"2026-11-01T00:00:00Z"}""") else ApiResponse(401, "{}") }
         val app = GenerosityAppState(backgroundScope, backend = BackendStore(platform))
         app.signIn("1", "María", remoteAccount = true)
         runCurrent()

@@ -69,7 +69,7 @@ fun AppIcon(@DrawableRes icon: Int, modifier: Modifier = Modifier, tint: Color =
 @Composable
 fun CategoryBadge(category: CenterCategory?, size: Int = 44) {
     val color = when (category) {
-        CenterCategory.HEALTH, CenterCategory.DISABILITY_SUPPORT -> Color(0xFF357D64)
+        CenterCategory.BLOOD_DONATION, CenterCategory.HEALTH, CenterCategory.DISABILITY_SUPPORT -> Color(0xFF357D64)
         CenterCategory.COMMUNITY_KITCHEN, CenterCategory.OLDER_ADULTS -> Color(0xFF9A581D)
         else -> Color(0xFF7060A5)
     }
@@ -79,7 +79,7 @@ fun CategoryBadge(category: CenterCategory?, size: Int = 44) {
 }
 
 fun CenterCategory?.icon(): Int = when (this) {
-    CenterCategory.HEALTH, CenterCategory.ORGAN_TISSUE_DONATION -> R.drawable.ic_health
+    CenterCategory.BLOOD_DONATION, CenterCategory.HEALTH, CenterCategory.ORGAN_TISSUE_DONATION -> R.drawable.ic_health
     CenterCategory.EDUCATION -> R.drawable.ic_education
     CenterCategory.COMMUNITY_KITCHEN -> R.drawable.ic_food
     CenterCategory.ADDICTION_RECOVERY -> R.drawable.ic_heart
