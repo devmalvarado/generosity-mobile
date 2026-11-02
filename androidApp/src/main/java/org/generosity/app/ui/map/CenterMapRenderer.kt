@@ -26,6 +26,7 @@ interface CenterMapRenderer {
         locale: SupportedLocale,
         onCenterSelected: (String) -> Unit,
         modifier: Modifier,
-        origin: org.generosity.domain.Coordinates? = null
+        origin: org.generosity.domain.Coordinates? = null,
+        originLabel: String? = null
     )
 }

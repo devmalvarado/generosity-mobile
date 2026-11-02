@@ -61,7 +61,7 @@ class GenerosityAppStateIos(
 
     fun setDeviceLanguages(codes: List<String>) = state.setDeviceLanguages(codes)
 
-    fun setDiscoveryArea(area: org.generosity.domain.DiscoveryArea?) = state.setDiscoveryArea(area)
+    fun setDiscoveryArea(area: org.generosity.domain.DiscoveryArea?, preserveSelection: Boolean) = state.setDiscoveryArea(area, preserveSelection)
 
     fun setSearchText(text: String) = state.setSearchText(text)
 

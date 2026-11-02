@@ -123,3 +123,21 @@
 "area_clear" = "Quitar zona";
 "area_distance" = "A %.1f km del lugar seleccionado";
 "area_loading" = "Buscando lugares…";
+
+// Current device location
+"location_use" = "Usar mi ubicación";
+"location_current" = "Tu ubicación";
+"location_loading" = "Obteniendo tu ubicación…";
+"location_scope" = "Centros a menos de 10 km de tu ubicación";
+"location_distance" = "A %.1f km de tu ubicación";
+"location_approximate" = "Ubicación aproximada; las distancias pueden variar.";
+"location_denied" = "El acceso a tu ubicación está desactivado. Actívalo en Ajustes o busca una dirección.";
+"location_disabled" = "La ubicación del dispositivo está desactivada. Actívala en Ajustes o busca una dirección.";
+"location_unavailable" = "No se pudo obtener una ubicación reciente. Inténtalo de nuevo o busca una dirección.";
+"location_settings" = "Abrir Ajustes";
+
+"map_open_google" = "Abrir en Google Maps";
+"map_open_apple" = "Abrir en Apple Maps";
+"map_open_device" = "Abrir en mapas del teléfono";
+"map_open_failed" = "No se pudo abrir el mapa. Prueba otra opción.";
+"map_location_unavailable" = "La ubicación de este centro no está disponible.";

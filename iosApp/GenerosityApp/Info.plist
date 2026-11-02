@@ -2,22 +2,16 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
-    <key>GenerosityAPIURL</key>
-    <string>$(GENEROSITY_API_URL)</string>
-    <key>CFBundleURLTypes</key>
-    <array><dict><key>CFBundleURLSchemes</key><array><string>org.generosity.app.ios</string></array></dict></array>
-    <key>CFBundleDisplayName</key>
-    <string>Generosity</string>
-    <key>CFBundleIdentifier</key>
-    <string>org.generosity.app</string>
-    <key>CFBundleName</key>
-    <string>Generosity</string>
-    <key>CFBundleShortVersionString</key>
-    <string>0.1.0</string>
-    <key>CFBundleVersion</key>
-    <string>1</string>
-    <key>NSLocationWhenInUseUsageDescription</key>
-    <string>Generosity uses your location to show nearby kindness centers.</string>
+	<key>CFBundleURLTypes</key>
+	<array>
+		<dict>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>org.generosity.app.ios</string>
+			</array>
+		</dict>
+	</array>
+	<key>GenerosityAPIURL</key>
+	<string>$(GENEROSITY_API_URL)</string>
 </dict>
 </plist>
-

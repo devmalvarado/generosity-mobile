@@ -54,12 +54,12 @@
 		13E8FF7199A91D36C45F77D2 /* es */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = es; path = es.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		1D7757C9C78879CA45846739 /* GenerosityApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GenerosityApp.swift; sourceTree = "<group>"; };
 		240C698EB5B5AE811FAA4D18 /* AccountSessionTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountSessionTests.swift; sourceTree = "<group>"; };
-		2A3BD546735DBA1B6FCBF1B5 /* Generosity.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = Generosity.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		2A3BD546735DBA1B6FCBF1B5 /* Generosity.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Generosity.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		305B21CEDDBE609FB9E4F89D /* WelcomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WelcomeView.swift; sourceTree = "<group>"; };
 		37BD51B2133A26B9C463D1B1 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
 		4762199ADF64A196FDD60FAB /* LocalizationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalizationTests.swift; sourceTree = "<group>"; };
 		48839BCE4C89DD3B2532F207 /* GenerosityTheme.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GenerosityTheme.swift; sourceTree = "<group>"; };
-		4CF08BFEF7172E975AD9E006 /* SharedBridge */ = {isa = PBXFileReference; lastKnownFileType = folder; name = SharedBridge; path = SharedBridge; sourceTree = SOURCE_ROOT; };
+		4CF08BFEF7172E975AD9E006 /* SharedBridge */ = {isa = PBXFileReference; lastKnownFileType = folder; path = SharedBridge; sourceTree = SOURCE_ROOT; };
 		4FBDC30DB116ADDF12CF4133 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		553F5D8AAA7C55879E0C5371 /* GenerosityUiChecklistTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GenerosityUiChecklistTests.swift; sourceTree = "<group>"; };
 		58057346B63330745D033FAD /* GenerosityUITests.xctest */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.cfbundle; path = GenerosityUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -497,9 +497,12 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = TR6XA675H4;
 				GENERATE_INFOPLIST_FILE = YES;
 				GENEROSITY_API_URL = "https://api.generosity.global";
 				INFOPLIST_FILE = GenerosityApp/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = Generosity;
+				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "Generosity uses your location to show nearby kindness centers.";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -519,9 +522,12 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = TR6XA675H4;
 				GENERATE_INFOPLIST_FILE = YES;
 				GENEROSITY_API_URL = "https://api.generosity.global";
 				INFOPLIST_FILE = GenerosityApp/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = Generosity;
+				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "Generosity uses your location to show nearby kindness centers.";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				LD_RUNPATH_SEARCH_PATHS = (

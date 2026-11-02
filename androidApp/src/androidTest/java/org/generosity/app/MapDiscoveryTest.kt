@@ -1,5 +1,10 @@
 package org.generosity.app
 
+import android.app.Activity
+import android.app.Instrumentation
+import android.content.Intent
+import android.net.Uri
+import androidx.test.platform.app.InstrumentationRegistry
 import androidx.activity.ComponentActivity
 import androidx.compose.foundation.layout.Column
 import androidx.compose.material3.MaterialTheme
@@ -57,6 +62,43 @@ class MapDiscoveryTest {
 
     @After
     fun tearDown() = scope.cancel()
+
+    @Test
+    fun selectedDetailOpensItsOwnCoordinatesInBothMapChoices() {
+        val instrumentation = InstrumentationRegistry.getInstrumentation()
+        var opened: Uri? = null
+        val monitor = object : Instrumentation.ActivityMonitor() {
+            override fun onStartActivity(intent: Intent): Instrumentation.ActivityResult? {
+                if (intent.action != Intent.ACTION_VIEW) return null
+                opened = intent.data
+                return Instrumentation.ActivityResult(Activity.RESULT_CANCELED, null)
+            }
+        }
+        instrumentation.addMonitor(monitor)
+        try {
+            launch()
+            val centers = app.state.value.centers
+            for (locale in listOf(SupportedLocale.ENGLISH, SupportedLocale.SPANISH)) {
+                composeRule.runOnIdle { app.setLocale(locale) }
+                composeRule.onNodeWithTag("tab-list").performClick()
+                for (center in listOf(centers.first(), centers.last())) {
+                    composeRule.onNodeWithTag("discovery-scroll").performScrollToNode(hasTestTag("center-${center.id}"))
+                    composeRule.onNodeWithTag("center-${center.id}").performClick()
+                    for (choice in listOf("google", "device")) {
+                        composeRule.runOnIdle { opened = null }
+                        composeRule.onNodeWithTag("map-open-$choice").performScrollTo().performClick()
+                        composeRule.runOnIdle {
+                            val uri = requireNotNull(opened)
+                            val point = "${center.coordinates.latitude},${center.coordinates.longitude}"
+                            if (choice == "google") assertEquals(point, uri.getQueryParameter("query"))
+                            else assertEquals("$point(${center.name.resolve(locale)})", Uri.decode(uri.toString().substringAfter("?q=")))
+                        }
+                    }
+                    composeRule.onNodeWithTag("detail-back").performClick()
+                }
+            }
+        } finally { instrumentation.removeMonitor(monitor) }
+    }
 
     @Test
     fun everyCardSelectsItsPinAndOpensItsOwnDetail() {
@@ -236,7 +278,8 @@ private class ProbeMapRenderer : CenterMapRenderer {
         locale: SupportedLocale,
         onCenterSelected: (String) -> Unit,
         modifier: Modifier,
-        origin: org.generosity.domain.Coordinates?
+        origin: org.generosity.domain.Coordinates?,
+        originLabel: String?
     ) {
         var cameraEdits by rememberSaveable { mutableIntStateOf(0) }
         SideEffect { this.markers = markers; this.selectedCenterId = selectedCenterId; this.origin = origin }

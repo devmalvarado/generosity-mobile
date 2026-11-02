@@ -56,7 +56,8 @@ open class MainActivity : ComponentActivity() {
                 }, onSignIn = { account.signIn() }, onCreate = { account.signIn(register = true) })
             else GenerosityApp(appState, GoogleCenterMapRenderer, ::selectLanguage, savingLanguage, languageSaveFailed,
                 onSignIn = { account.signIn() }, onSignOut = account::signOut, onCreate = { account.signIn(register = true) },
-                authBusy = account.busy, authFailed = account.failed)
+                authBusy = account.busy, authFailed = account.failed,
+                locationSource = if (usesDemoCatalog) null else remember { AndroidDeviceLocationSource(applicationContext) })
         }
     }
 

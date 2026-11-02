@@ -123,3 +123,21 @@
 "area_clear" = "Clear area";
 "area_distance" = "%.1f km from selected place";
 "area_loading" = "Searching places…";
+
+// Current device location
+"location_use" = "Use my location";
+"location_current" = "Your location";
+"location_loading" = "Finding your location…";
+"location_scope" = "Centers within 10 km of your location";
+"location_distance" = "%.1f km from your location";
+"location_approximate" = "Approximate location; distances may vary.";
+"location_denied" = "Location access is off. Enable it in Settings or search for an address.";
+"location_disabled" = "Device location is turned off. Turn it on in Settings or search for an address.";
+"location_unavailable" = "Could not get a recent location. Try again or search for an address.";
+"location_settings" = "Open Settings";
+
+"map_open_google" = "Open in Google Maps";
+"map_open_apple" = "Open in Apple Maps";
+"map_open_device" = "Open in device maps";
+"map_open_failed" = "Could not open the map. Try another option.";
+"map_location_unavailable" = "Location unavailable for this center.";

@@ -52,8 +52,8 @@ public final class GenerosityStore: ObservableObject {
         controller.onResume()
         refreshDeviceLanguages()
     }
-    public func setDiscoveryArea(_ area: DiscoveryArea?) {
-        controller.setDiscoveryArea(area: area)
+    public func setDiscoveryArea(_ area: DiscoveryArea?, preserveSelection: Bool = false) {
+        controller.setDiscoveryArea(area: area, preserveSelection: preserveSelection)
         state = controller.currentState
     }
     public func setSearchText(_ text: String) {

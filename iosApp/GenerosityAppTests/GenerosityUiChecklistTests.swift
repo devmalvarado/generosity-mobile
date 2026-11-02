@@ -1,6 +1,81 @@
 import XCTest
+import CoreLocation
 
 final class GenerosityUiChecklistTests: XCTestCase {
+    func testCurrentLocationFiltersNearbyCentersAndClearRestoresCatalog() {
+        XCUIDevice.shared.location = XCUILocation(location: CLLocation(latitude: 19.35, longitude: -99.16))
+        defer { XCUIDevice.shared.location = nil }
+        let app = launch()
+        app.resetAuthorizationStatus(for: .location)
+        app.launch()
+        app.buttons["location-use"].tap()
+        let alert = XCUIApplication(bundleIdentifier: "com.apple.springboard").alerts.firstMatch
+        XCTAssertTrue(alert.waitForExistence(timeout: 5))
+        alert.buttons["Allow While Using App"].tap()
+        let scope = app.staticTexts["discovery-origin-label"]
+        XCTAssertTrue(scope.waitForExistence(timeout: 20))
+        XCTAssertEqual(scope.label, "Centers within 10 km of your location")
+        XCTAssertTrue(app.buttons["center-kc-children-001"].exists)
+        app.buttons["category-children_support"].tap()
+        XCTAssertTrue(app.buttons["category-children_support"].isSelected)
+        XCTAssertTrue(scope.exists)
+        app.tabBars.buttons["Settings"].tap()
+        app.buttons["Español"].tap()
+        app.tabBars.buttons["Mapa"].tap()
+        XCTAssertEqual(scope.label, "Centros a menos de 10 km de tu ubicación")
+        XCTAssertEqual(app.buttons["location-use"].label, "Usar mi ubicación")
+        capture(app, name: "Current device location - Spanish")
+        app.buttons["area-clear"].tap()
+        XCTAssertFalse(scope.exists)
+        XCTAssertTrue(app.buttons["category-children_support"].isSelected)
+        app.terminate()
+    }
+
+    func testDeniedLocationLeavesAddressSearchAndCatalogAvailable() {
+        let app = launch()
+        app.resetAuthorizationStatus(for: .location)
+        app.launch()
+        app.buttons["location-use"].tap()
+        let alert = XCUIApplication(bundleIdentifier: "com.apple.springboard").alerts.firstMatch
+        XCTAssertTrue(alert.waitForExistence(timeout: 5))
+        alert.buttons["Don’t Allow"].tap()
+        XCTAssertTrue(app.staticTexts["location-status"].waitForExistence(timeout: 5))
+        XCTAssertTrue(app.buttons["location-settings"].exists)
+        XCTAssertTrue(app.buttons["center-kc-children-001"].exists)
+        app.buttons["location-use"].tap()
+        XCTAssertTrue(app.alerts["Use my location"].waitForExistence(timeout: 5))
+        XCTAssertTrue(app.alerts.buttons["Open Settings"].exists)
+        app.alerts.buttons["Back"].tap()
+        app.buttons["area-open"].tap()
+        XCTAssertTrue(app.textFields["area-query"].waitForExistence(timeout: 5))
+        app.terminate()
+    }
+
+    func testEveryCenterDetailOffersExternalMapsInBothLanguages() {
+        for (language, list, google, apple) in [
+            ("(en-US)", "List", "Open in Google Maps", "Open in Apple Maps"),
+            ("(es-MX)", "Lista", "Abrir en Google Maps", "Abrir en Apple Maps")
+        ] {
+            let app = launch(languages: language)
+            app.tabBars.buttons[list].tap()
+            for id in ["kc-children-001", "kc-health-001"] {
+                let card = app.buttons["center-\(id)"]
+                revealDiscovery(card, in: app)
+                card.tap()
+                XCTAssertTrue(app.staticTexts["detail-\(id)"].waitForExistence(timeout: 5))
+                for (key, title) in [("map-open-google", google), ("map-open-apple", apple)] {
+                    let button = app.buttons[key]
+                    for _ in 0..<4 where !button.isHittable { app.swipeUp() }
+                    XCTAssertTrue(button.isHittable)
+                    XCTAssertEqual(button.label, title)
+                }
+                capture(app, name: "External maps - \(id) - \(language)")
+                app.buttons["detail-back"].tap()
+            }
+            app.terminate()
+        }
+    }
+
     func testWelcomeOffersGuestAndAccountEntryInBothLanguages() {
         for (language, guest, signIn, create, list) in [
             ("en-US", "Continue as a guest", "Sign in", "Create account", "List"),

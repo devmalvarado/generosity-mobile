@@ -116,4 +116,19 @@
     <string name="area_clear">Quitar zona</string>
     <string name="area_distance">A %.1f km del lugar seleccionado</string>
     <string name="area_loading">Buscando lugares…</string>
+    <string name="location_use">Usar mi ubicación</string>
+    <string name="location_current">Tu ubicación</string>
+    <string name="location_loading">Obteniendo tu ubicación…</string>
+    <string name="location_scope">Centros a menos de 10 km de tu ubicación</string>
+    <string name="location_distance">A %.1f km de tu ubicación</string>
+    <string name="location_approximate">Ubicación aproximada; las distancias pueden variar.</string>
+    <string name="location_denied">El acceso a tu ubicación está desactivado. Actívalo en Ajustes o busca una dirección.</string>
+    <string name="location_disabled">La ubicación del dispositivo está desactivada. Actívala en Ajustes o busca una dirección.</string>
+    <string name="location_unavailable">No se pudo obtener una ubicación reciente. Inténtalo de nuevo o busca una dirección.</string>
+    <string name="location_settings">Abrir Ajustes</string>
+    <string name="map_open_google">Abrir en Google Maps</string>
+    <string name="map_open_apple">Abrir en Apple Maps</string>
+    <string name="map_open_device">Abrir en mapas del teléfono</string>
+    <string name="map_open_failed">No se pudo abrir el mapa. Prueba otra opción.</string>
+    <string name="map_location_unavailable">La ubicación de este centro no está disponible.</string>
 </resources>

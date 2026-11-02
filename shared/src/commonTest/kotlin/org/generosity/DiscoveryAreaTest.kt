@@ -42,6 +42,40 @@ class DiscoveryAreaTest {
         assertFailsWith<IllegalArgumentException> { DiscoveryArea(" ", Coordinates(0.0, 0.0)) }
     }
 
+    @Test fun gpsRefreshKeepsOpenDetailEvenWhenOriginExpiresOrMoves() = runTest {
+        val app = GenerosityAppState(backgroundScope, catalog = catalog)
+        app.start(); app.setDiscoveryArea(area); runCurrent()
+        app.selectCenter("near")
+        val selected = app.state.value.selectedCenter
+        val currentNeeds = app.state.value.currentNeeds
+        // Foreground return can clear an expired fix before publishing a new one.
+        app.setDiscoveryArea(null, preserveSelection = true); runCurrent()
+        assertEquals(selected, app.state.value.selectedCenter)
+        app.setDiscoveryArea(DiscoveryArea("New GPS fix", Coordinates(50.0, 50.0)), preserveSelection = true)
+        runCurrent()
+        assertTrue(app.state.value.centers.isEmpty())
+        assertEquals(selected, app.state.value.selectedCenter)
+        assertEquals(currentNeeds, app.state.value.currentNeeds)
+        // Choosing a different area explicitly still clears the selection.
+        app.setDiscoveryArea(area); runCurrent()
+        assertNull(app.state.value.selectedCenter)
+        assertNull(app.state.value.selectedCenterDetails)
+    }
+
+    @Test fun gpsRefreshDoesNotKeepDetailsOfARemovedCatalogCenter() = runTest {
+        var available = catalog
+        val app = GenerosityAppState(backgroundScope, catalog = catalog, centersRepository = object : KindnessCenterRepository {
+            override suspend fun centers() = available
+        })
+        app.start(); app.setDiscoveryArea(area); runCurrent()
+        app.selectCenter("near")
+        assertNotNull(app.state.value.selectedCenter)
+        available = emptyList()
+        app.setDiscoveryArea(area, preserveSelection = true); runCurrent()
+        assertNull(app.state.value.selectedCenter)
+        assertNull(app.state.value.selectedCenterDetails)
+    }
+
     @Test fun staleLookupCannotReplaceTheSelectedArea() = runTest {
         val delayed = CompletableDeferred<Unit>()
         var calls = 0

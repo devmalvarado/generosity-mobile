@@ -45,6 +45,8 @@ import android.view.View
 import java.util.Locale
 import org.generosity.app.GenerosityAppState
 import org.generosity.app.GenerosityUiState
+import org.generosity.app.DeviceLocationSource
+import org.generosity.app.DiscoveryLocation
 import org.generosity.app.R
 import org.generosity.app.ui.map.CenterMapRenderer
 import org.generosity.app.ui.map.toMapMarkers
@@ -63,12 +65,14 @@ fun GenerosityApp(
     languageSaveFailed: Boolean = false,
     onSignIn: () -> Unit = {}, onSignOut: () -> Unit = {}, onCreate: () -> Unit = {},
     authBusy: Boolean = false, authFailed: Boolean = false,
-    placeSearch: (suspend (String, SupportedLocale) -> List<DiscoveryArea>)? = null
+    placeSearch: (suspend (String, SupportedLocale) -> List<DiscoveryArea>)? = null,
+    locationSource: DeviceLocationSource? = null
 ) {
     val context = LocalContext.current
     val search: suspend (String, SupportedLocale) -> List<DiscoveryArea> = placeSearch ?: { query, locale -> searchPlaces(context, query, locale) }
     val state by appState.state.collectAsState()
     val locale = state.locale
+    val location = locationSource?.let { rememberDiscoveryLocation(it, appState) }
     var tab by rememberSaveable { mutableStateOf(AppTab.MAP) }
     val mapState = rememberSaveableStateHolder()
     val direction = if (TextUtils.getLayoutDirectionFromLocale(Locale.forLanguageTag(locale.code)) == View.LAYOUT_DIRECTION_RTL)
@@ -126,8 +130,8 @@ fun GenerosityApp(
             ) { padding ->
                 Box(Modifier.fillMaxSize().padding(padding).imePadding()) {
                     when (tab) {
-                        AppTab.MAP -> DiscoveryScreen(state, appState, true, mapRenderer, mapState, search)
-                        AppTab.LIST -> DiscoveryScreen(state, appState, false, mapRenderer, mapState, search)
+                        AppTab.MAP -> DiscoveryScreen(state, appState, true, mapRenderer, mapState, search, location, locationSource)
+                        AppTab.LIST -> DiscoveryScreen(state, appState, false, mapRenderer, mapState, search, location, locationSource)
                         AppTab.PROFILE -> ProfileScreen(state, appState, onSignIn, onSignOut, onCreate, authBusy, authFailed)
                         AppTab.SETTINGS -> SettingsScreen(state, appState, onLanguageSelected, savingLanguage, languageSaveFailed)
                     }
@@ -141,9 +145,12 @@ fun GenerosityApp(
 private fun DiscoveryScreen(
     state: GenerosityUiState, appState: GenerosityAppState, showMap: Boolean,
     mapRenderer: CenterMapRenderer, mapState: SaveableStateHolder,
-    placeSearch: suspend (String, SupportedLocale) -> List<DiscoveryArea>
+    placeSearch: suspend (String, SupportedLocale) -> List<DiscoveryArea>,
+    location: DiscoveryLocation?, locationSource: DeviceLocationSource?
 ) {
     val locale = state.locale
+    val deviceLocation = location?.state?.collectAsState()?.value
+    val hasDeviceOrigin = deviceLocation?.fix != null
     val listState = rememberLazyListState()
     val keyboard = LocalSoftwareKeyboardController.current
     var showDetail by remember { mutableStateOf(false) }
@@ -161,6 +168,7 @@ private fun DiscoveryScreen(
     }
     LaunchedEffect(state.discoveryArea, state.searchText, state.selectedCategories) { listState.scrollToItem(0) }
     if (showAreaSearch) AreaSearchDialog(locale, placeSearch, {
+        location?.useManualOrigin()
         appState.setDiscoveryArea(it); showAreaSearch = false
     }, { showAreaSearch = false })
     var offer by remember { mutableStateOf<Pair<CenterNeed, HelpMethod>?>(null) }
@@ -182,13 +190,15 @@ private fun DiscoveryScreen(
                     Text(localizedString(R.string.area_search, locale))
                 }
             }
+            if (location != null && locationSource != null) LocationActions(location, locationSource, locale)
             CategoryFilters(locale, state.selectedCategories, appState::toggleCategory, horizontal = true)
             if (showMap) {
                 mapState.SaveableStateProvider("discovery-map") {
                     mapRenderer.Render(
                         markers = state.centers.toMapMarkers(locale), selectedCenterId = state.selectedCenter?.id,
                         locale = locale, onCenterSelected = { id -> selectCenter(id); scrollTarget = id },
-                        modifier = Modifier.fillMaxWidth().height(mapHeight), origin = state.discoveryArea?.coordinates
+                        modifier = Modifier.fillMaxWidth().height(mapHeight), origin = state.discoveryArea?.coordinates,
+                        originLabel = if (hasDeviceOrigin) localizedString(R.string.location_current, locale) else state.discoveryArea?.label
                     )
                 }
             }
@@ -197,8 +207,10 @@ private fun DiscoveryScreen(
                 item {
                     Column {
                         state.discoveryArea?.let { area ->
-                            Text(localizedString(R.string.area_scope, locale) + " " + area.label, style = MaterialTheme.typography.bodySmall)
-                            TextButton(onClick = { appState.setDiscoveryArea(null) }, modifier = Modifier.testTag("area-clear")) { Text(localizedString(R.string.area_clear, locale)) }
+                            Text(if (hasDeviceOrigin) localizedString(R.string.location_scope, locale) else localizedString(R.string.area_scope, locale) + " " + area.label,
+                                modifier = Modifier.testTag("discovery-origin-label"), style = MaterialTheme.typography.bodySmall)
+                            if (hasDeviceOrigin && deviceLocation.approximate) Text(localizedString(R.string.location_approximate, locale), style = MaterialTheme.typography.bodySmall)
+                            TextButton(onClick = { location?.useManualOrigin(); appState.setDiscoveryArea(null) }, modifier = Modifier.testTag("area-clear")) { Text(localizedString(R.string.area_clear, locale)) }
                         }
                         Text(TextKey.NEARBY_CENTERS.label(locale), style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.SemiBold)
                         SyncStatus(state, appState)
@@ -214,7 +226,7 @@ private fun DiscoveryScreen(
                                 .testTag("center-" + center.id).semantics { this.selected = selected }.padding(GenSpace.md)) {
                                 CenterIdentity(locale, center)
                                 state.discoveryArea?.let { area ->
-                                    Text(localizedString(R.string.area_distance, locale, center.coordinates.distanceMetersTo(area.coordinates) / 1000), style = MaterialTheme.typography.bodySmall)
+                                    Text(localizedString(if (hasDeviceOrigin) R.string.location_distance else R.string.area_distance, locale, center.coordinates.distanceMetersTo(area.coordinates) / 1000), style = MaterialTheme.typography.bodySmall)
                                 }
                             }
                             TextButton(onClick = { selectCenter(center.id, details = true) }, modifier = Modifier.padding(horizontal = GenSpace.md).testTag("details-${center.id}")) {
@@ -306,6 +318,7 @@ private fun CenterDetail(
         }
         Text(center.categories.map { it.label(locale) }.joinToString(" · "), style = MaterialTheme.typography.labelLarge, color = MaterialTheme.colorScheme.primary)
         Text(center.address.resolve(locale), style = MaterialTheme.typography.bodyMedium, color = MaterialTheme.colorScheme.onSurfaceVariant)
+        CenterMapActions(center, locale)
         Text(center.description.resolve(locale), style = MaterialTheme.typography.bodyMedium)
         ContactActions(center.contactInfo, locale)
         HorizontalDivider(color = MaterialTheme.colorScheme.outlineVariant)

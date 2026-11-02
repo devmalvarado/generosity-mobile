@@ -6,7 +6,7 @@ import kotlin.math.pow
 import kotlin.math.sin
 import kotlin.math.sqrt
 
-/** A selected public place, not the device location. Session-only discovery scope. */
+/** Session-only discovery scope, from a chosen place or a permitted device fix. */
 data class DiscoveryArea(val label: String, val coordinates: Coordinates) {
     init {
         require(label.isNotBlank() && label.length <= 500)

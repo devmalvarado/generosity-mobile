@@ -28,7 +28,8 @@ struct AreaSearchView: View {
                         }
                         .onSubmit(search)
                     Button(L10n.resource("area_submit", locale: locale), action: search)
-                        .buttonStyle(.borderedProminent).disabled(busy || query.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty)
+                        .buttonStyle(.borderedProminent).foregroundStyle(GenPalette.onAccent)
+                        .disabled(busy || query.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty)
                         .accessibilityIdentifier("area-submit")
                     if busy { ProgressView(L10n.resource("area_loading", locale: locale)) }
                     if let message { Text(L10n.resource(message, locale: locale)) }

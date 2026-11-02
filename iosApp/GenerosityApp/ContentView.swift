@@ -13,6 +13,8 @@ struct ContentView: View {
     }
     @StateObject private var store: GenerosityStore
     @StateObject private var account: AccountSession
+    @StateObject private var permissions = PermissionService()
+    @State private var hasDeviceOrigin = false
     init() {
         let account = AccountSession()
         let connection = IOSConnection()
@@ -37,7 +39,7 @@ struct ContentView: View {
             ProfileView(locale: locale, state: store.state, account: account, store: store)
                 .tabItem { Label(L10n.text(.tabProfile, locale: locale), systemImage: "person") }
             SettingsView(
-                locale: locale, saveFailed: store.state.syncError == "save_failed", languageMode: Binding(get: { store.languageMode }, set: store.setLocale),
+                locale: locale, saveFailed: store.state.syncError == "save_failed", permissions: permissions, languageMode: Binding(get: { store.languageMode }, set: store.setLocale),
                 nearbyNotifications: Binding(get: { store.state.preferences.nearbyCentersEnabled }, set: { store.setPreferences(nearby: $0, urgent: store.state.preferences.urgentNeedsEnabled, reminders: store.state.preferences.remindersEnabled) }),
                 urgentNotifications: Binding(get: { store.state.preferences.urgentNeedsEnabled }, set: { store.setPreferences(nearby: store.state.preferences.nearbyCentersEnabled, urgent: $0, reminders: store.state.preferences.remindersEnabled) }),
                 reminderNotifications: Binding(get: { store.state.preferences.remindersEnabled }, set: { store.setPreferences(nearby: store.state.preferences.nearbyCentersEnabled, urgent: store.state.preferences.urgentNeedsEnabled, reminders: $0) })
@@ -54,7 +56,20 @@ struct ContentView: View {
         .onChange(of: scenePhase) { phase in
             if phase == .active {
                 store.onResume()
+                if entered && !Self.demoCatalog { permissions.resumeLocation() }
                 Task { if !Self.demoCatalog { await account.restore(store: store) } }
+            } else if phase == .background {
+                permissions.suspendLocation()
+            }
+        }
+        .onReceive(permissions.$currentLocation) { location in
+            if let location {
+                hasDeviceOrigin = true
+                store.setDiscoveryArea(DiscoveryArea(label: L10n.resource("location_current", locale: locale),
+                    coordinates: Coordinates(latitude: location.coordinate.latitude, longitude: location.coordinate.longitude)), preserveSelection: true)
+            } else if hasDeviceOrigin {
+                hasDeviceOrigin = false
+                store.setDiscoveryArea(nil, preserveSelection: true)
             }
         }
         .task { if !Self.demoCatalog { await account.restore(store: store) } }
@@ -65,7 +80,13 @@ struct ContentView: View {
 
     private func discovery(showMap: Bool) -> some View {
         NavigationStack {
-            DiscoveryView(locale: locale, store: store, showMap: showMap)
+            DiscoveryView(locale: locale, store: store, permissions: permissions, hasDeviceOrigin: hasDeviceOrigin,
+                          showMap: showMap, onSelectArea: { area in
+                hasDeviceOrigin = false
+                permissions.useManualArea()
+                store.setDiscoveryArea(area)
+            })
+                .onAppear { if !Self.demoCatalog { permissions.resumeLocation() } }
                 .navigationBarTitleDisplayMode(.inline)
                 .toolbar { ToolbarItem(placement: .principal) { BrandWordmark() } }
                 .toolbarBackground(GenPalette.surface, for: .navigationBar)
@@ -77,9 +98,13 @@ struct ContentView: View {
 private struct DiscoveryView: View {
     let locale: AppLocale
     @ObservedObject var store: GenerosityStore
+    @ObservedObject var permissions: PermissionService
+    let hasDeviceOrigin: Bool
     let showMap: Bool
+    let onSelectArea: (DiscoveryArea?) -> Void
     @State private var showDetail = false
     @State private var showAreaSearch = false
+    @State private var showLocationSettings = false
     @State private var scrollTarget: String?
     @FocusState private var searching: Bool
 
@@ -111,22 +136,48 @@ private struct DiscoveryView: View {
                 .padding(GenSpace.md).frame(minHeight: GenSize.iosTouch)
                 .background(GenPalette.surface, in: RoundedRectangle(cornerRadius: GenRadius.card))
                 .overlay(RoundedRectangle(cornerRadius: GenRadius.card).stroke(GenPalette.line))
+                HStack {
+                    Button {
+                        searching = false
+                        permissions.requestCurrentLocation()
+                        showLocationSettings = permissions.locationDenied
+                    } label: {
+                        Label(L10n.resource("location_use", locale: locale), systemImage: "location.fill")
+                            .frame(minHeight: GenSize.iosTouch)
+                    }
+                    .disabled(permissions.locating).accessibilityIdentifier("location-use")
+                    Spacer(minLength: GenSpace.sm)
+                    if permissions.locationDenied {
+                        Button(L10n.resource("location_settings", locale: locale)) {
+                            if let url = URL(string: UIApplication.openSettingsURLString) { UIApplication.shared.open(url) }
+                        }.frame(minHeight: GenSize.iosTouch).accessibilityIdentifier("location-settings")
+                    }
+                }.font(GenTypography.font(.subheadline))
                 CategoryFilterView(locale: locale, selectedCategories: store.state.selectedCategories,
                                    onToggle: { store.toggleCategory($0.code) }, horizontal: true)
                 if showMap {
                     CenterMapView(locale: locale, centers: store.state.centers,
                                   selectedCenterId: store.state.selectedCenter?.id,
-                                  onSelect: { id in select(id); scrollTarget = id }, origin: store.state.discoveryArea?.coordinates)
+                                  onSelect: { id in select(id); scrollTarget = id }, origin: store.state.discoveryArea?.coordinates,
+                                  deviceOrigin: hasDeviceOrigin)
                         .frame(height: max(100, min(300, geometry.size.height * 0.4)))
                         .clipShape(RoundedRectangle(cornerRadius: GenRadius.card))
                 }
                 ScrollViewReader { proxy in
                     ScrollView {
                         LazyVStack(alignment: .leading, spacing: GenSpace.md) {
+                            if permissions.locating { ProgressView(L10n.resource("location_loading", locale: locale)) }
+                            if let message = permissions.locationMessage {
+                                Text(L10n.resource(message, locale: locale)).accessibilityIdentifier("location-status")
+                            }
                             if let area = store.state.discoveryArea {
-                                Text(L10n.resource("area_scope", locale: locale) + " " + area.label)
+                                Text(hasDeviceOrigin ? L10n.resource("location_scope", locale: locale) : L10n.resource("area_scope", locale: locale) + " " + area.label)
                                     .font(GenTypography.font(.caption))
-                                Button(L10n.resource("area_clear", locale: locale)) { store.setDiscoveryArea(nil) }
+                                    .accessibilityIdentifier("discovery-origin-label")
+                                if hasDeviceOrigin && permissions.approximateLocation {
+                                    Text(L10n.resource("location_approximate", locale: locale)).font(GenTypography.font(.caption))
+                                }
+                                Button(L10n.resource("area_clear", locale: locale)) { onSelectArea(nil) }
                                     .frame(minHeight: GenSize.iosTouch).accessibilityIdentifier("area-clear")
                             }
                             Text(L10n.text(.nearbyCenters, locale: locale)).font(GenTypography.font(.headline))
@@ -141,7 +192,7 @@ private struct DiscoveryView: View {
                                         VStack(alignment: .leading, spacing: GenSpace.xs) {
                                             CenterIdentity(locale: locale, center: center)
                                             if let area = store.state.discoveryArea {
-                                                Text(String(format: L10n.resource("area_distance", locale: locale), locale: Locale(identifier: locale.rawValue), area.distanceKilometersTo(coordinates: center.coordinates)))
+                                                Text(String(format: L10n.resource(hasDeviceOrigin ? "location_distance" : "area_distance", locale: locale), locale: Locale(identifier: locale.rawValue), area.distanceKilometersTo(coordinates: center.coordinates)))
                                                     .font(GenTypography.font(.caption))
                                             }
                                         }
@@ -179,7 +230,15 @@ private struct DiscoveryView: View {
             .padding(.horizontal, GenSpace.lg).padding(.top, GenSpace.sm)
             .background(GenPalette.background).foregroundStyle(GenPalette.text)
         }
-        .sheet(isPresented: $showAreaSearch) { AreaSearchView(locale: locale, onSelect: store.setDiscoveryArea) }
+        .sheet(isPresented: $showAreaSearch) { AreaSearchView(locale: locale, onSelect: onSelectArea) }
+        .alert(L10n.resource("location_use", locale: locale), isPresented: $showLocationSettings) {
+            Button(L10n.resource("location_settings", locale: locale)) {
+                if let url = URL(string: UIApplication.openSettingsURLString) { UIApplication.shared.open(url) }
+            }
+            Button(L10n.resource("offer_cancel", locale: locale), role: .cancel) { }
+        } message: {
+            Text(L10n.resource("location_denied", locale: locale))
+        }
         .fullScreenCover(isPresented: $showDetail) {
             NavigationStack {
                 ScrollView {
@@ -244,6 +303,7 @@ struct CenterMapView: UIViewRepresentable {
     let selectedCenterId: String?
     let onSelect: (String) -> Void
     var origin: Coordinates? = nil
+    var deviceOrigin = false
 
     func makeCoordinator() -> Coordinator { Coordinator(self) }
 
@@ -288,16 +348,30 @@ struct CenterMapView: UIViewRepresentable {
         }
     }
 
+    final class OriginAnnotation: NSObject, MKAnnotation {
+        @objc dynamic var coordinate: CLLocationCoordinate2D
+        @objc dynamic var title: String?
+        init(_ coordinate: CLLocationCoordinate2D) { self.coordinate = coordinate }
+    }
+
     final class Coordinator: NSObject, MKMapViewDelegate {
         private var owner: CenterMapView
         private var pins: [String: Annotation] = [:]
         private var framedCoordinates: [String: [Double]] = [:]
         private var framedSelection: String?
         private var framedOrigin: Coordinates?
+        private var originPin: OriginAnnotation?
         init(_ owner: CenterMapView) { self.owner = owner }
 
         func update(_ map: MapCanvas, owner: CenterMapView) {
             self.owner = owner
+            if let origin = owner.origin {
+                let point = CLLocationCoordinate2D(latitude: origin.latitude, longitude: origin.longitude)
+                if originPin == nil { originPin = OriginAnnotation(point); map.addAnnotation(originPin!) }
+                originPin?.coordinate = point
+                originPin?.title = L10n.resource(owner.deviceOrigin ? "location_current" : "area_search", locale: owner.locale)
+                if let pin = originPin, let view = map.view(for: pin) as? MKMarkerAnnotationView { configureOrigin(view) }
+            } else if let pin = originPin { map.removeAnnotation(pin); originPin = nil }
             let centers = owner.centers.filter { CLLocationCoordinate2DIsValid($0.coordinate) }
             let coordinates = Dictionary(uniqueKeysWithValues: centers.map { ($0.id, [$0.coordinates.latitude, $0.coordinates.longitude]) })
             for id in pins.keys.filter({ coordinates[$0] == nil }) {
@@ -347,7 +421,23 @@ struct CenterMapView: UIViewRepresentable {
             view.accessibilityTraits = selected ? [.button, .selected] : [.button]
         }
 
+        private func configureOrigin(_ view: MKMarkerAnnotationView) {
+            view.glyphImage = UIImage(systemName: owner.deviceOrigin ? "location.fill" : "map")
+            view.markerTintColor = owner.deviceOrigin ? .systemBlue : UIColor(GenPalette.accent)
+            view.displayPriority = .required
+            view.isAccessibilityElement = true
+            view.accessibilityIdentifier = "discovery-origin-pin"
+            view.accessibilityLabel = originPin?.title
+        }
+
         func mapView(_ mapView: MKMapView, viewFor annotation: MKAnnotation) -> MKAnnotationView? {
+            if annotation is OriginAnnotation {
+                let view = mapView.dequeueReusableAnnotationView(withIdentifier: "origin") as? MKMarkerAnnotationView
+                    ?? MKMarkerAnnotationView(annotation: annotation, reuseIdentifier: "origin")
+                view.annotation = annotation
+                configureOrigin(view)
+                return view
+            }
             guard let pin = annotation as? Annotation else { return nil }
             let view = mapView.dequeueReusableAnnotationView(withIdentifier: "center") as? MKMarkerAnnotationView
                 ?? MKMarkerAnnotationView(annotation: pin, reuseIdentifier: "center")
@@ -414,6 +504,7 @@ private struct CenterDetail: View {
             Text(center.categories.sorted { $0.ordinal < $1.ordinal }.map { $0.label(locale) }.joined(separator: " · "))
                 .font(GenTypography.font(.subheadline)).foregroundStyle(GenPalette.accent)
             Text(center.address.resolve(locale)).font(GenTypography.font(.subheadline)).foregroundStyle(GenPalette.secondary)
+            CenterMapActions(locale: locale, center: center).id(center.id)
             Text(center.description_.resolve(locale)).font(GenTypography.font(.body))
             ForEach(center.contactInfo.links(), id: \.kind) { link in
                 Button(L10n.resource("contact_" + link.kind, locale: locale)) {
@@ -440,6 +531,36 @@ private struct CenterDetail: View {
         }
         .padding(GenSpace.lg).frame(maxWidth: .infinity, alignment: .leading)
         .background(GenPalette.surface)
+    }
+}
+
+private struct CenterMapActions: View {
+    let locale: AppLocale
+    let center: KindnessCenter
+    @Environment(\.openURL) private var openURL
+    @State private var failed = false
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: GenSpace.sm) {
+            if let google = center.googleMapsURL, let apple = center.appleMapsItem(locale: locale) {
+                Button {
+                    openURL(google) { accepted in failed = !accepted }
+                } label: {
+                    Label(L10n.resource("map_open_google", locale: locale), systemImage: "map")
+                }.accessibilityIdentifier("map-open-google")
+                Button {
+                    failed = !apple.openInMaps()
+                } label: {
+                    Label(L10n.resource("map_open_apple", locale: locale), systemImage: "map.fill")
+                }.accessibilityIdentifier("map-open-apple")
+            } else {
+                Text(L10n.resource("map_location_unavailable", locale: locale))
+            }
+            if failed {
+                Text(L10n.resource("map_open_failed", locale: locale)).foregroundStyle(GenPalette.error)
+                    .accessibilityIdentifier("map-open-error")
+            }
+        }.buttonStyle(.bordered).controlSize(.large)
     }
 }
 
@@ -572,11 +693,11 @@ private struct ProfileView: View {
 private struct SettingsView: View {
     let locale: AppLocale
     let saveFailed: Bool
+    @ObservedObject var permissions: PermissionService
     @Binding var languageMode: String
     @Binding var nearbyNotifications: Bool
     @Binding var urgentNotifications: Bool
     @Binding var reminderNotifications: Bool
-    @StateObject private var permissions = PermissionService()
 
     var body: some View {
         NavigationStack {

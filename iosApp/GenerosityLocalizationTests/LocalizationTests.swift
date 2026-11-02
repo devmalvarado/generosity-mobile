@@ -25,6 +25,40 @@ final class LocalizationTests: XCTestCase {
     }
 }
 
+final class ExternalMapTests: XCTestCase {
+    func testDestinationsUseEachCentersCoordinatesAndLocalizedName() throws {
+        for center in BundledKindnessCatalog.shared.centers() {
+            let url = try XCTUnwrap(center.googleMapsURL)
+            let parts = try XCTUnwrap(URLComponents(url: url, resolvingAgainstBaseURL: false))
+            XCTAssertEqual(parts.scheme, "https")
+            XCTAssertEqual(parts.host, "www.google.com")
+            XCTAssertEqual(parts.path, "/maps/search/")
+            XCTAssertEqual(parts.queryItems, [URLQueryItem(name: "api", value: "1"),
+                URLQueryItem(name: "query", value: "\(center.coordinates.latitude),\(center.coordinates.longitude)")])
+            for locale in [AppLocale.spanish, .english] {
+                let item = try XCTUnwrap(center.appleMapsItem(locale: locale))
+                XCTAssertEqual(item.name, center.name.resolve(locale))
+                XCTAssertEqual(item.placemark.coordinate.latitude, center.coordinates.latitude)
+                XCTAssertEqual(item.placemark.coordinate.longitude, center.coordinates.longitude)
+                XCTAssertFalse(item.isCurrentLocation)
+            }
+        }
+    }
+
+    func testInvalidCoordinatesDoNotProduceMapActions() {
+        let source = BundledKindnessCatalog.shared.centers()[0]
+        for point in [Coordinates(latitude: .nan, longitude: 0), Coordinates(latitude: 91, longitude: 0),
+                      Coordinates(latitude: 0, longitude: .infinity), Coordinates(latitude: 0, longitude: -181)] {
+            let center = source.doCopy(id: source.id, name: source.name, description: source.description_,
+                categories: source.categories, coordinates: point, address: source.address,
+                contactInfo: source.contactInfo, verificationStatus: source.verificationStatus,
+                needs: source.needs, importedAtIsoDate: source.importedAtIsoDate)
+            XCTAssertNil(center.googleMapsURL)
+            XCTAssertNil(center.appleMapsItem(locale: .spanish))
+        }
+    }
+}
+
 final class MapFramingTests: XCTestCase {
     func testSelectedSearchAreaFramesEmptyResultsAndSelectionTakesPrecedence() throws {
         let origin = CLLocationCoordinate2D(latitude: 19.35, longitude: -99.16)
@@ -107,4 +141,133 @@ final class MapFramingTests: XCTestCase {
         XCTAssertNil(discoveryMapRect(coordinates: [.init(latitude: .nan, longitude: 1)], selected: nil))
     }
 
+}
+
+@MainActor
+final class CurrentLocationTests: XCTestCase {
+    func testPermissionMustBeGrantedBeforeRequestingCoordinates() {
+        let manager = LocationManagerStub()
+        manager.status = .notDetermined
+        let service = PermissionService(locationManager: manager)
+        service.requestCurrentLocation()
+        XCTAssertEqual(manager.permissionRequests, 1)
+        XCTAssertEqual(manager.fixRequests, 0)
+        XCTAssertTrue(service.locating)
+        manager.status = .authorizedWhenInUse
+        service.locationManagerDidChangeAuthorization(manager)
+        XCTAssertEqual(manager.fixRequests, 1)
+        let fix = CLLocation(latitude: 19.35, longitude: -99.16)
+        service.locationManager(manager, didUpdateLocations: [fix])
+        XCTAssertEqual(service.currentLocation, fix)
+        XCTAssertFalse(service.locating)
+        XCTAssertNil(service.locationMessage)
+    }
+
+    func testDeniedAndRevokedPermissionClearLocationAndStopRequests() {
+        let manager = LocationManagerStub()
+        let service = PermissionService(locationManager: manager)
+        service.requestCurrentLocation()
+        service.locationManager(manager, didUpdateLocations: [CLLocation(latitude: 19.35, longitude: -99.16)])
+        XCTAssertNotNil(service.currentLocation)
+        manager.status = .denied
+        service.locationManagerDidChangeAuthorization(manager)
+        XCTAssertNil(service.currentLocation)
+        XCTAssertEqual(service.locationMessage, "location_denied")
+        XCTAssertTrue(service.locationDenied)
+        service.requestCurrentLocation()
+        XCTAssertEqual(manager.fixRequests, 1)
+        XCTAssertFalse(service.locating)
+        XCTAssertGreaterThan(manager.stops, 0)
+    }
+
+    func testManualSelectionAndBackgroundIgnoreLateFixes() {
+        let manager = LocationManagerStub()
+        let service = PermissionService(locationManager: manager)
+        service.requestCurrentLocation()
+        service.useManualArea()
+        let fix = CLLocation(latitude: 19.35, longitude: -99.16)
+        service.locationManager(manager, didUpdateLocations: [fix])
+        service.resumeLocation()
+        XCTAssertNil(service.currentLocation)
+        XCTAssertEqual(manager.fixRequests, 1)
+        service.requestCurrentLocation()
+        service.suspendLocation()
+        service.locationManager(manager, didUpdateLocations: [fix])
+        XCTAssertNil(service.currentLocation)
+        service.resumeLocation()
+        XCTAssertEqual(manager.fixRequests, 3)
+        service.useManualArea()
+    }
+
+    func testOldInvalidAndExcessivelyInaccurateFixesAreRejected() {
+        let now = Date()
+        func fix(_ age: TimeInterval, accuracy: Double = 100, latitude: Double = 19.35) -> CLLocation {
+            CLLocation(coordinate: .init(latitude: latitude, longitude: -99.16), altitude: 0,
+                       horizontalAccuracy: accuracy, verticalAccuracy: -1, timestamp: now.addingTimeInterval(-age))
+        }
+        XCTAssertTrue(PermissionService.isUsable(fix(120, accuracy: 5_000), now: now))
+        for candidate in [fix(121), fix(-6), fix(0, accuracy: -1), fix(0, accuracy: 5_001),
+                          fix(0, accuracy: .infinity), fix(0, latitude: .nan)] {
+            XCTAssertFalse(PermissionService.isUsable(candidate, now: now))
+        }
+        let manager = LocationManagerStub()
+        let service = PermissionService(locationManager: manager)
+        service.requestCurrentLocation()
+        service.locationManager(manager, didUpdateLocations: [fix(300)])
+        XCTAssertNil(service.currentLocation)
+        XCTAssertEqual(service.locationMessage, "location_unavailable")
+    }
+
+    func testApproximateFixIsAcceptedAndReportedAsApproximate() {
+        let manager = LocationManagerStub()
+        manager.precision = .reducedAccuracy
+        let service = PermissionService(locationManager: manager)
+        service.requestCurrentLocation()
+        service.locationManager(manager, didUpdateLocations: [CLLocation(coordinate: .init(latitude: 19.35, longitude: -99.16),
+            altitude: 0, horizontalAccuracy: 3_000, verticalAccuracy: -1, timestamp: Date())])
+        XCTAssertNotNil(service.currentLocation)
+        XCTAssertTrue(service.approximateLocation)
+    }
+
+    func testTimeoutAllowsRetryAndDoesNotAcceptLateResponse() async throws {
+        let manager = LocationManagerStub()
+        let service = PermissionService(locationManager: manager, timeoutSeconds: 0.01)
+        service.requestCurrentLocation()
+        try await Task.sleep(nanoseconds: 80_000_000)
+        XCTAssertFalse(service.locating)
+        XCTAssertEqual(service.locationMessage, "location_unavailable")
+        service.locationManager(manager, didUpdateLocations: [CLLocation(latitude: 19.35, longitude: -99.16)])
+        XCTAssertNil(service.currentLocation)
+        service.requestCurrentLocation()
+        XCTAssertEqual(manager.fixRequests, 2)
+        XCTAssertNil(service.locationMessage)
+        service.useManualArea()
+    }
+
+    func testOriginPinUsesLocationLabelAndIsRemovedWhenCleared() {
+        let point = Coordinates(latitude: 19.35, longitude: -99.16)
+        let owner = CenterMapView(locale: .spanish, centers: [], selectedCenterId: nil, onSelect: { _ in }, origin: point, deviceOrigin: true)
+        let coordinator = owner.makeCoordinator()
+        let map = CenterMapView.MapCanvas(frame: CGRect(x: 0, y: 0, width: 320, height: 240))
+        map.delegate = coordinator
+        coordinator.update(map, owner: owner)
+        XCTAssertEqual(map.annotations.count, 1)
+        XCTAssertEqual(map.annotations.first?.title, "Tu ubicación")
+        XCTAssertEqual(map.centerCoordinate.latitude, point.latitude, accuracy: 0.001)
+        coordinator.update(map, owner: CenterMapView(locale: .spanish, centers: [], selectedCenterId: nil, onSelect: { _ in }))
+        XCTAssertTrue(map.annotations.isEmpty)
+    }
+}
+
+private final class LocationManagerStub: CLLocationManager {
+    var status = CLAuthorizationStatus.authorizedWhenInUse
+    var precision = CLAccuracyAuthorization.fullAccuracy
+    var permissionRequests = 0
+    var fixRequests = 0
+    var stops = 0
+    override var authorizationStatus: CLAuthorizationStatus { status }
+    override var accuracyAuthorization: CLAccuracyAuthorization { precision }
+    override func requestWhenInUseAuthorization() { permissionRequests += 1 }
+    override func requestLocation() { fixRequests += 1 }
+    override func stopUpdatingLocation() { stops += 1 }
 }

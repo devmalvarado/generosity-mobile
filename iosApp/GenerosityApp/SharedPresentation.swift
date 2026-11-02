@@ -19,6 +19,21 @@ extension KindnessCenter {
     var coordinate: CLLocationCoordinate2D {
         CLLocationCoordinate2D(latitude: coordinates.latitude, longitude: coordinates.longitude)
     }
+
+    var googleMapsURL: URL? {
+        guard CLLocationCoordinate2DIsValid(coordinate) else { return nil }
+        var url = URLComponents(string: "https://www.google.com/maps/search/")!
+        url.queryItems = [URLQueryItem(name: "api", value: "1"),
+                         URLQueryItem(name: "query", value: "\(coordinates.latitude),\(coordinates.longitude)")]
+        return url.url
+    }
+
+    func appleMapsItem(locale: AppLocale) -> MKMapItem? {
+        guard CLLocationCoordinate2DIsValid(coordinate) else { return nil }
+        let item = MKMapItem(placemark: MKPlacemark(coordinate: coordinate))
+        item.name = name.resolve(locale)
+        return item
+    }
 }
 
 extension LocalizedText {

@@ -46,7 +46,8 @@ object GoogleCenterMapRenderer : CenterMapRenderer {
         locale: SupportedLocale,
         onCenterSelected: (String) -> Unit,
         modifier: Modifier,
-        origin: org.generosity.domain.Coordinates?
+        origin: org.generosity.domain.Coordinates?,
+        originLabel: String?
     ) {
         val context = LocalContext.current
         val selectedColor = MaterialTheme.colorScheme.primary
@@ -82,6 +83,12 @@ object GoogleCenterMapRenderer : CenterMapRenderer {
                             ),
                             onMapLoaded = { loaded = true }
                         ) {
+                            origin?.let {
+                                Marker(state = rememberUpdatedMarkerState(LatLng(it.latitude, it.longitude)),
+                                    title = originLabel, zIndex = 2f,
+                                    icon = BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE),
+                                    onClick = { true })
+                            }
                             markers.forEach { marker ->
                                 key(marker.centerId) {
                                     Marker(

@@ -56,6 +56,7 @@ data class GenerosityUiState(
     val selectedCategories: Set<CenterCategory> = emptySet(),
     val centers: List<KindnessCenter> = emptyList(),
     val selectedCenterId: String? = null,
+    val selectedCenterDetails: KindnessCenter? = null,
     val contributions: List<Contribution> = emptyList(),
     val impact: PersonalImpact = PersonalImpact(),
     val preferences: NotificationPreference = NotificationPreference(),
@@ -77,6 +78,7 @@ data class GenerosityUiState(
 
     val selectedCenter: KindnessCenter?
         get() = centers.firstOrNull { it.id == selectedCenterId }
+            ?: selectedCenterDetails?.takeIf { it.id == selectedCenterId }
 
     val currentNeeds: List<CenterNeed>
         get() = selectedCenter?.let { CurrentNeedsUseCase()(it.needs, referenceIsoDate) }.orEmpty()
@@ -146,8 +148,10 @@ class GenerosityAppState(
         scope.launch { refreshCenters() }
     }
 
-    fun setDiscoveryArea(area: DiscoveryArea?) {
-        update { copy(discoveryArea = area, selectedCenterId = null) }
+    fun setDiscoveryArea(area: DiscoveryArea?, preserveSelection: Boolean = false) {
+        update { copy(discoveryArea = area,
+            selectedCenterId = selectedCenterId.takeIf { preserveSelection },
+            selectedCenterDetails = selectedCenter.takeIf { preserveSelection }) }
         scope.launch { refreshCenters() }
     }
 
@@ -164,7 +168,10 @@ class GenerosityAppState(
         scope.launch { refreshCenters() }
     }
 
-    fun selectCenter(centerId: String?) = update { copy(selectedCenterId = centerId, lastRejection = null) }
+    fun selectCenter(centerId: String?) = update {
+        copy(selectedCenterId = centerId,
+            selectedCenterDetails = centers.firstOrNull { it.id == centerId }, lastRejection = null)
+    }
 
     fun setPreferences(preferences: NotificationPreference) {
         try {
@@ -305,11 +312,17 @@ class GenerosityAppState(
         val withLiveNeeds = discovered.map { center ->
             center.copy(needs = needs.needsForCenter(center.id))
         }
+        // An open detail survives GPS-driven list changes, but still follows the catalog.
+        val selectedDetails = current.selectedCenterId?.let { id ->
+            centersRepository.centerById(id)?.let { it.copy(needs = needs.needsForCenter(id)) }
+        }
         // A slower lookup in the previous language must not replace current results.
         update {
             if (locale == current.locale && searchText == current.searchText &&
                 selectedCategories == current.selectedCategories && discoveryArea == current.discoveryArea
-            ) copy(centers = withLiveNeeds, referenceIsoDate = clock().take(10)) else this
+            ) copy(centers = withLiveNeeds, referenceIsoDate = clock().take(10),
+                selectedCenterDetails = if (selectedCenterId == current.selectedCenterId) selectedDetails else selectedCenterDetails)
+            else this
         }
     }
 
