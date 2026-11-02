@@ -72,14 +72,17 @@ of the same pair are normalized without rounding geographic precision.
 pair and host/credential rejection. `center-applications.spec.js` covers visible
 fields, client validation, exact decimal payloads, language changes and the
 existing 320/390/768/1280px, 200%-text checks in Chromium and WebKit. The location
-update passed 16 browser checks and the targeted backend suite. No additional
-database migration is required for these JSON details. Deploy the backend first.
+update passed 16 browser checks on both the working and release branches and the
+targeted backend suite. No additional database migration was needed for these
+JSON details. The published form was visually inspected; its bytes match the
+release. No new authenticated production application was submitted.
 
 ### Release procedure
 
 The original intake and its additive migration were published with the
-[account/portal release](../releases/account-portal-2026-11-01.md). This new location
-field increment is prepared locally and still needs backend-first publication.
+[account/portal release](../releases/account-portal-2026-11-01.md). The location
+field increment was published backend-first on 2026-11-01; see the
+[initial catalog release](../releases/initial-catalog-2026-11-01.md).
 No new migration is needed. The selective landing workflow does not deploy PHP.
 Preserve accepted applications; do not roll back their table destructively.
 
