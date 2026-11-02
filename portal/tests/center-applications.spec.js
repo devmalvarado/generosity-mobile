@@ -90,6 +90,29 @@ test('lost response survives reload and retries the identical operation only aft
   expect(requests[0].headers()['idempotency-key']).toBe(requests[1].headers()['idempotency-key']);
 });
 
+test('location fields are visible, preserve precision and require a valid coordinate pair', async ({ page }) => {
+  const state = await fixture(page);
+  await fill(page);
+  await expect(page.locator('#application-address')).toBeVisible();
+  await expect(page.locator('#application-google_maps_url')).toBeVisible();
+  await page.locator('#application-address').fill('Ignacio Allende 177, Del Carmen, Coyoacán');
+  await page.locator('#application-google_maps_url').fill('https://maps.app.goo.gl/example');
+  await page.locator('#application-latitude').fill('19.3562351');
+  await page.locator('#registration-submit').click();
+  await expect(page.locator('#application-longitude')).toBeFocused();
+  expect(state.posts).toHaveLength(0);
+  await page.locator('#application-longitude').fill('-181');
+  await page.locator('#registration-submit').click();
+  expect(state.posts).toHaveLength(0);
+  await page.locator('#application-longitude').fill('-99.1627481');
+  await page.locator('#idioma').selectOption('en');
+  await expect(page.getByLabel('Google Maps link', { exact: true })).toHaveValue('https://maps.app.goo.gl/example');
+  await expect(page.locator('#application-location-hint')).toContainText('protected');
+  await page.locator('#registration-submit').click();
+  await expect(page.locator('#registration-result')).toContainText(receipt.id);
+  expect(state.posts[0].postDataJSON()).toMatchObject({ latitude: '19.3562351', longitude: '-99.1627481', google_maps_url: 'https://maps.app.goo.gl/example' });
+});
+
 test('server validation keeps values and focuses the invalid optional field', async ({ page }) => {
   await fixture(page);
   await page.route(api + '/api/v1/center-applications', route => route.fulfill({ status: 422, json: { error: { code: 'validation_failed', details: { phone: ['Invalid phone'] } } } }));

@@ -3,6 +3,23 @@ Replace hard-coded production centers with validated catalog data that can be lo
 
 ## ADDED Requirements
 
+### Requirement: Traceable Initial Public Directory
+An initial public-source batch SHALL retain stable IDs, source URLs, observation dates, Google Maps place references and full place-pin latitude/longitude. The batch SHALL distinguish its search area from the actual administrative address, preserve unknown values and hold material location discrepancies for review. It SHALL NOT infer official verification, free service, intake availability, current needs or staff membership from a map listing.
+
+#### Scenario: Import an incomplete discovery-only listing
+- **WHEN** an operator imports a center with a public name/address, category, valid coordinates, an HTTPS Google Maps place reference, imported status and no needs
+- **THEN** missing phone/email/website is permitted without inventing a contact
+- **AND** a contactless record with needs or a stronger verification status is rejected atomically
+
+#### Scenario: Preserve exact pin and legacy client compatibility
+- **WHEN** a batch includes Google Maps source metadata
+- **THEN** the backend stores its URL and full place-pin coordinate pair without using viewport coordinates
+- **AND** the directory API exposes the URL while the strict schema-v1 mobile snapshot retains its existing fields and coordinate-based map behavior
+
+#### Scenario: Ambiguous source location
+- **WHEN** a source has an unresolved street, postal-address, entrance or current-facility discrepancy
+- **THEN** the record remains in the dated research inventory with its sources and review reason and is omitted from the import batch until resolved
+
 ### Requirement: Validated Catalog Import
 Catalog imports SHALL follow the documented versioned schema with stable center/need identifiers, localized fields, supported codes, valid coordinates and valid quantity/date fields. Invalid imports SHALL fail atomically with a diagnostic rather than partially replacing the active catalog. Repeating an import SHALL not duplicate records.
 

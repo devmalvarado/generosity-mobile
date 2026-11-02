@@ -38,6 +38,12 @@ class CenterApplicationTest extends TestCase
         $first = $this->postJson('/api/v1/center-applications', $this->details(), $headers)->assertCreated()
             ->assertJsonPath('application.status', 'pending')->assertJsonPath('application.site_name', 'Sede Niñez')
             ->assertJsonMissingPath('application.contact_email');
+        $legacy = $this->details() + array_fill_keys(['legal_name', 'region', 'postal_code', 'address', 'phone', 'website'], null);
+        ksort($legacy);
+        $this->assertDatabaseHas('operations', ['key' => $headers['Idempotency-Key'],
+            'request_hash' => hash('sha256', 'POST api/v1/center-applications '.json_encode($legacy, JSON_THROW_ON_ERROR))]);
+        $this->postJson('/api/v1/center-applications', $this->details() + ['latitude' => null, 'longitude' => null, 'google_maps_url' => null], $headers)
+            ->assertCreated()->assertExactJson($first->json());
         $this->postJson('/api/v1/center-applications', $this->details(), $headers)->assertCreated()->assertExactJson($first->json());
         $this->postJson('/api/v1/center-applications', $this->details(), $this->headers($owner))->assertOk()->assertExactJson($first->json());
         $this->postJson('/api/v1/center-applications', array_replace($this->details(), ['site_name' => 'Otra sede']), $headers)->assertConflict();
@@ -76,6 +82,42 @@ class CenterApplicationTest extends TestCase
         $this->getJson('/api/v1/me/center-applications', $this->headers($other))->assertJsonPath('data.0.id', $second);
         $this->app['auth']->forgetGuards();
         $this->getJson('/api/v1/me/center-applications')->assertUnauthorized();
+    }
+
+    public function test_location_is_validated_persisted_privately_and_normalized_for_retries(): void
+    {
+        $owner = User::factory()->create();
+        $details = $this->details() + ['address' => 'Calle Pública 10, Coyoacán',
+            'google_maps_url' => 'https://maps.app.goo.gl/example',
+            'latitude' => '19.350000', 'longitude' => '-99.160000'];
+        $first = $this->postJson('/api/v1/center-applications', $details, $this->headers($owner))->assertCreated();
+        $saved = json_decode(DB::table('center_applications')->value('details'), true);
+        $this->assertSame(19.35, $saved['latitude']);
+        $this->assertSame(-99.16, $saved['longitude']);
+        $this->assertSame($details['google_maps_url'], $saved['google_maps_url']);
+        $details['latitude'] = 19.35;
+        $details['longitude'] = -99.16;
+        $this->postJson('/api/v1/center-applications', $details, $this->headers($owner))
+            ->assertOk()->assertExactJson($first->json());
+        $this->assertDatabaseCount('center_applications', 1);
+        $this->getJson('/api/v1/me/center-applications', $this->headers($owner))
+            ->assertJsonMissingPath('data.0.latitude')->assertJsonMissingPath('data.0.google_maps_url');
+        $this->getJson('/api/v1/sync/catalog')->assertJsonCount(0, 'catalog.centers');
+    }
+
+    public function test_invalid_coordinate_pairs_and_non_maps_urls_are_rejected(): void
+    {
+        foreach ([['latitude' => 19], ['longitude' => -99], ['latitude' => 0, 'longitude' => null],
+            ['latitude' => 91, 'longitude' => -99], ['latitude' => 19, 'longitude' => -181],
+            ['latitude' => 'NaN', 'longitude' => -99],
+            ['google_maps_url' => 'https://google.com.evil.test/maps/place/example'],
+            ['google_maps_url' => 'https://evil.test@www.google.com/maps/place/example'],
+            ['google_maps_url' => 'https://www.google.com/search?q=example'],
+            ['google_maps_url' => 'javascript:alert(1)']] as $invalid) {
+            $this->postJson('/api/v1/center-applications', array_replace($this->details(), $invalid), $this->headers(User::factory()->create()))
+                ->assertUnprocessable()->assertJsonPath('error.code', 'validation_failed');
+        }
+        $this->assertDatabaseCount('center_applications', 0);
     }
 
     public function test_stateful_requests_require_csrf_and_new_submission_rate_is_bounded(): void

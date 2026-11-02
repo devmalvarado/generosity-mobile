@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Services\CatalogRules;
 use App\Services\Mutation;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -28,6 +29,9 @@ class CenterApplicationController extends Controller
             'city' => 'required|string|max:100',
             'postal_code' => 'nullable|string|max:20',
             'address' => 'nullable|string|max:500',
+            'google_maps_url' => CatalogRules::googleMapsUrl(),
+            'latitude' => 'nullable|required_with:longitude|numeric|between:-90,90',
+            'longitude' => 'nullable|required_with:latitude|numeric|between:-180,180',
             'contact_name' => 'required|string|max:160',
             'contact_role' => 'required|string|max:160',
             'phone' => 'nullable|string|max:40|regex:/^\+?[0-9 ()\-.]{6,40}$/',
@@ -39,6 +43,17 @@ class CenterApplicationController extends Controller
         ]);
         foreach (['legal_name', 'region', 'postal_code', 'address', 'phone', 'website'] as $optional) {
             $data[$optional] ??= null;
+        }
+        // Preserve fingerprints and pending retries created before location fields existed.
+        foreach (['google_maps_url', 'latitude', 'longitude'] as $optional) {
+            if (($data[$optional] ?? null) === null) {
+                unset($data[$optional]);
+            }
+        }
+        foreach (['latitude', 'longitude'] as $coordinate) {
+            if (isset($data[$coordinate])) {
+                $data[$coordinate] = (float) $data[$coordinate];
+            }
         }
         $data['representation_confirmed'] = $data['contact_consent'] = true;
         ksort($data);
