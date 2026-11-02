@@ -37,9 +37,7 @@
 "category_education" = "Educación";
 "category_vulnerable_families" = "Apoyo a familias";
 "category_organ_tissue_donation" = "Donación de órganos y tejidos";
-"verification_imported" = "Ficha importada";
-"verification_visit_signaled" = "Visita reportada por un usuario";
-"verification_officially_verified" = "Verificado oficialmente";
+"verification_officially_verified" = "Verificado";
 "view_details" = "Ver detalles";
 "selected_center" = "Centro seleccionado";
 "priority_normal" = "Normal";

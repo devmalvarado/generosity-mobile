@@ -16,7 +16,6 @@ import org.generosity.domain.CenterCategory
 import org.generosity.domain.HelpMethod
 import org.generosity.domain.NotificationType
 import org.generosity.domain.SupportedLocale
-import org.generosity.domain.VerificationStatus
 
 fun Context.localizedResources(locale: SupportedLocale): Resources =
     createConfigurationContext(Configuration(resources.configuration).apply {
@@ -96,13 +95,6 @@ fun HelpMethod.label(locale: SupportedLocale): String = localizedString(when (th
     HelpMethod.TIME -> R.string.help_with_time
     HelpMethod.GOODS -> R.string.help_with_goods
     HelpMethod.MONEY -> R.string.help_with_money
-}, locale)
-
-@Composable
-fun VerificationStatus.label(locale: SupportedLocale): String = localizedString(when (this) {
-    VerificationStatus.IMPORTED -> R.string.verification_imported
-    VerificationStatus.VISIT_SIGNALED -> R.string.verification_visit_signaled
-    VerificationStatus.OFFICIALLY_VERIFIED -> R.string.verification_officially_verified
 }, locale)
 
 @Composable

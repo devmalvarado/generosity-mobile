@@ -228,11 +228,25 @@ private struct CenterIdentity: View {
         HStack(alignment: .center, spacing: 12) {
             CategoryBadge(category: center.categories.sorted { $0.ordinal < $1.ordinal }.first)
             VStack(alignment: .leading, spacing: 4) {
-                Text(center.name.resolve(locale)).font(.subheadline.weight(.semibold)).foregroundStyle(GenPalette.text)
+                HStack(spacing: 4) {
+                    Text(center.name.resolve(locale)).font(.subheadline.weight(.semibold)).foregroundStyle(GenPalette.text)
+                    VerifiedCenterBadge(locale: locale, status: center.verificationStatus)
+                }
                 Text(center.address.resolve(locale)).font(.caption).foregroundStyle(GenPalette.secondary)
-                Text(center.verificationStatus.label(locale)).font(.caption).foregroundStyle(GenPalette.secondary)
             }
             .frame(maxWidth: .infinity, alignment: .leading)
+        }
+    }
+}
+
+private struct VerifiedCenterBadge: View {
+    let locale: AppLocale
+    let status: VerificationStatus
+    var body: some View {
+        if status == .officiallyVerified {
+            Image(systemName: "checkmark.circle.fill")
+                .foregroundStyle(GenPalette.accent)
+                .accessibilityLabel(L10n.resource("verification_officially_verified", locale: locale))
         }
     }
 }
@@ -250,8 +264,11 @@ private struct CenterDetail: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 16) {
             CategoryBadge(category: center.categories.sorted { $0.ordinal < $1.ordinal }.first, size: 52)
-            Text(center.name.resolve(locale)).font(.title2.weight(.bold))
-                .accessibilityIdentifier("detail-\(center.id)")
+            HStack(spacing: 4) {
+                Text(center.name.resolve(locale)).font(.title2.weight(.bold))
+                    .accessibilityIdentifier("detail-\(center.id)")
+                VerifiedCenterBadge(locale: locale, status: center.verificationStatus)
+            }
             Text(center.categories.sorted { $0.ordinal < $1.ordinal }.map { $0.label(locale) }.joined(separator: " · "))
                 .font(.subheadline).foregroundStyle(GenPalette.accent)
             Text(center.address.resolve(locale)).font(.subheadline).foregroundStyle(GenPalette.secondary)
@@ -277,7 +294,6 @@ private struct CenterDetail: View {
             if visitNoted {
                 Text(store.state.backendConfigured ? L10n.resource("visit_saved", locale: locale) : L10n.text(.visitSignalSubmitted, locale: locale)).font(.footnote)
             }
-            Text(center.verificationStatus.label(locale)).font(.subheadline.weight(.semibold))
             Text(L10n.text(.officialVerificationBoundary, locale: locale)).font(.footnote).foregroundStyle(GenPalette.secondary)
         }
         .padding(16).frame(maxWidth: .infinity, alignment: .leading)

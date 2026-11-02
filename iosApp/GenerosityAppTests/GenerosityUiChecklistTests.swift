@@ -101,6 +101,26 @@ final class GenerosityUiChecklistTests: XCTestCase {
         XCTAssertTrue(app.buttons["center-kc-children-001"].waitForExistence(timeout: 5))
     }
 
+    func testOnlyVerifiedCentersShowAnAccessibleCheckmark() {
+        for (languages, list, verified) in [("(en-US)", "List", "Verified"), ("(es-MX)", "Lista", "Verificado")] {
+            let app = launch(languages: languages)
+            app.tabBars.buttons[list].tap()
+            for id in ["kc-children-001", "kc-seniors-001", "kc-health-001"] {
+                let card = app.buttons["center-\(id)"]
+                XCTAssertTrue(card.waitForExistence(timeout: 5))
+                for _ in 0..<4 where !card.isHittable { app.swipeUp() }
+                XCTAssertTrue(card.isHittable)
+                XCTAssertEqual(card.label.contains(verified), id == "kc-health-001", card.label)
+                for oldLabel in ["Imported listing", "Ficha importada", "Visit reported by a user", "Visita reportada por un usuario"] {
+                    XCTAssertFalse(card.label.contains(oldLabel))
+                    XCTAssertFalse(app.staticTexts[oldLabel].exists)
+                }
+            }
+            capture(app, name: "Verification checkmark - \(languages)")
+            app.terminate()
+        }
+    }
+
     func testBloodDonationFilterIsSeparateAndLocalized() {
         let app = launch()
         app.tabBars.buttons["List"].tap()

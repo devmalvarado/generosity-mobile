@@ -25,9 +25,3 @@ extension HelpMethod {
         L10n.resource("help_with_\(code)", locale: locale)
     }
 }
-
-extension VerificationStatus {
-    func label(_ locale: AppLocale) -> String {
-        L10n.resource("verification_\(code)", locale: locale)
-    }
-}

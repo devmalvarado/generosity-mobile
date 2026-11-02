@@ -28,6 +28,8 @@ import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.semantics.Role
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
@@ -236,10 +238,20 @@ private fun CenterIdentity(locale: SupportedLocale, center: KindnessCenter) {
     Row(horizontalArrangement = Arrangement.spacedBy(12.dp), verticalAlignment = Alignment.CenterVertically) {
         CategoryBadge(center.categories.firstOrNull())
         Column(Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(4.dp)) {
-            Text(center.name.resolve(locale), fontWeight = FontWeight.SemiBold)
+            Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(4.dp)) {
+                Text(center.name.resolve(locale), Modifier.weight(1f, fill = false), fontWeight = FontWeight.SemiBold)
+                VerifiedCenterBadge(locale, center.verificationStatus)
+            }
             Text(center.address.resolve(locale), style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
-            Text(center.verificationStatus.label(locale), style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
         }
+    }
+}
+
+@Composable
+private fun VerifiedCenterBadge(locale: SupportedLocale, status: VerificationStatus) {
+    if (status == VerificationStatus.OFFICIALLY_VERIFIED) {
+        val label = localizedString(R.string.verification_officially_verified, locale)
+        AppIcon(R.drawable.ic_verified, Modifier.semantics { contentDescription = label }, tint = MaterialTheme.colorScheme.primary)
     }
 }
 
@@ -254,7 +266,10 @@ private fun CenterDetail(
         verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
         CategoryBadge(center.categories.firstOrNull(), 52)
-        Text(center.name.resolve(locale), style = MaterialTheme.typography.headlineSmall, fontWeight = FontWeight.Bold)
+        Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(4.dp)) {
+            Text(center.name.resolve(locale), Modifier.weight(1f, fill = false), style = MaterialTheme.typography.headlineSmall, fontWeight = FontWeight.Bold)
+            VerifiedCenterBadge(locale, center.verificationStatus)
+        }
         Text(center.categories.map { it.label(locale) }.joinToString(" · "), style = MaterialTheme.typography.labelLarge, color = MaterialTheme.colorScheme.primary)
         Text(center.address.resolve(locale), style = MaterialTheme.typography.bodyMedium, color = MaterialTheme.colorScheme.onSurfaceVariant)
         Text(center.description.resolve(locale), style = MaterialTheme.typography.bodyMedium)
@@ -273,7 +288,6 @@ private fun CenterDetail(
             Text(TextKey.VISIT_SIGNAL.label(locale))
         }
         if (visitRecorded) Text(if (backendConfigured) localizedString(R.string.visit_saved, locale) else TextKey.VISIT_SIGNAL_SUBMITTED.label(locale), style = MaterialTheme.typography.bodySmall)
-        Text(center.verificationStatus.label(locale), style = MaterialTheme.typography.labelLarge)
         Text(TextKey.OFFICIAL_VERIFICATION_BOUNDARY.label(locale), style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
     }
 }

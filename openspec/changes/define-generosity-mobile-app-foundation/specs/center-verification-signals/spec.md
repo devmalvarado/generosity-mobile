@@ -1,11 +1,16 @@
-## ADDED Requirements
+## MODIFIED Requirements
 
 ### Requirement: Verification Status Display
-The mobile app SHALL display a Kindness Center verification status when that status is available from imported data or future backend data.
+The mobile app SHALL show a checkmark beside the center name only when its verification status is `officially_verified`, in discovery cards, map previews and center details. The icon SHALL have a localized accessible label (Verified / Verificado). Imported and visit-signaled records SHALL show neither a verification badge nor an import-origin label. Internal provenance and verification states SHALL remain unchanged.
 
 #### Scenario: Center has verification status
-- **WHEN** the user opens a Kindness Center with verification status
-- **THEN** the app displays the status on the center detail view
+- **WHEN** the user views a center with `officially_verified` status
+- **THEN** its name is accompanied by an accessible verification checkmark
+
+#### Scenario: Center is imported or has a reported visit
+- **WHEN** the user views an imported or visit-signaled center
+- **THEN** no verification checkmark, Imported listing / Ficha importada label, or public visit-status label appears
+- **AND** the internal status remains available without promoting the center to verified
 
 ### Requirement: User Visit Signal
 The mobile app SHALL allow a user to submit an explicit visit signal for a Kindness Center when visit-signal capture is available.
@@ -41,6 +46,8 @@ The mobile app SHALL collect only the minimum information needed for a visit sig
 #### Scenario: Visit signal includes location evidence
 - **WHEN** the app attaches location evidence to a visit signal
 - **THEN** the app does so only after explicit user action and applicable permission
+
+## ADDED Requirements
 
 ### Requirement: Durable Explicit Visit Receipt
 An explicit visit SHALL be durably stored before displaying local success. A registered user's visit SHALL be submitted or queued under that account with a stable operation ID. The app SHALL distinguish saved locally, upload pending, server received and failed states. Retries SHALL not create duplicate backend signals.
