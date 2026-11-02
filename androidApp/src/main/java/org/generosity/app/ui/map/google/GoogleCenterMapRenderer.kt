@@ -9,7 +9,6 @@ import androidx.compose.runtime.key
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -56,7 +55,6 @@ object GoogleCenterMapRenderer : CenterMapRenderer {
                 else -> {
                     // Keep the camera across retries; only recreate the failed SDK view.
                     val camera = rememberCameraPositionState()
-                    var framedCatalog by rememberSaveable { mutableStateOf(false) }
                     key(attempt) {
                         var loaded by remember { mutableStateOf(false) }
                         GoogleMap(
@@ -77,6 +75,7 @@ object GoogleCenterMapRenderer : CenterMapRenderer {
                                     Marker(
                                         state = rememberUpdatedMarkerState(marker.toLatLng()),
                                         title = marker.title,
+                                        zIndex = if (marker.centerId == selectedCenterId) 1f else 0f,
                                         icon = BitmapDescriptorFactory.defaultMarker(
                                             if (marker.centerId == selectedCenterId) {
                                                 BitmapDescriptorFactory.HUE_ORANGE
@@ -86,18 +85,19 @@ object GoogleCenterMapRenderer : CenterMapRenderer {
                                         ),
                                         onClick = {
                                             onCenterSelected(marker.centerId)
-                                            false
+                                            true
                                         }
                                     )
                                 }
                             }
                         }
-                        LaunchedEffect(loaded, markers.map { it.coordinates }) {
-                            if (loaded && !framedCatalog && markers.isNotEmpty()) {
+                        LaunchedEffect(loaded, markers.sortedBy { it.centerId }.map { it.coordinates }, selectedCenterId) {
+                            if (loaded && markers.isNotEmpty()) {
                                 val positions = markers.map { it.toLatLng() }.distinct()
-                                val update = if (positions.size == 1) {
+                                val focus = markers.firstOrNull { it.centerId == selectedCenterId }?.toLatLng()
+                                val update = if (focus != null || positions.size == 1) {
                                     CameraUpdateFactory.newCameraPosition(
-                                        CameraPosition.fromLatLngZoom(positions.single(), 13f)
+                                        CameraPosition.fromLatLngZoom(focus ?: positions.single(), 13f)
                                     )
                                 } else {
                                     val bounds = LatLngBounds.builder()
@@ -105,7 +105,6 @@ object GoogleCenterMapRenderer : CenterMapRenderer {
                                     CameraUpdateFactory.newLatLngBounds(bounds.build(), 64)
                                 }
                                 camera.move(update)
-                                framedCatalog = true
                             }
                         }
                         MapLoadFeedback(loaded, locale, onRetry = { attempt++ })

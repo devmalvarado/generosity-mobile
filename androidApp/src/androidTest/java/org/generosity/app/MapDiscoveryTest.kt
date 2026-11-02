@@ -19,6 +19,7 @@ import androidx.compose.ui.test.hasClickAction
 import androidx.compose.ui.test.hasScrollAction
 import androidx.compose.ui.test.hasTestTag
 import androidx.compose.ui.test.hasText
+import androidx.compose.ui.test.hasAnyAncestor
 import androidx.compose.ui.test.junit4.v2.createAndroidComposeRule
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
@@ -53,6 +54,35 @@ class MapDiscoveryTest {
 
     @After
     fun tearDown() = scope.cancel()
+
+    @Test
+    fun everyCardSelectsItsPinAndOpensItsOwnDetail() {
+        launch()
+        val ids = app.state.value.centers.map { it.id }
+        for (id in ids.reversed()) {
+            composeRule.onNodeWithTag("discovery-scroll").performScrollToNode(hasTestTag("center-$id"))
+            composeRule.onNodeWithTag("center-$id").performClick()
+            composeRule.onNodeWithTag("renderer-probe").assertIsDisplayed()
+            composeRule.runOnIdle { assertEquals(id, probe.selectedCenterId) }
+            composeRule.onNodeWithTag("discovery-scroll").performScrollToNode(hasTestTag("details-$id"))
+            composeRule.onNodeWithTag("details-$id").performClick()
+            val name = app.state.value.selectedCenter!!.name.resolve(SupportedLocale.ENGLISH)
+            composeRule.onNode(hasText(name) and hasAnyAncestor(hasTestTag("detail-$id"))).assertIsDisplayed()
+        }
+        composeRule.onNodeWithTag("tab-list").performClick()
+        val id = ids.last()
+        composeRule.onNodeWithTag("discovery-scroll").performScrollToNode(hasTestTag("center-$id"))
+        composeRule.onNodeWithTag("center-$id").performClick()
+        composeRule.onNodeWithTag("detail-$id").assertIsDisplayed()
+        composeRule.onNodeWithTag("tab-map").performClick()
+        composeRule.onNodeWithTag("renderer-probe").assertIsDisplayed()
+        composeRule.runOnIdle { assertEquals(id, probe.selectedCenterId) }
+        val other = ids.first()
+        composeRule.onNodeWithTag("marker-$other").performClick()
+        composeRule.onNodeWithTag("discovery-scroll").performScrollToNode(hasTestTag("selected-center-details"))
+        composeRule.onNodeWithTag("selected-center-details").performClick()
+        composeRule.onNodeWithTag("detail-$other").assertIsDisplayed()
+    }
 
     @Test
     fun replacementRendererUsesSharedFiltersAndSelectionWithoutProviderTypes() {

@@ -73,6 +73,7 @@ replace iOS sample discovery; the later task 5.4 update records that integration
 - [ ] 5.9 Add iOS manual place search without GPS; test selected-origin distance labels, empty/error results and preserved filters.
 - [ ] 5.10 Show Android phone/email/web actions; test missing fields, unsupported schemes, unavailable handlers and anonymous access.
 - [ ] 5.11 Show iOS phone/email/web actions; test missing fields, unsupported schemes, unavailable handlers and anonymous access.
+- [x] 5.12 Give every Android/iOS result direct detail access; scroll to the exact selected detail, synchronize card/pin selection and frame catalog coordinates or the selected center. Validate non-first cards, list/map transitions and far-away/empty results; keep live Google-provider acceptance separate until a key is configured.
 
 Task 5.2 implementation update (2026-10-26): the Google adapter, neutral renderer,
 configuration, boundary guard and automated contract/fallback tests now exist.

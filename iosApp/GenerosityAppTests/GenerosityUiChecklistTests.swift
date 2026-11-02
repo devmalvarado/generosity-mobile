@@ -175,6 +175,49 @@ final class GenerosityUiChecklistTests: XCTestCase {
         XCTAssertTrue(app.staticTexts["Online donations are not available yet. The app does not collect bank or payment details."].exists)
     }
 
+    func testEveryCardSelectsItsPinAndOpensItsOwnDetail() {
+        let app = launch()
+        for id in ["kc-health-001", "kc-seniors-001", "kc-children-001"] {
+            let card = app.buttons["center-\(id)"]
+            revealDiscovery(card, in: app)
+            card.tap()
+            let marker = app.buttons["marker-\(id)"]
+            XCTAssertTrue(marker.waitForExistence(timeout: 5))
+            XCTAssertTrue(marker.isSelected)
+            XCTAssertTrue(marker.isHittable)
+            let details = app.buttons["details-\(id)"]
+            revealDiscovery(details, in: app)
+            details.tap()
+            XCTAssertTrue(app.staticTexts["detail-\(id)"].isHittable)
+        }
+        app.tabBars.buttons["List"].tap()
+        let card = app.buttons["center-kc-health-001"]
+        revealDiscovery(card, in: app)
+        card.tap()
+        XCTAssertTrue(app.staticTexts["detail-kc-health-001"].isHittable)
+        app.tabBars.buttons["Map"].tap()
+        let marker = app.buttons["marker-kc-health-001"]
+        XCTAssertTrue(marker.isSelected)
+        XCTAssertTrue(marker.isHittable)
+        marker.tap()
+        let preview = app.buttons["selected-center-details"]
+        revealDiscovery(preview, in: app)
+        preview.tap()
+        XCTAssertTrue(app.staticTexts["detail-kc-health-001"].isHittable)
+        capture(app, name: "Selected center detail from map")
+    }
+
+    private func revealDiscovery(_ element: XCUIElement, in app: XCUIApplication) {
+        XCTAssertTrue(element.waitForExistence(timeout: 5))
+        for _ in 0..<16 where !element.isHittable {
+            let up = element.frame.midY > app.frame.midY
+            let start = app.coordinate(withNormalizedOffset: CGVector(dx: 0.98, dy: up ? 0.8 : 0.25))
+            let end = app.coordinate(withNormalizedOffset: CGVector(dx: 0.98, dy: up ? 0.25 : 0.8))
+            start.press(forDuration: 0.01, thenDragTo: end)
+        }
+        XCTAssertTrue(element.isHittable)
+    }
+
     func testSearchHidesStaleDetailAndKeepsQueryAcrossTabs() {
         let app = launch()
         app.tabBars.buttons["List"].tap()
@@ -182,6 +225,7 @@ final class GenerosityUiChecklistTests: XCTestCase {
         XCTAssertTrue(center.waitForExistence(timeout: 5))
         center.tap()
         let search = app.textFields["discovery-search"]
+        revealDiscovery(search, in: app)
         search.tap()
         search.typeText("zzzz-no-center\n")
         XCTAssertTrue(app.staticTexts["No kindness centers found."].waitForExistence(timeout: 5))

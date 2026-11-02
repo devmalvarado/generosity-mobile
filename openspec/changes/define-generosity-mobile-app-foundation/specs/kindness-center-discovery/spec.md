@@ -57,6 +57,22 @@ Both apps SHALL render a geographic map with pan, zoom and selectable center mar
 - **WHEN** a user filters by category and selects a visible marker
 - **THEN** its center matches the filtered list and opens the same detail record
 
+#### Scenario: Every result has direct detail access
+- **WHEN** a user chooses View details on any result card, including a result other than the first
+- **THEN** the app selects that exact center and brings its detail heading into view without requiring the user to scroll through the remaining catalog
+- **AND** the selected map preview opens the same detail record
+
+#### Scenario: Card selection is reflected on the map
+- **WHEN** a user selects a result card in map discovery or returns to the map after selecting a center in the list
+- **THEN** the app brings the map into view, centers its camera on that center and distinguishes the selected marker and card
+- **AND** a list-card tap brings the same center's details into view
+
+#### Scenario: Catalog coordinates are outside the demonstration area
+- **WHEN** a nonempty catalog first loads or search/category results change
+- **THEN** the map frames the selected center if it remains among those results, otherwise requests bounds covering the result coordinates within the provider's native zoom limits
+- **AND** it does not remain fixed to demonstration coordinates or fabricate a user location
+- **AND** empty results remove markers without inventing a default center; manual pan/zoom remains usable between result or selection changes
+
 #### Scenario: Map tiles unavailable
 - **WHEN** the map provider cannot load geographic imagery
 - **THEN** the app reports map unavailability while keeping cached list discovery, filters and details usable
