@@ -1,8 +1,9 @@
 # Tasks
 
-All tasks are pending. Foundation auth/backend/catalog/portal and shared iOS
-integration remain prerequisites. Use synthetic records, not the user's named
-center or representative, in fixtures and acceptance screenshots.
+The complete cross-platform directory feature remains in progress. The reviewed
+backend/import subset in section 8 is implemented independently of the remaining
+native UI, profile editor, fees, admission and protected-location work. Use
+synthetic records in behavior tests; keep private workbook values out of Git.
 
 ## 1. Shared Directory Contracts
 
@@ -43,3 +44,11 @@ center or representative, in fixtures and acceptance screenshots.
 
 - [ ] 7.1 Run synthetic draft -> minimally valid publication -> extended field edit -> native/web refresh -> disclosure withdrawal scenarios, including import conflicts and stale declarations; verify durable shared revisions, no private public payloads and no false fee/capacity/verification claims, and record integration evidence.
 - [ ] 7.2 Exercise upgrade/rollback with older clients and retained contributions, then validate strict OpenSpec and the combined foundation/discovery requirements; verify the planned application/archive ordering preserves real-map behavior and contact-only privacy exceptions, and record readiness without marking unimplemented dependencies complete.
+
+## 8. Reviewed Workbook And Funding Storage (2026-11-02)
+
+- [x] 8.1 Add separate funding-origin and administration columns with explicit unknown defaults; accept bounded public profile declarations with evidence and expose them through the directory API while preserving the mobile v1 shape.
+- [x] 8.2 Persist private source rows by file SHA-256, sheet and row; retain original values and review decisions, exclude pending rows from discovery, and reject stale reviewed imports transactionally.
+- [x] 8.3 Test invalid declarations, private-field rejection, rollback, repeat ingestion and preservation of enrichment during legacy imports.
+- [ ] 8.4 Reconcile all Aguascalientes workbook rows, publish only corroborated additions/enrichment, retain unresolved candidates privately and record production verification.
+- [ ] 8.5 Render funding and directory metadata in native/web detail screens and add authorized editing; this database/import work does not complete sections 4–6.

@@ -1,0 +1,1202 @@
+{
+  "Organizaciones:2": {
+    "centerId": "mx-hogar-de-la-nina-casimira-arteaga-0b9564",
+    "status": "matched",
+    "notes": [
+      "Matched by name and Arqueros 202. Keep the existing researched pin: the workbook contains two different coordinate pairs.",
+      "Public service and office-hour declarations added. Tax claims and representative details are not published."
+    ],
+    "sources": [
+      "https://ayudaresvivir.org/institucion/orfanatorio-casimira-arteaga-hogar-de-la-nina-asociacion-protectora-de-la-infancia-de-aguascalientes-ac.html"
+    ],
+    "updates": {
+      "directoryProfile": {
+        "activities": {
+          "es": "Alojamiento para niñas, alimentación, apoyo educativo y atención médica y psicológica.",
+          "en": "Residential support for girls, meals, education support, and medical and psychological care."
+        },
+        "hours": {
+          "es": "Atención administrativa publicada: lunes a viernes de 10:00 a 18:30. Confirmar antes de acudir.",
+          "en": "Published office hours: Monday–Friday, 10:00–18:30. Confirm before visiting."
+        },
+        "waysToContribute": {
+          "es": "Consultar con el centro sobre donativos en especie y apoyo educativo o de mantenimiento.",
+          "en": "Contact the center about goods donations, educational support or maintenance volunteering."
+        },
+        "fundingSources": [
+          "donations"
+        ],
+        "evidence": [
+          {
+            "fields": [
+              "activities",
+              "hours",
+              "waysToContribute",
+              "fundingSources"
+            ],
+            "url": "https://ayudaresvivir.org/institucion/orfanatorio-casimira-arteaga-hogar-de-la-nina-asociacion-protectora-de-la-infancia-de-aguascalientes-ac.html",
+            "reviewedOn": "2026-11-02",
+            "statement": "Public directory declarations; current vacancies, tax status and total funding composition are not established."
+          }
+        ]
+      }
+    }
+  },
+  "Organizaciones:8": {
+    "centerId": "mx-casa-hogar-dulce-refugio-e8b871",
+    "status": "matched",
+    "notes": [
+      "Matched by name and El Mocho 511. Retained the current institutional phone, website and mapped pin instead of the older workbook alternatives.",
+      "Private funding is the institution’s declaration, not an audit; undated beneficiary totals were not copied."
+    ],
+    "sources": [
+      "https://dulcerefugio.mx/"
+    ],
+    "updates": {
+      "fundingOrigin": "private",
+      "administrationType": "private",
+      "directoryProfile": {
+        "activities": {
+          "es": "Alojamiento y apoyo educativo, médico y psicológico para niñas, niños y adolescentes.",
+          "en": "Residential, educational, medical and psychological support for children and adolescents."
+        },
+        "waysToContribute": {
+          "es": "Donativos económicos o en especie; coordinar una visita con el centro.",
+          "en": "Monetary or goods donations; arrange a visit with the center."
+        },
+        "fundingSources": [
+          "donations"
+        ],
+        "evidence": [
+          {
+            "fields": [
+              "fundingOrigin",
+              "administrationType",
+              "activities",
+              "waysToContribute",
+              "fundingSources"
+            ],
+            "url": "https://dulcerefugio.mx/",
+            "reviewedOn": "2026-11-02",
+            "statement": "The institution describes itself as a nonprofit civil association operating through donations from private businesses."
+          }
+        ]
+      }
+    }
+  },
+  "Organizaciones:16": {
+    "centerId": "mx-estancia-de-vida-nuestra-senora-de-guadalupe-a-c-7ed852",
+    "status": "matched",
+    "notes": [
+      "Institutional website corroborates La Soledad 207. Workbook phone differs; current catalog phone retained pending direct confirmation.",
+      "No current fee, admission availability, funding origin or tax status is inferred."
+    ],
+    "sources": [
+      "https://estanciadevidaguadalupe.com/estancia.php"
+    ],
+    "updates": {
+      "contact": {
+        "phone": "+524499179374",
+        "email": "estanciadevida2010@gmail.com",
+        "website": "https://estanciadevidaguadalupe.com/estancia.php"
+      },
+      "directoryProfile": {
+        "activities": {
+          "es": "Alojamiento para personas mayores y espacios de convivencia y recreación.",
+          "en": "Residential support for older adults with shared recreation spaces."
+        },
+        "evidence": [
+          {
+            "fields": [
+              "activities"
+            ],
+            "url": "https://estanciadevidaguadalupe.com/estancia.php",
+            "reviewedOn": "2026-11-02",
+            "statement": "Institutional facilities page corroborates the address and describes residential and recreation spaces."
+          }
+        ]
+      }
+    }
+  },
+  "Comedores:2": {
+    "centerId": "mx-comedor-comunitario-el-abuelo-2ce601",
+    "status": "matched",
+    "notes": [
+      "Matched by name and Libertad 607; existing mapped pin retained.",
+      "Private administration is corroborated in a dated report. Workbook private-funding classification is retained only in review; total current funding composition is unknown."
+    ],
+    "sources": [
+      "https://www.heraldo.mx/son-ciudadanos-solidarios/"
+    ],
+    "updates": {
+      "administrationType": "private",
+      "directoryProfile": {
+        "activities": {
+          "es": "Apoyo alimentario comunitario. Consultar disponibilidad con el comedor.",
+          "en": "Community food assistance. Contact the kitchen about availability."
+        },
+        "evidence": [
+          {
+            "fields": [
+              "administrationType",
+              "activities"
+            ],
+            "url": "https://www.heraldo.mx/son-ciudadanos-solidarios/",
+            "reviewedOn": "2026-11-02",
+            "statement": "Report identifies a civil association as the kitchen operator at Libertad 607.",
+            "asOf": "2023-12-22"
+          }
+        ]
+      }
+    }
+  },
+  "Organizaciones:10": {
+    "centerId": "mx-casa-del-nino-villa-de-la-asuncion-35d76c",
+    "status": "matched",
+    "notes": [
+      "Matched by distinctive name. Workbook phone differs from the existing catalog and has no operational address.",
+      "Registry inactivity is not proof of physical closure; do not change public details until contact and operation are confirmed."
+    ],
+    "sources": [
+      "https://sii.bienestar.gob.mx/portal/organizaciones?page=243&page=248"
+    ]
+  },
+  "Comedores:3": {
+    "centerId": "mx-comedor-comunitario-san-martin-de-tours-347710",
+    "status": "matched",
+    "notes": [
+      "Matched by name, address and near-identical pin. Mixed funding, additional health services and legal operator remain uncorroborated.",
+      "Same source pin also appears on Ángeles de Corazón Down; do not merge those organizations or add disability services without confirmation."
+    ],
+    "sources": [
+      "https://universidaddelasartes.edu.mx/inauguracion-del-proyecto-altruista-de-yako-wong-alumno-de-la-maestria-en-arte-contemporaneo/"
+    ]
+  },
+  "Organizaciones:47": {
+    "centerId": null,
+    "status": "pending",
+    "notes": [
+      "Workbook reuses the San Martín de Tours kitchen coordinates. Missing operational address and questionable phone formatting; identity and location need confirmation."
+    ],
+    "sources": []
+  },
+  "Organizaciones:7": {
+    "centerId": null,
+    "status": "pending",
+    "notes": [
+      "Official organizational site gives Allende 211 Pte.; Google Maps gives Allende 220 and the workbook pin differs. Resolve entrance/address before publication."
+    ],
+    "sources": [
+      "https://casadejesus.mx/necesitas-ayuda/locations/aguascalientes-aguascalientes/"
+    ]
+  },
+  "Comedores:4": {
+    "centerId": null,
+    "status": "pending",
+    "notes": [
+      "Two workbook rows refer to AACAFIQ; retain both source rows without publishing duplicate centers.",
+      "The supplied albergue/comedor listing is marked permanently closed on Google Maps. The federal registry identifies a different registered address; confirm the current operational site."
+    ],
+    "sources": [
+      "https://sii.bienestar.gob.mx/portal/organizaciones?acronimo=&cluni=&nombre=&page=705&page=707&rfc=&status_osc=",
+      "https://www.google.com/maps/search/Aacafiq+Albergue+y+Comedor+Aguascalientes/"
+    ]
+  },
+  "Organizaciones:89": {
+    "centerId": null,
+    "status": "pending",
+    "notes": [
+      "Two workbook rows refer to AACAFIQ; retain both source rows without publishing duplicate centers.",
+      "The supplied albergue/comedor listing is marked permanently closed on Google Maps. The federal registry identifies a different registered address; confirm the current operational site."
+    ],
+    "sources": [
+      "https://sii.bienestar.gob.mx/portal/organizaciones?acronimo=&cluni=&nombre=&page=705&page=707&rfc=&status_osc=",
+      "https://www.google.com/maps/search/Aacafiq+Albergue+y+Comedor+Aguascalientes/"
+    ]
+  },
+  "Organizaciones:3": {
+    "centerId": null,
+    "status": "pending",
+    "notes": [
+      "Workbook itself questions whether Hogar Ahaba still operates. Historical registry evidence does not establish a current service location."
+    ],
+    "sources": [
+      "https://www.ordenjuridico.gob.mx/Estatal/AGUASCALIENTES/Acuerdos/AGSACU13.pdf"
+    ]
+  },
+  "Organizaciones:4": {
+    "centerId": null,
+    "status": "pending",
+    "notes": [
+      "Historic sources identify a home in Calvillo, not necessarily the capital. Workbook reports possible closure; current operation and pin require confirmation."
+    ],
+    "sources": [
+      "https://www.ags.gob.mx/masqueunbeso/Mas_que_un_beso_vdigital.pdf"
+    ]
+  },
+  "Organizaciones:5": {
+    "centerId": null,
+    "status": "pending",
+    "notes": [
+      "Workbook explicitly questions whether the residential service is operating. No confirmed operational address or map pin."
+    ],
+    "sources": []
+  },
+  "Organizaciones:9": {
+    "centerId": null,
+    "status": "pending",
+    "notes": [
+      "Historical national DIF list confirms the name but not a current public operational address and pin."
+    ],
+    "sources": [
+      "https://sitios1.dif.gob.mx/procuraduriaDIF/wp-content/uploads/2022/05/DNCAS_05_2022.pdf"
+    ]
+  },
+  "Organizaciones:17": {
+    "centerId": null,
+    "status": "pending",
+    "notes": [
+      "The Ciudad de los Niños institutional site describes an Asilo San Nicolás department. Do not create another center from a potentially related historical name until branch identity is established.",
+      "Official Ciudad de los Niños site names an Asilo San Nicolás department; branch identity is not resolved, so no separate public pin is created."
+    ],
+    "sources": [
+      "https://ciudaddelosninosags.com/"
+    ]
+  },
+  "Comedores:11": {
+    "center": {
+      "id": "mx-comedor-buen-provecho-insurgentes-3af187",
+      "name": {
+        "es": "Comedor Buen Provecho — Insurgentes",
+        "en": "Comedor Buen Provecho — Insurgentes"
+      },
+      "description": {
+        "es": "Comedor comunitario. Confirmar disponibilidad antes de acudir.",
+        "en": "Community kitchen. Confirm availability before visiting."
+      },
+      "address": {
+        "es": "Gral. Mateo Almanza 202, Insurgentes, 20287 Aguascalientes, Ags., México",
+        "en": "Gral. Mateo Almanza 202, Insurgentes, 20287 Aguascalientes, Ags., México"
+      },
+      "categories": [
+        "community_kitchen"
+      ],
+      "coordinates": {
+        "latitude": 21.8509196,
+        "longitude": -102.3093243
+      },
+      "contact": {
+        "phone": "449 910 2121 ext. 4284",
+        "email": null,
+        "website": "https://www.aguascalientes.gob.mx/SEDESO/"
+      },
+      "googleMapsUrl": "https://www.google.com/maps/place/Casa+del+Bien+Com%C3%BAn+Insurgentes/@21.8509196,-102.3093243,17z/data=!3m1!4b1!4m6!3m5!1s0x8429ede4ab39ed09:0x1927c781edbf84f8!8m2!3d21.8509196!4d-102.3093243!16s%2Fg%2F11tg6hy67y",
+      "verificationStatus": "imported",
+      "importedAtIsoDate": "2026-11-02",
+      "needs": [],
+      "fundingOrigin": "public",
+      "administrationType": "public",
+      "directoryProfile": {
+        "branchName": "Insurgentes",
+        "fundingSources": [
+          "public_support"
+        ],
+        "evidence": [
+          {
+            "fields": [
+              "branchName",
+              "administrationType"
+            ],
+            "url": "https://informacion.aguascalientes.gob.mx/news/invitan-a-comedores-comunitarios;-funcionan-en-todo-el-estado",
+            "reviewedOn": "2026-11-02",
+            "statement": "SEDESO program branch.",
+            "asOf": "2024-02-07"
+          },
+          {
+            "fields": [
+              "fundingOrigin",
+              "fundingSources"
+            ],
+            "url": "https://eservicios2.aguascalientes.gob.mx/transparencia/SAE/DGAD/LP/DGAD-LEA-N003-2024-C.pdf",
+            "reviewedOn": "2026-11-02",
+            "statement": "2024 state-budget food procurement for Buen Provecho; current allocation not audited."
+          }
+        ]
+      }
+    },
+    "notes": [
+      "Program/branch corroborated by the state government (2024); location pin observed in Maps on 2026-11-02. Confirm current meal availability with the operator.",
+      "Workbook coordinates point away from Mateo Almanza 202; used the public place pin."
+    ],
+    "sources": [
+      "https://www.google.com/maps/place/Casa+del+Bien+Com%C3%BAn+Insurgentes/@21.8509196,-102.3093243,17z/data=!3m1!4b1!4m6!3m5!1s0x8429ede4ab39ed09:0x1927c781edbf84f8!8m2!3d21.8509196!4d-102.3093243!16s%2Fg%2F11tg6hy67y",
+      "https://informacion.aguascalientes.gob.mx/news/invitan-a-comedores-comunitarios;-funcionan-en-todo-el-estado",
+      "https://eservicios2.aguascalientes.gob.mx/transparencia/SAE/DGAD/LP/DGAD-LEA-N003-2024-C.pdf"
+    ]
+  },
+  "Comedores:12": {
+    "center": {
+      "id": "mx-comedor-buen-provecho-san-marcos-6f70ca",
+      "name": {
+        "es": "Comedor Buen Provecho — San Marcos",
+        "en": "Comedor Buen Provecho — San Marcos"
+      },
+      "description": {
+        "es": "Comedor comunitario. Confirmar disponibilidad antes de acudir.",
+        "en": "Community kitchen. Confirm availability before visiting."
+      },
+      "address": {
+        "es": "Av. Aguascalientes Pte. 604, Fraccionamiento San Marcos, 20078 Aguascalientes, Ags., México",
+        "en": "Av. Aguascalientes Pte. 604, Fraccionamiento San Marcos, 20078 Aguascalientes, Ags., México"
+      },
+      "categories": [
+        "community_kitchen"
+      ],
+      "coordinates": {
+        "latitude": 21.8799562,
+        "longitude": -102.3182012
+      },
+      "contact": {
+        "phone": "449 910 2121 ext. 4259",
+        "email": null,
+        "website": "https://www.aguascalientes.gob.mx/SEDESO/"
+      },
+      "googleMapsUrl": "https://www.google.com/maps/place/Casa+del+Bien+Com%C3%BAn+San+Marcos/@21.8799562,-102.3182012,17z/data=!3m1!4b1!4m6!3m5!1s0x8429ef567fc6dc3d:0x381611d04122da6b!8m2!3d21.8799562!4d-102.3182012!16s%2Fg%2F11ff5k4bmb",
+      "verificationStatus": "imported",
+      "importedAtIsoDate": "2026-11-02",
+      "needs": [],
+      "fundingOrigin": "public",
+      "administrationType": "public",
+      "directoryProfile": {
+        "branchName": "San Marcos",
+        "fundingSources": [
+          "public_support"
+        ],
+        "evidence": [
+          {
+            "fields": [
+              "branchName",
+              "administrationType"
+            ],
+            "url": "https://informacion.aguascalientes.gob.mx/news/invitan-a-comedores-comunitarios;-funcionan-en-todo-el-estado",
+            "reviewedOn": "2026-11-02",
+            "statement": "SEDESO program branch.",
+            "asOf": "2024-02-07"
+          },
+          {
+            "fields": [
+              "fundingOrigin",
+              "fundingSources"
+            ],
+            "url": "https://eservicios2.aguascalientes.gob.mx/transparencia/SAE/DGAD/LP/DGAD-LEA-N003-2024-C.pdf",
+            "reviewedOn": "2026-11-02",
+            "statement": "2024 state-budget food procurement for Buen Provecho; current allocation not audited."
+          }
+        ]
+      }
+    },
+    "notes": [
+      "Program/branch corroborated by the state government (2024); location pin observed in Maps on 2026-11-02. Confirm current meal availability with the operator.",
+      "Workbook repeats the Constitución coordinates; replaced with the San Marcos place pin."
+    ],
+    "sources": [
+      "https://www.google.com/maps/place/Casa+del+Bien+Com%C3%BAn+San+Marcos/@21.8799562,-102.3182012,17z/data=!3m1!4b1!4m6!3m5!1s0x8429ef567fc6dc3d:0x381611d04122da6b!8m2!3d21.8799562!4d-102.3182012!16s%2Fg%2F11ff5k4bmb",
+      "https://informacion.aguascalientes.gob.mx/news/invitan-a-comedores-comunitarios;-funcionan-en-todo-el-estado",
+      "https://eservicios2.aguascalientes.gob.mx/transparencia/SAE/DGAD/LP/DGAD-LEA-N003-2024-C.pdf"
+    ]
+  },
+  "Comedores:13": {
+    "center": {
+      "id": "mx-comedor-buen-provecho-miravalle-14c035",
+      "name": {
+        "es": "Comedor Buen Provecho — Miravalle",
+        "en": "Comedor Buen Provecho — Miravalle"
+      },
+      "description": {
+        "es": "Comedor comunitario. Confirmar disponibilidad antes de acudir.",
+        "en": "Community kitchen. Confirm availability before visiting."
+      },
+      "address": {
+        "es": "Felipe Ruiz de Chávez 614, Miravalle, 20040 Aguascalientes, Ags., México",
+        "en": "Felipe Ruiz de Chávez 614, Miravalle, 20040 Aguascalientes, Ags., México"
+      },
+      "categories": [
+        "community_kitchen"
+      ],
+      "coordinates": {
+        "latitude": 21.8913277,
+        "longitude": -102.3111831
+      },
+      "contact": {
+        "phone": "449 910 2121 ext. 4259",
+        "email": null,
+        "website": "https://www.aguascalientes.gob.mx/SEDESO/"
+      },
+      "googleMapsUrl": "https://www.google.com/maps/place/Casa+del+Bien+Comun+Miravalle/@21.8913277,-102.3111831,17z/data=!3m1!4b1!4m6!3m5!1s0x8429efbec044dabb:0x9d141dda6c4150e6!8m2!3d21.8913277!4d-102.3111831!16s%2Fg%2F11gk7hknzc",
+      "verificationStatus": "imported",
+      "importedAtIsoDate": "2026-11-02",
+      "needs": [],
+      "fundingOrigin": "public",
+      "administrationType": "public",
+      "directoryProfile": {
+        "branchName": "Miravalle",
+        "fundingSources": [
+          "public_support"
+        ],
+        "evidence": [
+          {
+            "fields": [
+              "branchName",
+              "administrationType"
+            ],
+            "url": "https://informacion.aguascalientes.gob.mx/news/invitan-a-comedores-comunitarios;-funcionan-en-todo-el-estado",
+            "reviewedOn": "2026-11-02",
+            "statement": "SEDESO program branch.",
+            "asOf": "2024-02-07"
+          },
+          {
+            "fields": [
+              "fundingOrigin",
+              "fundingSources"
+            ],
+            "url": "https://eservicios2.aguascalientes.gob.mx/transparencia/SAE/DGAD/LP/DGAD-LEA-N003-2024-C.pdf",
+            "reviewedOn": "2026-11-02",
+            "statement": "2024 state-budget food procurement for Buen Provecho; current allocation not audited."
+          }
+        ]
+      }
+    },
+    "notes": [
+      "Program/branch corroborated by the state government (2024); location pin observed in Maps on 2026-11-02. Confirm current meal availability with the operator."
+    ],
+    "sources": [
+      "https://www.google.com/maps/place/Casa+del+Bien+Comun+Miravalle/@21.8913277,-102.3111831,17z/data=!3m1!4b1!4m6!3m5!1s0x8429efbec044dabb:0x9d141dda6c4150e6!8m2!3d21.8913277!4d-102.3111831!16s%2Fg%2F11gk7hknzc",
+      "https://informacion.aguascalientes.gob.mx/news/invitan-a-comedores-comunitarios;-funcionan-en-todo-el-estado",
+      "https://eservicios2.aguascalientes.gob.mx/transparencia/SAE/DGAD/LP/DGAD-LEA-N003-2024-C.pdf"
+    ]
+  },
+  "Comedores:10": {
+    "center": {
+      "id": "mx-comedor-buen-provecho-pocitos-560788",
+      "name": {
+        "es": "Comedor Buen Provecho — Pocitos",
+        "en": "Comedor Buen Provecho — Pocitos"
+      },
+      "description": {
+        "es": "Comedor comunitario. Confirmar disponibilidad antes de acudir.",
+        "en": "Community kitchen. Confirm availability before visiting."
+      },
+      "address": {
+        "es": "Av. Eugenio Garza Sada 405A, Pocitos, 20328 Pocitos, Ags., México",
+        "en": "Av. Eugenio Garza Sada 405A, Pocitos, 20328 Pocitos, Ags., México"
+      },
+      "categories": [
+        "community_kitchen"
+      ],
+      "coordinates": {
+        "latitude": 21.9236041,
+        "longitude": -102.3372733
+      },
+      "contact": {
+        "phone": "449 910 2121 ext. 4259",
+        "email": null,
+        "website": "https://www.aguascalientes.gob.mx/SEDESO/"
+      },
+      "googleMapsUrl": "https://www.google.com/maps/place/Casa+de+Bien+Com%C3%BAn+Pocitos/@21.9236041,-102.3372733,17z/data=!3m1!4b1!4m6!3m5!1s0x8429ef4615973bad:0xa1802460b5aa8f40!8m2!3d21.9236041!4d-102.3372733!16s%2Fg%2F11k3gnn2tg",
+      "verificationStatus": "imported",
+      "importedAtIsoDate": "2026-11-02",
+      "needs": [],
+      "fundingOrigin": "public",
+      "administrationType": "public",
+      "directoryProfile": {
+        "branchName": "Pocitos",
+        "fundingSources": [
+          "public_support"
+        ],
+        "evidence": [
+          {
+            "fields": [
+              "branchName",
+              "administrationType"
+            ],
+            "url": "https://informacion.aguascalientes.gob.mx/news/invitan-a-comedores-comunitarios;-funcionan-en-todo-el-estado",
+            "reviewedOn": "2026-11-02",
+            "statement": "SEDESO program branch.",
+            "asOf": "2024-02-07"
+          },
+          {
+            "fields": [
+              "fundingOrigin",
+              "fundingSources"
+            ],
+            "url": "https://eservicios2.aguascalientes.gob.mx/transparencia/SAE/DGAD/LP/DGAD-LEA-N003-2024-C.pdf",
+            "reviewedOn": "2026-11-02",
+            "statement": "2024 state-budget food procurement for Buen Provecho; current allocation not audited."
+          }
+        ]
+      }
+    },
+    "notes": [
+      "Program/branch corroborated by the state government (2024); location pin observed in Maps on 2026-11-02. Confirm current meal availability with the operator."
+    ],
+    "sources": [
+      "https://www.google.com/maps/place/Casa+de+Bien+Com%C3%BAn+Pocitos/@21.9236041,-102.3372733,17z/data=!3m1!4b1!4m6!3m5!1s0x8429ef4615973bad:0xa1802460b5aa8f40!8m2!3d21.9236041!4d-102.3372733!16s%2Fg%2F11k3gnn2tg",
+      "https://informacion.aguascalientes.gob.mx/news/invitan-a-comedores-comunitarios;-funcionan-en-todo-el-estado",
+      "https://eservicios2.aguascalientes.gob.mx/transparencia/SAE/DGAD/LP/DGAD-LEA-N003-2024-C.pdf"
+    ]
+  },
+  "Comedores:15": {
+    "center": {
+      "id": "mx-comedor-buen-provecho-la-salud-3f13d4",
+      "name": {
+        "es": "Comedor Buen Provecho — La Salud",
+        "en": "Comedor Buen Provecho — La Salud"
+      },
+      "description": {
+        "es": "Comedor comunitario. Confirmar disponibilidad antes de acudir.",
+        "en": "Community kitchen. Confirm availability before visiting."
+      },
+      "address": {
+        "es": "C. de la Luna 129, Barrio de la Salud, 20240 Aguascalientes, Ags., México",
+        "en": "C. de la Luna 129, Barrio de la Salud, 20240 Aguascalientes, Ags., México"
+      },
+      "categories": [
+        "community_kitchen"
+      ],
+      "coordinates": {
+        "latitude": 21.8722052,
+        "longitude": -102.2844706
+      },
+      "contact": {
+        "phone": null,
+        "email": null,
+        "website": "https://www.aguascalientes.gob.mx/SEDESO/"
+      },
+      "googleMapsUrl": "https://www.google.com/maps/place/casa+del+bien+comun+la+salud/@21.8722052,-102.2844706,17z/data=!3m1!4b1!4m6!3m5!1s0x8429ef002d3b2497:0xf095fc1a88f5631c!8m2!3d21.8722052!4d-102.2844706!16s%2Fg%2F11zkc16xrz",
+      "verificationStatus": "imported",
+      "importedAtIsoDate": "2026-11-02",
+      "needs": [],
+      "fundingOrigin": "public",
+      "administrationType": "public",
+      "directoryProfile": {
+        "branchName": "La Salud",
+        "fundingSources": [
+          "public_support"
+        ],
+        "evidence": [
+          {
+            "fields": [
+              "branchName",
+              "administrationType"
+            ],
+            "url": "https://informacion.aguascalientes.gob.mx/news/invitan-a-comedores-comunitarios;-funcionan-en-todo-el-estado",
+            "reviewedOn": "2026-11-02",
+            "statement": "SEDESO program branch.",
+            "asOf": "2024-02-07"
+          },
+          {
+            "fields": [
+              "fundingOrigin",
+              "fundingSources"
+            ],
+            "url": "https://eservicios2.aguascalientes.gob.mx/transparencia/SAE/DGAD/LP/DGAD-LEA-N003-2024-C.pdf",
+            "reviewedOn": "2026-11-02",
+            "statement": "2024 state-budget food procurement for Buen Provecho; current allocation not audited."
+          }
+        ]
+      }
+    },
+    "notes": [
+      "Program/branch corroborated by the state government (2024); location pin observed in Maps on 2026-11-02. Confirm current meal availability with the operator."
+    ],
+    "sources": [
+      "https://www.google.com/maps/place/casa+del+bien+comun+la+salud/@21.8722052,-102.2844706,17z/data=!3m1!4b1!4m6!3m5!1s0x8429ef002d3b2497:0xf095fc1a88f5631c!8m2!3d21.8722052!4d-102.2844706!16s%2Fg%2F11zkc16xrz",
+      "https://informacion.aguascalientes.gob.mx/news/invitan-a-comedores-comunitarios;-funcionan-en-todo-el-estado",
+      "https://eservicios2.aguascalientes.gob.mx/transparencia/SAE/DGAD/LP/DGAD-LEA-N003-2024-C.pdf"
+    ]
+  },
+  "Comedores:22": {
+    "center": {
+      "id": "mx-comedor-buen-provecho-guadalupe-peralta-01aecd",
+      "name": {
+        "es": "Comedor Buen Provecho — Guadalupe Peralta",
+        "en": "Comedor Buen Provecho — Guadalupe Peralta"
+      },
+      "description": {
+        "es": "Comedor comunitario. Confirmar disponibilidad antes de acudir.",
+        "en": "Community kitchen. Confirm availability before visiting."
+      },
+      "address": {
+        "es": "Av. Salud 302, José Guadalupe Peralta Gámez, 20196 Aguascalientes, Ags., México",
+        "en": "Av. Salud 302, José Guadalupe Peralta Gámez, 20196 Aguascalientes, Ags., México"
+      },
+      "categories": [
+        "community_kitchen"
+      ],
+      "coordinates": {
+        "latitude": 21.8683895,
+        "longitude": -102.2390643
+      },
+      "contact": {
+        "phone": "449 910 2121 ext. 4259",
+        "email": null,
+        "website": "https://www.aguascalientes.gob.mx/SEDESO/"
+      },
+      "googleMapsUrl": "https://www.google.com/maps/place/Casa+del+bien+com%C3%BAn+Guadalupe+Peralta/@21.8683895,-102.2390643,17z/data=!3m1!4b1!4m6!3m5!1s0x8429f21b8b4b6e65:0x32ca872e5f9d20a0!8m2!3d21.8683895!4d-102.2390643!16s%2Fg%2F11g9frdwrw",
+      "verificationStatus": "imported",
+      "importedAtIsoDate": "2026-11-02",
+      "needs": [],
+      "fundingOrigin": "public",
+      "administrationType": "public",
+      "directoryProfile": {
+        "branchName": "Guadalupe Peralta",
+        "fundingSources": [
+          "public_support"
+        ],
+        "evidence": [
+          {
+            "fields": [
+              "branchName",
+              "administrationType"
+            ],
+            "url": "https://informacion.aguascalientes.gob.mx/news/invitan-a-comedores-comunitarios;-funcionan-en-todo-el-estado",
+            "reviewedOn": "2026-11-02",
+            "statement": "SEDESO program branch.",
+            "asOf": "2024-02-07"
+          },
+          {
+            "fields": [
+              "fundingOrigin",
+              "fundingSources"
+            ],
+            "url": "https://eservicios2.aguascalientes.gob.mx/transparencia/SAE/DGAD/LP/DGAD-LEA-N003-2024-C.pdf",
+            "reviewedOn": "2026-11-02",
+            "statement": "2024 state-budget food procurement for Buen Provecho; current allocation not audited."
+          }
+        ]
+      }
+    },
+    "notes": [
+      "Program/branch corroborated by the state government (2024); location pin observed in Maps on 2026-11-02. Confirm current meal availability with the operator."
+    ],
+    "sources": [
+      "https://www.google.com/maps/place/Casa+del+bien+com%C3%BAn+Guadalupe+Peralta/@21.8683895,-102.2390643,17z/data=!3m1!4b1!4m6!3m5!1s0x8429f21b8b4b6e65:0x32ca872e5f9d20a0!8m2!3d21.8683895!4d-102.2390643!16s%2Fg%2F11g9frdwrw",
+      "https://informacion.aguascalientes.gob.mx/news/invitan-a-comedores-comunitarios;-funcionan-en-todo-el-estado",
+      "https://eservicios2.aguascalientes.gob.mx/transparencia/SAE/DGAD/LP/DGAD-LEA-N003-2024-C.pdf"
+    ]
+  },
+  "Comedores:24": {
+    "center": {
+      "id": "mx-comedor-buen-provecho-mujeres-ilustres-780491",
+      "name": {
+        "es": "Comedor Buen Provecho — Mujeres Ilustres",
+        "en": "Comedor Buen Provecho — Mujeres Ilustres"
+      },
+      "description": {
+        "es": "Comedor comunitario. Confirmar disponibilidad antes de acudir.",
+        "en": "Community kitchen. Confirm availability before visiting."
+      },
+      "address": {
+        "es": "Mujeres Ilustres, 20294 Aguascalientes, Ags., México",
+        "en": "Mujeres Ilustres, 20294 Aguascalientes, Ags., México"
+      },
+      "categories": [
+        "community_kitchen"
+      ],
+      "coordinates": {
+        "latitude": 21.846905,
+        "longitude": -102.2477502
+      },
+      "contact": {
+        "phone": "449 910 2121",
+        "email": null,
+        "website": "https://www.aguascalientes.gob.mx/SEDESO/"
+      },
+      "googleMapsUrl": "https://www.google.com/maps/place/Casa+del+Bien+Com%C3%BAn+Mujeres+Ilustres/@21.846905,-102.2477502,17z/data=!3m1!4b1!4m6!3m5!1s0x8429f273979c78cd:0x5be2483f3eb8fbf8!8m2!3d21.846905!4d-102.2477502!16s%2Fg%2F11fxwtx3qv",
+      "verificationStatus": "imported",
+      "importedAtIsoDate": "2026-11-02",
+      "needs": [],
+      "fundingOrigin": "public",
+      "administrationType": "public",
+      "directoryProfile": {
+        "branchName": "Mujeres Ilustres",
+        "fundingSources": [
+          "public_support"
+        ],
+        "evidence": [
+          {
+            "fields": [
+              "branchName",
+              "administrationType"
+            ],
+            "url": "https://informacion.aguascalientes.gob.mx/news/invitan-a-comedores-comunitarios;-funcionan-en-todo-el-estado",
+            "reviewedOn": "2026-11-02",
+            "statement": "SEDESO program branch.",
+            "asOf": "2024-02-07"
+          },
+          {
+            "fields": [
+              "fundingOrigin",
+              "fundingSources"
+            ],
+            "url": "https://eservicios2.aguascalientes.gob.mx/transparencia/SAE/DGAD/LP/DGAD-LEA-N003-2024-C.pdf",
+            "reviewedOn": "2026-11-02",
+            "statement": "2024 state-budget food procurement for Buen Provecho; current allocation not audited."
+          }
+        ]
+      }
+    },
+    "notes": [
+      "Program/branch corroborated by the state government (2024); location pin observed in Maps on 2026-11-02. Confirm current meal availability with the operator.",
+      "Maps confirms the place pin and neighborhood only; the workbook street number is not independently confirmed and is omitted."
+    ],
+    "sources": [
+      "https://www.google.com/maps/place/Casa+del+Bien+Com%C3%BAn+Mujeres+Ilustres/@21.846905,-102.2477502,17z/data=!3m1!4b1!4m6!3m5!1s0x8429f273979c78cd:0x5be2483f3eb8fbf8!8m2!3d21.846905!4d-102.2477502!16s%2Fg%2F11fxwtx3qv",
+      "https://informacion.aguascalientes.gob.mx/news/invitan-a-comedores-comunitarios;-funcionan-en-todo-el-estado",
+      "https://eservicios2.aguascalientes.gob.mx/transparencia/SAE/DGAD/LP/DGAD-LEA-N003-2024-C.pdf"
+    ]
+  },
+  "Comedores:18": {
+    "center": {
+      "id": "mx-comedor-buen-provecho-nazario-ortiz-garza-2cc06b",
+      "name": {
+        "es": "Comedor Buen Provecho — Nazario Ortiz Garza",
+        "en": "Comedor Buen Provecho — Nazario Ortiz Garza"
+      },
+      "description": {
+        "es": "Comedor comunitario. Confirmar disponibilidad antes de acudir.",
+        "en": "Community kitchen. Confirm availability before visiting."
+      },
+      "address": {
+        "es": "Agustín Pradillo 302, Progreso, 20179 Aguascalientes, Ags., México",
+        "en": "Agustín Pradillo 302, Progreso, 20179 Aguascalientes, Ags., México"
+      },
+      "categories": [
+        "community_kitchen"
+      ],
+      "coordinates": {
+        "latitude": 21.904816,
+        "longitude": -102.2663043
+      },
+      "contact": {
+        "phone": "449 910 2121 ext. 4259",
+        "email": null,
+        "website": "https://www.aguascalientes.gob.mx/SEDESO/"
+      },
+      "googleMapsUrl": "https://www.google.com/maps/place/Casa+del+Bien+Com%C3%BAn+Nazario+Ortiz+Garza/@21.904816,-102.2663043,17z/data=!3m1!4b1!4m6!3m5!1s0x8429ee24d523b189:0x3251296e8e6c64f5!8m2!3d21.904816!4d-102.2663043!16s%2Fg%2F11fxvsnylq",
+      "verificationStatus": "imported",
+      "importedAtIsoDate": "2026-11-02",
+      "needs": [],
+      "fundingOrigin": "public",
+      "administrationType": "public",
+      "directoryProfile": {
+        "branchName": "Nazario Ortiz Garza",
+        "fundingSources": [
+          "public_support"
+        ],
+        "evidence": [
+          {
+            "fields": [
+              "branchName",
+              "administrationType"
+            ],
+            "url": "https://informacion.aguascalientes.gob.mx/news/invitan-a-comedores-comunitarios;-funcionan-en-todo-el-estado",
+            "reviewedOn": "2026-11-02",
+            "statement": "SEDESO program branch.",
+            "asOf": "2024-02-07"
+          },
+          {
+            "fields": [
+              "fundingOrigin",
+              "fundingSources"
+            ],
+            "url": "https://eservicios2.aguascalientes.gob.mx/transparencia/SAE/DGAD/LP/DGAD-LEA-N003-2024-C.pdf",
+            "reviewedOn": "2026-11-02",
+            "statement": "2024 state-budget food procurement for Buen Provecho; current allocation not audited."
+          }
+        ]
+      }
+    },
+    "notes": [
+      "Program/branch corroborated by the state government (2024); location pin observed in Maps on 2026-11-02. Confirm current meal availability with the operator."
+    ],
+    "sources": [
+      "https://www.google.com/maps/place/Casa+del+Bien+Com%C3%BAn+Nazario+Ortiz+Garza/@21.904816,-102.2663043,17z/data=!3m1!4b1!4m6!3m5!1s0x8429ee24d523b189:0x3251296e8e6c64f5!8m2!3d21.904816!4d-102.2663043!16s%2Fg%2F11fxvsnylq",
+      "https://informacion.aguascalientes.gob.mx/news/invitan-a-comedores-comunitarios;-funcionan-en-todo-el-estado",
+      "https://eservicios2.aguascalientes.gob.mx/transparencia/SAE/DGAD/LP/DGAD-LEA-N003-2024-C.pdf"
+    ]
+  },
+  "Comedores:20": {
+    "center": {
+      "id": "mx-comedor-buen-provecho-gomez-portugal-d12727",
+      "name": {
+        "es": "Comedor Buen Provecho — Gómez Portugal",
+        "en": "Comedor Buen Provecho — Gómez Portugal"
+      },
+      "description": {
+        "es": "Comedor comunitario. Confirmar disponibilidad antes de acudir.",
+        "en": "Community kitchen. Confirm availability before visiting."
+      },
+      "address": {
+        "es": "Estrella Polar 205, Gómez Portugal, 20250 Aguascalientes, Ags., México",
+        "en": "Estrella Polar 205, Gómez Portugal, 20250 Aguascalientes, Ags., México"
+      },
+      "categories": [
+        "community_kitchen"
+      ],
+      "coordinates": {
+        "latitude": 21.8730506,
+        "longitude": -102.265078
+      },
+      "contact": {
+        "phone": null,
+        "email": null,
+        "website": "https://www.aguascalientes.gob.mx/SEDESO/"
+      },
+      "googleMapsUrl": "https://www.google.com/maps/place/Casa+del+Bien+Com%C3%BAn+G%C3%B3mez+Portugal/@21.8730506,-102.265078,17z/data=!3m1!4b1!4m6!3m5!1s0x8429ef00256c6205:0x59bf9c0b78cef02b!8m2!3d21.8730506!4d-102.265078!16s%2Fg%2F11y7t5nrc5",
+      "verificationStatus": "imported",
+      "importedAtIsoDate": "2026-11-02",
+      "needs": [],
+      "fundingOrigin": "public",
+      "administrationType": "public",
+      "directoryProfile": {
+        "branchName": "Gómez Portugal",
+        "fundingSources": [
+          "public_support"
+        ],
+        "evidence": [
+          {
+            "fields": [
+              "branchName",
+              "administrationType"
+            ],
+            "url": "https://informacion.aguascalientes.gob.mx/news/invitan-a-comedores-comunitarios;-funcionan-en-todo-el-estado",
+            "reviewedOn": "2026-11-02",
+            "statement": "SEDESO program branch.",
+            "asOf": "2024-02-07"
+          },
+          {
+            "fields": [
+              "fundingOrigin",
+              "fundingSources"
+            ],
+            "url": "https://eservicios2.aguascalientes.gob.mx/transparencia/SAE/DGAD/LP/DGAD-LEA-N003-2024-C.pdf",
+            "reviewedOn": "2026-11-02",
+            "statement": "2024 state-budget food procurement for Buen Provecho; current allocation not audited."
+          }
+        ]
+      }
+    },
+    "notes": [
+      "Program/branch corroborated by the state government (2024); location pin observed in Maps on 2026-11-02. Confirm current meal availability with the operator."
+    ],
+    "sources": [
+      "https://www.google.com/maps/place/Casa+del+Bien+Com%C3%BAn+G%C3%B3mez+Portugal/@21.8730506,-102.265078,17z/data=!3m1!4b1!4m6!3m5!1s0x8429ef00256c6205:0x59bf9c0b78cef02b!8m2!3d21.8730506!4d-102.265078!16s%2Fg%2F11y7t5nrc5",
+      "https://informacion.aguascalientes.gob.mx/news/invitan-a-comedores-comunitarios;-funcionan-en-todo-el-estado",
+      "https://eservicios2.aguascalientes.gob.mx/transparencia/SAE/DGAD/LP/DGAD-LEA-N003-2024-C.pdf"
+    ]
+  },
+  "Comedores:19": {
+    "center": {
+      "id": "mx-comedor-buen-provecho-jesus-teran-71787a",
+      "name": {
+        "es": "Comedor Buen Provecho — Jesús Terán",
+        "en": "Comedor Buen Provecho — Jesús Terán"
+      },
+      "description": {
+        "es": "Comedor comunitario. Confirmar disponibilidad antes de acudir.",
+        "en": "Community kitchen. Confirm availability before visiting."
+      },
+      "address": {
+        "es": "Prol. Olivos LB, Jesús Terán, 20260 Aguascalientes, Ags., México",
+        "en": "Prol. Olivos LB, Jesús Terán, 20260 Aguascalientes, Ags., México"
+      },
+      "categories": [
+        "community_kitchen"
+      ],
+      "coordinates": {
+        "latitude": 21.8701046,
+        "longitude": -102.2757665
+      },
+      "contact": {
+        "phone": null,
+        "email": null,
+        "website": "https://www.aguascalientes.gob.mx/SEDESO/"
+      },
+      "googleMapsUrl": "https://www.google.com/maps/place/CASA+DEL+BIEN+COM%C3%9AN/@21.8701046,-102.2757665,17z/data=!3m1!4b1!4m6!3m5!1s0x8429ed2e0cf2c749:0xb2167e9c5aba2c30!8m2!3d21.8701046!4d-102.2757665!16s%2Fg%2F11ssz1h9xb",
+      "verificationStatus": "imported",
+      "importedAtIsoDate": "2026-11-02",
+      "needs": [],
+      "fundingOrigin": "public",
+      "administrationType": "public",
+      "directoryProfile": {
+        "branchName": "Jesús Terán",
+        "fundingSources": [
+          "public_support"
+        ],
+        "evidence": [
+          {
+            "fields": [
+              "branchName",
+              "administrationType"
+            ],
+            "url": "https://informacion.aguascalientes.gob.mx/news/invitan-a-comedores-comunitarios;-funcionan-en-todo-el-estado",
+            "reviewedOn": "2026-11-02",
+            "statement": "SEDESO program branch.",
+            "asOf": "2024-02-07"
+          },
+          {
+            "fields": [
+              "fundingOrigin",
+              "fundingSources"
+            ],
+            "url": "https://eservicios2.aguascalientes.gob.mx/transparencia/SAE/DGAD/LP/DGAD-LEA-N003-2024-C.pdf",
+            "reviewedOn": "2026-11-02",
+            "statement": "2024 state-budget food procurement for Buen Provecho; current allocation not audited."
+          }
+        ]
+      }
+    },
+    "notes": [
+      "Program/branch corroborated by the state government (2024); location pin observed in Maps on 2026-11-02. Confirm current meal availability with the operator.",
+      "Direct branch search and Olivos/Jesús Terán address match. This same result was rejected for Obraje, Palomino Dena and Solidaridad IV."
+    ],
+    "sources": [
+      "https://www.google.com/maps/place/CASA+DEL+BIEN+COM%C3%9AN/@21.8701046,-102.2757665,17z/data=!3m1!4b1!4m6!3m5!1s0x8429ed2e0cf2c749:0xb2167e9c5aba2c30!8m2!3d21.8701046!4d-102.2757665!16s%2Fg%2F11ssz1h9xb",
+      "https://informacion.aguascalientes.gob.mx/news/invitan-a-comedores-comunitarios;-funcionan-en-todo-el-estado",
+      "https://eservicios2.aguascalientes.gob.mx/transparencia/SAE/DGAD/LP/DGAD-LEA-N003-2024-C.pdf"
+    ]
+  },
+  "Organizaciones:6": {
+    "center": {
+      "id": "mx-ciudad-de-los-ninos-de-aguascalientes-83f604",
+      "name": {
+        "es": "Ciudad de los Niños de Aguascalientes",
+        "en": "Ciudad de los Niños de Aguascalientes"
+      },
+      "description": {
+        "es": "Alojamiento, educación y cuidados para niñas, niños y personas mayores.",
+        "en": "Residential care and educational support for children and older adults."
+      },
+      "address": {
+        "es": "Carretera a Villa Hidalgo km 7, Ciudad de los Niños, 20371 Aguascalientes, Ags., México",
+        "en": "Carretera a Villa Hidalgo km 7, Ciudad de los Niños, 20371 Aguascalientes, Ags., México"
+      },
+      "categories": [
+        "children_support",
+        "older_adults",
+        "education"
+      ],
+      "coordinates": {
+        "latitude": 21.8336086,
+        "longitude": -102.3697738
+      },
+      "contact": {
+        "phone": "+52 449 976 4161",
+        "email": "ciudaddelosninos.ags@gmail.com",
+        "website": "https://ciudaddelosninosags.com/"
+      },
+      "googleMapsUrl": "https://www.google.com/maps/place/Ciudad+De+Los+Ni%C3%B1os/@21.8336136,-102.3723487,17z/data=!3m1!4b1!4m6!3m5!1s0x8429eb961cc5f0f1:0x798c5a3bef50db6c!8m2!3d21.8336086!4d-102.3697738!16s%2Fg%2F11s16r7h7h",
+      "verificationStatus": "imported",
+      "importedAtIsoDate": "2026-11-02",
+      "needs": [],
+      "fundingOrigin": "not_informed",
+      "administrationType": "private",
+      "directoryProfile": {
+        "activities": {
+          "es": "Alojamiento, educación y cuidado de personas mayores.",
+          "en": "Residential care, education and support for older adults."
+        },
+        "hours": {
+          "es": "Oficina: lunes a viernes, 9:00–16:00; sábado, 9:00–13:00.",
+          "en": "Office: Monday–Friday, 09:00–16:00; Saturday, 09:00–13:00."
+        },
+        "waysToContribute": {
+          "es": "Consultar donativos y voluntariado con la institución.",
+          "en": "Contact the institution about donations and volunteering."
+        },
+        "fundingSources": [
+          "donations",
+          "recovery_fees"
+        ],
+        "evidence": [
+          {
+            "fields": [
+              "administrationType",
+              "activities",
+              "hours",
+              "waysToContribute",
+              "fundingSources"
+            ],
+            "url": "https://ciudaddelosninosags.com/",
+            "reviewedOn": "2026-11-02",
+            "statement": "Civil association; donations and a contribution for older-adult care are declared. Total funding composition is unknown."
+          }
+        ]
+      }
+    },
+    "notes": [
+      "Matched public place name, address and place-pin coordinates; not an official center verification."
+    ],
+    "sources": [
+      "https://www.google.com/maps/place/Ciudad+De+Los+Ni%C3%B1os/@21.8336136,-102.3723487,17z/data=!3m1!4b1!4m6!3m5!1s0x8429eb961cc5f0f1:0x798c5a3bef50db6c!8m2!3d21.8336086!4d-102.3697738!16s%2Fg%2F11s16r7h7h",
+      "https://ciudaddelosninosags.com/"
+    ]
+  },
+  "Organizaciones:49": {
+    "center": {
+      "id": "mx-crit-aguascalientes-918b21",
+      "name": {
+        "es": "CRIT Aguascalientes",
+        "en": "CRIT Aguascalientes"
+      },
+      "description": {
+        "es": "Rehabilitación e inclusión de personas con discapacidad.",
+        "en": "Rehabilitation and inclusion services for people with disabilities."
+      },
+      "address": {
+        "es": "Av. Heroico Colegio Militar 600, Aguascalientes, Ags., México",
+        "en": "Av. Heroico Colegio Militar 600, Aguascalientes, Ags., México"
+      },
+      "categories": [
+        "disability_support",
+        "health"
+      ],
+      "coordinates": {
+        "latitude": 21.8908481,
+        "longitude": -102.2782242
+      },
+      "contact": {
+        "phone": "+52 449 910 2223",
+        "email": null,
+        "website": "https://teleton.org/voluntariado"
+      },
+      "googleMapsUrl": "https://www.google.com/maps/place/CRIT+Aguascalientes./@21.8908481,-102.2782242,17z/data=!3m1!4b1!4m6!3m5!1s0x8429ee6b366c3931:0xa29f771ab1c12a9!8m2!3d21.8908481!4d-102.2782242!16s%2Fg%2F1tfjfw0w",
+      "verificationStatus": "imported",
+      "importedAtIsoDate": "2026-11-02",
+      "needs": [],
+      "fundingOrigin": "not_informed",
+      "administrationType": "not_informed",
+      "directoryProfile": {
+        "hours": {
+          "es": "Horario publicado: lunes a viernes de 6:50 a 15:00. Confirmar citas.",
+          "en": "Published hours: Monday–Friday, 06:50–15:00. Confirm appointments."
+        },
+        "waysToContribute": {
+          "es": "Consultar el programa de voluntariado de Teletón.",
+          "en": "Ask about the Teletón volunteer program."
+        },
+        "evidence": [
+          {
+            "fields": [
+              "hours",
+              "waysToContribute"
+            ],
+            "url": "https://teleton.org/voluntariado",
+            "reviewedOn": "2026-11-02",
+            "statement": "Official branch contact and volunteer program."
+          }
+        ]
+      }
+    },
+    "notes": [
+      "Official branch page and Maps agree on street, number, phone and location. Their neighborhood/postal-code labels differ; those labels are omitted pending confirmation.",
+      "Funding composition for this branch is not established. No national funding assumption applied."
+    ],
+    "sources": [
+      "https://www.google.com/maps/place/CRIT+Aguascalientes./@21.8908481,-102.2782242,17z/data=!3m1!4b1!4m6!3m5!1s0x8429ee6b366c3931:0xa29f771ab1c12a9!8m2!3d21.8908481!4d-102.2782242!16s%2Fg%2F1tfjfw0w",
+      "https://teleton.org/voluntariado"
+    ]
+  },
+  "Dispensario Médico:2": {
+    "center": {
+      "id": "mx-casa-de-san-vicente-de-paul-dispensario-medico-1349db",
+      "name": {
+        "es": "Casa de San Vicente de Paúl — dispensario médico",
+        "en": "Casa de San Vicente de Paúl — dispensario médico"
+      },
+      "description": {
+        "es": "Dispensario médico. Confirmar los servicios disponibles antes de acudir.",
+        "en": "Medical dispensary. Confirm available services before visiting."
+      },
+      "address": {
+        "es": "C. Guadalupe 344, Barrio de Guadalupe, 20059 Aguascalientes, Ags., México",
+        "en": "C. Guadalupe 344, Barrio de Guadalupe, 20059 Aguascalientes, Ags., México"
+      },
+      "categories": [
+        "health"
+      ],
+      "coordinates": {
+        "latitude": 21.8842945,
+        "longitude": -102.3028419
+      },
+      "contact": {
+        "phone": null,
+        "email": null,
+        "website": null
+      },
+      "googleMapsUrl": "https://www.google.com/maps/place/Casa+de+San+Vicente+de+Pa%C3%BAl,+dispensario+m%C3%A9dico/@21.8842945,-102.3028419,17z/data=!3m1!4b1!4m6!3m5!1s0x8429eff53b121787:0x585b8b0bbd997de4!8m2!3d21.8842945!4d-102.3028419!16s%2Fg%2F11fjs7fdlb",
+      "verificationStatus": "imported",
+      "importedAtIsoDate": "2026-11-02",
+      "needs": [],
+      "fundingOrigin": "not_informed",
+      "administrationType": "not_informed"
+    },
+    "notes": [
+      "Public place name, address and pin match the workbook. No corroborated institutional phone, hours, funding or service capacity; those fields remain unknown. Directory-only listing with no needs."
+    ],
+    "sources": [
+      "https://www.google.com/maps/place/Casa+de+San+Vicente+de+Pa%C3%BAl,+dispensario+m%C3%A9dico/@21.8842945,-102.3028419,17z/data=!3m1!4b1!4m6!3m5!1s0x8429eff53b121787:0x585b8b0bbd997de4!8m2!3d21.8842945!4d-102.3028419!16s%2Fg%2F11fjs7fdlb"
+    ]
+  },
+  "Organizaciones:75": {
+    "status": "pending",
+    "notes": [
+      "AMANC official network lists Monroy 109 interior 1, but Maps lists Mahatma Gandhi 347-B and a different phone. A second Maps listing also exists. Current operational branch must be confirmed before publishing a pin."
+    ],
+    "sources": [
+      "https://www.amancrednacional.org/somos/red-nacional-amanc/",
+      "https://www.google.com/maps/place/AMANC+AGUASCALIENTES/@21.862454,-102.2957054,17z/data=!3m1!4b1!4m6!3m5!1s0x8429edd3c4e552ab:0xd834d6cf37ba2efd!8m2!3d21.862454!4d-102.2957054!16s%2Fg%2F11rd02kl_q"
+    ]
+  },
+  "Comedores:8": {
+    "status": "pending",
+    "notes": [
+      "Constitución community-center place pin is corroborated, but this branch is not in the researched government list of operating community kitchens. Food service requires confirmation before applying that category."
+    ],
+    "sources": [
+      "https://informacion.aguascalientes.gob.mx/news/invitan-a-comedores-comunitarios;-funcionan-en-todo-el-estado",
+      "https://www.google.com/maps/place/Casa+Del+Bien+Com%C3%BAn+Constituci%C3%B3n/@21.9307388,-102.284905,17z/data=!3m1!4b1!4m6!3m5!1s0x8429efba6b2e7959:0xf3160cc701e7bbce!8m2!3d21.9307388!4d-102.284905!16s%2Fg%2F11g8y9bmvz"
+    ]
+  },
+  "Comedores:16": {
+    "status": "pending",
+    "notes": [
+      "Government confirms the kitchen branch, but Maps search returned Jesús Terán instead. Workbook coordinates are not published until this branch has an independently matched place pin."
+    ],
+    "sources": [
+      "https://informacion.aguascalientes.gob.mx/news/invitan-a-comedores-comunitarios;-funcionan-en-todo-el-estado",
+      "https://www.google.com/maps/place/CASA+DEL+BIEN+COM%C3%9AN/@21.8701046,-102.2757665,17z/data=!3m1!4b1!4m6!3m5!1s0x8429ed2e0cf2c749:0xb2167e9c5aba2c30!8m2!3d21.8701046!4d-102.2757665!16s%2Fg%2F11ssz1h9xb"
+    ]
+  },
+  "Comedores:21": {
+    "status": "pending",
+    "notes": [
+      "Government confirms the kitchen branch, but Maps search returned Jesús Terán instead. Workbook coordinates are not published until this branch has an independently matched place pin."
+    ],
+    "sources": [
+      "https://informacion.aguascalientes.gob.mx/news/invitan-a-comedores-comunitarios;-funcionan-en-todo-el-estado",
+      "https://www.google.com/maps/place/CASA+DEL+BIEN+COM%C3%9AN/@21.8701046,-102.2757665,17z/data=!3m1!4b1!4m6!3m5!1s0x8429ed2e0cf2c749:0xb2167e9c5aba2c30!8m2!3d21.8701046!4d-102.2757665!16s%2Fg%2F11ssz1h9xb"
+    ]
+  },
+  "Comedores:23": {
+    "status": "pending",
+    "notes": [
+      "Government confirms the kitchen branch, but Maps search returned Jesús Terán instead. Workbook coordinates are not published until this branch has an independently matched place pin."
+    ],
+    "sources": [
+      "https://informacion.aguascalientes.gob.mx/news/invitan-a-comedores-comunitarios;-funcionan-en-todo-el-estado",
+      "https://www.google.com/maps/place/CASA+DEL+BIEN+COM%C3%9AN/@21.8701046,-102.2757665,17z/data=!3m1!4b1!4m6!3m5!1s0x8429ed2e0cf2c749:0xb2167e9c5aba2c30!8m2!3d21.8701046!4d-102.2757665!16s%2Fg%2F11ssz1h9xb"
+    ]
+  }
+}

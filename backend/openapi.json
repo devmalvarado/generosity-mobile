@@ -1966,6 +1966,133 @@
           "updated_at"
         ]
       },
+      "DirectoryProfile": {
+        "type": "object",
+        "additionalProperties": false,
+        "description": "Reviewed public declarations only. Private workbook contacts and unresolved claims are stored separately and never serialized here. Missing optional fields mean not informed. No financial audit or donation/tax eligibility is implied.",
+        "properties": {
+          "legalName": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "maxLength": 500
+          },
+          "branchName": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "maxLength": 250
+          },
+          "activities": {
+            "type": "object",
+            "minProperties": 1,
+            "maxProperties": 20,
+            "additionalProperties": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 4000
+            }
+          },
+          "hours": {
+            "type": "object",
+            "minProperties": 1,
+            "maxProperties": 20,
+            "additionalProperties": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 4000
+            }
+          },
+          "waysToContribute": {
+            "type": "object",
+            "minProperties": 1,
+            "maxProperties": 20,
+            "additionalProperties": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 4000
+            }
+          },
+          "socialLinks": {
+            "type": "array",
+            "maxItems": 10,
+            "items": {
+              "type": "string",
+              "format": "uri",
+              "pattern": "^https://"
+            }
+          },
+          "fundingSources": {
+            "type": "array",
+            "uniqueItems": true,
+            "maxItems": 6,
+            "items": {
+              "enum": [
+                "donations",
+                "recovery_fees",
+                "grants",
+                "public_support",
+                "own_revenue",
+                "other"
+              ]
+            }
+          },
+          "evidence": {
+            "type": "array",
+            "maxItems": 30,
+            "items": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "fields",
+                "url",
+                "reviewedOn",
+                "statement"
+              ],
+              "properties": {
+                "fields": {
+                  "type": "array",
+                  "items": {
+                    "enum": [
+                      "legalName",
+                      "branchName",
+                      "activities",
+                      "hours",
+                      "waysToContribute",
+                      "socialLinks",
+                      "fundingSources",
+                      "fundingOrigin",
+                      "administrationType"
+                    ]
+                  }
+                },
+                "url": {
+                  "type": "string",
+                  "format": "uri",
+                  "pattern": "^https://"
+                },
+                "reviewedOn": {
+                  "type": "string",
+                  "format": "date"
+                },
+                "asOf": {
+                  "type": [
+                    "string",
+                    "null"
+                  ],
+                  "format": "date"
+                },
+                "statement": {
+                  "type": "string",
+                  "maxLength": 1000
+                }
+              }
+            }
+          }
+        }
+      },
       "Center": {
         "type": "object",
         "properties": {
@@ -2074,6 +2201,29 @@
           },
           "updatedAt": {
             "type": "string"
+          },
+          "fundingOrigin": {
+            "enum": [
+              "public",
+              "private",
+              "mixed",
+              "not_informed"
+            ],
+            "default": "not_informed",
+            "description": "Independent classification; legal form does not determine funding."
+          },
+          "administrationType": {
+            "enum": [
+              "public",
+              "private",
+              "mixed",
+              "not_informed"
+            ],
+            "default": "not_informed",
+            "description": "Independent classification; legal form does not determine funding."
+          },
+          "directoryProfile": {
+            "$ref": "#/components/schemas/DirectoryProfile"
           }
         },
         "required": [

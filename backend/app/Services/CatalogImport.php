@@ -15,14 +15,29 @@ class CatalogImport
     public function run(array $catalog, string $operator): void
     {
         Validator::make($catalog, [
-            'schemaVersion' => 'required|integer|in:1', 'centers' => 'required|array|max:10000',
-            'centers.*' => 'array:id,name,description,address,categories,coordinates,contact,googleMapsUrl,verificationStatus,importedAtIsoDate,needs',
+            'schemaVersion' => 'required|integer|in:1', 'centers' => 'present|array|max:10000',
+            'centers.*' => 'array:id,name,description,address,categories,coordinates,contact,googleMapsUrl,verificationStatus,importedAtIsoDate,needs,fundingOrigin,administrationType,directoryProfile,expectedVersion',
             'centers.*.id' => 'required|string|max:100|regex:/^[a-z0-9][a-z0-9-]*$/|distinct:strict',
+            'reviewBatch' => 'sometimes|array:sourceName,sourceSha256,rows',
+            'reviewBatch.sourceName' => 'required_with:reviewBatch|string|max:255',
+            'reviewBatch.sourceSha256' => 'required_with:reviewBatch|regex:/^[a-f0-9]{64}$/',
+            'reviewBatch.rows' => 'required_with:reviewBatch|array|max:10000',
+            'reviewBatch.rows.*' => 'array:sheet,rowNumber,centerId,status,sourceData,reviewNotes,sourceUrls',
+            'reviewBatch.rows.*.sheet' => 'required|string|max:80',
+            'reviewBatch.rows.*.rowNumber' => 'required|integer|min:1',
+            'reviewBatch.rows.*.centerId' => 'nullable|string|max:100',
+            'reviewBatch.rows.*.status' => 'required|in:pending,applied,matched,duplicate',
+            'reviewBatch.rows.*.sourceData' => 'present|array|max:50',
+            'reviewBatch.rows.*.sourceData.*' => 'nullable|string|max:6000',
+            'reviewBatch.rows.*.reviewNotes' => 'required|array|max:30',
+            'reviewBatch.rows.*.reviewNotes.*' => 'required|string|max:2000',
+            'reviewBatch.rows.*.sourceUrls' => 'present|array|max:30',
+            'reviewBatch.rows.*.sourceUrls.*' => 'required|url:http,https|max:2048',
         ])->validate();
         $needIds = [];
         $centers = [];
         foreach ($catalog['centers'] as $center) {
-            $validated = Validator::make($center, [
+            $validated = Validator::make($center, CatalogRules::directory() + [
                 'id' => 'required|string|max:100', 'name' => CatalogRules::localized(),
                 'description' => CatalogRules::localized(), 'address' => CatalogRules::localized(),
                 'categories' => 'required|array|min:1|max:30', 'categories.*' => 'required|in:children_support,older_adults,disability_support,blood_donation,health,addiction_recovery,community_kitchen,education,vulnerable_families,organ_tissue_donation|distinct',
@@ -35,6 +50,17 @@ class CatalogImport
                 'importedAtIsoDate' => 'required|date_format:Y-m-d', 'needs' => 'present|array|max:1000',
                 'needs.*' => 'array:id,centerId,title,description,helpMethods,urgent,expiresOnIsoDate,quantityRequired,quantityCommitted,unit,status,category,priority,publishedOnIsoDate',
             ])->validate();
+            $evidenceFields = array_merge([], ...array_column($validated['directoryProfile']['evidence'] ?? [], 'fields'));
+            foreach (['fundingOrigin', 'administrationType'] as $field) {
+                if (($validated[$field] ?? 'not_informed') !== 'not_informed' && ! in_array($field, $evidenceFields, true)) {
+                    throw ValidationException::withMessages([$field => 'A public source and review date are required.']);
+                }
+            }
+            foreach (Arr::except($validated['directoryProfile'] ?? [], ['evidence']) as $field => $value) {
+                if ($value !== null && $value !== [] && ! in_array($field, $evidenceFields, true)) {
+                    throw ValidationException::withMessages(['directoryProfile.'.$field => 'A public source and review date are required.']);
+                }
+            }
             // Initial directory-only listings may lack contact; they cannot claim verification or solicit help.
             if (! array_filter($validated['contact']) && ! ($validated['verificationStatus'] === 'imported'
                 && ! empty($validated['googleMapsUrl']) && $center['needs'] === [])) {
@@ -64,14 +90,36 @@ class CatalogImport
             }
             $centers[] = $validated;
         }
-        DB::transaction(function () use ($centers, $operator) {
+        $review = $catalog['reviewBatch'] ?? null;
+        $rowKeys = [];
+        foreach ($review['rows'] ?? [] as $row) {
+            $key = $row['sheet'].':'.$row['rowNumber'];
+            if (isset($rowKeys[$key]) || ($row['status'] !== 'pending' && empty($row['centerId']))) {
+                throw ValidationException::withMessages(['reviewBatch' => 'Rows must be unique; resolved rows require a center.']);
+            }
+            $rowKeys[$key] = true;
+        }
+        DB::transaction(function () use ($centers, $operator, $review) {
             foreach ($centers as $centerData) {
                 $center = Center::whereKey($centerData['id'])->lockForUpdate()->first();
-                $details = Arr::except($centerData, ['id', 'needs']);
+                if (isset($centerData['expectedVersion']) && $centerData['expectedVersion'] !== ($center?->version ?? 0)) {
+                    throw new ApiProblem('catalog_version_conflict', 409);
+                }
+                $details = Arr::except($centerData, ['id', 'needs', 'fundingOrigin', 'administrationType', 'expectedVersion']);
+                // Legacy imports omit new sections; omission must not erase reviewed enrichment.
+                if ($center && ! array_key_exists('directoryProfile', $details) && isset($center->details['directoryProfile'])) {
+                    $details['directoryProfile'] = $center->details['directoryProfile'];
+                }
+                $attributes = ['details' => $details];
+                foreach (['fundingOrigin' => 'funding_origin', 'administrationType' => 'administration_type'] as $field => $column) {
+                    if (array_key_exists($field, $centerData)) {
+                        $attributes[$column] = $centerData[$field];
+                    }
+                }
                 if ($center) {
-                    $center->update(['details' => $details, 'version' => $center->version + 1]);
+                    $center->update($attributes + ['version' => $center->version + 1]);
                 } else {
-                    $center = Center::create(['id' => $centerData['id'], 'details' => $details]);
+                    $center = Center::create(['id' => $centerData['id']] + $attributes);
                 }
                 foreach ($centerData['needs'] as $data) {
                     $need = Need::whereKey($data['id'])->lockForUpdate()->first();
@@ -98,9 +146,25 @@ class CatalogImport
                     }
                 }
             }
+            foreach ($review['rows'] ?? [] as $row) {
+                if (! empty($row['centerId']) && ! Center::whereKey($row['centerId'])->exists()) {
+                    throw ValidationException::withMessages(['reviewBatch' => 'Referenced center does not exist.']);
+                }
+                $identity = [
+                    'source_sha256' => $review['sourceSha256'], 'sheet' => $row['sheet'], 'row_number' => $row['rowNumber'],
+                ];
+                $existingRow = DB::table('catalog_import_rows')->where($identity)->lockForUpdate()->first();
+                DB::table('catalog_import_rows')->updateOrInsert($identity, [
+                    'source_name' => $review['sourceName'], 'center_id' => $row['centerId'] ?? null, 'status' => $row['status'],
+                    'source_data' => json_encode($row['sourceData'], JSON_THROW_ON_ERROR),
+                    'review_notes' => json_encode($row['reviewNotes'], JSON_THROW_ON_ERROR),
+                    'source_urls' => json_encode($row['sourceUrls'], JSON_THROW_ON_ERROR),
+                    'created_at' => $existingRow?->created_at ?? now(), 'updated_at' => now(),
+                ]);
+            }
             DB::table('operator_audits')->insert([
                 'operator' => $operator, 'action' => 'catalog_import',
-                'details' => json_encode(['centers' => array_column($centers, 'id'), 'uid' => getmyuid()], JSON_THROW_ON_ERROR),
+                'details' => json_encode(['centers' => array_column($centers, 'id'), 'uid' => getmyuid(), 'sourceSha256' => $review['sourceSha256'] ?? null, 'reviewRows' => count($review['rows'] ?? [])], JSON_THROW_ON_ERROR),
                 'created_at' => now(),
             ]);
         }, 5);

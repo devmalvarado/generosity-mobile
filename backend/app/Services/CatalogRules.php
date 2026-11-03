@@ -6,6 +6,35 @@ use Closure;
 
 class CatalogRules
 {
+    public static function directory(): array
+    {
+        $fields = 'legalName,branchName,activities,hours,waysToContribute,socialLinks,fundingSources,fundingOrigin,administrationType';
+
+        return [
+            'fundingOrigin' => 'sometimes|in:public,private,mixed,not_informed',
+            'administrationType' => 'sometimes|in:public,private,mixed,not_informed',
+            'expectedVersion' => 'sometimes|integer|min:0',
+            'directoryProfile' => 'sometimes|array:legalName,branchName,activities,hours,waysToContribute,socialLinks,fundingSources,evidence',
+            'directoryProfile.legalName' => 'sometimes|nullable|string|max:500',
+            'directoryProfile.branchName' => 'sometimes|nullable|string|max:250',
+            'directoryProfile.activities' => ['sometimes', ...self::localized()],
+            'directoryProfile.hours' => ['sometimes', ...self::localized()],
+            'directoryProfile.waysToContribute' => ['sometimes', ...self::localized()],
+            'directoryProfile.socialLinks' => 'sometimes|array|max:10',
+            'directoryProfile.socialLinks.*' => 'required|url:https|max:2048|distinct',
+            'directoryProfile.fundingSources' => 'sometimes|array|max:6',
+            'directoryProfile.fundingSources.*' => 'required|in:donations,recovery_fees,grants,public_support,own_revenue,other|distinct',
+            'directoryProfile.evidence' => 'sometimes|array|max:30',
+            'directoryProfile.evidence.*' => 'array:fields,url,reviewedOn,asOf,statement',
+            'directoryProfile.evidence.*.fields' => 'required|array|min:1|max:10',
+            'directoryProfile.evidence.*.fields.*' => 'required|in:'.$fields.'|distinct',
+            'directoryProfile.evidence.*.url' => 'required|url:https|max:2048',
+            'directoryProfile.evidence.*.reviewedOn' => 'required|date_format:Y-m-d|before_or_equal:today',
+            'directoryProfile.evidence.*.asOf' => 'nullable|date_format:Y-m-d|before_or_equal:today',
+            'directoryProfile.evidence.*.statement' => 'required|string|max:1000',
+        ];
+    }
+
     public static function googleMapsUrl(): array
     {
         return ['bail', 'nullable', 'string', 'url:https', 'max:2048', function (string $attribute, mixed $value, Closure $fail) {

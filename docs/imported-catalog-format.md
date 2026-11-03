@@ -1,5 +1,47 @@
 # Imported Kindness Center Catalog Format
 
+## Reviewed directory enrichment (2026-11-02)
+
+The operator import additionally accepts `fundingOrigin` and `administrationType`
+(`public`, `private`, `mixed`, `not_informed`). They persist as separate columns (funding origin is indexed); defaults are explicitly unknown.
+Neither legal form nor a tax-directory entry determines funding or donation eligibility.
+
+Optional `directoryProfile` contains only `legalName`, `branchName`, localized
+`activities`, `hours`, `waysToContribute`, HTTPS `socialLinks`, `fundingSources`
+and `evidence`. Sources use `donations`, `recovery_fees`, `grants`, `public_support`,
+`own_revenue`, `other`. Evidence identifies covered fields, a public HTTPS URL,
+`reviewedOn`, optional historical `asOf`, and a bounded explanatory `statement`.
+Every supplied nonempty profile field and non-unknown classification needs evidence.
+Unknown optional fields are omitted, never filled with invented zero/free/open values.
+Hours are descriptive declarations here, not an operational open-now schedule.
+Full limits and allowlists are in `CatalogRules::directory` and `openapi.json`.
+
+These fields appear in `/api/v1/centers` and `/api/v1/centers/{id}`. Mobile
+`/api/v1/sync/catalog` remains explicitly allowlisted for strict v1 readers;
+native presentation of directory enrichment is still pending. Omission of the
+entire profile or classification in legacy imports preserves existing enrichment.
+Supplying a profile replaces that section; include the complete reviewed section.
+`expectedVersion` rejects a stale import atomically (use `0` for a new center).
+Refresh and reconcile the source snapshot before retrying a version conflict.
+
+The same command accepts a private `reviewBatch` with `sourceName`, file
+`sourceSha256`, and `rows`. Each row contains `sheet`, `rowNumber`, nullable
+`centerId`, `status` (`pending`, `applied`, `matched`, `duplicate`), `sourceData`,
+`reviewNotes`, and `sourceUrls`. Resolved rows require an existing or newly imported
+center; duplicate file/sheet/row entries within a batch are rejected. Re-importing
+the same source row updates one record. A review-only batch may have `centers: []`.
+
+`catalog_import_rows` is private operator data, with no public or staff API route.
+Keep source cells, personal contacts, uncorroborated assertions and call notes in
+this table and ignored private artifacts, never in `Center.details` or Git.
+Only reviewed public values enter the catalog. A known name with an uncertain
+operational address remains pending; a map search viewport is never a place pin.
+Imports do not create users, memberships, needs or official-verification claims.
+
+The Aguascalientes reconciliation is documented in
+`data/aguascalientes-directory-2026-11-02/README.md`; behavior tests use synthetic
+fixtures in `backend/tests/Feature/DirectoryEnrichmentTest.php`.
+
 The mobile foundation consumes schema version 1 through the shared repository,
 with backend refresh and a validated bundled fallback. The bundled document is
 the only labeled demonstration fixture. Real initial data is imported into the
@@ -23,9 +65,9 @@ The [33-zone expansion](../data/catalog-expansion-2026-11-01/README.md) adds a
 separate 132-record research inventory and a reviewed 120-center batch, with
 12 exclusions. It covers Mexico, the United States and European search areas,
 including explicit Rome alternatives for Vatican searches. Stable IDs derive
-from observed Google feature IDs; missing place IDs are not fabricated. Funding
-origin, service distinctions and sources stay in the research inventory until
-the full directory contract is implemented. The batch retains the same import
+from observed Google feature IDs; missing place IDs are not fabricated. That
+historical batch keeps unconfirmed funding in its research inventory. Reviewed
+funding can now be imported using the enrichment contract above. The batch retains the same import
 schema; public office and food-pantry descriptions do
 not promise residential admission or prepared meals.
 

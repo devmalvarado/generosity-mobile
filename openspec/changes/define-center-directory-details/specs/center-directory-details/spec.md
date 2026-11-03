@@ -112,6 +112,36 @@ Resource sources SHALL support multiple stable types and optional localized expl
 - **WHEN** staff declares those sources without audited financial evidence
 - **THEN** both appear as center-declared sources without financial assurance, donor identification or a tax-deductibility claim
 
+### Requirement: Independent Funding Origin
+Funding origin SHALL use `public`, `private`, `mixed` or `not_informed`, independently of administration type using the same vocabulary. Legal form, government registration and permission to receive deductible donations SHALL NOT determine either classification automatically. Non-unknown classifications SHALL carry a public evidence URL and review date; historical evidence SHALL retain its as-of date when known.
+
+#### Scenario: Private administration with mixed funding
+- **WHEN** a privately administered organization documents both public and private resource support
+- **THEN** its administration remains private and its funding origin may be mixed, without implying audited accounts, tax deductibility or active donation checkout
+
+#### Scenario: Workbook funding claim lacks corroboration
+- **WHEN** an imported spreadsheet says a center has mixed funding without corroborating public evidence
+- **THEN** the assertion remains in private review data and the public funding origin remains not informed
+
+### Requirement: Traceable Directory Reconciliation
+Operator imports SHALL preserve source-file identity, sheet, row, original supplied values, review status, review notes and consulted URLs separately from public centers. Pending rows SHALL NOT appear in discovery or create needs, memberships, verification badges or payment authority.
+
+#### Scenario: Repeated or stale imports
+- **WHEN** the same file/sheet/row is ingested again or a supplied expected center version is stale
+- **THEN** the review row is updated without duplication, a version conflict rolls back the entire batch, and legacy imports preserve omitted directory enrichment
+
+#### Scenario: Conflicting coordinates in a workbook
+- **WHEN** two supplied pins disagree or a source pin refers to a different branch
+- **THEN** the original values and conflict remain reviewable; a published location is retained or replaced only by a corroborated place pin, never by a city centroid or spreadsheet precision alone
+
+#### Scenario: Private contact alongside a public listing
+- **WHEN** a workbook includes a representative's personal contact or call notes
+- **THEN** these values stay in private import review storage and never enter public center responses, sync snapshots or repository datasets
+
+#### Scenario: An older client refreshes after enrichment
+- **WHEN** a schema-version-1 mobile client requests the catalog after funding or directory fields are added
+- **THEN** it receives its existing allowlisted shape; directory API metadata does not invalidate the mobile snapshot
+
 ### Requirement: Scoped Verification Presentation
 The directory's verification section SHALL consume existing claim authority, scope, validity and provenance, not a staff-editable boolean. Unsupported legacy true/false values SHALL not create active official claims or fraud labels. Profile completeness, legal name, visits and beneficiary counts SHALL not verify a center. Private evidence SHALL remain private, and identity changes SHALL recheck dependent claims under their owning policy.
 

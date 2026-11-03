@@ -3,10 +3,12 @@
 namespace App\Http\Controllers;
 
 use App\Exceptions\ApiProblem;
+use App\Jobs\PublishUrgentNeed;
 use App\Models\Center;
 use App\Models\Need;
 use App\Services\CatalogRules;
 use App\Services\Mutation;
+use App\Services\PushMessaging;
 use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Str;
@@ -22,7 +24,7 @@ class CatalogController extends Controller
 
     public function center(Center $center): array
     {
-        return array_merge($center->details, ['id' => $center->id, 'version' => $center->version, 'updatedAt' => $center->updated_at->toISOString()]);
+        return array_merge($center->details, ['id' => $center->id, 'fundingOrigin' => $center->funding_origin ?? 'not_informed', 'administrationType' => $center->administration_type ?? 'not_informed', 'version' => $center->version, 'updatedAt' => $center->updated_at->toISOString()]);
     }
 
     public function needs(Request $request)
@@ -88,8 +90,8 @@ class CatalogController extends Controller
 
     private function notifyPublication(Need $need, bool $wasUrgent): void
     {
-        if (! $wasUrgent && \App\Services\PushMessaging::eligible($need)) {
-            \App\Jobs\PublishUrgentNeed::dispatch($need->id, (string) Str::uuid(), now()->toDateTimeString());
+        if (! $wasUrgent && PushMessaging::eligible($need)) {
+            PublishUrgentNeed::dispatch($need->id, (string) Str::uuid(), now()->toDateTimeString());
         }
     }
 

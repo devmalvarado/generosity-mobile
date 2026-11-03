@@ -1,0 +1,1653 @@
+{
+  "sourceName": "Directorio Aguascallientes.xlsx",
+  "sourceSha256": "1d1f017d34d1dca1e07bef1a6eab6627f4a21600483de9343504f85c8228fc1e",
+  "reviewedOn": "2026-11-02",
+  "excludedSheets": [
+    "DB (empty)",
+    "Ideas (taxonomy/country notes, not center listings)"
+  ],
+  "excludedRows": "Organizaciones 112–124 contain numbering only; blank rows are not listings.",
+  "rows": [
+    {
+      "sheet": "Organizaciones",
+      "rowNumber": 2,
+      "name": "Orfanatorio Casimira Arteaga Hogar de la Niña, API Ags., A.C.",
+      "centerId": "mx-hogar-de-la-nina-casimira-arteaga-0b9564",
+      "status": "applied",
+      "reviewNotes": [
+        "Matched by name and Arqueros 202. Keep the existing researched pin: the workbook contains two different coordinate pairs.",
+        "Public service and office-hour declarations added. Tax claims and representative details are not published."
+      ],
+      "sourceUrls": [
+        "https://ayudaresvivir.org/institucion/orfanatorio-casimira-arteaga-hogar-de-la-nina-asociacion-protectora-de-la-infancia-de-aguascalientes-ac.html"
+      ]
+    },
+    {
+      "sheet": "Organizaciones",
+      "rowNumber": 3,
+      "name": "Hogar Ahaba. A.C.",
+      "centerId": null,
+      "status": "pending",
+      "reviewNotes": [
+        "Workbook itself questions whether Hogar Ahaba still operates. Historical registry evidence does not establish a current service location."
+      ],
+      "sourceUrls": [
+        "https://www.ordenjuridico.gob.mx/Estatal/AGUASCALIENTES/Acuerdos/AGSACU13.pdf"
+      ]
+    },
+    {
+      "sheet": "Organizaciones",
+      "rowNumber": 4,
+      "name": "Hogar del Niño María Auxiliadora, A.C.",
+      "centerId": null,
+      "status": "pending",
+      "reviewNotes": [
+        "Historic sources identify a home in Calvillo, not necessarily the capital. Workbook reports possible closure; current operation and pin require confirmation."
+      ],
+      "sourceUrls": [
+        "https://www.ags.gob.mx/masqueunbeso/Mas_que_un_beso_vdigital.pdf"
+      ]
+    },
+    {
+      "sheet": "Organizaciones",
+      "rowNumber": 5,
+      "name": "Foria Centro de Desarrollo, I.B.P.",
+      "centerId": null,
+      "status": "pending",
+      "reviewNotes": [
+        "Workbook explicitly questions whether the residential service is operating. No confirmed operational address or map pin."
+      ],
+      "sourceUrls": []
+    },
+    {
+      "sheet": "Organizaciones",
+      "rowNumber": 6,
+      "name": "Ciudad de los Niños de Ags., A. C.",
+      "centerId": "mx-ciudad-de-los-ninos-de-aguascalientes-83f604",
+      "status": "applied",
+      "reviewNotes": [
+        "Matched public place name, address and place-pin coordinates; not an official center verification."
+      ],
+      "sourceUrls": [
+        "https://www.google.com/maps/place/Ciudad+De+Los+Ni%C3%B1os/@21.8336136,-102.3723487,17z/data=!3m1!4b1!4m6!3m5!1s0x8429eb961cc5f0f1:0x798c5a3bef50db6c!8m2!3d21.8336086!4d-102.3697738!16s%2Fg%2F11s16r7h7h",
+        "https://ciudaddelosninosags.com/"
+      ]
+    },
+    {
+      "sheet": "Organizaciones",
+      "rowNumber": 7,
+      "name": "Centro de Promoción Femenina \"Casa de Jesús\", A.C.",
+      "centerId": null,
+      "status": "pending",
+      "reviewNotes": [
+        "Official organizational site gives Allende 211 Pte.; Google Maps gives Allende 220 and the workbook pin differs. Resolve entrance/address before publication."
+      ],
+      "sourceUrls": [
+        "https://casadejesus.mx/necesitas-ayuda/locations/aguascalientes-aguascalientes/"
+      ]
+    },
+    {
+      "sheet": "Organizaciones",
+      "rowNumber": 8,
+      "name": "Casa Hogar Dulce Refugio, A.C.",
+      "centerId": "mx-casa-hogar-dulce-refugio-e8b871",
+      "status": "applied",
+      "reviewNotes": [
+        "Matched by name and El Mocho 511. Retained the current institutional phone, website and mapped pin instead of the older workbook alternatives.",
+        "Private funding is the institution’s declaration, not an audit; undated beneficiary totals were not copied."
+      ],
+      "sourceUrls": [
+        "https://dulcerefugio.mx/"
+      ]
+    },
+    {
+      "sheet": "Organizaciones",
+      "rowNumber": 9,
+      "name": "Casa Hogar Creación y Vida, A.C.",
+      "centerId": null,
+      "status": "pending",
+      "reviewNotes": [
+        "Historical national DIF list confirms the name but not a current public operational address and pin."
+      ],
+      "sourceUrls": [
+        "https://sitios1.dif.gob.mx/procuraduriaDIF/wp-content/uploads/2022/05/DNCAS_05_2022.pdf"
+      ]
+    },
+    {
+      "sheet": "Organizaciones",
+      "rowNumber": 10,
+      "name": "Casa del Niño Villa de la Asunción, A.C.",
+      "centerId": "mx-casa-del-nino-villa-de-la-asuncion-35d76c",
+      "status": "matched",
+      "reviewNotes": [
+        "Matched by distinctive name. Workbook phone differs from the existing catalog and has no operational address.",
+        "Registry inactivity is not proof of physical closure; do not change public details until contact and operation are confirmed."
+      ],
+      "sourceUrls": [
+        "https://sii.bienestar.gob.mx/portal/organizaciones?page=243&page=248"
+      ]
+    },
+    {
+      "sheet": "Organizaciones",
+      "rowNumber": 11,
+      "name": "Asilo Rosa María, A.C.",
+      "centerId": null,
+      "status": "pending",
+      "reviewNotes": [
+        "Workbook declaration retained privately. No independently corroborated operational location and place pin in this review; further research is pending.",
+        "The workbook supplies no address, map URL or coordinates for this row. A name or tax-directory entry alone is insufficient to publish a location."
+      ],
+      "sourceUrls": []
+    },
+    {
+      "sheet": "Organizaciones",
+      "rowNumber": 12,
+      "name": "Alianza para los Desamparados, A. C.",
+      "centerId": null,
+      "status": "pending",
+      "reviewNotes": [
+        "Workbook declaration retained privately. No independently corroborated operational location and place pin in this review; further research is pending.",
+        "The workbook supplies no address, map URL or coordinates for this row. A name or tax-directory entry alone is insufficient to publish a location."
+      ],
+      "sourceUrls": []
+    },
+    {
+      "sheet": "Organizaciones",
+      "rowNumber": 13,
+      "name": "Casa de Descanso para Ancianos \"Matilde Roubroy de Villanueva\", I.B.P.",
+      "centerId": null,
+      "status": "pending",
+      "reviewNotes": [
+        "Workbook declaration retained privately. No independently corroborated operational location and place pin in this review; further research is pending.",
+        "The workbook supplies no address, map URL or coordinates for this row. A name or tax-directory entry alone is insufficient to publish a location."
+      ],
+      "sourceUrls": []
+    },
+    {
+      "sheet": "Organizaciones",
+      "rowNumber": 14,
+      "name": "Asilo de la Sagrada Familia, A.C.",
+      "centerId": null,
+      "status": "pending",
+      "reviewNotes": [
+        "Workbook declaration retained privately. No independently corroborated operational location and place pin in this review; further research is pending.",
+        "The workbook supplies no address, map URL or coordinates for this row. A name or tax-directory entry alone is insufficient to publish a location."
+      ],
+      "sourceUrls": []
+    },
+    {
+      "sheet": "Organizaciones",
+      "rowNumber": 15,
+      "name": "Patronato de Asistencia Social de Calvillo, A.C.",
+      "centerId": null,
+      "status": "pending",
+      "reviewNotes": [
+        "Workbook declaration retained privately. No independently corroborated operational location and place pin in this review; further research is pending.",
+        "The workbook supplies no address, map URL or coordinates for this row. A name or tax-directory entry alone is insufficient to publish a location."
+      ],
+      "sourceUrls": []
+    },
+    {
+      "sheet": "Organizaciones",
+      "rowNumber": 16,
+      "name": "Estancia de Vida Nuestra Señora de Guadalupe, A.C.",
+      "centerId": "mx-estancia-de-vida-nuestra-senora-de-guadalupe-a-c-7ed852",
+      "status": "applied",
+      "reviewNotes": [
+        "Institutional website corroborates La Soledad 207. Workbook phone differs; current catalog phone retained pending direct confirmation.",
+        "No current fee, admission availability, funding origin or tax status is inferred."
+      ],
+      "sourceUrls": [
+        "https://estanciadevidaguadalupe.com/estancia.php"
+      ]
+    },
+    {
+      "sheet": "Organizaciones",
+      "rowNumber": 17,
+      "name": "Casa de Descanso San Nicolás Tolentino Fundación Nerón López",
+      "centerId": null,
+      "status": "pending",
+      "reviewNotes": [
+        "The Ciudad de los Niños institutional site describes an Asilo San Nicolás department. Do not create another center from a potentially related historical name until branch identity is established.",
+        "Official Ciudad de los Niños site names an Asilo San Nicolás department; branch identity is not resolved, so no separate public pin is created."
+      ],
+      "sourceUrls": [
+        "https://ciudaddelosninosags.com/"
+      ]
+    },
+    {
+      "sheet": "Organizaciones",
+      "rowNumber": 18,
+      "name": "Casa de Descanso y Asilo para Ancianos San José, A.C.",
+      "centerId": null,
+      "status": "pending",
+      "reviewNotes": [
+        "Workbook declaration retained privately. No independently corroborated operational location and place pin in this review; further research is pending.",
+        "The workbook supplies no address, map URL or coordinates for this row. A name or tax-directory entry alone is insufficient to publish a location."
+      ],
+      "sourceUrls": []
+    },
+    {
+      "sheet": "Organizaciones",
+      "rowNumber": 19,
+      "name": "Casa de Retiro de Ancianitas San Vicente, A.C,",
+      "centerId": null,
+      "status": "pending",
+      "reviewNotes": [
+        "Workbook declaration retained privately. No independently corroborated operational location and place pin in this review; further research is pending.",
+        "The workbook supplies no address, map URL or coordinates for this row. A name or tax-directory entry alone is insufficient to publish a location."
+      ],
+      "sourceUrls": []
+    },
+    {
+      "sheet": "Organizaciones",
+      "rowNumber": 20,
+      "name": "Asilo Nuestra Señora de Guadalupe",
+      "centerId": null,
+      "status": "pending",
+      "reviewNotes": [
+        "Workbook declaration retained privately. No independently corroborated operational location and place pin in this review; further research is pending.",
+        "The workbook supplies no address, map URL or coordinates for this row. A name or tax-directory entry alone is insufficient to publish a location."
+      ],
+      "sourceUrls": []
+    },
+    {
+      "sheet": "Organizaciones",
+      "rowNumber": 21,
+      "name": "Asilo de Ancianos de Pabellón de Arteaga, Ags., A.C.",
+      "centerId": null,
+      "status": "pending",
+      "reviewNotes": [
+        "Workbook declaration retained privately. No independently corroborated operational location and place pin in this review; further research is pending.",
+        "The workbook supplies no address, map URL or coordinates for this row. A name or tax-directory entry alone is insufficient to publish a location."
+      ],
+      "sourceUrls": []
+    },
+    {
+      "sheet": "Organizaciones",
+      "rowNumber": 22,
+      "name": "Asilo de Ancianos José Guadalupe Alcalá. A.C.",
+      "centerId": null,
+      "status": "pending",
+      "reviewNotes": [
+        "Workbook declaration retained privately. No independently corroborated operational location and place pin in this review; further research is pending.",
+        "The workbook supplies no address, map URL or coordinates for this row. A name or tax-directory entry alone is insufficient to publish a location."
+      ],
+      "sourceUrls": []
+    },
+    {
+      "sheet": "Organizaciones",
+      "rowNumber": 23,
+      "name": "Plenitud y Dignidad, A.C.",
+      "centerId": null,
+      "status": "pending",
+      "reviewNotes": [
+        "Workbook declaration retained privately. No independently corroborated operational location and place pin in this review; further research is pending.",
+        "The workbook supplies no address, map URL or coordinates for this row. A name or tax-directory entry alone is insufficient to publish a location."
+      ],
+      "sourceUrls": []
+    },
+    {
+      "sheet": "Organizaciones",
+      "rowNumber": 24,
+      "name": "Casa Hogar de Aguascalientes Colibrí, A.C.",
+      "centerId": null,
+      "status": "pending",
+      "reviewNotes": [
+        "Workbook declaration retained privately. No independently corroborated operational location and place pin in this review; further research is pending.",
+        "The workbook supplies no address, map URL or coordinates for this row. A name or tax-directory entry alone is insufficient to publish a location."
+      ],
+      "sourceUrls": []
+    },
+    {
+      "sheet": "Organizaciones",
+      "rowNumber": 25,
+      "name": "Casa para la promoción Integral del Adulto Mayor, A.C.",
+      "centerId": null,
+      "status": "pending",
+      "reviewNotes": [
+        "Workbook declaration retained privately. No independently corroborated operational location and place pin in this review; further research is pending.",
+        "The workbook supplies no address, map URL or coordinates for this row. A name or tax-directory entry alone is insufficient to publish a location."
+      ],
+      "sourceUrls": []
+    },
+    {
+      "sheet": "Organizaciones",
+      "rowNumber": 26,
+      "name": "Ciegos Progresistas de Aguascalientes, A. C.",
+      "centerId": null,
+      "status": "pending",
+      "reviewNotes": [
+        "Workbook declaration retained privately. No independently corroborated operational location and place pin in this review; further research is pending.",
+        "The workbook supplies no address, map URL or coordinates for this row. A name or tax-directory entry alone is insufficient to publish a location."
+      ],
+      "sourceUrls": []
+    },
+    {
+      "sheet": "Organizaciones",
+      "rowNumber": 27,
+      "name": "Consejo Estatal de Personas con Discapacidad en el Estado de Ags.",
+      "centerId": null,
+      "status": "pending",
+      "reviewNotes": [
+        "Workbook declaration retained privately. No independently corroborated operational location and place pin in this review; further research is pending.",
+        "The workbook supplies no address, map URL or coordinates for this row. A name or tax-directory entry alone is insufficient to publish a location."
+      ],
+      "sourceUrls": []
+    },
+    {
+      "sheet": "Organizaciones",
+      "rowNumber": 28,
+      "name": "Comunidad Agazzi, A. C.",
+      "centerId": null,
+      "status": "pending",
+      "reviewNotes": [
+        "Workbook declaration retained privately. No independently corroborated operational location and place pin in this review; further research is pending.",
+        "The workbook supplies no address, map URL or coordinates for this row. A name or tax-directory entry alone is insufficient to publish a location."
+      ],
+      "sourceUrls": []
+    },
+    {
+      "sheet": "Organizaciones",
+      "rowNumber": 29,
+      "name": "Diagnóstico y Asesoría en Problemas de Desarrollo Infantil, A. C. (DAPDI)",
+      "centerId": null,
+      "status": "pending",
+      "reviewNotes": [
+        "Workbook declaration retained privately. No independently corroborated operational location and place pin in this review; further research is pending.",
+        "The workbook supplies no address, map URL or coordinates for this row. A name or tax-directory entry alone is insufficient to publish a location."
+      ],
+      "sourceUrls": []
+    },
+    {
+      "sheet": "Organizaciones",
+      "rowNumber": 30,
+      "name": "Unión de Invidentes de Ags., A. C.",
+      "centerId": null,
+      "status": "pending",
+      "reviewNotes": [
+        "Workbook declaration retained privately. No independently corroborated operational location and place pin in this review; further research is pending.",
+        "The workbook supplies no address, map URL or coordinates for this row. A name or tax-directory entry alone is insufficient to publish a location."
+      ],
+      "sourceUrls": []
+    },
+    {
+      "sheet": "Organizaciones",
+      "rowNumber": 31,
+      "name": "Benefactores del Grupo Integración, A.C.",
+      "centerId": null,
+      "status": "pending",
+      "reviewNotes": [
+        "Workbook declaration retained privately. No independently corroborated operational location and place pin in this review; further research is pending.",
+        "The workbook supplies no address, map URL or coordinates for this row. A name or tax-directory entry alone is insufficient to publish a location."
+      ],
+      "sourceUrls": []
+    },
+    {
+      "sheet": "Organizaciones",
+      "rowNumber": 32,
+      "name": "Asociación de Hemofilia de Ags., AC",
+      "centerId": null,
+      "status": "pending",
+      "reviewNotes": [
+        "Workbook declaration retained privately. No independently corroborated operational location and place pin in this review; further research is pending.",
+        "The workbook supplies no address, map URL or coordinates for this row. A name or tax-directory entry alone is insufficient to publish a location."
+      ],
+      "sourceUrls": []
+    },
+    {
+      "sheet": "Organizaciones",
+      "rowNumber": 33,
+      "name": "Padres de Personas con Discapacidad Intelectual de Ags, A.C.",
+      "centerId": null,
+      "status": "pending",
+      "reviewNotes": [
+        "Workbook declaration retained privately. No independently corroborated operational location and place pin in this review; further research is pending.",
+        "The workbook supplies no address, map URL or coordinates for this row. A name or tax-directory entry alone is insufficient to publish a location."
+      ],
+      "sourceUrls": []
+    },
+    {
+      "sheet": "Organizaciones",
+      "rowNumber": 34,
+      "name": "Centro de Educación Diferenciada Especializada para Sordos, AC",
+      "centerId": null,
+      "status": "pending",
+      "reviewNotes": [
+        "Workbook declaration retained privately. No independently corroborated operational location and place pin in this review; further research is pending.",
+        "The workbook supplies no address, map URL or coordinates for this row. A name or tax-directory entry alone is insufficient to publish a location."
+      ],
+      "sourceUrls": []
+    },
+    {
+      "sheet": "Organizaciones",
+      "rowNumber": 35,
+      "name": "Asociación al Rescate por amigos de Esclerosis Múltiple de Ags., A.C.",
+      "centerId": null,
+      "status": "pending",
+      "reviewNotes": [
+        "Workbook declaration retained privately. No independently corroborated operational location and place pin in this review; further research is pending.",
+        "The workbook supplies no address, map URL or coordinates for this row. A name or tax-directory entry alone is insufficient to publish a location."
+      ],
+      "sourceUrls": []
+    },
+    {
+      "sheet": "Organizaciones",
+      "rowNumber": 36,
+      "name": "Personas Productivas, A. C.",
+      "centerId": null,
+      "status": "pending",
+      "reviewNotes": [
+        "Workbook declaration retained privately. No independently corroborated operational location and place pin in this review; further research is pending.",
+        "The workbook supplies no address, map URL or coordinates for this row. A name or tax-directory entry alone is insufficient to publish a location."
+      ],
+      "sourceUrls": []
+    },
+    {
+      "sheet": "Organizaciones",
+      "rowNumber": 37,
+      "name": "Comunidad Educativa Asunción, A. C.",
+      "centerId": null,
+      "status": "pending",
+      "reviewNotes": [
+        "Workbook declaration retained privately. No independently corroborated operational location and place pin in this review; further research is pending.",
+        "The workbook supplies no address, map URL or coordinates for this row. A name or tax-directory entry alone is insufficient to publish a location."
+      ],
+      "sourceUrls": []
+    },
+    {
+      "sheet": "Organizaciones",
+      "rowNumber": 38,
+      "name": "Fray Escoba A. C",
+      "centerId": null,
+      "status": "pending",
+      "reviewNotes": [
+        "Workbook declaration retained privately. No independently corroborated operational location and place pin in this review; further research is pending.",
+        "The workbook supplies no address, map URL or coordinates for this row. A name or tax-directory entry alone is insufficient to publish a location."
+      ],
+      "sourceUrls": []
+    },
+    {
+      "sheet": "Organizaciones",
+      "rowNumber": 39,
+      "name": "Intégrate al Deporte, A.C.",
+      "centerId": null,
+      "status": "pending",
+      "reviewNotes": [
+        "Workbook declaration retained privately. No independently corroborated operational location and place pin in this review; further research is pending.",
+        "The workbook supplies no address, map URL or coordinates for this row. A name or tax-directory entry alone is insufficient to publish a location."
+      ],
+      "sourceUrls": []
+    },
+    {
+      "sheet": "Organizaciones",
+      "rowNumber": 40,
+      "name": "Niños por Siempre. A.C",
+      "centerId": null,
+      "status": "pending",
+      "reviewNotes": [
+        "Workbook declaration retained privately. No independently corroborated operational location and place pin in this review; further research is pending.",
+        "The workbook supplies no address, map URL or coordinates for this row. A name or tax-directory entry alone is insufficient to publish a location."
+      ],
+      "sourceUrls": []
+    },
+    {
+      "sheet": "Organizaciones",
+      "rowNumber": 41,
+      "name": "De mi Mano a tu Mano, A.C.",
+      "centerId": null,
+      "status": "pending",
+      "reviewNotes": [
+        "Workbook declaration retained privately. No independently corroborated operational location and place pin in this review; further research is pending.",
+        "The workbook supplies no address, map URL or coordinates for this row. A name or tax-directory entry alone is insufficient to publish a location."
+      ],
+      "sourceUrls": []
+    },
+    {
+      "sheet": "Organizaciones",
+      "rowNumber": 42,
+      "name": "Fundación Caballo Amigo, A.C.",
+      "centerId": null,
+      "status": "pending",
+      "reviewNotes": [
+        "Workbook declaration retained privately. No independently corroborated operational location and place pin in this review; further research is pending.",
+        "The workbook supplies no address, map URL or coordinates for this row. A name or tax-directory entry alone is insufficient to publish a location."
+      ],
+      "sourceUrls": []
+    },
+    {
+      "sheet": "Organizaciones",
+      "rowNumber": 43,
+      "name": "Mujeres Turner y Discapacidad México. A.C.",
+      "centerId": null,
+      "status": "pending",
+      "reviewNotes": [
+        "Workbook declaration retained privately. No independently corroborated operational location and place pin in this review; further research is pending.",
+        "The workbook supplies no address, map URL or coordinates for this row. A name or tax-directory entry alone is insufficient to publish a location."
+      ],
+      "sourceUrls": []
+    },
+    {
+      "sheet": "Organizaciones",
+      "rowNumber": 44,
+      "name": "FUNDOWN .A.C.",
+      "centerId": null,
+      "status": "pending",
+      "reviewNotes": [
+        "Workbook declaration retained privately. No independently corroborated operational location and place pin in this review; further research is pending.",
+        "The workbook supplies no address, map URL or coordinates for this row. A name or tax-directory entry alone is insufficient to publish a location."
+      ],
+      "sourceUrls": []
+    },
+    {
+      "sheet": "Organizaciones",
+      "rowNumber": 45,
+      "name": "Paso a Paso con el, AC",
+      "centerId": null,
+      "status": "pending",
+      "reviewNotes": [
+        "Workbook declaration retained privately. No independently corroborated operational location and place pin in this review; further research is pending.",
+        "The workbook supplies no address, map URL or coordinates for this row. A name or tax-directory entry alone is insufficient to publish a location."
+      ],
+      "sourceUrls": []
+    },
+    {
+      "sheet": "Organizaciones",
+      "rowNumber": 46,
+      "name": "Kiimakool, A.C.",
+      "centerId": null,
+      "status": "pending",
+      "reviewNotes": [
+        "Workbook declaration retained privately. No independently corroborated operational location and place pin in this review; further research is pending.",
+        "The workbook supplies no address, map URL or coordinates for this row. A name or tax-directory entry alone is insufficient to publish a location."
+      ],
+      "sourceUrls": []
+    },
+    {
+      "sheet": "Organizaciones",
+      "rowNumber": 47,
+      "name": "Ángeles de Corazón Down",
+      "centerId": null,
+      "status": "pending",
+      "reviewNotes": [
+        "Workbook reuses the San Martín de Tours kitchen coordinates. Missing operational address and questionable phone formatting; identity and location need confirmation."
+      ],
+      "sourceUrls": []
+    },
+    {
+      "sheet": "Organizaciones",
+      "rowNumber": 48,
+      "name": "Autismo Aguascalientes A.C",
+      "centerId": null,
+      "status": "pending",
+      "reviewNotes": [
+        "Workbook declaration retained privately. No independently corroborated operational location and place pin in this review; further research is pending.",
+        "The workbook supplies no address, map URL or coordinates for this row. A name or tax-directory entry alone is insufficient to publish a location."
+      ],
+      "sourceUrls": []
+    },
+    {
+      "sheet": "Organizaciones",
+      "rowNumber": 49,
+      "name": "Fundación Teletón Aquascalientes",
+      "centerId": "mx-crit-aguascalientes-918b21",
+      "status": "applied",
+      "reviewNotes": [
+        "Official branch page and Maps agree on street, number, phone and location. Their neighborhood/postal-code labels differ; those labels are omitted pending confirmation.",
+        "Funding composition for this branch is not established. No national funding assumption applied."
+      ],
+      "sourceUrls": [
+        "https://www.google.com/maps/place/CRIT+Aguascalientes./@21.8908481,-102.2782242,17z/data=!3m1!4b1!4m6!3m5!1s0x8429ee6b366c3931:0xa29f771ab1c12a9!8m2!3d21.8908481!4d-102.2782242!16s%2Fg%2F1tfjfw0w",
+        "https://teleton.org/voluntariado"
+      ]
+    },
+    {
+      "sheet": "Organizaciones",
+      "rowNumber": 50,
+      "name": "Centro de Estudios Diferenciados",
+      "centerId": null,
+      "status": "pending",
+      "reviewNotes": [
+        "Workbook declaration retained privately. No independently corroborated operational location and place pin in this review; further research is pending.",
+        "The workbook supplies no address, map URL or coordinates for this row. A name or tax-directory entry alone is insufficient to publish a location."
+      ],
+      "sourceUrls": []
+    },
+    {
+      "sheet": "Organizaciones",
+      "rowNumber": 51,
+      "name": "Ángeles Unidos contra la Esclerosis Multiple de Aguascalientes, A.C.",
+      "centerId": null,
+      "status": "pending",
+      "reviewNotes": [
+        "Workbook declaration retained privately. No independently corroborated operational location and place pin in this review; further research is pending.",
+        "The workbook supplies no address, map URL or coordinates for this row. A name or tax-directory entry alone is insufficient to publish a location."
+      ],
+      "sourceUrls": []
+    },
+    {
+      "sheet": "Organizaciones",
+      "rowNumber": 52,
+      "name": "Alas de Colores",
+      "centerId": null,
+      "status": "pending",
+      "reviewNotes": [
+        "Workbook declaration retained privately. No independently corroborated operational location and place pin in this review; further research is pending.",
+        "The workbook supplies no address, map URL or coordinates for this row. A name or tax-directory entry alone is insufficient to publish a location."
+      ],
+      "sourceUrls": []
+    },
+    {
+      "sheet": "Organizaciones",
+      "rowNumber": 53,
+      "name": "Confia en Mi. si puedo. A.C",
+      "centerId": null,
+      "status": "pending",
+      "reviewNotes": [
+        "Workbook declaration retained privately. No independently corroborated operational location and place pin in this review; further research is pending.",
+        "The workbook supplies no address, map URL or coordinates for this row. A name or tax-directory entry alone is insufficient to publish a location."
+      ],
+      "sourceUrls": []
+    },
+    {
+      "sheet": "Organizaciones",
+      "rowNumber": 54,
+      "name": "Patronato Aguascalientes contra la Sordera. A C",
+      "centerId": null,
+      "status": "pending",
+      "reviewNotes": [
+        "Workbook declaration retained privately. No independently corroborated operational location and place pin in this review; further research is pending.",
+        "The workbook supplies no address, map URL or coordinates for this row. A name or tax-directory entry alone is insufficient to publish a location."
+      ],
+      "sourceUrls": []
+    },
+    {
+      "sheet": "Organizaciones",
+      "rowNumber": 55,
+      "name": "Fundación Tres Legados Centro contra las Adicciones, A. C.",
+      "centerId": null,
+      "status": "pending",
+      "reviewNotes": [
+        "Workbook declaration retained privately. No independently corroborated operational location and place pin in this review; further research is pending.",
+        "The workbook supplies no address, map URL or coordinates for this row. A name or tax-directory entry alone is insufficient to publish a location."
+      ],
+      "sourceUrls": []
+    },
+    {
+      "sheet": "Organizaciones",
+      "rowNumber": 56,
+      "name": "Centros de Integración Juvenil Aguascalientes, A. C",
+      "centerId": null,
+      "status": "pending",
+      "reviewNotes": [
+        "Workbook declaration retained privately. No independently corroborated operational location and place pin in this review; further research is pending.",
+        "The workbook supplies no address, map URL or coordinates for this row. A name or tax-directory entry alone is insufficient to publish a location."
+      ],
+      "sourceUrls": []
+    },
+    {
+      "sheet": "Organizaciones",
+      "rowNumber": 57,
+      "name": "Casas y albergues de Rehabilitación Agua Viva, A.C.",
+      "centerId": null,
+      "status": "pending",
+      "reviewNotes": [
+        "Workbook declaration retained privately. No independently corroborated operational location and place pin in this review; further research is pending.",
+        "The workbook supplies no address, map URL or coordinates for this row. A name or tax-directory entry alone is insufficient to publish a location."
+      ],
+      "sourceUrls": []
+    },
+    {
+      "sheet": "Organizaciones",
+      "rowNumber": 58,
+      "name": "Amigos Para Siempre para Alcohólicos y Drogadictos, I.A.P.",
+      "centerId": null,
+      "status": "pending",
+      "reviewNotes": [
+        "Workbook declaration retained privately. No independently corroborated operational location and place pin in this review; further research is pending.",
+        "The workbook supplies no address, map URL or coordinates for this row. A name or tax-directory entry alone is insufficient to publish a location."
+      ],
+      "sourceUrls": []
+    },
+    {
+      "sheet": "Organizaciones",
+      "rowNumber": 59,
+      "name": "Los Arcos Enlace a la Vida, A.C.",
+      "centerId": null,
+      "status": "pending",
+      "reviewNotes": [
+        "Workbook declaration retained privately. No independently corroborated operational location and place pin in this review; further research is pending.",
+        "The workbook supplies no address, map URL or coordinates for this row. A name or tax-directory entry alone is insufficient to publish a location."
+      ],
+      "sourceUrls": []
+    },
+    {
+      "sheet": "Organizaciones",
+      "rowNumber": 60,
+      "name": "Centro de Recuperación y Rehabilitación para enfermos de Alcoholismo y Drogadicción Zona Uno A.C.",
+      "centerId": null,
+      "status": "pending",
+      "reviewNotes": [
+        "Workbook declaration retained privately. No independently corroborated operational location and place pin in this review; further research is pending.",
+        "The workbook supplies no address, map URL or coordinates for this row. A name or tax-directory entry alone is insufficient to publish a location."
+      ],
+      "sourceUrls": []
+    },
+    {
+      "sheet": "Organizaciones",
+      "rowNumber": 61,
+      "name": "Centro de Rehabilitación Siete de Junio, A.C.",
+      "centerId": null,
+      "status": "pending",
+      "reviewNotes": [
+        "Workbook declaration retained privately. No independently corroborated operational location and place pin in this review; further research is pending.",
+        "The workbook supplies no address, map URL or coordinates for this row. A name or tax-directory entry alone is insufficient to publish a location."
+      ],
+      "sourceUrls": []
+    },
+    {
+      "sheet": "Organizaciones",
+      "rowNumber": 62,
+      "name": "CIDA Aguascalientes, A.C",
+      "centerId": null,
+      "status": "pending",
+      "reviewNotes": [
+        "Workbook declaration retained privately. No independently corroborated operational location and place pin in this review; further research is pending.",
+        "The workbook supplies no address, map URL or coordinates for this row. A name or tax-directory entry alone is insufficient to publish a location."
+      ],
+      "sourceUrls": []
+    },
+    {
+      "sheet": "Organizaciones",
+      "rowNumber": 63,
+      "name": "Grupo Plenitud 24 Horas. A.C",
+      "centerId": null,
+      "status": "pending",
+      "reviewNotes": [
+        "Workbook declaration retained privately. No independently corroborated operational location and place pin in this review; further research is pending.",
+        "The workbook supplies no address, map URL or coordinates for this row. A name or tax-directory entry alone is insufficient to publish a location."
+      ],
+      "sourceUrls": []
+    },
+    {
+      "sheet": "Organizaciones",
+      "rowNumber": 64,
+      "name": "Grupo Despertar de Ags., A.C.",
+      "centerId": null,
+      "status": "pending",
+      "reviewNotes": [
+        "Workbook declaration retained privately. No independently corroborated operational location and place pin in this review; further research is pending.",
+        "The workbook supplies no address, map URL or coordinates for this row. A name or tax-directory entry alone is insufficient to publish a location."
+      ],
+      "sourceUrls": []
+    },
+    {
+      "sheet": "Organizaciones",
+      "rowNumber": 65,
+      "name": "FARERSO. A.C",
+      "centerId": null,
+      "status": "pending",
+      "reviewNotes": [
+        "Workbook declaration retained privately. No independently corroborated operational location and place pin in this review; further research is pending.",
+        "The workbook supplies no address, map URL or coordinates for this row. A name or tax-directory entry alone is insufficient to publish a location."
+      ],
+      "sourceUrls": []
+    },
+    {
+      "sheet": "Organizaciones",
+      "rowNumber": 66,
+      "name": "Mi Único Camino, A.C.",
+      "centerId": null,
+      "status": "pending",
+      "reviewNotes": [
+        "Workbook declaration retained privately. No independently corroborated operational location and place pin in this review; further research is pending.",
+        "The workbook supplies no address, map URL or coordinates for this row. A name or tax-directory entry alone is insufficient to publish a location."
+      ],
+      "sourceUrls": []
+    },
+    {
+      "sheet": "Organizaciones",
+      "rowNumber": 67,
+      "name": "Comunidad Terapéutica Especializada en Adicciones Sana tu ser, Cuerpo, Espiritu y Mente, A.C.",
+      "centerId": null,
+      "status": "pending",
+      "reviewNotes": [
+        "Workbook declaration retained privately. No independently corroborated operational location and place pin in this review; further research is pending.",
+        "The workbook supplies no address, map URL or coordinates for this row. A name or tax-directory entry alone is insufficient to publish a location."
+      ],
+      "sourceUrls": []
+    },
+    {
+      "sheet": "Organizaciones",
+      "rowNumber": 68,
+      "name": "Prisionero Liberado, A.C",
+      "centerId": null,
+      "status": "pending",
+      "reviewNotes": [
+        "Workbook declaration retained privately. No independently corroborated operational location and place pin in this review; further research is pending.",
+        "The workbook supplies no address, map URL or coordinates for this row. A name or tax-directory entry alone is insufficient to publish a location."
+      ],
+      "sourceUrls": []
+    },
+    {
+      "sheet": "Organizaciones",
+      "rowNumber": 69,
+      "name": "Mesón del Buen Samaritano, A.C",
+      "centerId": null,
+      "status": "pending",
+      "reviewNotes": [
+        "Workbook declaration retained privately. No independently corroborated operational location and place pin in this review; further research is pending.",
+        "The workbook supplies no address, map URL or coordinates for this row. A name or tax-directory entry alone is insufficient to publish a location."
+      ],
+      "sourceUrls": []
+    },
+    {
+      "sheet": "Organizaciones",
+      "rowNumber": 70,
+      "name": "Centro de Recuperación Filadelfia, A.C.",
+      "centerId": null,
+      "status": "pending",
+      "reviewNotes": [
+        "Workbook declaration retained privately. No independently corroborated operational location and place pin in this review; further research is pending.",
+        "The workbook supplies no address, map URL or coordinates for this row. A name or tax-directory entry alone is insufficient to publish a location."
+      ],
+      "sourceUrls": []
+    },
+    {
+      "sheet": "Organizaciones",
+      "rowNumber": 71,
+      "name": "Instituto de Servicios Integrales para el Desarrollo Humano y las Conductas Adictivas, A.C.",
+      "centerId": null,
+      "status": "pending",
+      "reviewNotes": [
+        "Workbook declaration retained privately. No independently corroborated operational location and place pin in this review; further research is pending.",
+        "The workbook supplies no address, map URL or coordinates for this row. A name or tax-directory entry alone is insufficient to publish a location."
+      ],
+      "sourceUrls": []
+    },
+    {
+      "sheet": "Organizaciones",
+      "rowNumber": 72,
+      "name": "CETTAP Ags., A.C.",
+      "centerId": null,
+      "status": "pending",
+      "reviewNotes": [
+        "Workbook declaration retained privately. No independently corroborated operational location and place pin in this review; further research is pending.",
+        "The workbook supplies no address, map URL or coordinates for this row. A name or tax-directory entry alone is insufficient to publish a location."
+      ],
+      "sourceUrls": []
+    },
+    {
+      "sheet": "Organizaciones",
+      "rowNumber": 73,
+      "name": "Sanación del Alma, A.C.",
+      "centerId": null,
+      "status": "pending",
+      "reviewNotes": [
+        "Workbook declaration retained privately. No independently corroborated operational location and place pin in this review; further research is pending.",
+        "The workbook supplies no address, map URL or coordinates for this row. A name or tax-directory entry alone is insufficient to publish a location."
+      ],
+      "sourceUrls": []
+    },
+    {
+      "sheet": "Organizaciones",
+      "rowNumber": 74,
+      "name": "Centro de Rehabilitación Vida de Hechos, A.C.",
+      "centerId": null,
+      "status": "pending",
+      "reviewNotes": [
+        "Workbook declaration retained privately. No independently corroborated operational location and place pin in this review; further research is pending.",
+        "The workbook supplies no address, map URL or coordinates for this row. A name or tax-directory entry alone is insufficient to publish a location."
+      ],
+      "sourceUrls": []
+    },
+    {
+      "sheet": "Organizaciones",
+      "rowNumber": 75,
+      "name": "Asociación Mexicana de Ayuda a Niños con Cáncer de Ags., A. C",
+      "centerId": null,
+      "status": "pending",
+      "reviewNotes": [
+        "AMANC official network lists Monroy 109 interior 1, but Maps lists Mahatma Gandhi 347-B and a different phone. A second Maps listing also exists. Current operational branch must be confirmed before publishing a pin."
+      ],
+      "sourceUrls": [
+        "https://www.amancrednacional.org/somos/red-nacional-amanc/",
+        "https://www.google.com/maps/place/AMANC+AGUASCALIENTES/@21.862454,-102.2957054,17z/data=!3m1!4b1!4m6!3m5!1s0x8429edd3c4e552ab:0xd834d6cf37ba2efd!8m2!3d21.862454!4d-102.2957054!16s%2Fg%2F11rd02kl_q"
+      ]
+    },
+    {
+      "sheet": "Organizaciones",
+      "rowNumber": 76,
+      "name": "Grupo de Enfermos con Problemas Renales, A. C.",
+      "centerId": null,
+      "status": "pending",
+      "reviewNotes": [
+        "Workbook declaration retained privately. No independently corroborated operational location and place pin in this review; further research is pending.",
+        "The workbook supplies no address, map URL or coordinates for this row. A name or tax-directory entry alone is insufficient to publish a location."
+      ],
+      "sourceUrls": []
+    },
+    {
+      "sheet": "Organizaciones",
+      "rowNumber": 77,
+      "name": "Juntos en el Camino de la Esperanza. A.C",
+      "centerId": null,
+      "status": "pending",
+      "reviewNotes": [
+        "Workbook declaration retained privately. No independently corroborated operational location and place pin in this review; further research is pending.",
+        "The workbook supplies no address, map URL or coordinates for this row. A name or tax-directory entry alone is insufficient to publish a location."
+      ],
+      "sourceUrls": []
+    },
+    {
+      "sheet": "Organizaciones",
+      "rowNumber": 78,
+      "name": "Grupo de Auto Ayuda de Epilepsia, A.C.",
+      "centerId": null,
+      "status": "pending",
+      "reviewNotes": [
+        "Workbook declaration retained privately. No independently corroborated operational location and place pin in this review; further research is pending.",
+        "The workbook supplies no address, map URL or coordinates for this row. A name or tax-directory entry alone is insufficient to publish a location."
+      ],
+      "sourceUrls": []
+    },
+    {
+      "sheet": "Organizaciones",
+      "rowNumber": 79,
+      "name": "Patronato Banco de Ojos y Tejidos de Aguascalientes, A. C",
+      "centerId": null,
+      "status": "pending",
+      "reviewNotes": [
+        "Workbook declaration retained privately. No independently corroborated operational location and place pin in this review; further research is pending.",
+        "The workbook supplies no address, map URL or coordinates for this row. A name or tax-directory entry alone is insufficient to publish a location."
+      ],
+      "sourceUrls": []
+    },
+    {
+      "sheet": "Organizaciones",
+      "rowNumber": 80,
+      "name": "Asociación de Enfermeras Prácticas Gratuitas a Domicilio de Aguascalientes, A.C.",
+      "centerId": null,
+      "status": "pending",
+      "reviewNotes": [
+        "Workbook declaration retained privately. No independently corroborated operational location and place pin in this review; further research is pending.",
+        "The workbook supplies no address, map URL or coordinates for this row. A name or tax-directory entry alone is insufficient to publish a location."
+      ],
+      "sourceUrls": []
+    },
+    {
+      "sheet": "Organizaciones",
+      "rowNumber": 81,
+      "name": "Dulce Esperanza, A.C.",
+      "centerId": null,
+      "status": "pending",
+      "reviewNotes": [
+        "Workbook declaration retained privately. No independently corroborated operational location and place pin in this review; further research is pending.",
+        "The workbook supplies no address, map URL or coordinates for this row. A name or tax-directory entry alone is insufficient to publish a location."
+      ],
+      "sourceUrls": []
+    },
+    {
+      "sheet": "Organizaciones",
+      "rowNumber": 82,
+      "name": "Cambiando una Vida, A.C",
+      "centerId": null,
+      "status": "pending",
+      "reviewNotes": [
+        "Workbook declaration retained privately. No independently corroborated operational location and place pin in this review; further research is pending.",
+        "The workbook supplies no address, map URL or coordinates for this row. A name or tax-directory entry alone is insufficient to publish a location."
+      ],
+      "sourceUrls": []
+    },
+    {
+      "sheet": "Organizaciones",
+      "rowNumber": 83,
+      "name": "Centro de Diagnóstico Oportuno del Cáncer, A.C",
+      "centerId": null,
+      "status": "pending",
+      "reviewNotes": [
+        "Workbook declaration retained privately. No independently corroborated operational location and place pin in this review; further research is pending.",
+        "The workbook supplies no address, map URL or coordinates for this row. A name or tax-directory entry alone is insufficient to publish a location."
+      ],
+      "sourceUrls": []
+    },
+    {
+      "sheet": "Organizaciones",
+      "rowNumber": 84,
+      "name": "Asociación de Familiares y Amigos de Pacientes Esquizofrénicos, AFAPE de Aguascalientes, A.C.",
+      "centerId": null,
+      "status": "pending",
+      "reviewNotes": [
+        "Workbook declaration retained privately. No independently corroborated operational location and place pin in this review; further research is pending.",
+        "The workbook supplies no address, map URL or coordinates for this row. A name or tax-directory entry alone is insufficient to publish a location."
+      ],
+      "sourceUrls": []
+    },
+    {
+      "sheet": "Organizaciones",
+      "rowNumber": 85,
+      "name": "Fundación de Familiares de Alzheimer de Aguascalientes, A.C",
+      "centerId": null,
+      "status": "pending",
+      "reviewNotes": [
+        "Workbook declaration retained privately. No independently corroborated operational location and place pin in this review; further research is pending.",
+        "The workbook supplies no address, map URL or coordinates for this row. A name or tax-directory entry alone is insufficient to publish a location."
+      ],
+      "sourceUrls": []
+    },
+    {
+      "sheet": "Organizaciones",
+      "rowNumber": 86,
+      "name": "Salva a Una Mujer, A.C.",
+      "centerId": null,
+      "status": "pending",
+      "reviewNotes": [
+        "Workbook declaration retained privately. No independently corroborated operational location and place pin in this review; further research is pending.",
+        "The workbook supplies no address, map URL or coordinates for this row. A name or tax-directory entry alone is insufficient to publish a location."
+      ],
+      "sourceUrls": []
+    },
+    {
+      "sheet": "Organizaciones",
+      "rowNumber": 87,
+      "name": "Fundación Intervive,A.C.",
+      "centerId": null,
+      "status": "pending",
+      "reviewNotes": [
+        "Workbook declaration retained privately. No independently corroborated operational location and place pin in this review; further research is pending.",
+        "The workbook supplies no address, map URL or coordinates for this row. A name or tax-directory entry alone is insufficient to publish a location."
+      ],
+      "sourceUrls": []
+    },
+    {
+      "sheet": "Organizaciones",
+      "rowNumber": 88,
+      "name": "Asociación Mexicana de Fibrosis Quística de Aguascalientes, A.C",
+      "centerId": null,
+      "status": "pending",
+      "reviewNotes": [
+        "Workbook declaration retained privately. No independently corroborated operational location and place pin in this review; further research is pending.",
+        "The workbook supplies no address, map URL or coordinates for this row. A name or tax-directory entry alone is insufficient to publish a location."
+      ],
+      "sourceUrls": []
+    },
+    {
+      "sheet": "Organizaciones",
+      "rowNumber": 89,
+      "name": "Aacafiq, A.C",
+      "centerId": null,
+      "status": "pending",
+      "reviewNotes": [
+        "Two workbook rows refer to AACAFIQ; retain both source rows without publishing duplicate centers.",
+        "The supplied albergue/comedor listing is marked permanently closed on Google Maps. The federal registry identifies a different registered address; confirm the current operational site."
+      ],
+      "sourceUrls": [
+        "https://sii.bienestar.gob.mx/portal/organizaciones?acronimo=&cluni=&nombre=&page=705&page=707&rfc=&status_osc=",
+        "https://www.google.com/maps/search/Aacafiq+Albergue+y+Comedor+Aguascalientes/"
+      ]
+    },
+    {
+      "sheet": "Organizaciones",
+      "rowNumber": 90,
+      "name": "Chikil. A.C",
+      "centerId": null,
+      "status": "pending",
+      "reviewNotes": [
+        "Workbook declaration retained privately. No independently corroborated operational location and place pin in this review; further research is pending.",
+        "The workbook supplies no address, map URL or coordinates for this row. A name or tax-directory entry alone is insufficient to publish a location."
+      ],
+      "sourceUrls": []
+    },
+    {
+      "sheet": "Organizaciones",
+      "rowNumber": 91,
+      "name": "CANICA Aguascalientes Centro de Apoyo a Niños con Cáncer. I.B.P.",
+      "centerId": null,
+      "status": "pending",
+      "reviewNotes": [
+        "Workbook declaration retained privately. No independently corroborated operational location and place pin in this review; further research is pending.",
+        "The workbook supplies no address, map URL or coordinates for this row. A name or tax-directory entry alone is insufficient to publish a location."
+      ],
+      "sourceUrls": []
+    },
+    {
+      "sheet": "Organizaciones",
+      "rowNumber": 92,
+      "name": "Erradicando la Discriminación a Personas con Enfermedades Crónicas, A.C.",
+      "centerId": null,
+      "status": "pending",
+      "reviewNotes": [
+        "Workbook declaration retained privately. No independently corroborated operational location and place pin in this review; further research is pending.",
+        "The workbook supplies no address, map URL or coordinates for this row. A name or tax-directory entry alone is insufficient to publish a location."
+      ],
+      "sourceUrls": []
+    },
+    {
+      "sheet": "Organizaciones",
+      "rowNumber": 93,
+      "name": "Alcanza Salud. Valores I.A.P.",
+      "centerId": null,
+      "status": "pending",
+      "reviewNotes": [
+        "Workbook declaration retained privately. No independently corroborated operational location and place pin in this review; further research is pending.",
+        "The workbook supplies no address, map URL or coordinates for this row. A name or tax-directory entry alone is insufficient to publish a location."
+      ],
+      "sourceUrls": []
+    },
+    {
+      "sheet": "Organizaciones",
+      "rowNumber": 94,
+      "name": "Eli Lozano Yo Lucho contra el Cáncer, A.C",
+      "centerId": null,
+      "status": "pending",
+      "reviewNotes": [
+        "Workbook declaration retained privately. No independently corroborated operational location and place pin in this review; further research is pending.",
+        "The workbook supplies no address, map URL or coordinates for this row. A name or tax-directory entry alone is insufficient to publish a location."
+      ],
+      "sourceUrls": []
+    },
+    {
+      "sheet": "Organizaciones",
+      "rowNumber": 95,
+      "name": "Patronato el Centro de Prevención de Quemaduras, A.C.",
+      "centerId": null,
+      "status": "pending",
+      "reviewNotes": [
+        "Workbook declaration retained privately. No independently corroborated operational location and place pin in this review; further research is pending.",
+        "The workbook supplies no address, map URL or coordinates for this row. A name or tax-directory entry alone is insufficient to publish a location."
+      ],
+      "sourceUrls": []
+    },
+    {
+      "sheet": "Organizaciones",
+      "rowNumber": 96,
+      "name": "Cruz Roja Delegación Aguascalientes.I.A.P",
+      "centerId": null,
+      "status": "pending",
+      "reviewNotes": [
+        "Workbook declaration retained privately. No independently corroborated operational location and place pin in this review; further research is pending.",
+        "The workbook supplies no address, map URL or coordinates for this row. A name or tax-directory entry alone is insufficient to publish a location."
+      ],
+      "sourceUrls": []
+    },
+    {
+      "sheet": "Organizaciones",
+      "rowNumber": 97,
+      "name": "Cáritas de Aguascalientes, A. C",
+      "centerId": null,
+      "status": "pending",
+      "reviewNotes": [
+        "Workbook declaration retained privately. No independently corroborated operational location and place pin in this review; further research is pending.",
+        "The workbook supplies no address, map URL or coordinates for this row. A name or tax-directory entry alone is insufficient to publish a location."
+      ],
+      "sourceUrls": []
+    },
+    {
+      "sheet": "Organizaciones",
+      "rowNumber": 98,
+      "name": "Centro Social REFFO, A. C.",
+      "centerId": null,
+      "status": "pending",
+      "reviewNotes": [
+        "Workbook declaration retained privately. No independently corroborated operational location and place pin in this review; further research is pending.",
+        "The workbook supplies no address, map URL or coordinates for this row. A name or tax-directory entry alone is insufficient to publish a location."
+      ],
+      "sourceUrls": []
+    },
+    {
+      "sheet": "Organizaciones",
+      "rowNumber": 99,
+      "name": "Librada Orozco. A. C.",
+      "centerId": null,
+      "status": "pending",
+      "reviewNotes": [
+        "Workbook declaration retained privately. No independently corroborated operational location and place pin in this review; further research is pending.",
+        "The workbook supplies no address, map URL or coordinates for this row. A name or tax-directory entry alone is insufficient to publish a location."
+      ],
+      "sourceUrls": []
+    },
+    {
+      "sheet": "Organizaciones",
+      "rowNumber": 100,
+      "name": "La Rosaleda de Aguascalientes, A. C.",
+      "centerId": null,
+      "status": "pending",
+      "reviewNotes": [
+        "Workbook declaration retained privately. No independently corroborated operational location and place pin in this review; further research is pending.",
+        "The workbook supplies no address, map URL or coordinates for this row. A name or tax-directory entry alone is insufficient to publish a location."
+      ],
+      "sourceUrls": []
+    },
+    {
+      "sheet": "Organizaciones",
+      "rowNumber": 101,
+      "name": "Casa de Asistencia Infantil Nuestra Señora de la Asunción. A. C",
+      "centerId": null,
+      "status": "pending",
+      "reviewNotes": [
+        "Workbook declaration retained privately. No independently corroborated operational location and place pin in this review; further research is pending.",
+        "The workbook supplies no address, map URL or coordinates for this row. A name or tax-directory entry alone is insufficient to publish a location."
+      ],
+      "sourceUrls": []
+    },
+    {
+      "sheet": "Organizaciones",
+      "rowNumber": 102,
+      "name": "VIFAC Aguascalientes, A. C",
+      "centerId": null,
+      "status": "pending",
+      "reviewNotes": [
+        "Workbook declaration retained privately. No independently corroborated operational location and place pin in this review; further research is pending.",
+        "The workbook supplies no address, map URL or coordinates for this row. A name or tax-directory entry alone is insufficient to publish a location."
+      ],
+      "sourceUrls": []
+    },
+    {
+      "sheet": "Organizaciones",
+      "rowNumber": 103,
+      "name": "Alianza Cultural. A. C.",
+      "centerId": null,
+      "status": "pending",
+      "reviewNotes": [
+        "Workbook declaration retained privately. No independently corroborated operational location and place pin in this review; further research is pending.",
+        "The workbook supplies no address, map URL or coordinates for this row. A name or tax-directory entry alone is insufficient to publish a location."
+      ],
+      "sourceUrls": []
+    },
+    {
+      "sheet": "Organizaciones",
+      "rowNumber": 104,
+      "name": "Formación y Cultura de Ags., A. C.",
+      "centerId": null,
+      "status": "pending",
+      "reviewNotes": [
+        "Workbook declaration retained privately. No independently corroborated operational location and place pin in this review; further research is pending.",
+        "The workbook supplies no address, map URL or coordinates for this row. A name or tax-directory entry alone is insufficient to publish a location."
+      ],
+      "sourceUrls": []
+    },
+    {
+      "sheet": "Organizaciones",
+      "rowNumber": 105,
+      "name": "Bodega de Alimentos de Cáritas de Aguascalientes, A. C.",
+      "centerId": null,
+      "status": "pending",
+      "reviewNotes": [
+        "Workbook declaration retained privately. No independently corroborated operational location and place pin in this review; further research is pending.",
+        "The workbook supplies no address, map URL or coordinates for this row. A name or tax-directory entry alone is insufficient to publish a location."
+      ],
+      "sourceUrls": []
+    },
+    {
+      "sheet": "Organizaciones",
+      "rowNumber": 106,
+      "name": "Asociación Nacional Pro Superación Personal, A. C.",
+      "centerId": null,
+      "status": "pending",
+      "reviewNotes": [
+        "Workbook declaration retained privately. No independently corroborated operational location and place pin in this review; further research is pending.",
+        "The workbook supplies no address, map URL or coordinates for this row. A name or tax-directory entry alone is insufficient to publish a location."
+      ],
+      "sourceUrls": []
+    },
+    {
+      "sheet": "Organizaciones",
+      "rowNumber": 107,
+      "name": "Voluntarias Vicentinas de Ags., A. C.",
+      "centerId": null,
+      "status": "pending",
+      "reviewNotes": [
+        "Workbook declaration retained privately. No independently corroborated operational location and place pin in this review; further research is pending.",
+        "The workbook supplies no address, map URL or coordinates for this row. A name or tax-directory entry alone is insufficient to publish a location."
+      ],
+      "sourceUrls": []
+    },
+    {
+      "sheet": "Organizaciones",
+      "rowNumber": 108,
+      "name": "Club Rotario San Marcos. A. C",
+      "centerId": null,
+      "status": "pending",
+      "reviewNotes": [
+        "Workbook declaration retained privately. No independently corroborated operational location and place pin in this review; further research is pending.",
+        "The workbook supplies no address, map URL or coordinates for this row. A name or tax-directory entry alone is insufficient to publish a location."
+      ],
+      "sourceUrls": []
+    },
+    {
+      "sheet": "Organizaciones",
+      "rowNumber": 109,
+      "name": "Mujer Contemporánea, A.C.",
+      "centerId": null,
+      "status": "pending",
+      "reviewNotes": [
+        "Workbook declaration retained privately. No independently corroborated operational location and place pin in this review; further research is pending.",
+        "The workbook supplies no address, map URL or coordinates for this row. A name or tax-directory entry alone is insufficient to publish a location."
+      ],
+      "sourceUrls": []
+    },
+    {
+      "sheet": "Organizaciones",
+      "rowNumber": 110,
+      "name": "Club Rotario Bosques, A. C",
+      "centerId": null,
+      "status": "pending",
+      "reviewNotes": [
+        "Workbook declaration retained privately. No independently corroborated operational location and place pin in this review; further research is pending.",
+        "The workbook supplies no address, map URL or coordinates for this row. A name or tax-directory entry alone is insufficient to publish a location."
+      ],
+      "sourceUrls": []
+    },
+    {
+      "sheet": "Organizaciones",
+      "rowNumber": 111,
+      "name": "Protegidos de Cebras, A. C",
+      "centerId": null,
+      "status": "pending",
+      "reviewNotes": [
+        "Workbook declaration retained privately. No independently corroborated operational location and place pin in this review; further research is pending.",
+        "The workbook supplies no address, map URL or coordinates for this row. A name or tax-directory entry alone is insufficient to publish a location."
+      ],
+      "sourceUrls": []
+    },
+    {
+      "sheet": "Comedores",
+      "rowNumber": 2,
+      "name": "Comedor Comunitario El Abuelo",
+      "centerId": "mx-comedor-comunitario-el-abuelo-2ce601",
+      "status": "applied",
+      "reviewNotes": [
+        "Matched by name and Libertad 607; existing mapped pin retained.",
+        "Private administration is corroborated in a dated report. Workbook private-funding classification is retained only in review; total current funding composition is unknown."
+      ],
+      "sourceUrls": [
+        "https://www.heraldo.mx/son-ciudadanos-solidarios/"
+      ]
+    },
+    {
+      "sheet": "Comedores",
+      "rowNumber": 3,
+      "name": "Comedor Comunitario San Martin de Tours",
+      "centerId": "mx-comedor-comunitario-san-martin-de-tours-347710",
+      "status": "matched",
+      "reviewNotes": [
+        "Matched by name, address and near-identical pin. Mixed funding, additional health services and legal operator remain uncorroborated.",
+        "Same source pin also appears on Ángeles de Corazón Down; do not merge those organizations or add disability services without confirmation."
+      ],
+      "sourceUrls": [
+        "https://universidaddelasartes.edu.mx/inauguracion-del-proyecto-altruista-de-yako-wong-alumno-de-la-maestria-en-arte-contemporaneo/"
+      ]
+    },
+    {
+      "sheet": "Comedores",
+      "rowNumber": 4,
+      "name": "Aacafiq A.C. Albergue y Comedor",
+      "centerId": null,
+      "status": "pending",
+      "reviewNotes": [
+        "Two workbook rows refer to AACAFIQ; retain both source rows without publishing duplicate centers.",
+        "The supplied albergue/comedor listing is marked permanently closed on Google Maps. The federal registry identifies a different registered address; confirm the current operational site."
+      ],
+      "sourceUrls": [
+        "https://sii.bienestar.gob.mx/portal/organizaciones?acronimo=&cluni=&nombre=&page=705&page=707&rfc=&status_osc=",
+        "https://www.google.com/maps/search/Aacafiq+Albergue+y+Comedor+Aguascalientes/"
+      ]
+    },
+    {
+      "sheet": "Comedores",
+      "rowNumber": 8,
+      "name": "Buen Provecho — Casa del Bien Común Constitución",
+      "centerId": null,
+      "status": "pending",
+      "reviewNotes": [
+        "Constitución community-center place pin is corroborated, but this branch is not in the researched government list of operating community kitchens. Food service requires confirmation before applying that category."
+      ],
+      "sourceUrls": [
+        "https://informacion.aguascalientes.gob.mx/news/invitan-a-comedores-comunitarios;-funcionan-en-todo-el-estado",
+        "https://www.google.com/maps/place/Casa+Del+Bien+Com%C3%BAn+Constituci%C3%B3n/@21.9307388,-102.284905,17z/data=!3m1!4b1!4m6!3m5!1s0x8429efba6b2e7959:0xf3160cc701e7bbce!8m2!3d21.9307388!4d-102.284905!16s%2Fg%2F11g8y9bmvz"
+      ]
+    },
+    {
+      "sheet": "Comedores",
+      "rowNumber": 9,
+      "name": "Buen Provecho — OLIVARES SANTANA",
+      "centerId": null,
+      "status": "pending",
+      "reviewNotes": [
+        "Workbook declaration retained privately. No independently corroborated operational location and place pin in this review; further research is pending."
+      ],
+      "sourceUrls": []
+    },
+    {
+      "sheet": "Comedores",
+      "rowNumber": 10,
+      "name": "Buen Provecho — POCITOS",
+      "centerId": "mx-comedor-buen-provecho-pocitos-560788",
+      "status": "applied",
+      "reviewNotes": [
+        "Program/branch corroborated by the state government (2024); location pin observed in Maps on 2026-11-02. Confirm current meal availability with the operator."
+      ],
+      "sourceUrls": [
+        "https://www.google.com/maps/place/Casa+de+Bien+Com%C3%BAn+Pocitos/@21.9236041,-102.3372733,17z/data=!3m1!4b1!4m6!3m5!1s0x8429ef4615973bad:0xa1802460b5aa8f40!8m2!3d21.9236041!4d-102.3372733!16s%2Fg%2F11k3gnn2tg",
+        "https://informacion.aguascalientes.gob.mx/news/invitan-a-comedores-comunitarios;-funcionan-en-todo-el-estado",
+        "https://eservicios2.aguascalientes.gob.mx/transparencia/SAE/DGAD/LP/DGAD-LEA-N003-2024-C.pdf"
+      ]
+    },
+    {
+      "sheet": "Comedores",
+      "rowNumber": 11,
+      "name": "Buen Provecho — Casa del Bien Común Insurgentes",
+      "centerId": "mx-comedor-buen-provecho-insurgentes-3af187",
+      "status": "applied",
+      "reviewNotes": [
+        "Program/branch corroborated by the state government (2024); location pin observed in Maps on 2026-11-02. Confirm current meal availability with the operator.",
+        "Workbook coordinates point away from Mateo Almanza 202; used the public place pin."
+      ],
+      "sourceUrls": [
+        "https://www.google.com/maps/place/Casa+del+Bien+Com%C3%BAn+Insurgentes/@21.8509196,-102.3093243,17z/data=!3m1!4b1!4m6!3m5!1s0x8429ede4ab39ed09:0x1927c781edbf84f8!8m2!3d21.8509196!4d-102.3093243!16s%2Fg%2F11tg6hy67y",
+        "https://informacion.aguascalientes.gob.mx/news/invitan-a-comedores-comunitarios;-funcionan-en-todo-el-estado",
+        "https://eservicios2.aguascalientes.gob.mx/transparencia/SAE/DGAD/LP/DGAD-LEA-N003-2024-C.pdf"
+      ]
+    },
+    {
+      "sheet": "Comedores",
+      "rowNumber": 12,
+      "name": "Buen Provecho — Casa del Bien Común San Marcos",
+      "centerId": "mx-comedor-buen-provecho-san-marcos-6f70ca",
+      "status": "applied",
+      "reviewNotes": [
+        "Program/branch corroborated by the state government (2024); location pin observed in Maps on 2026-11-02. Confirm current meal availability with the operator.",
+        "Workbook repeats the Constitución coordinates; replaced with the San Marcos place pin."
+      ],
+      "sourceUrls": [
+        "https://www.google.com/maps/place/Casa+del+Bien+Com%C3%BAn+San+Marcos/@21.8799562,-102.3182012,17z/data=!3m1!4b1!4m6!3m5!1s0x8429ef567fc6dc3d:0x381611d04122da6b!8m2!3d21.8799562!4d-102.3182012!16s%2Fg%2F11ff5k4bmb",
+        "https://informacion.aguascalientes.gob.mx/news/invitan-a-comedores-comunitarios;-funcionan-en-todo-el-estado",
+        "https://eservicios2.aguascalientes.gob.mx/transparencia/SAE/DGAD/LP/DGAD-LEA-N003-2024-C.pdf"
+      ]
+    },
+    {
+      "sheet": "Comedores",
+      "rowNumber": 13,
+      "name": "Buen Provecho — MIRAVALLE",
+      "centerId": "mx-comedor-buen-provecho-miravalle-14c035",
+      "status": "applied",
+      "reviewNotes": [
+        "Program/branch corroborated by the state government (2024); location pin observed in Maps on 2026-11-02. Confirm current meal availability with the operator."
+      ],
+      "sourceUrls": [
+        "https://www.google.com/maps/place/Casa+del+Bien+Comun+Miravalle/@21.8913277,-102.3111831,17z/data=!3m1!4b1!4m6!3m5!1s0x8429efbec044dabb:0x9d141dda6c4150e6!8m2!3d21.8913277!4d-102.3111831!16s%2Fg%2F11gk7hknzc",
+        "https://informacion.aguascalientes.gob.mx/news/invitan-a-comedores-comunitarios;-funcionan-en-todo-el-estado",
+        "https://eservicios2.aguascalientes.gob.mx/transparencia/SAE/DGAD/LP/DGAD-LEA-N003-2024-C.pdf"
+      ]
+    },
+    {
+      "sheet": "Comedores",
+      "rowNumber": 14,
+      "name": "Buen Provecho — PIRULES",
+      "centerId": null,
+      "status": "pending",
+      "reviewNotes": [
+        "Workbook declaration retained privately. No independently corroborated operational location and place pin in this review; further research is pending."
+      ],
+      "sourceUrls": []
+    },
+    {
+      "sheet": "Comedores",
+      "rowNumber": 15,
+      "name": "Buen Provecho — LA SALUD",
+      "centerId": "mx-comedor-buen-provecho-la-salud-3f13d4",
+      "status": "applied",
+      "reviewNotes": [
+        "Program/branch corroborated by the state government (2024); location pin observed in Maps on 2026-11-02. Confirm current meal availability with the operator."
+      ],
+      "sourceUrls": [
+        "https://www.google.com/maps/place/casa+del+bien+comun+la+salud/@21.8722052,-102.2844706,17z/data=!3m1!4b1!4m6!3m5!1s0x8429ef002d3b2497:0xf095fc1a88f5631c!8m2!3d21.8722052!4d-102.2844706!16s%2Fg%2F11zkc16xrz",
+        "https://informacion.aguascalientes.gob.mx/news/invitan-a-comedores-comunitarios;-funcionan-en-todo-el-estado",
+        "https://eservicios2.aguascalientes.gob.mx/transparencia/SAE/DGAD/LP/DGAD-LEA-N003-2024-C.pdf"
+      ]
+    },
+    {
+      "sheet": "Comedores",
+      "rowNumber": 16,
+      "name": "Buen Provecho — PALOMINO DENA",
+      "centerId": null,
+      "status": "pending",
+      "reviewNotes": [
+        "Government confirms the kitchen branch, but Maps search returned Jesús Terán instead. Workbook coordinates are not published until this branch has an independently matched place pin."
+      ],
+      "sourceUrls": [
+        "https://informacion.aguascalientes.gob.mx/news/invitan-a-comedores-comunitarios;-funcionan-en-todo-el-estado",
+        "https://www.google.com/maps/place/CASA+DEL+BIEN+COM%C3%9AN/@21.8701046,-102.2757665,17z/data=!3m1!4b1!4m6!3m5!1s0x8429ed2e0cf2c749:0xb2167e9c5aba2c30!8m2!3d21.8701046!4d-102.2757665!16s%2Fg%2F11ssz1h9xb"
+      ]
+    },
+    {
+      "sheet": "Comedores",
+      "rowNumber": 17,
+      "name": "Buen Provecho — LA ESTRELLA",
+      "centerId": null,
+      "status": "pending",
+      "reviewNotes": [
+        "Workbook declaration retained privately. No independently corroborated operational location and place pin in this review; further research is pending."
+      ],
+      "sourceUrls": []
+    },
+    {
+      "sheet": "Comedores",
+      "rowNumber": 18,
+      "name": "Buen Provecho — NAZARIO ORTIZ GARZA",
+      "centerId": "mx-comedor-buen-provecho-nazario-ortiz-garza-2cc06b",
+      "status": "applied",
+      "reviewNotes": [
+        "Program/branch corroborated by the state government (2024); location pin observed in Maps on 2026-11-02. Confirm current meal availability with the operator."
+      ],
+      "sourceUrls": [
+        "https://www.google.com/maps/place/Casa+del+Bien+Com%C3%BAn+Nazario+Ortiz+Garza/@21.904816,-102.2663043,17z/data=!3m1!4b1!4m6!3m5!1s0x8429ee24d523b189:0x3251296e8e6c64f5!8m2!3d21.904816!4d-102.2663043!16s%2Fg%2F11fxvsnylq",
+        "https://informacion.aguascalientes.gob.mx/news/invitan-a-comedores-comunitarios;-funcionan-en-todo-el-estado",
+        "https://eservicios2.aguascalientes.gob.mx/transparencia/SAE/DGAD/LP/DGAD-LEA-N003-2024-C.pdf"
+      ]
+    },
+    {
+      "sheet": "Comedores",
+      "rowNumber": 19,
+      "name": "Buen Provecho — JESUS TERAN",
+      "centerId": "mx-comedor-buen-provecho-jesus-teran-71787a",
+      "status": "applied",
+      "reviewNotes": [
+        "Program/branch corroborated by the state government (2024); location pin observed in Maps on 2026-11-02. Confirm current meal availability with the operator.",
+        "Direct branch search and Olivos/Jesús Terán address match. This same result was rejected for Obraje, Palomino Dena and Solidaridad IV."
+      ],
+      "sourceUrls": [
+        "https://www.google.com/maps/place/CASA+DEL+BIEN+COM%C3%9AN/@21.8701046,-102.2757665,17z/data=!3m1!4b1!4m6!3m5!1s0x8429ed2e0cf2c749:0xb2167e9c5aba2c30!8m2!3d21.8701046!4d-102.2757665!16s%2Fg%2F11ssz1h9xb",
+        "https://informacion.aguascalientes.gob.mx/news/invitan-a-comedores-comunitarios;-funcionan-en-todo-el-estado",
+        "https://eservicios2.aguascalientes.gob.mx/transparencia/SAE/DGAD/LP/DGAD-LEA-N003-2024-C.pdf"
+      ]
+    },
+    {
+      "sheet": "Comedores",
+      "rowNumber": 20,
+      "name": "Buen Provecho — GOMEZ PORTUGAL",
+      "centerId": "mx-comedor-buen-provecho-gomez-portugal-d12727",
+      "status": "applied",
+      "reviewNotes": [
+        "Program/branch corroborated by the state government (2024); location pin observed in Maps on 2026-11-02. Confirm current meal availability with the operator."
+      ],
+      "sourceUrls": [
+        "https://www.google.com/maps/place/Casa+del+Bien+Com%C3%BAn+G%C3%B3mez+Portugal/@21.8730506,-102.265078,17z/data=!3m1!4b1!4m6!3m5!1s0x8429ef00256c6205:0x59bf9c0b78cef02b!8m2!3d21.8730506!4d-102.265078!16s%2Fg%2F11y7t5nrc5",
+        "https://informacion.aguascalientes.gob.mx/news/invitan-a-comedores-comunitarios;-funcionan-en-todo-el-estado",
+        "https://eservicios2.aguascalientes.gob.mx/transparencia/SAE/DGAD/LP/DGAD-LEA-N003-2024-C.pdf"
+      ]
+    },
+    {
+      "sheet": "Comedores",
+      "rowNumber": 21,
+      "name": "Buen Provecho — SOLIDARIDAD IV",
+      "centerId": null,
+      "status": "pending",
+      "reviewNotes": [
+        "Government confirms the kitchen branch, but Maps search returned Jesús Terán instead. Workbook coordinates are not published until this branch has an independently matched place pin."
+      ],
+      "sourceUrls": [
+        "https://informacion.aguascalientes.gob.mx/news/invitan-a-comedores-comunitarios;-funcionan-en-todo-el-estado",
+        "https://www.google.com/maps/place/CASA+DEL+BIEN+COM%C3%9AN/@21.8701046,-102.2757665,17z/data=!3m1!4b1!4m6!3m5!1s0x8429ed2e0cf2c749:0xb2167e9c5aba2c30!8m2!3d21.8701046!4d-102.2757665!16s%2Fg%2F11ssz1h9xb"
+      ]
+    },
+    {
+      "sheet": "Comedores",
+      "rowNumber": 22,
+      "name": "Buen Provecho — GUADALUPE PERALTA",
+      "centerId": "mx-comedor-buen-provecho-guadalupe-peralta-01aecd",
+      "status": "applied",
+      "reviewNotes": [
+        "Program/branch corroborated by the state government (2024); location pin observed in Maps on 2026-11-02. Confirm current meal availability with the operator."
+      ],
+      "sourceUrls": [
+        "https://www.google.com/maps/place/Casa+del+bien+com%C3%BAn+Guadalupe+Peralta/@21.8683895,-102.2390643,17z/data=!3m1!4b1!4m6!3m5!1s0x8429f21b8b4b6e65:0x32ca872e5f9d20a0!8m2!3d21.8683895!4d-102.2390643!16s%2Fg%2F11g9frdwrw",
+        "https://informacion.aguascalientes.gob.mx/news/invitan-a-comedores-comunitarios;-funcionan-en-todo-el-estado",
+        "https://eservicios2.aguascalientes.gob.mx/transparencia/SAE/DGAD/LP/DGAD-LEA-N003-2024-C.pdf"
+      ]
+    },
+    {
+      "sheet": "Comedores",
+      "rowNumber": 23,
+      "name": "Buen Provecho — OBRAJE",
+      "centerId": null,
+      "status": "pending",
+      "reviewNotes": [
+        "Government confirms the kitchen branch, but Maps search returned Jesús Terán instead. Workbook coordinates are not published until this branch has an independently matched place pin."
+      ],
+      "sourceUrls": [
+        "https://informacion.aguascalientes.gob.mx/news/invitan-a-comedores-comunitarios;-funcionan-en-todo-el-estado",
+        "https://www.google.com/maps/place/CASA+DEL+BIEN+COM%C3%9AN/@21.8701046,-102.2757665,17z/data=!3m1!4b1!4m6!3m5!1s0x8429ed2e0cf2c749:0xb2167e9c5aba2c30!8m2!3d21.8701046!4d-102.2757665!16s%2Fg%2F11ssz1h9xb"
+      ]
+    },
+    {
+      "sheet": "Comedores",
+      "rowNumber": 24,
+      "name": "Buen Provecho — MUJERES ILUSTRES",
+      "centerId": "mx-comedor-buen-provecho-mujeres-ilustres-780491",
+      "status": "applied",
+      "reviewNotes": [
+        "Program/branch corroborated by the state government (2024); location pin observed in Maps on 2026-11-02. Confirm current meal availability with the operator.",
+        "Maps confirms the place pin and neighborhood only; the workbook street number is not independently confirmed and is omitted."
+      ],
+      "sourceUrls": [
+        "https://www.google.com/maps/place/Casa+del+Bien+Com%C3%BAn+Mujeres+Ilustres/@21.846905,-102.2477502,17z/data=!3m1!4b1!4m6!3m5!1s0x8429f273979c78cd:0x5be2483f3eb8fbf8!8m2!3d21.846905!4d-102.2477502!16s%2Fg%2F11fxwtx3qv",
+        "https://informacion.aguascalientes.gob.mx/news/invitan-a-comedores-comunitarios;-funcionan-en-todo-el-estado",
+        "https://eservicios2.aguascalientes.gob.mx/transparencia/SAE/DGAD/LP/DGAD-LEA-N003-2024-C.pdf"
+      ]
+    },
+    {
+      "sheet": "Dispensario Médico",
+      "rowNumber": 2,
+      "name": "Casa de San Vicente de Paúl, dispensario médico",
+      "centerId": "mx-casa-de-san-vicente-de-paul-dispensario-medico-1349db",
+      "status": "applied",
+      "reviewNotes": [
+        "Public place name, address and pin match the workbook. No corroborated institutional phone, hours, funding or service capacity; those fields remain unknown. Directory-only listing with no needs."
+      ],
+      "sourceUrls": [
+        "https://www.google.com/maps/place/Casa+de+San+Vicente+de+Pa%C3%BAl,+dispensario+m%C3%A9dico/@21.8842945,-102.3028419,17z/data=!3m1!4b1!4m6!3m5!1s0x8429eff53b121787:0x585b8b0bbd997de4!8m2!3d21.8842945!4d-102.3028419!16s%2Fg%2F11fjs7fdlb"
+      ]
+    }
+  ]
+}
