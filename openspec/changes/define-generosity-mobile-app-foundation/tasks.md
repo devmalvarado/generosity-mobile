@@ -285,6 +285,17 @@ confirmation/fulfillment and matching history, capacity/cancellation, restart an
 isolated database restore. The native pilot and device offline/account-switching
 matrix remain open; no real pilot center/need has been supplied.
 
+15.1 publication subset (2026-11-02, later owner authorization): created a clearly
+labeled fictional DEMO center on the published backend and granted the existing
+owner account staff access only to it. Live portal draft → publish → edit 10 to
+20 kits / urgent → close → republish retained one authoritative need ID. The
+physical iPhone 14 Pro showed 10 after Update, 20 / Urgent after foreground resume,
+and no published needs after closing and refreshing. All 157 original centers
+were unchanged. The DEMO remains published for owner use. This does not close
+15.1 (native offers/fulfillment/history and Android remain), 15.2, or 15.3:
+publishing a need still sends no push notification. See the
+[published demo evidence](../../../docs/releases/critical-foundation-2026-11-02.md#owner-authorized-published-demo--2026-11-02).
+
 ## 16. Mobile-First Center Web Portal
 
 - [ ] 16.1 Review and consolidate the provided landing source/assets into canonical `portal/` without deleting the PoC; document asset provenance, local preview/test commands and browser deployment/session choices without adding an unnecessary UI framework.

@@ -94,6 +94,52 @@ The private local handoff is `build/releases/Generosity-0.1.0-build2.apk` with a
 adjacent SHA-256 file. This does not establish physical Android Google/GPS or
 account-flow acceptance, and the APK is not a Play Store release build.
 
+## Owner-authorized published demo — 2026-11-02
+
+The owner subsequently authorized fictional data on the published backend for
+an interactive needs test. Created only `demo-generosity-20261102`, named
+**DEMO — Centro de pruebas Generosity**, with bilingual fictional-location and
+no-delivery/no-donation notices. The existing verified owner account received
+staff access to this demo center only, through the audited `center:staff` command.
+No official-verification status or reviewer privileges were granted.
+
+Using the live portal, Google session and normal staff endpoints, created need
+`ca6be1ba-7d4e-45fe-8db6-1db5bacbd985` and exercised:
+
+| Action | Observed result |
+| --- | --- |
+| Save a draft for 10 school kits | Portal showed Draft; public needs endpoint excluded it |
+| Publish | Public snapshot included the same need; physical iPhone 14 Pro showed 10 remaining after tapping Update |
+| Edit to 20 kits and urgent | Same ID and changed catalog revision; iPhone kept 10 while continuously foregrounded, then displayed 20 and Urgent after leaving and returning to the app |
+| Close | Portal retained the Closed record; public snapshot excluded it; Update then detail on iPhone showed no published needs |
+| Republish for owner use | Same need restored as Published, version 5, quantity 20, zero committed |
+
+Final server check: **158 centers (157 originals + 1 DEMO), 1 published demo need,
+1 demo-scoped membership, 0 demo contributions**. Compared every original center
+row with the pre-demo checkpoint; all 157 were unchanged. Queue and failed-job
+counts were zero. No application code, provider credentials or hosting settings
+changed. The demo remains available for the owner to edit, close and republish.
+
+Open `https://generosity.global/#center-workspace`, sign in with the owner's
+existing Google account, select the DEMO center, and use **Edit → Save changes**.
+On mobile, search **DEMO**, tap **Update**, then **View details**. If a geographic
+filter excludes Monterrey, clear the area first. A draft or closed need is not
+public; closing is reversible through the same editor.
+
+**This is catalog synchronization, not push delivery.** Publishing or setting
+Urgent does not queue an APNs/FCM alert, email or SMS. The app refreshes on resume
+or explicit Update, without continuously updating an already-open screen.
+Notification delivery and its permission/device acceptance remain open. This
+check also does not cover native offers, fulfillment/history, offline conflicts,
+or physical Android. iOS currently labels the remaining count generically as
+“units”; the stored unit is `kits` and the demo description includes it.
+
+Private local captures: `build/acceptance-2026-11-02/iphone14-demo-10.png`,
+`iphone14-demo-20.png` and `iphone14-demo-closed.png`. The private pre-demo
+checkpoint is `.deployments/demo-needs-20261102/catalog-before.json` under the
+API domain directory. To stop displaying the request, close this specific need;
+do not restore the old catalog over newer activity or delete contribution history.
+
 ## Recovery
 
 The exact pre-release private backup is
