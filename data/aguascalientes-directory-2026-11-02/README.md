@@ -53,7 +53,12 @@ Directory endpoints expose the reviewed fields. Mobile sync retains its strict e
 
 - Full backend suite before the real-data fixture: 89 tests, 5,316 assertions, passed on isolated `generosity_test`.
 - The focused enrichment suite passed: 4 tests, 207 assertions. It additionally exercises the reviewed 17-center fixture, private-row isolation, stale versions, legacy imports, invalid evidence and location pin precision.
-- Production migration/import and post-release checks: pending below until executed.
+- Published to `api.generosity.global` at 2026-11-03 03:30:31 UTC (2026-11-02 local time), from implementation commit `f49225e`.
+- Migration `2026_11_03_000002_add_directory_funding_and_import_review` applied successfully. Private audit rows: 131 (17 applied, 2 matched, 112 pending).
+- Database and public API: **171 centers** (158 before), three existing need records unchanged, 154 unrelated center records unchanged, demo verification preserved. Both directory endpoints and mobile sync returned the expected records/coordinates.
+- Public funding totals: 10 public, one private, 160 not informed. No inferred mixed/private status was assigned from legal form. Public source cells/review data are absent.
+- Protected recovery artifacts: `/home/u643005321/domains/api.generosity.global/private/.deployments/directory-aguascalientes-f49225e/`, containing previous code, the pre-import center/need snapshot, private reviewed batch and verification result. These are outside the web root and Git. Do not roll back/drop the new tables to revert an application release; reconcile any subsequent edits before selectively restoring center data.
+- `production-verification.json` records the sanitized outcome. Health remains `ready`; payments remain disabled. No physical visit, phone call, available-meal check or native UI acceptance was performed for this data/schema change.
 
 ## Row ledger
 

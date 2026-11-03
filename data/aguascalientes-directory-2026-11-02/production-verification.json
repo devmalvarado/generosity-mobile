@@ -1,0 +1,26 @@
+{
+  "centers": 171,
+  "new": 13,
+  "enriched": 4,
+  "matched": 2,
+  "pendingPrivateRows": 112,
+  "fundingOrigins": {
+    "not_informed": 160,
+    "private": 1,
+    "public": 10
+  },
+  "mobileSyncCenters": 171,
+  "unrelatedCentersPreserved": 154,
+  "demoVerifiedPreserved": true,
+  "health": {
+    "status": "ready",
+    "apiVersion": 1,
+    "payments": "disabled"
+  },
+  "publicPrivacyBoundary": "sourceData/reviewBatch absent",
+  "verifiedAtUtc": "2026-11-03T03:30:31+00:00",
+  "implementationCommit": "f49225e",
+  "sourceRows": 131,
+  "needs": 3,
+  "allNeedsPreserved": true
+}

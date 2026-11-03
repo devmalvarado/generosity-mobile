@@ -50,5 +50,5 @@ synthetic records in behavior tests; keep private workbook values out of Git.
 - [x] 8.1 Add separate funding-origin and administration columns with explicit unknown defaults; accept bounded public profile declarations with evidence and expose them through the directory API while preserving the mobile v1 shape.
 - [x] 8.2 Persist private source rows by file SHA-256, sheet and row; retain original values and review decisions, exclude pending rows from discovery, and reject stale reviewed imports transactionally.
 - [x] 8.3 Test invalid declarations, private-field rejection, rollback, repeat ingestion and preservation of enrichment during legacy imports.
-- [ ] 8.4 Reconcile all Aguascalientes workbook rows, publish only corroborated additions/enrichment, retain unresolved candidates privately and record production verification.
+- [x] 8.4 Reconcile all Aguascalientes workbook rows, publish only corroborated additions/enrichment, retain unresolved candidates privately and record production verification. Published 13 additions and four enrichments; two matches retained, 112 rows pending; see `data/aguascalientes-directory-2026-11-02/README.md`.
 - [ ] 8.5 Render funding and directory metadata in native/web detail screens and add authorized editing; this database/import work does not complete sections 4–6.
