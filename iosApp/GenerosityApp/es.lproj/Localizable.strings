@@ -152,3 +152,9 @@
 "push_unavailable" = "La bandeja funciona con tu cuenta. Los avisos al teléfono requieren permisos y la configuración del servicio push.";
 "push_failed" = "No se pudo registrar el dispositivo. Se reintentará al actualizar.";
 "push_consent" = "Las alertas opcionales al teléfono usan Google FCM y Apple APNs con identificadores técnicos del dispositivo. Nunca se envían notas privadas. Puedes desactivarlas cuando quieras.";
+"need_progress_committed" = "Comprometido: %1$@ / %2$@ %3$@ (%4$@%%)";
+"need_progress_received" = "Recibido por el centro: %1$@ / %2$@ %3$@";
+"need_progress_remaining" = "Disponible para aportar: %1$@ (%2$@)";
+"need_progress_received_unknown" = "Aún no hay datos de recepción.";
+"need_progress_units" = "unidades";
+"offer_partial_hint" = "Puedes aportar una parte. Usa la unidad indicada: por ejemplo, 1 caja de 10 piezas, no 10 cajas.";

@@ -10,6 +10,7 @@ import org.generosity.domain.KindnessCenter
 import org.generosity.domain.KindnessCenterRepository
 import org.generosity.domain.NotificationPreference
 import org.generosity.domain.NotificationType
+import org.generosity.domain.NeedStatus
 import org.generosity.domain.SupportedLocale
 import org.generosity.domain.UserMode
 import org.generosity.domain.UserProfile
@@ -50,7 +51,7 @@ class DiscoverKindnessCentersUseCase(
 class CurrentNeedsUseCase {
     operator fun invoke(needs: List<CenterNeed>, referenceIsoDate: String): List<CenterNeed> =
         needs
-            .filter { it.isCurrent(referenceIsoDate) }
+            .filter { it.isCurrent(referenceIsoDate) || (it.status == NeedStatus.COVERED && !it.isExpired(referenceIsoDate)) }
             .sortedWith(compareByDescending<CenterNeed> { it.priority.rank }.thenBy { it.publishedOnIsoDate ?: "" })
 }
 

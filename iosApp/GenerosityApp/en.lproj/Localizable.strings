@@ -152,3 +152,9 @@
 "push_unavailable" = "The inbox works with your account. Phone alerts require permissions and push service setup.";
 "push_failed" = "Device registration failed. We will retry when you refresh.";
 "push_consent" = "Optional phone alerts use Google FCM and Apple APNs with technical device identifiers. Private notes are never sent. You can disable alerts at any time.";
+"need_progress_committed" = "Committed: %1$@ / %2$@ %3$@ (%4$@%%)";
+"need_progress_received" = "Received by the center: %1$@ / %2$@ %3$@";
+"need_progress_remaining" = "Available to contribute: %1$@ (%2$@)";
+"need_progress_received_unknown" = "Receipt data is not available yet.";
+"need_progress_units" = "units";
+"offer_partial_hint" = "You can contribute part of the total. Use the stated unit: for example, 1 box of 10 items, not 10 boxes.";

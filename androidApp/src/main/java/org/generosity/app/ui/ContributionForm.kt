@@ -8,11 +8,31 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.testTag
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import org.generosity.app.*
 import org.generosity.app.R
 import org.generosity.domain.*
+
+@Composable
+internal fun NeedProgress(need: CenterNeed, locale: SupportedLocale) {
+    if (HelpMethod.GOODS !in need.helpMethods) return
+    val required = need.quantityRequired ?: return
+    val fraction = need.committedFraction ?: return
+    val unit = need.quantityUnit ?: localizedString(R.string.need_progress_units, locale)
+    val target = localizedNumber(required, locale)
+    val label = localizedString(R.string.need_progress_committed, locale, localizedNumber(need.quantityCommitted, locale), target, unit, localizedNumber(need.committedPercent ?: 0, locale))
+    Column(verticalArrangement = Arrangement.spacedBy(GenSpace.xs)) {
+        Text(label, style = MaterialTheme.typography.labelLarge)
+        LinearProgressIndicator(progress = { fraction.toFloat() }, modifier = Modifier.fillMaxWidth().testTag("need-progress-" + need.id).semantics { contentDescription = label })
+        Text(need.quantityReceived?.let { localizedString(R.string.need_progress_received, locale, localizedNumber(it, locale), target, unit) }
+            ?: localizedString(R.string.need_progress_received_unknown, locale), style = MaterialTheme.typography.bodySmall)
+        Text(localizedString(R.string.need_progress_remaining, locale, localizedNumber(required - need.quantityCommitted, locale), unit), style = MaterialTheme.typography.bodySmall)
+    }
+}
 
 @Composable
 internal fun SyncStatus(state: GenerosityUiState, app: GenerosityAppState) {
@@ -49,6 +69,8 @@ internal fun OfferDialog(state: GenerosityUiState, app: GenerosityAppState, need
         text = {
             Column(Modifier.verticalScroll(rememberScrollState()), verticalArrangement = Arrangement.spacedBy(10.dp)) {
                 if (method == HelpMethod.GOODS) {
+                    if (need != null) NeedProgress(need, locale)
+                    Text(localizedString(R.string.offer_partial_hint, locale), style = MaterialTheme.typography.bodySmall)
                     OutlinedTextField(quantity, { quantity = it }, label = { Text(localizedString(R.string.offer_quantity, locale)) }, keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number))
                     OutlinedTextField(unit, { unit = it }, readOnly = need != null, label = { Text(localizedString(R.string.offer_unit, locale)) })
                 } else {

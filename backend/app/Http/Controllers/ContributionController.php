@@ -35,6 +35,9 @@ class ContributionController extends Controller
                     throw new ApiProblem('method_unavailable', 422);
                 }
                 if ($data['method'] === 'goods') {
+                    if (isset($data['quantity_unit']) && $data['quantity_unit'] !== ($need->details['unit'] ?? null)) {
+                        throw new ApiProblem('unit_mismatch', 422);
+                    }
                     if ($need->quantity_required !== null && $need->quantity_committed + $data['quantity'] > $need->quantity_required) {
                         throw new ApiProblem('capacity_exceeded', 409, ['available' => $need->quantity_required - $need->quantity_committed]);
                     }

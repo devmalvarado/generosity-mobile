@@ -1,5 +1,9 @@
 # Native/backend/center-workspace integration
 
+The 2026-11-02 [partial contribution increment](need-progress.md) adds committed
+progress and center-received goods totals. Its local verification and outstanding
+deployment/device checks are tracked separately from the historical results below.
+
 Date: 2026-10-31 (America/Monterrey). Branch: `codex/backend-php-mysql`.
 The API catalog/account sync increment is published with `1adf57a`. Native and
 portal checks below are local evidence, not a live three-client release.

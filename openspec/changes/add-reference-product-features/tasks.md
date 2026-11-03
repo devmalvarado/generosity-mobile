@@ -88,6 +88,8 @@ location. See [technical implementation](../../../docs/push-notifications.md).
 - [ ] 10.10 Implement private allocation/distribution evidence and scoped audited operations separate from provider collection/settlement; test partial distributions, duplicate evidence, unauthorized recipient changes, unavailable centers, fee/net presentation and no center-received claim or help award from collection alone. Do not add automated bank transfers or a consumer wallet.
 - [ ] 10.11 Publish reviewed delivery, unallocated-fund, campaign-failure and refund/dispute rules before collection; test donor-approved purpose handling and post-deletion ownership-verified support with minimum retained evidence, without restoring deleted accounts or relabeling ordinary receipts as deductible donations.
 
+- [ ] 10.12 Implement partial monetary goals with integer minor units, a disclosed gross/net basis, confirmed allocation progress, exact remaining amounts and a localized accessible bar. Cover MXN 10,000 / 200,000 = 5%, duplicate events, partial refunds/disputes, fees unknown, currencies, overfunding races and institute-versus-center receipt; preserve all provider/recipient/store gates.
+
 ## 11. Functional Native Navigation
 
 - [ ] 11.1 Implement shared destination/helping-intent state and account-summary metadata; test old-route migration, private-state clearing and no duplicate writes/subscriptions across tabs.

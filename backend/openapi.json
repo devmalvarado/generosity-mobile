@@ -1225,7 +1225,7 @@
             "description": "Snapshot exceeds supported limit; retain last known data"
           },
           "422": {
-            "description": "Unsupported category_version"
+            "description": "Unsupported category_version or progress_version"
           }
         },
         "security": [],
@@ -1243,6 +1243,13 @@
               "default": 1
             },
             "description": "Use 2 to receive blood_donation categories. Omitted/1 maps blood_donation to health for legacy native readers; the JSON schema remains version 1."
+          },
+          {
+            "name": "progress_version",
+            "in": "query",
+            "required": false,
+            "schema": {"type": "integer", "enum": [1]},
+            "description": "Use 1 to include quantityReceived for needs with a quantity target. Omission preserves legacy strict mobile readers. Received sums center-fulfilled goods; committed includes offered, confirmed and fulfilled goods."
           }
         ]
       }
@@ -2495,7 +2502,14 @@
             "type": "integer"
           },
           "quantityCommitted": {
-            "type": "integer"
+            "type": "integer",
+            "minimum": 0,
+            "description": "Offered, confirmed and fulfilled goods; includes received units, excludes cancellations."
+          },
+          "quantityReceived": {
+            "type": "integer",
+            "minimum": 0,
+            "description": "Goods fulfilled by authorized center staff. Optional in sync: requires progress_version=1 and a target."
           },
           "updatedAt": {
             "type": "string"
@@ -2512,6 +2526,7 @@
           "urgent",
           "quantityRequired",
           "quantityCommitted",
+          "quantityReceived",
           "expiresOnIsoDate",
           "updatedAt"
         ]
@@ -3300,7 +3315,14 @@
             ]
           },
           "quantityCommitted": {
-            "type": "integer"
+            "type": "integer",
+            "minimum": 0,
+            "description": "Offered, confirmed and fulfilled goods; includes received units, excludes cancellations."
+          },
+          "quantityReceived": {
+            "type": "integer",
+            "minimum": 0,
+            "description": "Goods fulfilled by authorized center staff. Optional in sync: requires progress_version=1 and a target."
           }
         },
         "required": [

@@ -119,7 +119,8 @@ object CatalogJson {
             quantityRequired = quantityRequired,
             quantityCommitted = quantityCommitted,
             publishedOnIsoDate = objectValue.optional("publishedOnIsoDate")?.asDateOrNull("$path.publishedOnIsoDate"),
-            quantityUnit = objectValue.optional("unit")?.asStringOrNull("$path.unit")
+            quantityUnit = objectValue.optional("unit")?.asStringOrNull("$path.unit"),
+            quantityReceived = objectValue.optional("quantityReceived")?.asInt("$path.quantityReceived")
         )
     }
 
@@ -195,7 +196,7 @@ object CatalogJson {
     private val NEED_KEYS = setOf(
         "id", "centerId", "title", "description", "helpMethods", "urgent",
         "expiresOnIsoDate", "category", "priority", "status", "quantityRequired",
-        "quantityCommitted", "publishedOnIsoDate", "unit"
+        "quantityCommitted", "quantityReceived", "publishedOnIsoDate", "unit"
     )
     private val CONTACT_KEYS = setOf("phone", "email", "website")
     private val COORDINATE_KEYS = setOf("latitude", "longitude")

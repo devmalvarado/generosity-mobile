@@ -1,6 +1,6 @@
 const {test,expect}=require('@playwright/test');
 const api='https://api.generosity.global';
-const need={id:'need-a',title:{es:'Alimentos',en:'Food'},description:{es:'Paquetes',en:'Packs'},helpMethods:['goods'],urgent:false,status:'published',quantityRequired:20,quantityCommitted:2,unit:'paquetes',version:1};
+const need={id:'need-a',title:{es:'Alimentos',en:'Food'},description:{es:'Paquetes',en:'Packs'},helpMethods:['goods'],urgent:false,status:'published',quantityRequired:20,quantityCommitted:2,quantityReceived:1,unit:'paquetes',version:1};
 const pageOf=data=>({data,current_page:1,last_page:1});
 async function fixture(page){
  await page.route(api+'/auth/session',r=>r.fulfill({json:{user:{id:42,name:'María'},csrf_token:'csrf-test'}}));
@@ -9,6 +9,23 @@ async function fixture(page){
  await page.route(api+'/api/v1/staff/centers/center-a/contributions?*',r=>r.fulfill({json:pageOf([{id:'offer-a',user_id:7,title:{es:'Alimentos'},status:'offered',version:1,method:'goods',quantity:3,notes:'<img src=x onerror=alert(1)>'}])}));
  await page.goto('/#center-workspace');await page.locator('#idioma').selectOption('es');await expect(page.locator('#staff-needs button')).toBeEnabled();
 }
+test('partial progress separates commitments from receipts and keeps a full target visible',async({page})=>{
+ await fixture(page);
+ const card=page.locator('#staff-needs');
+ await expect(card.getByRole('progressbar')).toHaveAttribute('value','2');
+ await expect(card.getByRole('progressbar')).toHaveAttribute('max','20');
+ await expect(card).toContainText('Comprometido: 2 / 20 paquetes (10%)');
+ await expect(card).toContainText('Recibido por el centro: 1 / 20 paquetes');
+ await page.route(api+'/api/v1/staff/centers/center-a/needs?*',r=>r.fulfill({json:pageOf([{...need,quantityCommitted:20}])}));
+ await page.locator('#staff-reload').click();
+ await expect(card.getByRole('progressbar')).toHaveAttribute('value','20');
+ await expect(card).toContainText('Disponible para aportar: 0 (paquetes)');
+ await page.locator('#idioma').selectOption('en');
+ await expect(card).toContainText('Committed: 20 / 20 paquetes (100%)');
+ await expect(card).toContainText('Received by the center: 1 / 20 paquetes');
+ await page.route(api+'/api/v1/staff/centers/center-a/needs?*',r=>r.fulfill({json:pageOf([{...need,quantityRequired:null}])}));
+ await page.locator('#staff-reload').click();await expect(card.getByRole('progressbar')).toHaveCount(0);
+});
 test('staff edits preserve translations and send CSRF, version and idempotency',async({page})=>{
  await fixture(page);await page.locator('#staff-needs button').click();await page.locator('#need-title-es').fill('Medicinas para niñas');let sent;
  await page.route(api+'/api/v1/staff/centers/center-a/needs/need-a',r=>{sent=r.request();return r.fulfill({json:{...need,version:2}});});

@@ -52,3 +52,44 @@ Accepted transitions SHALL preserve actor, timestamp, prior/new state and proven
 #### Scenario: Confirmed offer is cancelled
 - **WHEN** a cancellation commits for an offer previously included in impact
 - **THEN** the history preserves both events, the cancelled item remains visible and its quantity no longer contributes to impact
+
+### Requirement: Partial Contributions Use the Published Unit
+Donors SHALL be able to offer positive whole quantities up to the unreserved remainder, using the published unit. Package contents SHALL not silently change that unit. Supplied conflicting units SHALL be rejected. Receipt SHALL require authorized center fulfillment; donor promises alone SHALL not count as delivered help.
+
+#### Scenario: One box toward ten boxes
+- **WHEN** the need requests ten boxes of ten items and a donor offers one box
+- **THEN** committed quantity becomes one, remaining capacity is nine boxes and committed progress is ten percent, while received quantity stays unchanged until staff fulfills that offer
+
+#### Scenario: Donor sends a different unit
+- **WHEN** an API request supplies pieces for a need denominated in boxes
+- **THEN** the request is rejected with no reservation and the donor must use the published unit
+
+### Requirement: Truthful Accessible Need Progress
+Native apps and the center portal SHALL show committed/target goods progress, exact counts, unit, percentage and unreserved remainder. Received totals SHALL count only center-fulfilled goods and remain separate; they are already included in commitments. Missing targets SHALL have no determinate bar, and unknown receipt data SHALL not become zero. Localized accessible labels SHALL explain progress without relying on color.
+
+#### Scenario: Reservations fill the target before delivery
+- **WHEN** all ten boxes are committed but the center has received one
+- **THEN** the visible bar says one hundred percent committed, the separate received total says one of ten and the center detail retains the need while disabling further offers
+
+#### Scenario: Cancellation releases a partial reservation
+- **WHEN** a donor cancels nine unfulfilled boxes from the fully committed target
+- **THEN** refreshed progress becomes one of ten, nine become available again, the received count stays one and retries do not change those totals twice
+
+#### Scenario: Legacy cached catalog lacks receipt totals
+- **WHEN** a client loads an older cached catalog without receipt data
+- **THEN** it may show known commitment progress with receipt unavailable and must not present commitments as delivered goods
+
+### Requirement: Negotiated Progress Synchronization
+Need responses SHALL expose quantityReceived. Native sync SHALL include it for targeted needs only when progress_version=1 is requested, preserving the legacy shape otherwise. The shared parser SHALL accept missing receipt data and reject negative values, totals above commitments or received quantities without a target. Refresh/restart SHALL preserve acknowledged totals; offline offers SHALL not advance authoritative progress.
+
+#### Scenario: Mixed client versions
+- **WHEN** old and new native clients request the same catalog
+- **THEN** both can parse their responses; only negotiated clients receive the new quantityReceived field, and old-client requests remain valid
+
+#### Scenario: Fulfillment changes the snapshot
+- **WHEN** center staff fulfills a goods contribution without changing its reserved quantity
+- **THEN** negotiated received totals and the snapshot revision change so a client refresh reflects the delivery
+
+#### Scenario: A center accepts loose items
+- **WHEN** staff wants to collect one hundred items individually instead of ten sealed boxes
+- **THEN** it publishes target one hundred with unit items before receiving commitments; no implicit box-to-item conversion occurs

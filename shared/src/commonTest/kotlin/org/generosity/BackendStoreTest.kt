@@ -89,6 +89,17 @@ class BackendStoreTest {
         assertEquals("old-token-".repeat(10), revoked["token"])
     }
 
+    @Test fun acknowledgedReceiptProgressSurvivesRestart() = runTest {
+        val platform = Connection()
+        val catalog = BundledKindnessCatalog.JSON.replace("\"quantityCommitted\": 5", "\"quantityCommitted\": 5, \"quantityReceived\": 2")
+        platform.response = ApiResponse(200, """{"catalog":$catalog,"updatedAt":"2026-11-02T00:00:00Z"}""")
+        BackendStore(platform).refreshCatalog()
+        val restored = BackendStore(platform).needById("need-school-supplies")!!
+        assertEquals(2, restored.quantityReceived)
+        assertEquals(5, restored.quantityCommitted)
+        assertEquals(25, restored.committedPercent)
+    }
+
     @Test fun bloodDonationRefreshPersistsAndFiltersSeparatelyFromHealthAndOrgans() = runTest {
         val document = ApiJson.parse(BundledKindnessCatalog.JSON)
         val rows = document.objects("centers")
@@ -96,7 +107,7 @@ class BackendStoreTest {
         val platform = Connection()
         platform.response = ApiResponse(200, ApiJson.encode(mapOf("catalog" to mapOf("schemaVersion" to 1, "centers" to rows + blood))))
         BackendStore(platform).refreshCatalog()
-        assertEquals("/api/v1/sync/catalog?category_version=2", platform.requests.single().path)
+        assertEquals("/api/v1/sync/catalog?category_version=2&progress_version=1", platform.requests.single().path)
         val discovery = DiscoverKindnessCentersUseCase(BackendStore(platform))
         assertEquals(listOf("blood-bank"), discovery(DiscoveryQuery(categories = setOf(CenterCategory.BLOOD_DONATION))).map { it.id })
         assertEquals(listOf(rows.last().text("id")), discovery(DiscoveryQuery(categories = setOf(CenterCategory.ORGAN_TISSUE_DONATION))).map { it.id })
@@ -200,7 +211,7 @@ class BackendStoreTest {
         val platform = Connection()
         val raw = """{"user":{"id":1},"contributions":[{"id":"offer-a","user_id":1,"title":{"es":"Alimentos"},"center_id":"center-a","need_id":"need-a","method":"goods","status":"fulfilled","quantity":2,"quantity_unit":"packs","created_at":"2026-11-01T00:00:00Z","version":3}]}"""
         platform.disk["account-1"] = raw
-        platform.handler = { request -> if (request.path == "/api/v1/sync/catalog?category_version=2") ApiResponse(200, """{"catalog":{"schemaVersion":1,"centers":[]},"updatedAt":"2026-11-01T00:00:00Z"}""") else ApiResponse(401, "{}") }
+        platform.handler = { request -> if (request.path == "/api/v1/sync/catalog?category_version=2&progress_version=1") ApiResponse(200, """{"catalog":{"schemaVersion":1,"centers":[]},"updatedAt":"2026-11-01T00:00:00Z"}""") else ApiResponse(401, "{}") }
         val app = GenerosityAppState(backgroundScope, backend = BackendStore(platform))
         app.signIn("1", "María", remoteAccount = true)
         runCurrent()

@@ -7,7 +7,9 @@ use App\Models\Center;
 use App\Models\Contribution;
 use App\Models\Need;
 use App\Models\User;
+use App\Notifications\ResetPassword;
 use App\Notifications\VerifyEmail;
+use App\Services\AccountPolicy;
 use App\Services\CatalogImport;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Illuminate\Support\Facades\DB;
@@ -74,6 +76,38 @@ class ApiTest extends TestCase
         return $this->callApi('POST', 'contributions', $token, ['need_id' => 'need-a', 'method' => 'goods', 'quantity' => $quantity]);
     }
 
+    public function test_partial_box_progress_distinguishes_reserved_and_received_and_preserves_legacy_sync(): void
+    {
+        $need = Need::findOrFail('need-a');
+        $need->update(['quantity_required' => 10, 'details' => array_merge($need->details, ['unit' => 'cajas de 10 piezas'])]);
+        [, $donor] = $this->actor();
+        [, $other] = $this->actor();
+        [, $staff] = $this->actor('center-a');
+        $this->callApi('POST', 'contributions', $donor, ['need_id' => 'need-a', 'method' => 'goods', 'quantity' => 1, 'quantity_unit' => 'piezas'])->assertUnprocessable()->assertJsonPath('error.code', 'unit_mismatch');
+        $first = $this->offer($donor, 1)->assertCreated()->assertJsonPath('quantity_unit', 'cajas de 10 piezas')->json();
+        $this->callApi('GET', 'needs/need-a')->assertJsonPath('quantityRequired', 10)->assertJsonPath('quantityCommitted', 1)->assertJsonPath('quantityReceived', 0);
+        $path = 'contributions/'.$first['id'].'/transition';
+        $this->callApi('POST', $path, $donor, ['action' => 'fulfill', 'version' => 1])->assertForbidden();
+        $this->callApi('POST', $path, $staff, ['action' => 'confirm', 'version' => 1])->assertOk();
+        $this->callApi('GET', 'needs/need-a')->assertJsonPath('quantityReceived', 0);
+        $key = (string) Str::uuid();
+        for ($i = 0; $i < 2; $i++) {
+            $this->callApi('POST', $path, $staff, ['action' => 'fulfill', 'version' => 2], $key)->assertOk();
+        }
+        $this->callApi('GET', 'needs')->assertJsonPath('data.0.quantityReceived', 1);
+        $this->callApi('GET', 'staff/centers/center-a/needs', $staff)->assertJsonPath('data.0.quantityReceived', 1);
+        $rest = $this->offer($other, 9)->assertCreated()->json();
+        $this->offer($other, 1)->assertConflict()->assertJsonPath('error.code', 'capacity_exceeded');
+        $modern = $this->callApi('GET', 'sync/catalog?progress_version=1')->assertOk();
+        $modern->assertJsonPath('catalog.centers.0.needs.0.quantityCommitted', 10)->assertJsonPath('catalog.centers.0.needs.0.quantityReceived', 1)->assertJsonPath('catalog.centers.0.needs.0.status', 'covered');
+        $legacy = $this->callApi('GET', 'sync/catalog')->assertOk();
+        $this->assertArrayNotHasKey('quantityReceived', $legacy->json('catalog.centers.0.needs.0'));
+        $this->callApi('POST', 'contributions/'.$rest['id'].'/transition', $other, ['action' => 'cancel', 'version' => 1])->assertOk();
+        $this->callApi('GET', 'sync/catalog?progress_version=1')->assertJsonPath('catalog.centers.0.needs.0.quantityCommitted', 1)->assertJsonPath('catalog.centers.0.needs.0.quantityReceived', 1)->assertJsonPath('catalog.centers.0.needs.0.status', 'active');
+        $this->callApi('GET', 'sync/catalog?progress_version=2')->assertUnprocessable();
+        $this->callApi('POST', 'contributions', $donor, ['need_id' => 'need-a', 'method' => 'money', 'amount' => 10000])->assertUnprocessable();
+    }
+
     public function test_public_catalog_is_paginated_unicode_and_hides_drafts(): void
     {
         $this->callApi('GET', 'centers')->assertOk()->assertJsonPath('data.0.name.es', 'Centro de apoyo')->assertJsonPath('per_page', 25);
@@ -122,7 +156,7 @@ class ApiTest extends TestCase
     public function test_registration_verification_login_and_revocation(): void
     {
         Notification::fake();
-        $body = ['adult_confirmed' => true, 'terms_accepted' => true, 'privacy_acknowledged' => true, 'policy_version' => \App\Services\AccountPolicy::VERSION, 'name' => 'María', 'email' => 'MARIA@example.test', 'password' => 'LongPassword123', 'role' => 'admin'];
+        $body = ['adult_confirmed' => true, 'terms_accepted' => true, 'privacy_acknowledged' => true, 'policy_version' => AccountPolicy::VERSION, 'name' => 'María', 'email' => 'MARIA@example.test', 'password' => 'LongPassword123', 'role' => 'admin'];
         $this->callApi('POST', 'auth/register', null, $body)->assertStatus(202);
         $user = User::where('email', 'maria@example.test')->firstOrFail();
         $this->assertTrue(Hash::check($body['password'], $user->password));
@@ -191,7 +225,7 @@ class ApiTest extends TestCase
             $this->callApi('POST', 'auth/'.$action, null, ['email' => 'missing@example.test'])->assertStatus(202)->assertExactJson(['status' => $status]);
             Notification::assertNothingSent();
             $this->callApi('POST', 'auth/'.$action, null, ['email' => $user->email])->assertStatus(202)->assertExactJson(['status' => $status]);
-            Notification::assertSentTo($user, $action === 'verification' ? VerifyEmail::class : \App\Notifications\ResetPassword::class);
+            Notification::assertSentTo($user, $action === 'verification' ? VerifyEmail::class : ResetPassword::class);
             Notification::fake();
         }
     }
@@ -211,9 +245,9 @@ class ApiTest extends TestCase
     {
         Notification::fake();
         $password = 'ContraseñaÚnica123';
-        $this->callApi('POST', 'auth/register', null, ['adult_confirmed' => true, 'terms_accepted' => true, 'privacy_acknowledged' => true, 'policy_version' => \App\Services\AccountPolicy::VERSION, 'name' => 'José', 'email' => 'jose@example.test', 'password' => $password])->assertStatus(202);
+        $this->callApi('POST', 'auth/register', null, ['adult_confirmed' => true, 'terms_accepted' => true, 'privacy_acknowledged' => true, 'policy_version' => AccountPolicy::VERSION, 'name' => 'José', 'email' => 'jose@example.test', 'password' => $password])->assertStatus(202);
         $this->assertTrue(Hash::check($password, User::where('email', 'jose@example.test')->firstOrFail()->password));
-        $this->callApi('POST', 'auth/register', null, ['adult_confirmed' => true, 'terms_accepted' => true, 'privacy_acknowledged' => true, 'policy_version' => \App\Services\AccountPolicy::VERSION, 'name' => 'José', 'email' => 'oversized@example.test', 'password' => str_repeat('ñ', 36).'Aa1'])->assertUnprocessable();
+        $this->callApi('POST', 'auth/register', null, ['adult_confirmed' => true, 'terms_accepted' => true, 'privacy_acknowledged' => true, 'policy_version' => AccountPolicy::VERSION, 'name' => 'José', 'email' => 'oversized@example.test', 'password' => str_repeat('ñ', 36).'Aa1'])->assertUnprocessable();
         $this->assertDatabaseMissing('users', ['email' => 'oversized@example.test']);
     }
 

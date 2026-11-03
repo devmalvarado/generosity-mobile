@@ -203,6 +203,13 @@ strict readers continue to accept the entire snapshot. Invalid versions return
 unknown properties/codes are still rejected by the reader. Directory endpoints
 return the stored categories. New builds are required for the new filter.
 
+Native need progress also requests `progress_version=1` alongside `category_version=2`.
+The sync response then includes optional `quantityReceived` for needs with a target,
+bounded between zero and `quantityCommitted`. Missing receipt data means unknown,
+not zero. The server derives receipts from fulfilled contributions; this is not an
+editable catalog-import total. Older sync requests omit the field. See
+[partial contribution verification](testing/need-progress.md) for the API/UI boundary.
+
 Help methods:
 
 - `time`

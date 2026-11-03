@@ -2,6 +2,24 @@ import XCTest
 import CoreLocation
 
 final class GenerosityUiChecklistTests: XCTestCase {
+    func testPartialNeedProgressInEnglishAndSpanish() {
+        for spanish in [false, true] {
+            let app = launch(languages: spanish ? "(es-MX)" : "(en-US)")
+            app.tabBars.buttons[spanish ? "Lista" : "List"].tap()
+            app.buttons["category-children_support"].tap()
+            let center = app.buttons["center-kc-children-001"]
+            XCTAssertTrue(center.waitForExistence(timeout: 5))
+            center.tap()
+            let bar = app.progressIndicators["need-progress-need-school-supplies"]
+            for _ in 0..<8 where !bar.isHittable { app.scrollViews["detail-scroll"].swipeUp() }
+            XCTAssertTrue(bar.isHittable)
+            XCTAssertEqual(bar.label, spanish ? "Comprometido: 5 / 20 unidades (25%)" : "Committed: 5 / 20 units (25%)")
+            XCTAssertTrue(app.staticTexts[spanish ? "Aún no hay datos de recepción." : "Receipt data is not available yet."].exists)
+            capture(app, name: spanish ? "partial-progress-es" : "partial-progress-en")
+            app.terminate()
+        }
+    }
+
     func testCurrentLocationFiltersNearbyCentersAndClearRestoresCatalog() {
         XCUIDevice.shared.location = XCUILocation(location: CLLocation(latitude: 19.35, longitude: -99.16))
         defer { XCUIDevice.shared.location = nil }
@@ -223,7 +241,7 @@ final class GenerosityUiChecklistTests: XCTestCase {
         XCTAssertFalse(app.buttons["center-kc-seniors-001"].exists)
         center.tap()
         XCTAssertTrue(app.staticTexts["detail-kc-children-001"].exists)
-        XCTAssertEqual(app.staticTexts["remaining-need-school-supplies"].label, "15 items still needed")
+        XCTAssertEqual(app.staticTexts["remaining-need-school-supplies"].label, "Available to contribute: 15 (units)")
         app.buttons["detail-back"].tap()
         for _ in 0..<3 {
             app.tabBars.buttons["Map"].tap()
@@ -235,7 +253,7 @@ final class GenerosityUiChecklistTests: XCTestCase {
             XCTAssertTrue(center.isSelected)
             center.tap()
             XCTAssertTrue(app.staticTexts["detail-kc-children-001"].exists)
-            XCTAssertEqual(app.staticTexts["remaining-need-school-supplies"].label, "15 items still needed")
+            XCTAssertEqual(app.staticTexts["remaining-need-school-supplies"].label, "Available to contribute: 15 (units)")
             app.buttons["detail-back"].tap()
         }
         capture(app, name: "Shared discovery - category and selected center")
@@ -249,7 +267,7 @@ final class GenerosityUiChecklistTests: XCTestCase {
         app.tabBars.buttons["List"].tap()
         app.buttons["center-kc-children-001"].tap()
         XCTAssertTrue(app.staticTexts["detail-kc-children-001"].waitForExistence(timeout: 5))
-        XCTAssertEqual(app.staticTexts["remaining-need-school-supplies"].label, "15 items still needed")
+        XCTAssertEqual(app.staticTexts["remaining-need-school-supplies"].label, "Available to contribute: 15 (units)")
         XCTAssertTrue(app.staticTexts["Urgent"].exists)
         XCTAssertTrue(app.staticTexts["Online donations are not available yet. The app does not collect bank or payment details."].exists)
     }

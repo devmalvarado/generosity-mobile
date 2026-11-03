@@ -152,7 +152,8 @@ data class CenterNeed(
     val quantityRequired: Int? = null,
     val quantityCommitted: Int = 0,
     val publishedOnIsoDate: String? = null,
-    val quantityUnit: String? = null
+    val quantityUnit: String? = null,
+    val quantityReceived: Int? = null
 ) {
     init {
         quantityRequired?.let { required ->
@@ -161,10 +162,21 @@ data class CenterNeed(
                 "Committed quantity must stay between zero and the required quantity."
             }
         }
+        quantityReceived?.let { received ->
+            require(quantityRequired != null && received in 0..quantityCommitted) {
+                "Received quantity requires a target and cannot exceed committed quantity."
+            }
+        }
     }
 
     val quantityRemaining: Int?
         get() = quantityRequired?.minus(quantityCommitted)
+
+    val committedFraction: Double?
+        get() = quantityRequired?.let { quantityCommitted.toDouble() / it }
+
+    val committedPercent: Int?
+        get() = quantityRequired?.let { (quantityCommitted.toLong() * 100 / it).toInt() }
 
     /** Urgent is derived from priority so the two can never disagree. */
     val isUrgent: Boolean

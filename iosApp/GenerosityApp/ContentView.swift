@@ -636,16 +636,14 @@ private struct NeedView: View {
                     .font(GenTypography.font(.caption).weight(.bold)).foregroundStyle(need.isUrgent ? GenPalette.error : GenPalette.accent)
                 Text(need.title.resolve(locale)).font(GenTypography.font(.subheadline).weight(.semibold))
                 Text(need.description_.resolve(locale)).font(GenTypography.font(.subheadline)).foregroundStyle(GenPalette.secondary)
-                if let remaining = need.quantityRemaining {
-                    Text(L10n.remaining(remaining.intValue, locale: locale)).font(GenTypography.font(.subheadline).weight(.medium))
-                        .accessibilityIdentifier("remaining-\(need.id)")
-                }
+                NeedProgressView(locale: locale, need: need)
                 Text(need.helpMethods.sorted { $0.ordinal < $1.ordinal }.map { $0.label(locale) }.joined(separator: " · "))
                     .font(GenTypography.font(.footnote))
                 if store.state.canRecordContributions {
                     ForEach(["goods", "time"].filter { code in need.helpMethods.contains { $0.code == code } }, id: \.self) { code in
                         Button(L10n.resource(code == "goods" ? "offer_goods_action" : "offer_time", locale: locale)) { method = code; offering = true }
                             .buttonStyle(.bordered).frame(minHeight: GenSize.iosTouch)
+                            .disabled(!need.status.isOpen || (code == "goods" && need.quantityRemaining?.intValue == 0))
                     }
                 } else { Text(L10n.resource("registration_required", locale: locale)).font(GenTypography.font(.footnote)) }
                 if need.helpMethods.contains(.money) {

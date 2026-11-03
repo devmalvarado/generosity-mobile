@@ -428,3 +428,11 @@ limits are recorded in [account-policy tests](../../../docs/testing/account-poli
 and the [release record](../../../docs/releases/account-portal-2026-11-01.md).
 Full erasure, provider revocation, native deletion, independent review and physical
 device journeys remain unchecked. No foundation archive is appropriate.
+
+## 21. Partial Goods Contributions and Progress
+
+- [x] 21.1 Expose center-fulfilled goods totals separately from commitments; negotiate the native sync field and retain the legacy payload. Test one box of ten, staff fulfillment, wrong units, cancellation, retries and capacity overflow.
+- [x] 21.2 Add optional validated receipt data and shared progress calculations; preserve cached unknown receipts and keep fully committed needs visible until expiry/closure, with offers disabled.
+- [x] 21.3 Render localized progress, units, remaining capacity and receipt totals in Android, iOS and the center portal; explain package versus loose-item quantities in contribution/publication forms.
+- [x] 21.4 Complete backend/shared/native builds, portal accessibility/layout checks and iOS simulator acceptance; record results in docs/testing/need-progress.md. Automated labels/layout passed; manual screen-reader and physical-device acceptance remain pending.
+- [ ] 21.5 Publish the tested API/portal release and distribute updated native builds; verify acknowledged offer -> center fulfillment -> client refresh in the deployed environment. No payment activation is included.

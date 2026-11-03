@@ -2,6 +2,32 @@ import SwiftUI
 import Shared
 import SharedBridge
 
+struct NeedProgressView: View {
+    let locale: AppLocale
+    let need: CenterNeed
+    var body: some View {
+        if need.helpMethods.contains(.goods), let required = need.quantityRequired, let fraction = need.committedFraction {
+            let unit = need.quantityUnit ?? L10n.resource("need_progress_units", locale: locale)
+            let target = L10n.number(required.int32Value, locale: locale)
+            let label = String(format: L10n.resource("need_progress_committed", locale: locale),
+                               L10n.number(need.quantityCommitted, locale: locale), target, unit,
+                               L10n.number(need.committedPercent?.int32Value ?? 0, locale: locale))
+            VStack(alignment: .leading, spacing: GenSpace.xs) {
+                Text(label).font(GenTypography.font(.subheadline).weight(.medium))
+                ProgressView(value: fraction.doubleValue).tint(GenPalette.accent)
+                    .accessibilityLabel(label).accessibilityIdentifier("need-progress-\(need.id)")
+                if let received = need.quantityReceived {
+                    Text(String(format: L10n.resource("need_progress_received", locale: locale),
+                                L10n.number(received.int32Value, locale: locale), target, unit))
+                } else { Text(L10n.resource("need_progress_received_unknown", locale: locale)) }
+                Text(String(format: L10n.resource("need_progress_remaining", locale: locale),
+                            L10n.number(required.int32Value - need.quantityCommitted, locale: locale), unit))
+                    .accessibilityIdentifier("remaining-\(need.id)")
+            }.font(GenTypography.font(.footnote))
+        }
+    }
+}
+
 struct SyncStatusView: View {
     let locale: AppLocale
     @ObservedObject var store: GenerosityStore
@@ -46,6 +72,8 @@ struct OfferForm: View {
             Form {
                 Text(need?.title.resolve(locale) ?? L10n.resource("personal_add", locale: locale)).font(GenTypography.font(.headline))
                 if method == "goods" {
+                    if let need { NeedProgressView(locale: locale, need: need) }
+                    Text(L10n.resource("offer_partial_hint", locale: locale)).font(GenTypography.font(.footnote))
                     field("offer_quantity", $quantity).keyboardType(.numberPad)
                     if let need { Text(need.quantityUnit ?? "") }
                     else { field("offer_unit", $unit) }

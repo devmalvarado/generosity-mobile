@@ -141,4 +141,10 @@
     <string name="push_unavailable">La bandeja funciona con tu cuenta. Los avisos al teléfono requieren permisos y la configuración del servicio push.</string>
     <string name="push_failed">No se pudo registrar el dispositivo. Se reintentará al actualizar.</string>
     <string name="push_consent">Las alertas opcionales al teléfono usan Google FCM y Apple APNs con identificadores técnicos del dispositivo. Nunca se envían notas privadas. Puedes desactivarlas cuando quieras.</string>
+    <string name="need_progress_committed">Comprometido: %1$s / %2$s %3$s (%4$s%%)</string>
+    <string name="need_progress_received">Recibido por el centro: %1$s / %2$s %3$s</string>
+    <string name="need_progress_remaining">Disponible para aportar: %1$s (%2$s)</string>
+    <string name="need_progress_received_unknown">Aún no hay datos de recepción.</string>
+    <string name="need_progress_units">unidades</string>
+    <string name="offer_partial_hint">Puedes aportar una parte. Usa la unidad indicada: por ejemplo, 1 caja de 10 piezas, no 10 cajas.</string>
 </resources>

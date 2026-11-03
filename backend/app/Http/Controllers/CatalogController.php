@@ -31,7 +31,7 @@ class CatalogController extends Controller
     {
         $data = $request->validate(['center_id' => 'sometimes|string|max:100', 'page' => 'sometimes|integer|min:1|max:100000']);
 
-        return Need::where('status', 'published')->when(isset($data['center_id']), fn ($query) => $query->where('center_id', $data['center_id']))
+        return Need::withProgress()->where('status', 'published')->when(isset($data['center_id']), fn ($query) => $query->where('center_id', $data['center_id']))
             ->orderBy('id')->paginate(25)->through(fn ($need) => $need->publicData());
     }
 
@@ -47,7 +47,7 @@ class CatalogController extends Controller
         $request->validate(['page' => 'sometimes|integer|min:1|max:100000']);
         Mutation::staff($request->user()->id, $center->id);
 
-        return Need::where('center_id', $center->id)->orderBy('id')->paginate(25)->through(fn ($need) => $need->publicData());
+        return Need::withProgress()->where('center_id', $center->id)->orderBy('id')->paginate(25)->through(fn ($need) => $need->publicData());
     }
 
     public function createNeed(Request $request, Center $center)

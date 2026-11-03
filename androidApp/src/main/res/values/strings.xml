@@ -141,4 +141,10 @@
     <string name="push_unavailable">The inbox works with your account. Phone alerts require permissions and push service setup.</string>
     <string name="push_failed">Device registration failed. We will retry when you refresh.</string>
     <string name="push_consent">Optional phone alerts use Google FCM and Apple APNs with technical device identifiers. Private notes are never sent. You can disable alerts at any time.</string>
+    <string name="need_progress_committed">Committed: %1$s / %2$s %3$s (%4$s%%)</string>
+    <string name="need_progress_received">Received by the center: %1$s / %2$s %3$s</string>
+    <string name="need_progress_remaining">Available to contribute: %1$s (%2$s)</string>
+    <string name="need_progress_received_unknown">Receipt data is not available yet.</string>
+    <string name="need_progress_units">units</string>
+    <string name="offer_partial_hint">You can contribute part of the total. Use the stated unit: for example, 1 box of 10 items, not 10 boxes.</string>
 </resources>

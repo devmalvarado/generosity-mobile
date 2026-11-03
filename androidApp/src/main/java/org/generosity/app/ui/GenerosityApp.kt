@@ -387,15 +387,15 @@ private fun NeedRow(locale: SupportedLocale, need: CenterNeed, remoteAccount: Bo
                 style = MaterialTheme.typography.labelMedium, fontWeight = FontWeight.Bold)
             Text(need.title.resolve(locale), fontWeight = FontWeight.SemiBold)
             Text(need.description.resolve(locale), style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
-            need.quantityRemaining?.let { Text(localizedQuantity(R.plurals.remaining_units, it, locale), style = MaterialTheme.typography.labelLarge) }
+            NeedProgress(need, locale)
             Text(need.helpMethods.map { it.label(locale) }.joinToString(" · "), style = MaterialTheme.typography.bodySmall)
             if (HelpMethod.MONEY in need.helpMethods) Text(TextKey.MONEY_BOUNDARY.label(locale), style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
             FlowRow(horizontalArrangement = Arrangement.spacedBy(GenSpace.sm)) {
                 if (HelpMethod.GOODS in need.helpMethods) {
-                    Button(onClick = { onOfferGoods(need.id) }, enabled = !remoteAccount) { Text(localizedString(R.string.offer_goods_action, locale)) }
+                    Button(onClick = { onOfferGoods(need.id) }, enabled = !remoteAccount && need.status.isOpen && need.quantityRemaining != 0) { Text(localizedString(R.string.offer_goods_action, locale)) }
                 }
                 if (HelpMethod.TIME in need.helpMethods) {
-                    Button(onClick = { onOfferTime(need.id) }, enabled = !remoteAccount) { Text(TextKey.OFFER_TIME.label(locale)) }
+                    Button(onClick = { onOfferTime(need.id) }, enabled = !remoteAccount && need.status.isOpen) { Text(TextKey.OFFER_TIME.label(locale)) }
                 }
             }
         }

@@ -58,7 +58,7 @@ class NeedCatalogSyncTest {
             override fun newOperationId() = java.util.UUID.randomUUID().toString()
             override fun send(request: ApiRequest, completion: (ApiResponse) -> Unit) {
                 assertEquals("GET", request.method)
-                assertEquals("/api/v1/sync/catalog?category_version=2", request.path)
+                assertEquals("/api/v1/sync/catalog?category_version=2&progress_version=1", request.path)
                 center.put("needs", if (published) JSONArray().put(need) else JSONArray())
                 completion(if (offline) ApiResponse(0, "") else ApiResponse(200,
                     JSONObject().put("catalog", catalog).put("updatedAt", "2026-11-02T12:00:00Z").toString()))

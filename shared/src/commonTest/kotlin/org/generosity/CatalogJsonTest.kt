@@ -16,6 +16,15 @@ import kotlin.test.assertTrue
 
 class CatalogJsonTest {
     @Test
+    fun receivedProgressIsOptionalAndRejectsImpossibleTotals() {
+        val legacy = assertIs<CatalogImport.Accepted>(CatalogJson.parse(BundledKindnessCatalog.JSON))
+        assertNull(legacy.centers.flatMap { it.needs }.first { it.quantityRequired != null }.quantityReceived)
+        val withProgress = BundledKindnessCatalog.JSON.replace("\"quantityCommitted\": 5", "\"quantityCommitted\": 5, \"quantityReceived\": 2")
+        val accepted = assertIs<CatalogImport.Accepted>(CatalogJson.parse(withProgress))
+        assertEquals(2, accepted.centers.flatMap { it.needs }.first { it.quantityRequired != null }.quantityReceived)
+        assertIs<CatalogImport.Rejected>(CatalogJson.parse(withProgress.replace("\"quantityReceived\": 2", "\"quantityReceived\": 6")))
+    }
+    @Test
     fun bundledCatalogIsTheOnlyLabeledSample() {
         val centers = BundledKindnessCatalog.centers()
         val school = centers.flatMap { it.needs }.first { it.id == "need-school-supplies" }

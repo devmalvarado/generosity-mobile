@@ -54,6 +54,11 @@ def signature(value):
                    for index, match in enumerate(FORMAT.finditer(value), 1))
 
 
+def portable_copy(values):
+    # Foundation uses %@ for objects; Android uses %s for the same localized text.
+    return {key: re.sub(r'%(\d+\$)?@', r'%\1s', value) for key, value in values.items()}
+
+
 def coverage(values, baseline, source):
     require(values.keys() == baseline.keys(),
             f'{source}: missing {sorted(baseline.keys() - values.keys())}; extra {sorted(values.keys() - baseline.keys())}')
@@ -90,7 +95,8 @@ def validate():
     baseline = android_strings(android / 'values/strings.xml')
     plural_baseline = android_plurals(android / 'values/plurals.xml')
     permission_baseline = apple_strings(ios / 'en.lproj/InfoPlist.strings')
-    require(apple_strings(ios / 'en.lproj/Localizable.strings') == baseline, 'English platforms disagree')
+    apple_baseline = apple_strings(ios / 'en.lproj/Localizable.strings')
+    require(portable_copy(apple_baseline) == baseline, 'English platforms disagree')
     project = (ROOT / 'iosApp/project.yml').read_text()
     regions = re.search(r'knownRegions:\s*\[([^]]+)\]', project)[1].replace(' ', '').split(',')
     for language in languages:
@@ -99,8 +105,8 @@ def validate():
         android_values = android_strings(android / folder / 'strings.xml')
         apple_values = apple_strings(ios / f'{language}.lproj/Localizable.strings')
         coverage(android_values, baseline, language + ' Android')
-        coverage(apple_values, baseline, language + ' iOS')
-        require(android_values == apple_values, f'{language}: Android/iOS copy differs')
+        coverage(apple_values, apple_baseline, language + ' iOS')
+        require(android_values == portable_copy(apple_values), f'{language}: Android/iOS copy differs')
         coverage(apple_strings(ios / f'{language}.lproj/InfoPlist.strings'), permission_baseline, language + ' permissions')
         ap = android_plurals(android / folder / 'plurals.xml')
         ip = apple_plurals(ios / f'{language}.lproj/Localizable.stringsdict')
@@ -115,6 +121,7 @@ def validate():
 
 
 def self_test():
+    require(portable_copy({'a': '%1$@ / %2$@ (10%%)'}) == {'a': '%1$s / %2$s (10%%)'}, 'Platform object placeholders')
     require(signature('%1$d item') == signature('Falta %d unidad'), 'Number placeholder comparison')
     require(signature('%1$d') != signature('%1$s'), 'Wrong placeholder type must fail')
     for action in [lambda: unique([('a', 'A'), ('a', 'B')], 'test'),

@@ -5,6 +5,8 @@ import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFalse
 import kotlin.test.assertTrue
+import kotlin.test.assertNull
+import kotlin.test.assertFailsWith
 import org.generosity.data.InMemoryContributionRepository
 import org.generosity.domain.CenterCategory
 import org.generosity.domain.CenterNeed
@@ -210,14 +212,31 @@ class ContributionFlowTest {
     }
 
     @Test
-    fun currentNeedsLeadWithTheMostUrgentAndDropClosedOnes() {
+    fun currentNeedsKeepFullyCommittedProgressButDropExpiredAndCancelledOnes() {
         val urgent = diapers(required = 10, committed = 0).copy(id = "urgent", priority = NeedPriority.URGENT, urgent = true)
         val normal = diapers(required = 10, committed = 0).copy(id = "normal", priority = NeedPriority.NORMAL)
         val covered = diapers(required = 10, committed = 10).copy(id = "covered", status = NeedStatus.COVERED)
 
-        val current = CurrentNeedsUseCase()(listOf(normal, covered, urgent), "2026-05-13")
+        val expired = covered.copy(id = "expired", expiresOnIsoDate = "2026-05-12")
+        val cancelled = normal.copy(id = "cancelled", status = NeedStatus.CANCELLED)
+        val current = CurrentNeedsUseCase()(listOf(normal, covered, urgent, expired, cancelled), "2026-05-13")
 
-        assertEquals(listOf("urgent", "normal"), current.map { it.id })
+        assertEquals(listOf("urgent", "normal", "covered"), current.map { it.id })
+    }
+
+    @Test
+    fun oneBoxOfTenIsTenPercentOfTenBoxesWithoutInventingDelivery() {
+        val need = diapers(required = 10, committed = 0).copy(quantityUnit = "cajas de 10 piezas")
+        val offered = requireNotNull(need.commitGoods(1))
+        assertEquals(0.1, offered.committedFraction)
+        assertEquals(10, offered.committedPercent)
+        assertEquals(29, offered.copy(quantityRequired = 100, quantityCommitted = 29).committedPercent)
+        assertEquals(9, offered.quantityRemaining)
+        assertEquals("cajas de 10 piezas", offered.quantityUnit)
+        assertNull(offered.quantityReceived)
+        assertEquals(1, offered.copy(quantityReceived = 1).quantityReceived)
+        assertFailsWith<IllegalArgumentException> { offered.copy(quantityReceived = 2) }
+        assertNull(need.copy(quantityRequired = null).committedFraction)
     }
 
     @Test

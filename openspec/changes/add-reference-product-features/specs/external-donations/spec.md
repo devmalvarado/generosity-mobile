@@ -98,3 +98,26 @@ Each platform/territory SHALL have approved fundraising and recipient eligibilit
 #### Scenario: Institute or channel approval is unresolved
 - **WHEN** a provider, store route or applicable recipient approval is missing, including the current institute setup
 - **THEN** the affected monetary action and payment links stay disabled, other helping methods remain available and a sandbox result cannot enable production
+
+### Requirement: Partial Monetary Goals and Collection Progress
+Monetary needs SHALL define a positive goal, one currency and an explicit gross/net basis using integer minor units. Partial donations SHALL advance a labeled accessible bar only from provider-confirmed allocated funds adjusted for refunds/disputes. Pending intents, browser returns and promises SHALL not count. Collection by the institute SHALL remain distinct from center receipt; currencies and goods SHALL not be combined.
+
+#### Scenario: Ten thousand toward a two-hundred-thousand-peso collection goal
+- **WHEN** a goal is MXN 200,000 in collected funds and the provider confirms an allocated MXN 10,000 payment with no reversal
+- **THEN** the bar shows MXN 10,000 of MXN 200,000 collected, five percent and MXN 190,000 remaining; any fees and onward distribution remain separately disclosed
+
+#### Scenario: Duplicate or refunded payment
+- **WHEN** a confirmed payment event repeats or a verified partial refund arrives
+- **THEN** repetition does not increase progress, the refund reduces the collected amount once, and progress/history reconcile to the same currency ledger
+
+#### Scenario: Goal needs spendable funds for a procedure
+- **WHEN** the disclosed goal is the net amount available for an operation
+- **THEN** the goal calculation includes known fees and adjustments; unknown fees leave net progress explicitly unavailable rather than claiming the operation is funded
+
+#### Scenario: Concurrent donations approach the goal
+- **WHEN** donations or pending payment authorizations may exceed the remaining target
+- **THEN** the backend applies the disclosed overfunding policy with idempotent reservations or an explicit capped amount; the bar is visually bounded at one hundred percent while any accepted excess is separately stated
+
+#### Scenario: Payment integration remains unavailable
+- **WHEN** provider, recipient or platform eligibility is not configured
+- **THEN** checkout and monetary mutations remain disabled, no mock payment advances a real goal and goods/time progress remains usable
