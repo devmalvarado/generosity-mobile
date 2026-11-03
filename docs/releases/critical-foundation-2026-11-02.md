@@ -65,6 +65,25 @@ publication → native offer → staff fulfillment acceptance matrix.
 Apple remains blocked because the institute's Apple Developer membership is not
 active. No Apple capability, key or production sign-in was claimed.
 
+## iPhone 14 Pro update — 2026-11-02
+
+Rebuilt the current shared XCFramework and signed iOS app as **0.1.0 (2)** using
+the existing personal development team. Both the Xcode project and its YAML source
+now use build 2. Strict code-signature verification passed with macOS keychain
+access; the sandbox-only check could not establish certificate trust.
+
+Installed over the existing app on the physical iPhone 14 Pro / iOS 27.0.1,
+without uninstalling or clearing its data. The device reports version 0.1.0,
+bundle version 2. Launch showed the dark-mode MapKit map, nearby pins and saved
+location configuration. Guest Profile displayed both Sign in and Create account;
+the app was left on the map. This is an installation/startup check, not a new
+Google authorization or full contribution journey. The private local capture is
+`build/acceptance-2026-11-02/iphone14-build2-profile.png`.
+
+A fresh read-only production check still found 157 centers, zero needs, zero
+staff memberships and no configured reviewers. Mail queue and failed-job counts
+were both zero. The remaining pilot and native acceptance gates above still apply.
+
 ## Recovery
 
 The exact pre-release private backup is
