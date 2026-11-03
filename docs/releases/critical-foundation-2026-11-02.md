@@ -84,6 +84,16 @@ A fresh read-only production check still found 157 centers, zero needs, zero
 staff memberships and no configured reviewers. Mail queue and failed-job counts
 were both zero. The remaining pilot and native acceptance gates above still apply.
 
+## Android APK update — 2026-11-02
+
+Android distribution follow-up: generated **0.1.0 (2)** with the existing debug
+certificate, configured Maps key and production HTTPS API. All 13 Android JVM
+unit tests and the map-provider boundary check passed. `apksigner` verified the
+APK; its SHA-1 matches the documented Google Maps development restriction.
+The private local handoff is `build/releases/Generosity-0.1.0-build2.apk` with an
+adjacent SHA-256 file. This does not establish physical Android Google/GPS or
+account-flow acceptance, and the APK is not a Play Store release build.
+
 ## Recovery
 
 The exact pre-release private backup is
