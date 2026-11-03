@@ -14,7 +14,7 @@ import org.generosity.domain.SupportedLocale
 import org.generosity.app.R
 
 @Composable
-fun PlatformPermissionActions(locale: SupportedLocale) {
+fun PlatformPermissionActions(locale: SupportedLocale, onResult: () -> Unit = {}) {
     val permissions = buildList {
         add(Manifest.permission.ACCESS_FINE_LOCATION)
         add(Manifest.permission.ACCESS_COARSE_LOCATION)
@@ -24,7 +24,7 @@ fun PlatformPermissionActions(locale: SupportedLocale) {
     }
     val launcher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.RequestMultiplePermissions(),
-        onResult = { }
+        onResult = { onResult() }
     )
 
     Column(verticalArrangement = Arrangement.spacedBy(GenSpace.sm)) {

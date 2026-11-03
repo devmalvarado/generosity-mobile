@@ -65,6 +65,14 @@
 - [ ] 9.3 Implement Android bell/list/unread/target actions; UI-test denied push permission, offline badges and removed/cancelled targets.
 - [ ] 9.4 Implement equivalent iOS inbox; verify cross-device read state, safe private targets and no implicit push/location opt-in.
 - [ ] 9.5 Reconcile FCM/APNs receipt with the same owned inbox and current target data; test one foreground banner per event, duplicate retries, missed-push recovery on resume, no implicit read acknowledgement, and private-target rejection after account switch. Coordinate provider setup with foundation task 8.14; verify OS alerts separately from in-app notices.
+- [x] 9.6 Deliver the initial urgent-need inbox subset: owned retained APIs, account-isolated shared cache and queued reads, Android/iOS inbox entry/list, foreground deduplication and current-center destination. PHP/shared tests, Android Spanish/English inbox UI and actual Android FCM foreground/background receipt passed on 2026-11-02; see [evidence](../../../docs/releases/push-delivery-2026-11-02.md).
+
+Tasks 9.1–9.5 remain open for the complete product contract: contribution/event
+categories, local proximity reconciliation, timestamps/category presentation,
+pagination beyond the latest 100 retained notices, complete pending/offline and
+removed-target UX, cross-device acceptance and signed iOS/physical OS delivery.
+The first slice retains notices for 90 days and never implicitly enables push or
+location. See [technical implementation](../../../docs/push-notifications.md).
 
 ## 10. External Donations
 

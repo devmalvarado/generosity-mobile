@@ -8,6 +8,7 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.sync.Mutex
+import kotlinx.coroutines.sync.withLock
 import org.generosity.data.BackendStore
 import org.generosity.data.BackendFailure
 import org.generosity.data.PendingOperation
@@ -30,6 +31,8 @@ import org.generosity.domain.KindnessCenterRepository
 import org.generosity.domain.LocalePreference
 import org.generosity.domain.NeedCatalog
 import org.generosity.domain.NotificationPreference
+import org.generosity.domain.InboxNotice
+import org.generosity.domain.PushDevice
 import org.generosity.domain.PersonalImpact
 import org.generosity.domain.RejectionReason
 import org.generosity.domain.SupportedLocale
@@ -71,6 +74,11 @@ data class GenerosityUiState(
     val savedOffer: Int = 0,
     val syncError: String? = null,
     val catalogUpdatedAt: String? = null,
+    val notices: List<InboxNotice> = emptyList(),
+    val noticeDestinationId: String? = null,
+    val pushConfigured: Boolean = false,
+    val pushSyncError: Boolean = false,
+    val pushBanner: String? = null,
     val pendingOperations: List<PendingOperation> = emptyList()
 ) {
     val locale: SupportedLocale
@@ -107,6 +115,53 @@ class GenerosityAppState(
     private val impact = PersonalImpactUseCase()
     private val syncMutex = Mutex()
     private var refreshRequested = false
+    private var pushDevice: PushDevice? = null
+    private val displayedPushes = mutableSetOf<String>()
+
+    fun setPushDevice(token: String?, platform: String, authorized: Boolean) {
+        val remembered = try { token ?: backend?.pushToken(platform) }
+            catch (_: Exception) { update { copy(pushSyncError = true) }; return }
+        val device = remembered?.takeIf { it.length in 20..4096 }?.let { PushDevice(it, platform, authorized) }
+        if (pushDevice == device) return
+        pushDevice = device
+        scope.launch { refresh() }
+    }
+
+    fun receivePush(accountId: String, noticeId: String, open: Boolean) {
+        if (_state.value.profile.id != accountId || !_state.value.remoteAccount) return
+        scope.launch {
+            syncMutex.withLock { }
+            if (_state.value.profile.id != accountId) return@launch
+            refresh()
+            if (_state.value.profile.id == accountId && _state.value.notices.any { it.id == noticeId }) {
+                if (open) openNotice(noticeId)
+                else if (_state.value.preferences.urgentNeedsEnabled && displayedPushes.add(noticeId)) {
+                    if (displayedPushes.size > 100) displayedPushes.remove(displayedPushes.first())
+                    update { copy(pushBanner = noticeId) }
+                }
+            }
+        }
+    }
+
+    fun openNotice(id: String) {
+        val owner = _state.value.profile.id ?: return
+        val notice = _state.value.notices.firstOrNull { it.id == id } ?: return
+        scope.launch {
+            try {
+                backend?.markNoticeRead(owner, id)
+                val center = centersRepository.centerById(notice.centerId)
+                if (_state.value.profile.id != owner) return@launch
+                update { copy(selectedCenterId = center?.id, selectedCenterDetails = center,
+                    noticeDestinationId = center?.id, notices = backend?.notices(owner).orEmpty(),
+                    syncError = if (center == null) "not_found" else null) }
+                refresh()
+            } catch (cancelled: CancellationException) { throw cancelled }
+            catch (_: Exception) { if (_state.value.profile.id == owner) update { copy(syncError = "save_failed") } }
+        }
+    }
+
+    fun clearNoticeDestination() = update { copy(noticeDestinationId = null) }
+    fun dismissPushBanner() = update { copy(pushBanner = null) }
 
     private val _state = MutableStateFlow(
         GenerosityUiState(
@@ -177,6 +232,7 @@ class GenerosityAppState(
         try {
             backend?.savePreferences(_state.value.profile.id, preferences)
             update { copy(preferences = preferences) }
+            scope.launch { refresh() }
         } catch (_: Exception) { update { copy(syncError = "save_failed") } }
     }
 
@@ -186,7 +242,7 @@ class GenerosityAppState(
             profiles.saveProfile(profile)
             update { copy(profile = profile, remoteAccount = remoteAccount,
                 contributions = if (this.profile.id == userId) contributions else emptyList(),
-                impact = if (this.profile.id == userId) impact else PersonalImpact(), pendingOperations = emptyList(), visitedCenterIds = emptySet(), visitSignalCenterId = null, preferences = NotificationPreference()) }
+                impact = if (this.profile.id == userId) impact else PersonalImpact(), notices = if (this.profile.id == userId) notices else emptyList(), noticeDestinationId = null, pushBanner = null, pushConfigured = false, pendingOperations = emptyList(), visitedCenterIds = emptySet(), visitSignalCenterId = null, preferences = NotificationPreference()) }
             refresh()
         }
     }
@@ -195,7 +251,7 @@ class GenerosityAppState(
         scope.launch {
             val profile = UserProfile(mode = UserMode.ANONYMOUS)
             profiles.saveProfile(profile)
-            update { copy(profile = profile, remoteAccount = false, contributions = emptyList(), impact = PersonalImpact(), pendingOperations = emptyList(), visitedCenterIds = emptySet(), visitSignalCenterId = null, preferences = NotificationPreference()) }
+            update { copy(profile = profile, remoteAccount = false, contributions = emptyList(), impact = PersonalImpact(), notices = emptyList(), noticeDestinationId = null, pushBanner = null, pushConfigured = false, pushSyncError = false, pendingOperations = emptyList(), visitedCenterIds = emptySet(), visitSignalCenterId = null, preferences = NotificationPreference()) }
             refresh()
         }
     }
@@ -286,6 +342,13 @@ class GenerosityAppState(
                 if (userId != null && _state.value.remoteAccount) {
                     backend.flush(userId) { _state.value.profile.id == userId && _state.value.remoteAccount }
                     if (_state.value.profile.id == userId) backend.refreshAccount(userId)
+                    if (_state.value.profile.id == userId) pushDevice?.let { device ->
+                        try {
+                            val configured = backend.registerPush(userId, device, _state.value.locale)
+                            if (_state.value.profile.id == userId) update { copy(pushConfigured = configured, pushSyncError = false) }
+                        } catch (error: CancellationException) { throw error }
+                        catch (_: Exception) { if (_state.value.profile.id == userId) update { copy(pushSyncError = true) } }
+                    }
                 }
                 refreshContributions()
             }
@@ -335,7 +398,8 @@ class GenerosityAppState(
         val pending = profile.id?.let { backend?.pending(it) }.orEmpty()
         val visits = backend?.visitedCenters(profile.id).orEmpty()
         val preferences = backend?.preferences(profile.id) ?: _state.value.preferences
-        update { if (this.profile.id == profile.id) copy(contributions = history, impact = impact(history), pendingOperations = pending, visitedCenterIds = visits, preferences = preferences) else this }
+        val notices = backend?.notices(profile.id).orEmpty()
+        update { if (this.profile.id == profile.id) copy(contributions = history, impact = impact(history), pendingOperations = pending, visitedCenterIds = visits, preferences = preferences, notices = notices) else this }
     }
 
     private fun update(transform: GenerosityUiState.() -> GenerosityUiState) {

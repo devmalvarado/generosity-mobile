@@ -54,6 +54,7 @@ class CatalogController extends Controller
 
         return Mutation::run($request, $data, fn () => Mutation::staff($request->user()->id, $center->id), function () use ($center, $data) {
             $need = Need::create(['id' => (string) Str::uuid(), 'center_id' => $center->id] + $this->attributes($data));
+            $this->notifyPublication($need, false);
 
             return response()->json($need->refresh()->publicData(), 201);
         });
@@ -75,12 +76,21 @@ class CatalogController extends Controller
             if ($current->quantity_committed > 0 && ($data['unit'] ?? null) !== ($current->details['unit'] ?? null)) {
                 throw new ApiProblem('reserved_unit_immutable');
             }
+            $wasUrgent = $current->status === 'published' && ($current->details['urgent'] ?? false);
             $current->fill($this->attributes($data));
             $current->version++;
             $current->save();
+            $this->notifyPublication($current, $wasUrgent);
 
             return response()->json($current->publicData());
         });
+    }
+
+    private function notifyPublication(Need $need, bool $wasUrgent): void
+    {
+        if (! $wasUrgent && \App\Services\PushMessaging::eligible($need)) {
+            \App\Jobs\PublishUrgentNeed::dispatch($need->id, (string) Str::uuid(), now()->toDateTimeString());
+        }
     }
 
     private function attributes(array $data): array

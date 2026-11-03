@@ -43,6 +43,12 @@ class GenerosityAppStateIos(
     val currentState: GenerosityUiState get() = state.state.value
 
     fun onResume() = state.onResume()
+    fun setPushDevice(token: String?, authorized: Boolean) = state.setPushDevice(token, "ios", authorized)
+    fun receivePush(accountId: String, noticeId: String, open: Boolean) = state.receivePush(accountId, noticeId, open)
+    fun openNotice(id: String) = state.openNotice(id)
+    fun clearNoticeDestination() = state.clearNoticeDestination()
+    fun dismissPushBanner() = state.dismissPushBanner()
+    fun setAllNotificationCategories(all: Boolean) = state.setPreferences(currentState.preferences.copy(allCategoryInterests = all))
 
     fun start(onChange: (GenerosityUiState) -> Unit) {
         stop()
@@ -101,7 +107,7 @@ class GenerosityAppStateIos(
 
     fun setPreferences(nearby: Boolean, urgent: Boolean, reminders: Boolean) =
         state.setPreferences(
-            NotificationPreference(
+            currentState.preferences.copy(
                 nearbyCentersEnabled = nearby,
                 urgentNeedsEnabled = urgent,
                 remindersEnabled = reminders

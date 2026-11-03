@@ -70,4 +70,14 @@ The smoke script is fixed to local Compose/loopback. It adds clearly labeled dev
 
 ## Remaining scope
 
-The API is published at https://api.generosity.global and the portal is published from `main`. Google and Apple stay disabled until server configuration exists. Mail uses the log driver, so registration mail is not delivered. Payments stay disabled. Catalog and contribution client adapters, incremental sync, profile updates, visits, reminders, device registration and push delivery are not in the published slice. The password-reset page is a minimal English operational page; the hosted sign-in page and native/portal account controls have Spanish/English resources.
+The API is published at https://api.generosity.global and the portal is published
+from `main`. Google authentication and Hostinger SMTP are configured, with live
+acceptance evidence. Native catalog/account/contribution/visit adapters and the
+center workspace are implemented. Urgent-need owned inboxes, device registration
+and FCM HTTP v1 jobs are now published; Android foreground/background receipt
+passed with real Firebase on a Google APIs emulator. iOS sending stays disabled
+pending institutional signing/APNs. Reminders, proximity alerts, broader notice
+categories and physical-device push acceptance remain open. Payments stay disabled.
+Hosted account pages and native/portal controls have Spanish/English resources.
+See [push setup, security and limits](../docs/push-notifications.md) and
+[release evidence](../docs/releases/push-delivery-2026-11-02.md).

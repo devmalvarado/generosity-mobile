@@ -29,6 +29,7 @@ open class MainActivity : ComponentActivity() {
     private val account by lazy { AccountSession(this, lifecycleScope, appState) }
     private var savingLanguage by mutableStateOf(false)
     private var languageSaveFailed by mutableStateOf(false)
+    private var pendingPush by mutableStateOf<PushSignal?>(null)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -36,8 +37,23 @@ open class MainActivity : ComponentActivity() {
         connection.credential = account::credentialFor
         appState.start()
         account.callback(intent.data)
+        if (!usesDemoCatalog) AndroidPush.prepare(this)
+        pendingPush = AndroidPush.opened(intent)
         setContent {
             val state by appState.state.collectAsState()
+            val signal by AndroidPush.signal.collectAsState()
+            val pushToken by AndroidPush.token.collectAsState()
+            LaunchedEffect(state.profile.id, state.preferences.urgentNeedsEnabled, pushToken) {
+                if (!usesDemoCatalog) AndroidPush.update(this@MainActivity, state.remoteAccount && state.preferences.urgentNeedsEnabled, appState)
+            }
+            LaunchedEffect(signal, pendingPush, state.profile.id) {
+                val received = pendingPush ?: signal
+                if (received != null && state.profile.id != null) {
+                    appState.receivePush(received.accountId, received.noticeId, received.open)
+                    pendingPush = null
+                    AndroidPush.signal.value = null
+                }
+            }
             val settings = remember { getSharedPreferences("entry", MODE_PRIVATE) }
             var entered by remember { mutableStateOf(usesDemoCatalog || settings.getBoolean("entered", false)) }
             var wasRegistered by remember { mutableStateOf(false) }
@@ -66,12 +82,14 @@ open class MainActivity : ComponentActivity() {
         appState.onResume()
         if (!usesDemoCatalog) account.restore()
         appState.setDeviceLanguages(AndroidLanguageSettings.deviceLanguages())
+        if (!usesDemoCatalog) AndroidPush.update(this, appState.state.value.remoteAccount && appState.state.value.preferences.urgentNeedsEnabled, appState)
     }
 
     override fun onNewIntent(intent: Intent) {
         super.onNewIntent(intent)
         setIntent(intent)
         account.callback(intent.data)
+        pendingPush = AndroidPush.opened(intent)
     }
 
     override fun onConfigurationChanged(newConfig: Configuration) {

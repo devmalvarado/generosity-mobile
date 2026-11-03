@@ -105,7 +105,7 @@
     <string name="contact_website">Abrir sitio web</string>
     <string name="contact_failed">No hay una aplicación disponible para abrir este contacto.</string>
     <string name="visit_saved">Visita guardada. Las visitas de invitado permanecen en este dispositivo. No constituye verificación oficial.</string>
-    <string name="notifications_pending">Estas preferencias se guardan en este dispositivo. La entrega de alertas todavía no está disponible.</string>
+    <string name="notifications_pending">Las alertas por cercanía y los recordatorios programados aún no están disponibles.</string>
     <string name="area_search">Buscar zona</string>
     <string name="area_query">Colonia, dirección o ciudad</string>
     <string name="area_submit">Buscar</string>
@@ -131,4 +131,14 @@
     <string name="map_open_device">Abrir en mapas del teléfono</string>
     <string name="map_open_failed">No se pudo abrir el mapa. Prueba otra opción.</string>
     <string name="map_location_unavailable">La ubicación de este centro no está disponible.</string>
+    <string name="inbox_title">Avisos</string>
+    <string name="inbox_empty">Todavía no hay avisos. Elige las alertas urgentes y categorías en Configuración.</string>
+    <string name="inbox_retention">Hasta 100 avisos recientes de los últimos 90 días.</string>
+    <string name="inbox_close">Cerrar</string>
+    <string name="push_new">Hay una nueva necesidad urgente. Ver avisos.</string>
+    <string name="push_all_categories">Alertas urgentes de todas las categorías y ubicaciones</string>
+    <string name="push_ready">Servicio push conectado. Los avisos al teléfono también requieren permiso de notificaciones.</string>
+    <string name="push_unavailable">La bandeja funciona con tu cuenta. Los avisos al teléfono requieren permisos y la configuración del servicio push.</string>
+    <string name="push_failed">No se pudo registrar el dispositivo. Se reintentará al actualizar.</string>
+    <string name="push_consent">Las alertas opcionales al teléfono usan Google FCM y Apple APNs con identificadores técnicos del dispositivo. Nunca se envían notas privadas. Puedes desactivarlas cuando quieras.</string>
 </resources>

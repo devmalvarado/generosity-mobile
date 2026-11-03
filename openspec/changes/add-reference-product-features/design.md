@@ -168,7 +168,7 @@ their preferences. Use explicit event-notification preference for event push.
 Read writes are idempotent desired-state operations. Nearby guest notices stay
 local and do not turn into server location records.
 
-Proposed inbox retention is 90 days, configurable and disclosed; expiring an
+Inbox retention for the initial urgent-need slice is 90 days, disclosed; expiring an
 inbox row does not remove its contribution/payment record. Query read counts
 from retained authorized rows. Deleting/retrying events must not create negative
 badges or leak private notices on account switch. Older links resolve current
@@ -178,8 +178,10 @@ The foundation's **In-App Notices and Phone Push — 2026-11-02** decision selec
 FCM HTTP v1 for Android and iOS (through APNs), driven by Laravel/MySQL and the
 bounded Hostinger cron worker. This inbox is the shared history for those events;
 foreground banners and OS alerts must reconcile the same stable event IDs.
-Provider/OS delivery failure must not remove an authorized inbox item. This is
-pending implementation, not evidence of an existing notification outbox.
+Provider/OS delivery failure must not remove an authorized inbox item. The
+urgent-need outbox/inbox and Android delivery subset is implemented and tested;
+broader event categories and real iOS delivery remain pending. See
+[configuration and limits](../../../docs/push-notifications.md).
 
 ### Volunteer Events and Attendance
 

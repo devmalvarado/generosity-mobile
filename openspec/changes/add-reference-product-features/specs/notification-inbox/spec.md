@@ -24,6 +24,14 @@ Opening a notice or explicitly marking notices read SHALL update desired read st
 - **WHEN** a read request commits and is retried after interruption
 - **THEN** the notice remains read once and the unread count does not drift or become negative
 
+#### Scenario: Notice retention expires
+- **WHEN** a notice is older than the disclosed 90-day retention period
+- **THEN** it no longer appears in the owned inbox or unread count, and its read endpoint rejects it without deleting contribution history
+
+#### Scenario: Initial inbox reaches the pilot limit
+- **WHEN** more than 100 retained notices exist
+- **THEN** the initial mobile slice shows the latest 100 with a disclosed limit, and the API exposes whether more exist without claiming a complete history
+
 ### Requirement: Safe Targets and Preferences
 Notice navigation SHALL re-resolve current public/private targets and enforce ownership. Removed or cancelled content SHALL explain its current state rather than allow invalid actions. Urgent/nearby/reminder preferences SHALL govern their respective optional notices; transactional history notices SHALL be distinguished from promotional alerts. In-app reads SHALL never silently enable push, location or reminder permissions.
 

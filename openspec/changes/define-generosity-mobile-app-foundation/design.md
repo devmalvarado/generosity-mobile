@@ -547,9 +547,13 @@ not claimed to be retractable. No provider-specific delivery guarantee is promis
 
 ### In-App Notices and Phone Push — 2026-11-02
 
-Status: selected delivery design, **not implemented or activated**. Catalog
-refresh already runs at launch/resume and explicit Refresh on both platforms;
-it does not provide a foreground event stream or a phone notification.
+Status updated 2026-11-02: the urgent-need slice is implemented and published.
+Actual Firebase foreground/background receipt passed on the Android Google APIs
+emulator. Both apps have an owned inbox and current-data reconciliation; iOS phone
+delivery remains disabled pending institutional Apple signing/APNs. Proximity,
+reminders and other event categories remain pending. See
+[implementation and configuration](../../../docs/push-notifications.md) and
+[acceptance evidence](../../../docs/releases/push-delivery-2026-11-02.md).
 Reuse the owned inbox/read-state contract in
 `add-reference-product-features/specs/notification-inbox/spec.md` rather than
 creating separate histories for banners and operating-system notifications.
@@ -597,6 +601,16 @@ reconciliation, then iOS FCM/APNs after institutional signing is available. Veri
 foreground/background/locked/terminated states, revoked permission, token rotation,
 account switching, expired/closed targets and retry duplicates on both platforms.
 Physical-device delivery remains a separate acceptance gate.
+
+The implemented outbox uses the existing database queue on the same connection
+as the need transaction, with `beforeCommit()` insertion rather than an
+after-commit callback that could lose the event. No separate broker is required.
+Inbox retention is 90 days and the pilot snapshot is limited to the latest 100
+notices; pagination and broader event categories remain explicit follow-ups.
+Android requires a Firebase-specific restricted client key: the console's first
+download selected the Maps-only key and failed registration. Maps restrictions
+remain unchanged. Mobile installation tokens are encrypted and bound to a
+revocable Sanctum session plus a persistent installation secret.
 
 Primary references: [FCM HTTP v1](https://firebase.google.com/docs/cloud-messaging/send/v1-api),
 [FCM Android receipt](https://firebase.google.com/docs/cloud-messaging/android/receive-messages),

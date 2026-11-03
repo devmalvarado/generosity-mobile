@@ -9,6 +9,9 @@ settings:
     SWIFT_VERSION: "5.0"
     TARGETED_DEVICE_FAMILY: "1,2"
 packages:
+  Firebase:
+    url: https://github.com/firebase/firebase-ios-sdk
+    exactVersion: 13.1.1
   SharedBridge:
     path: SharedBridge
 targets:
@@ -17,12 +20,24 @@ targets:
     platform: iOS
     sources:
       - path: GenerosityApp
-        excludes: [Info.plist]
+        excludes: [Info.plist, GoogleService-Info.plist]
     dependencies:
       - package: SharedBridge
+      - package: Firebase
+        product: FirebaseMessaging
     preBuildScripts:
       - name: Check design resources
         script: python3 "$SRCROOT/../scripts/generate-design-system.py" --check
+        basedOnDependencyAnalysis: false
+    postBuildScripts:
+      - name: Copy optional Firebase configuration
+        script: |
+          destination="$TARGET_BUILD_DIR/$UNLOCALIZED_RESOURCES_FOLDER_PATH/GoogleService-Info.plist"
+          if [ -f "$SRCROOT/GenerosityApp/GoogleService-Info.plist" ]; then
+            cp "$SRCROOT/GenerosityApp/GoogleService-Info.plist" "$destination"
+          else
+            rm -f "$destination"
+          fi
         basedOnDependencyAnalysis: false
     settings:
       base:
@@ -34,7 +49,8 @@ targets:
         INFOPLIST_KEY_UILaunchScreen_Generation: YES
         INFOPLIST_KEY_UIApplicationSceneManifest_Generation: YES
         MARKETING_VERSION: "0.1.0"
-        CURRENT_PROJECT_VERSION: "2"
+        CURRENT_PROJECT_VERSION: "3"
+        GENEROSITY_PUSH_ENABLED: NO
   GenerosityLocalizationTests:
     type: bundle.unit-test
     platform: iOS

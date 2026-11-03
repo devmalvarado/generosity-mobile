@@ -63,6 +63,7 @@ class ClientSyncController extends Controller
             return ['user' => $request->user()->only(['id', 'name', 'email']),
                 'contributions' => $owned->orderByDesc('created_at')->orderBy('id')->get(),
                 'visits' => $visits->orderBy('received_at')->orderBy('id')->get(),
+                'notices' => NotificationController::snapshot($request->user()->id),
                 'updatedAt' => now()->toISOString()];
         });
     }

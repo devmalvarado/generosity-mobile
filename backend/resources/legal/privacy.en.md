@@ -49,6 +49,8 @@ Web sign-in uses session and anti-forgery cookies. The landing remembers languag
 
 You can clear cookies and storage through your browser or app; doing so may sign you out or remove unsent drafts. It does not erase records already received by the server. These flows do not use advertising cookies or campaign-tracking tools.
 
+Optional alerts use Google Firebase Cloud Messaging and, on iOS, Apple Push Notification service. When enabled, the provider receives the installation token and technical identifier, technical information needed to deliver messages, and account, notice and center references. Lock-screen text is generic. We do not send private notes or beneficiary data, and Analytics is not enabled for this service. You can turn alerts off in Settings or phone permissions; your account inbox is independent and retains notices for up to 90 days.
+
 ## 7. Retention and closure
 
 We retain account data while the relationship is active and the data is necessary for its purposes. Location applications are retained during review and follow-up; contributions and changes are retained while needed to meet commitments, address incidents and evidence the transaction. The Institute reviews continued retention when resolving a request or receiving a cancellation request.

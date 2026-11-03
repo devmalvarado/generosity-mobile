@@ -1,3 +1,4 @@
+import Combine
 import XCTest
 import MapKit
 import Shared
@@ -232,8 +233,11 @@ final class CurrentLocationTests: XCTestCase {
     func testTimeoutAllowsRetryAndDoesNotAcceptLateResponse() async throws {
         let manager = LocationManagerStub()
         let service = PermissionService(locationManager: manager, timeoutSeconds: 0.01)
+        let expired = expectation(description: "Location request times out")
+        let observation = service.$locationMessage.filter { $0 == "location_unavailable" }.first().sink { _ in expired.fulfill() }
         service.requestCurrentLocation()
-        try await Task.sleep(nanoseconds: 80_000_000)
+        await fulfillment(of: [expired], timeout: 3)
+        observation.cancel()
         XCTAssertFalse(service.locating)
         XCTAssertEqual(service.locationMessage, "location_unavailable")
         service.locationManager(manager, didUpdateLocations: [CLLocation(latitude: 19.35, longitude: -99.16)])

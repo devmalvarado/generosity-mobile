@@ -105,7 +105,7 @@
     <string name="contact_website">Open website</string>
     <string name="contact_failed">No app is available to open this contact.</string>
     <string name="visit_saved">Visit saved. Guest visits stay on this device. This is not official verification.</string>
-    <string name="notifications_pending">These preferences are saved on this device. Alert delivery is not available yet.</string>
+    <string name="notifications_pending">Nearby alerts and scheduled reminders are not yet available.</string>
     <string name="area_search">Search area</string>
     <string name="area_query">Neighborhood, address or city</string>
     <string name="area_submit">Search</string>
@@ -131,4 +131,14 @@
     <string name="map_open_device">Open in device maps</string>
     <string name="map_open_failed">Could not open the map. Try another option.</string>
     <string name="map_location_unavailable">Location unavailable for this center.</string>
+    <string name="inbox_title">Notifications</string>
+    <string name="inbox_empty">No notifications yet. Choose urgent alerts and categories in Settings.</string>
+    <string name="inbox_retention">Up to 100 recent notifications from the last 90 days.</string>
+    <string name="inbox_close">Close</string>
+    <string name="push_new">A new urgent need is available. View notifications.</string>
+    <string name="push_all_categories">Urgent alerts from all categories and locations</string>
+    <string name="push_ready">Push service connected. Phone alerts also require notification permission.</string>
+    <string name="push_unavailable">The inbox works with your account. Phone alerts require permissions and push service setup.</string>
+    <string name="push_failed">Device registration failed. We will retry when you refresh.</string>
+    <string name="push_consent">Optional phone alerts use Google FCM and Apple APNs with technical device identifiers. Private notes are never sent. You can disable alerts at any time.</string>
 </resources>

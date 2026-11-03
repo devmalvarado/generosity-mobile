@@ -48,6 +48,12 @@ public final class GenerosityStore: ObservableObject {
         state = controller.currentState
     }
 
+    public func setPushDevice(_ token: String?, authorized: Bool) { controller.setPushDevice(token: token, authorized: authorized) }
+    public func receivePush(accountId: String, noticeId: String, open: Bool) { controller.receivePush(accountId: accountId, noticeId: noticeId, open: open) }
+    public func openNotice(_ id: String) { controller.openNotice(id: id) }
+    public func clearNoticeDestination() { controller.clearNoticeDestination() }
+    public func dismissPushBanner() { controller.dismissPushBanner() }
+    public func setAllNotificationCategories(_ all: Bool) { controller.setAllNotificationCategories(all: all) }
     public func onResume() {
         controller.onResume()
         refreshDeviceLanguages()

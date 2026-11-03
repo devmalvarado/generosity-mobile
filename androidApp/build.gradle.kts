@@ -3,7 +3,10 @@ import java.util.Properties
 plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.plugin.compose")
+    id("com.google.gms.google-services") version "4.5.0" apply false
 }
+
+if (file("google-services.json").exists()) apply(plugin = "com.google.gms.google-services")
 
 val localProperties = Properties().apply {
     val file = rootProject.file("local.properties")
@@ -24,7 +27,7 @@ android {
         applicationId = "org.generosity.app"
         minSdk = 26
         targetSdk = 36
-        versionCode = 2
+        versionCode = 3
         versionName = "0.1.0"
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         manifestPlaceholders["MAPS_API_KEY"] = mapsApiKey
@@ -49,6 +52,8 @@ android {
 }
 
 dependencies {
+    implementation(platform("com.google.firebase:firebase-bom:35.1.0"))
+    implementation("com.google.firebase:firebase-messaging")
     implementation(project(":shared"))
     implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.9.4")
     implementation("androidx.activity:activity-compose:1.12.4")

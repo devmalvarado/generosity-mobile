@@ -110,7 +110,7 @@
 "contact_failed" = "No hay una aplicación disponible para abrir este contacto.";
 
 "visit_saved" = "Visita guardada. Las visitas de invitado permanecen en este dispositivo. No constituye verificación oficial.";
-"notifications_pending" = "Estas preferencias se guardan en este dispositivo. La entrega de alertas todavía no está disponible.";
+"notifications_pending" = "Las alertas por cercanía y los recordatorios programados aún no están disponibles.";
 
 // Manual area discovery
 "area_search" = "Buscar zona";
@@ -141,3 +141,14 @@
 "map_open_device" = "Abrir en mapas del teléfono";
 "map_open_failed" = "No se pudo abrir el mapa. Prueba otra opción.";
 "map_location_unavailable" = "La ubicación de este centro no está disponible.";
+
+"inbox_title" = "Avisos";
+"inbox_empty" = "Todavía no hay avisos. Elige las alertas urgentes y categorías en Configuración.";
+"inbox_retention" = "Hasta 100 avisos recientes de los últimos 90 días.";
+"inbox_close" = "Cerrar";
+"push_new" = "Hay una nueva necesidad urgente. Ver avisos.";
+"push_all_categories" = "Alertas urgentes de todas las categorías y ubicaciones";
+"push_ready" = "Servicio push conectado. Los avisos al teléfono también requieren permiso de notificaciones.";
+"push_unavailable" = "La bandeja funciona con tu cuenta. Los avisos al teléfono requieren permisos y la configuración del servicio push.";
+"push_failed" = "No se pudo registrar el dispositivo. Se reintentará al actualizar.";
+"push_consent" = "Las alertas opcionales al teléfono usan Google FCM y Apple APNs con identificadores técnicos del dispositivo. Nunca se envían notas privadas. Puedes desactivarlas cuando quieras.";

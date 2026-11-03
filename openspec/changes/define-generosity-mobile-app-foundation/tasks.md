@@ -206,6 +206,8 @@ complete the separate forms/history, real clock, persistence or backend tasks.
 - [ ] 8.12 Deliver eligible nearby and urgent alerts on Android within platform limits, with opt-out tests.
 - [ ] 8.13 Deliver eligible nearby and urgent alerts on iOS within platform limits, with opt-out tests.
 - [ ] 8.14 Configure institutional Firebase messaging for Android and iOS (FCM → APNs), private HTTP v1 server credentials and signed iOS push entitlements; verify actual foreground/background/locked-device delivery, token rotation and revoked permissions. Maps/OAuth credentials are not messaging credentials. Follow the 2026-11-02 delivery design; keep unavailable providers visibly inactive.
+- [x] 8.15 Implement the urgent-need FCM slice: institutional Firebase app registrations, least-privilege PHP service identity, private key/configuration, Android-specific Firebase API key, opt-in token registration and owned foreground reconciliation. Actual Android emulator foreground/background receipt passed on 2026-11-02; see [evidence](../../../docs/releases/push-delivery-2026-11-02.md).
+- [ ] 8.16 Complete signed iOS APNs activation and physical Android/iOS locked/terminated/tap acceptance. iOS adapter and simulator tests exist, but Apple membership/key/profile are unavailable; `FCM_IOS_ENABLED=false` and personal-team push entitlement stays disabled. 8.12–8.14 remain open for these gates and proximity delivery.
 
 ## 9. Visit Signals and Verification Boundary
 
@@ -253,7 +255,7 @@ The Kotlin-specific evidence remains available on the preserved mockup branch.
 - [ ] 12.2 Implement shared durable operation dispatch and reconciliation; test lost responses, replays with changed payloads, rejection rollback and account-switch suspension.
 - [ ] 12.3 Connect Android to catalog/account sync; test offline bundle/cache, stale indicators, full resync and preserved history for removed catalog items.
 - [ ] 12.4 Connect iOS to the same sync contracts; test equivalent offline/reconnect outcomes and cross-device history updates.
-- [ ] 12.5 Add transactional domain outbox and idempotent owned-inbox/FCM delivery jobs using the bounded Hostinger database queue; test opt-in/category/expiry checks, publication vs quantity-only edits, transient retry, per-installation deduplication, invalid-token retirement and provider acceptance distinct from user receipt. Coordinate inbox APIs with reference-product task 9.1.
+- [x] 12.5 Add transactional domain outbox and idempotent owned-inbox/FCM delivery jobs using the bounded Hostinger database queue; test opt-in/category/expiry checks, publication vs quantity-only edits, transient retry, per-installation deduplication, invalid-token retirement and provider acceptance distinct from user receipt. Implemented for urgent-need publication/transition; broader reference inbox categories remain under reference-product task 9.1.
 - [ ] 12.6 Document sync/alert conflict and retry semantics; verify the documented offline preference behavior using an interrupted-network integration test.
 
 ## 13. Contribution Lifecycle
@@ -294,7 +296,8 @@ physical iPhone 14 Pro showed 10 after Update, 20 / Urgent after foreground resu
 and no published needs after closing and refreshing. All 157 original centers
 were unchanged. The DEMO remains published for owner use. This does not close
 15.1 (native offers/fulfillment/history and Android remain), 15.2, or 15.3:
-publishing a need still sends no push notification. See the
+at that checkpoint, publishing a need sent no push notification (superseded by
+the urgent-need delivery slice below). See the
 [published demo evidence](../../../docs/releases/critical-foundation-2026-11-02.md#owner-authorized-published-demo--2026-11-02).
 
 15.1 Android publication follow-up (2026-11-02): `NeedCatalogSyncTest` passed
@@ -305,6 +308,13 @@ and encrypted storage to display the same published DEMO need and restore it
 from cache. Build 2's APK is unchanged. This completes the emulator publication
 check only; physical Android, native offers/fulfillment/history and push delivery
 remain open. See [Android evidence](../../../docs/releases/critical-foundation-2026-11-02.md#android-needs-acceptance--2026-11-02).
+
+Push follow-up (2026-11-02): build 3 and the published backend passed real FCM
+foreground/background delivery on the Android emulator, with two isolated DEMO
+needs closed afterwards. Shared owned-inbox/banner/read tests, Android bilingual
+inbox UI tests, and iOS parser/build tests passed. Physical Android delivery and
+all real APNs delivery remain pending; this does not close pilot task 15.1 or
+the complete notification acceptance matrix. See [push evidence](../../../docs/releases/push-delivery-2026-11-02.md).
 
 ## 16. Mobile-First Center Web Portal
 

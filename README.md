@@ -4,7 +4,7 @@ Generosity is a cross-platform mobile app for iOS and Android that helps people 
 
 The shared contribution flow connects a center to its needs, offers of help, and personal impact. It tracks need priority and status, remaining goods quantities, and contributions. Only confirmed or fulfilled contributions count toward impact. Android observes this state through `GenerosityAppState`.
 
-The current prototype uses sample imported Kindness Center data and supports
+The current pilot uses the published Kindness Center catalog and supports
 Spanish and English. Both apps now default to the first supported device
 language and retain a system/Spanish/English override in Settings across
 restarts, independently of account state. On 2026-10-25 the user expanded the planning scope to
@@ -12,7 +12,9 @@ include backend APIs, real authentication, durable storage/sync and
 center-authorized contributions, plus a mobile-first center web portal based
 on the supplied landing. A separate PHP/Laravel API now implements accounts,
 public catalog, staff-scoped needs and transactional contributions with MySQL/MariaDB.
-Native/portal HTTP integration, account sync and delivery remain pending.
+Native/portal HTTP integration and account synchronization are implemented.
+The urgent-need inbox and Android FCM slice are available; iOS phone delivery
+awaits Apple signing/APNs. See [push configuration and limits](docs/push-notifications.md).
 See the [backend setup](backend/README.md) and [hosting decision](docs/backend-php-mysql.md).
 See the [feature spec index](openspec/changes/define-generosity-mobile-app-foundation/spec-index.md).
 Reference-aligned styling of existing native screens is being implemented from
@@ -50,7 +52,7 @@ separate meanings. Contact-only listings do not require public coordinates.
 - iOS UI: SwiftUI.
 - Android UI: Jetpack Compose.
 - Native maps: Google Maps on Android behind a replaceable renderer; Apple MapKit on iOS. See [configuration and MapLibre migration boundary](docs/native-maps.md).
-- Backend: PHP 8.4 / Laravel 13 with MySQL/MariaDB; local API and tests implemented, Hostinger deployment pending.
+- Backend: PHP 8.4 / Laravel 13 with MySQL/MariaDB; API published on Hostinger with bounded database queue processing.
 - Web: public landing and mobile-first center need publishing/management are planned; see the [portal assessment](docs/center-portal.md). The source still lives in the older PoC.
 - Follow-up scope: reference navigation/feed, favorites/sharing, public profiles, moderated reviews, gamification, inbox, events and gated external-provider donations.
 - Community scope: registered users earn organizing access through validated prior help/level/points; household follow-up is optional and private, and territorial maps use approved aggregates. Organizer status never grants center staff or blanket case access.
@@ -243,20 +245,23 @@ Entered goods/time offers, personal help, server history, owner actions and the
 authenticated center workspace are implemented locally. Guest visits and
 notification preferences persist on the device; account visits synchronize.
 The [integration report](docs/testing/backend-integration.md) distinguishes local
-test evidence from live acceptance. The catalog, account, and visit endpoints,
-and their two migrations, are on the published API (`1adf57a`). A production
-catalog read returned no centers. The center workspace is not on the live
-landing until those portal files reach `main`. Google/Apple credentials, Facebook,
-phone verification, actual alerts/reminders, GPS/manual origin and complete
-account lifecycle remain pending. Welcome routing exists; illustration/legal
-destinations and the full accessibility matrix remain open. Payments are disabled.
+test evidence from live acceptance. Catalog, account, visit and urgent-notification
+endpoints are published. The catalog contains 157 imported listings and one
+owner-authorized DEMO center; the authenticated center workspace is also published.
+Google access and Hostinger SMTP have live acceptance evidence. Apple access,
+phone verification, complete Facebook configuration, nearby/reminder delivery,
+physical push acceptance and the full accessibility matrix remain open. Current
+location/manual origin and legal destinations are implemented. Payments are disabled.
+See [critical foundation evidence](docs/releases/critical-foundation-2026-11-02.md)
+and [push delivery evidence](docs/releases/push-delivery-2026-11-02.md).
 
 SwiftUI discovery, map/list selection, current needs and language now consume
 `SharedBridge` through one cancellable subscription owned by the root store.
 The duplicate Swift sample catalog, search and need-expiry rules were removed.
 Both apps use the same catalog/account contracts and shared lifecycle rules.
 Profile displays server history with explicit personal-help provenance and
-unavailable metrics; notification delivery remains pending on both platforms.
+unavailable metrics. Android urgent push delivery passed against real Firebase
+on the Google APIs emulator; real iOS delivery remains gated by APNs/signing.
 The Xcode app now requires the staged bridge. Apple command-line
 tools alone cannot link the iOS framework or run its native tests; use
 full Xcode. On Apple Silicon, the native ARM64 tests run; Gradle skips

@@ -29,6 +29,8 @@ Artisan::command('auth:check-portal', function () {
 
 Schedule::command('sanctum:prune-expired --hours=24')->daily();
 Schedule::command('auth:clear-resets')->daily();
+Schedule::call(fn () => DB::table('inbox_notices')->where('created_at', '<', now()->subDays(90))->delete())
+    ->daily()->name('notifications:prune');
 
 Schedule::call(function () {
     DB::table('auth_attempts')->where('expires_at', '<', now())->delete();

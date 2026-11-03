@@ -11,6 +11,84 @@ import org.generosity.usecase.DiscoveryQuery
 import kotlin.test.*
 
 class BackendStoreTest {
+    @OptIn(ExperimentalCoroutinesApi::class)
+    @Test fun pushReconcilesOwnedInboxOnceAndNeverOpensAnotherAccountsTarget() = runTest {
+        val platform = Connection()
+        var read = false
+        platform.handler = { request -> when {
+            request.path.startsWith("/api/v1/sync/catalog") -> ApiResponse(200, """{"catalog":${BundledKindnessCatalog.JSON}}""")
+            request.path.endsWith("/read") -> { read = true; ApiResponse(200, "{}") }
+            else -> ApiResponse(200, """{"user":{"id":${request.accountId}},"contributions":[],"notices":{"items":[{"id":"notice-1","eventId":"event-1","centerId":"kc-children-001","needId":"need-school-supplies","title":{"es":"Útiles","en":"Supplies"},"createdAt":"2026-11-02T00:00:00Z","read":$read}]}}""")
+        } }
+        val app = GenerosityAppState(backgroundScope, backend = BackendStore(platform))
+        app.signIn("1", "María", remoteAccount = true); runCurrent()
+        app.receivePush("1", "notice-1", open = false); runCurrent()
+        assertNull(app.state.value.pushBanner)
+        app.setPreferences(NotificationPreference(urgentNeedsEnabled = true)); runCurrent()
+        app.receivePush("2", "notice-1", open = true); runCurrent()
+        assertNull(app.state.value.noticeDestinationId)
+        app.receivePush("1", "notice-1", open = false); runCurrent()
+        assertEquals("notice-1", app.state.value.pushBanner)
+        assertFalse(read)
+        app.dismissPushBanner()
+        app.receivePush("1", "notice-1", open = false); runCurrent()
+        assertNull(app.state.value.pushBanner)
+        app.receivePush("1", "notice-1", open = true); runCurrent()
+        assertEquals("kc-children-001", app.state.value.noticeDestinationId)
+        assertTrue(read)
+        assertTrue(app.state.value.notices.single().read)
+        app.continueAnonymously(); runCurrent()
+        assertTrue(app.state.value.notices.isEmpty())
+        assertNull(app.state.value.noticeDestinationId)
+        app.signIn("2", "Otra cuenta", remoteAccount = true); runCurrent()
+        app.receivePush("1", "notice-1", open = true); runCurrent()
+        assertNull(app.state.value.noticeDestinationId)
+        assertNull(app.state.value.pushBanner)
+    }
+
+    @Test fun inboxIsPrivateReadIsDurableAndPushRegistrationIsNotReplayed() = runTest {
+        val platform = Connection()
+        platform.disk["account-1"] = """{"user":{"id":1},"contributions":[],"notices":{"items":[{"id":"notice-1","eventId":"event-1","centerId":"c1","needId":"n1","title":{"es":"Útiles"},"createdAt":"2026-11-02T00:00:00Z","read":false}]}}"""
+        val store = BackendStore(platform)
+        assertTrue(store.notices("2").isEmpty())
+        assertFalse(store.notices("1").single().read)
+        store.markNoticeRead("1", "notice-1")
+        store.markNoticeRead("1", "notice-1")
+        assertEquals(1, store.pending("1").size)
+        assertTrue(BackendStore(platform).notices("1").single().read)
+        assertFails { store.markNoticeRead("2", "notice-1") }
+        platform.response = ApiResponse(200, "{\"deliveryConfigured\":true}")
+        assertTrue(store.registerPush("1", PushDevice("token-".repeat(10), "android", true), SupportedLocale.SPANISH))
+        val first = ApiJson.parse(platform.requests.last().body!!)
+        val restarted = BackendStore(platform)
+        assertEquals("token-".repeat(10), restarted.pushToken("android"))
+        assertNull(restarted.pushToken("ios"))
+        restarted.registerPush("2", PushDevice("new-token-".repeat(10), "android", false), SupportedLocale.ENGLISH)
+        assertEquals(first.text("secret"), ApiJson.parse(platform.requests.last().body!!).text("secret"))
+        assertEquals(platform.requests.first().path, platform.requests.last().path)
+        assertTrue(restarted.pending("2").isEmpty())
+    }
+
+    @OptIn(ExperimentalCoroutinesApi::class)
+    @Test fun coldStartCanRevokeStoredPushTokenWithoutRegisteringWithFirebaseAgain() = runTest {
+        val platform = Connection()
+        platform.response = ApiResponse(200, "{\"deliveryConfigured\":true}")
+        BackendStore(platform).registerPush("1", PushDevice("old-token-".repeat(10), "android", true), SupportedLocale.ENGLISH)
+        platform.requests.clear()
+        platform.handler = { request -> when {
+            request.path.startsWith("/api/v1/sync/catalog") -> ApiResponse(200, """{"catalog":${BundledKindnessCatalog.JSON}}""")
+            request.path == "/api/v1/sync/account" -> ApiResponse(200, """{"user":{"id":1},"contributions":[]}""")
+            else -> ApiResponse(200, "{\"deliveryConfigured\":true}")
+        } }
+        val app = GenerosityAppState(backgroundScope, backend = BackendStore(platform))
+        app.signIn("1", "María", remoteAccount = true)
+        app.setPushDevice(null, "android", false)
+        runCurrent()
+        val revoked = ApiJson.parse(platform.requests.last { it.path.contains("push-installations") }.body!!)
+        assertEquals(false, revoked["authorized"])
+        assertEquals("old-token-".repeat(10), revoked["token"])
+    }
+
     @Test fun bloodDonationRefreshPersistsAndFiltersSeparatelyFromHealthAndOrgans() = runTest {
         val document = ApiJson.parse(BundledKindnessCatalog.JSON)
         val rows = document.objects("centers")

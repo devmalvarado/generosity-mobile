@@ -30,6 +30,9 @@ Route::prefix('v1')->group(function () {
         Route::post('reset-password', [AuthController::class, 'reset']);
     });
     Route::middleware(['auth:sanctum', 'verified'])->group(function () {
+        Route::post('me/notification-preferences', [\App\Http\Controllers\NotificationController::class, 'preferences']);
+        Route::post('me/push-installations/{installation}', [\App\Http\Controllers\NotificationController::class, 'register'])->whereUuid('installation');
+        Route::post('me/notifications/{notice}/read', [\App\Http\Controllers\NotificationController::class, 'read'])->whereUuid('notice');
         Route::get('me/center-applications', [\App\Http\Controllers\CenterApplicationController::class, 'index']);
         Route::post('center-applications', [\App\Http\Controllers\CenterApplicationController::class, 'store'])->middleware('throttle:center-applications');
         Route::get('center-applications/{application}', [\App\Http\Controllers\CenterApplicationController::class, 'show'])->middleware('throttle:center-application-cases')->whereUuid('application');

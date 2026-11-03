@@ -49,6 +49,8 @@ El acceso web usa cookies de sesión y protección contra solicitudes falsificad
 
 Puedes borrar cookies y almacenamiento desde tu navegador o aplicación; hacerlo puede cerrar tu sesión o eliminar borradores no enviados. Esto no borra los registros ya recibidos por el servidor. No usamos cookies publicitarias ni herramientas de seguimiento de campañas en estos recorridos.
 
+Para las alertas opcionales usamos Google Firebase Cloud Messaging y, en iOS, Apple Push Notification service. Al activarlas, el proveedor recibe el token e identificador técnico de instalación, información técnica necesaria para entregar mensajes y referencias de la cuenta, aviso y centro. El texto visible en la pantalla bloqueada es genérico. No enviamos notas privadas ni datos de beneficiarios y no habilitamos Analytics para este servicio. Puedes desactivarlas en Configuración o en los permisos del teléfono; la bandeja de avisos de tu cuenta es independiente y conserva hasta 90 días de avisos.
+
 ## 7. Conservación y cierre
 
 Conservamos los datos de cuenta mientras la relación esté activa y sean necesarios para sus finalidades. Las solicitudes de sedes se conservan durante su revisión y seguimiento; las aportaciones y sus cambios, mientras sean necesarios para cumplir compromisos, atender incidencias y acreditar la operación. El Instituto revisa la necesidad de conservación al resolver una solicitud o recibir una petición de cancelación.

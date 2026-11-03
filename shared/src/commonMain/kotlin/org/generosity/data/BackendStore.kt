@@ -136,9 +136,49 @@ class BackendStore(private val connection: AppConnection) : KindnessCenterReposi
         return NotificationPreference(nearbyCentersEnabled = json["nearby"] == true, urgentNeedsEnabled = json["urgent"] == true, remindersEnabled = json["reminders"] == true, allCategoryInterests = json["all"] == true, categoryInterests = (json["categories"] as? List<*>)?.mapNotNull { code -> CenterCategory.entries.firstOrNull { it.code == code } }?.toSet().orEmpty())
     }
 
-    fun savePreferences(userId: String?, preferences: NotificationPreference) = connection.write("preferences-${userId ?: "guest"}", ApiJson.encode(mapOf(
+    fun savePreferences(userId: String?, preferences: NotificationPreference) {
+        val values = mapOf(
         "nearby" to preferences.nearbyCentersEnabled, "urgent" to preferences.urgentNeedsEnabled, "reminders" to preferences.remindersEnabled, "all" to preferences.allCategoryInterests, "categories" to preferences.categoryInterests.map { it.code }
-    )))
+        )
+        if (userId != null) enqueue(userId, "/api/v1/me/notification-preferences", values.filterKeys { it in setOf("urgent", "all", "categories") })
+        connection.write("preferences-${userId ?: "guest"}", ApiJson.encode(values))
+    }
+
+    fun notices(userId: String?): List<InboxNotice> {
+        if (userId == null) return emptyList()
+        val raw = connection.read("account-$userId").takeIf { it.isNotEmpty() } ?: return emptyList()
+        val data = ApiJson.parse(raw)
+        require(data.objectValue("user")["id"].toString() == userId)
+        if (!data.containsKey("notices")) return emptyList()
+        val reads = queue(userId).mapNotNull { it.text("path") }.toSet()
+        return data.objectValue("notices").objects("items").map { row ->
+            val id = requireNotNull(row.text("id"))
+            InboxNotice(id, requireNotNull(row.text("eventId")), requireNotNull(row.text("centerId")), requireNotNull(row.text("needId")),
+                LocalizedText(row.objectValue("title").mapValues { it.value.toString() }), requireNotNull(row.text("createdAt")),
+                row["read"] == true || "/api/v1/me/notifications/$id/read" in reads)
+        }
+    }
+
+    suspend fun markNoticeRead(userId: String, id: String) = mutex.withLock {
+        require(notices(userId).any { it.id == id })
+        val path = "/api/v1/me/notifications/$id/read"
+        if (queue(userId).none { it.text("path") == path }) enqueue(userId, path, emptyMap())
+    }
+
+    fun pushToken(platform: String): String? = connection.read("push-installation").takeIf { it.isNotEmpty() }
+        ?.let(ApiJson::parse)?.takeIf { it.text("platform") == platform }?.text("token")
+
+    suspend fun registerPush(userId: String, device: PushDevice, locale: SupportedLocale): Boolean = mutex.withLock {
+        require(device.platform in listOf("android", "ios") && device.token.length in 20..4096)
+        val registration = connection.read("push-installation").takeIf { it.isNotEmpty() }?.let(ApiJson::parse)
+            ?: mapOf("id" to connection.newOperationId(), "secret" to connection.newOperationId())
+        // Keep the last token in protected storage to report revocation after a cold start.
+        connection.write("push-installation", ApiJson.encode(registration + mapOf("token" to device.token, "platform" to device.platform)))
+        val body = mapOf("secret" to registration.text("secret"), "token" to device.token, "platform" to device.platform,
+            "locale" to locale.code, "authorized" to device.authorized)
+        val response = request(ApiRequest("POST", "/api/v1/me/push-installations/${registration.text("id")}", ApiJson.encode(body), connection.newOperationId(), userId))
+        return@withLock ApiJson.parse(response)["deliveryConfigured"] == true
+    }
 
     private fun enqueue(userId: String, path: String, body: Map<String, Any?>) {
         val rows = queue(userId).toMutableList()

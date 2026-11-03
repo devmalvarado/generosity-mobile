@@ -14,6 +14,9 @@ Thumbs.db
 .env.*
 !.env.example
 local.properties
+google-services.json
+GoogleService-Info.plist
+*service-account*.json
 
 # Gradle, Kotlin, and JVM build output
 .gradle/

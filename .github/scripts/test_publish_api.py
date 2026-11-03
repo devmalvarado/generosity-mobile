@@ -11,6 +11,15 @@ import publish_api
 
 
 class InitialCatalogReleaseTest(unittest.TestCase):
+    def test_runtime_push_credentials_and_backups_never_enter_release(self):
+        with tempfile.TemporaryDirectory() as directory, patch.object(publish_api, 'BACKEND', Path(directory)):
+            root = Path(directory)
+            for name in ['storage/app/private/fcm-service-account.json', '.deployments/backup.sql', 'app/Jobs/SendPush.php']:
+                path = root / name
+                path.parent.mkdir(parents=True, exist_ok=True)
+                path.write_text('fixture')
+            self.assertEqual([rel for _, rel in publish_api.private_files()], ['app/Jobs/SendPush.php'])
+
     def test_import_requires_explicit_opt_in_and_stays_outside_public_root(self):
         with tempfile.TemporaryDirectory() as directory, patch.object(publish_api, 'private_files', return_value=[]):
             archive = Path(directory) / 'release.zip'

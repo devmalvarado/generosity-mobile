@@ -48,6 +48,7 @@ import org.generosity.app.GenerosityUiState
 import org.generosity.app.DeviceLocationSource
 import org.generosity.app.DiscoveryLocation
 import org.generosity.app.R
+import org.generosity.app.AndroidPush
 import org.generosity.app.ui.map.CenterMapRenderer
 import org.generosity.app.ui.map.toMapMarkers
 import org.generosity.domain.*
@@ -74,16 +75,37 @@ fun GenerosityApp(
     val locale = state.locale
     val location = locationSource?.let { rememberDiscoveryLocation(it, appState) }
     var tab by rememberSaveable { mutableStateOf(AppTab.MAP) }
+    var showInbox by rememberSaveable { mutableStateOf(false) }
+    LaunchedEffect(state.noticeDestinationId) {
+        if (state.noticeDestinationId != null) { tab = AppTab.LIST; showInbox = false }
+    }
     val mapState = rememberSaveableStateHolder()
     val direction = if (TextUtils.getLayoutDirectionFromLocale(Locale.forLanguageTag(locale.code)) == View.LAYOUT_DIRECTION_RTL)
         LayoutDirection.Rtl else LayoutDirection.Ltr
     CompositionLocalProvider(LocalLayoutDirection provides direction) {
         GenerosityTheme {
+            if (showInbox) AlertDialog(onDismissRequest = { showInbox = false },
+                title = { Text(localizedString(R.string.inbox_title, locale)) },
+                text = {
+                    LazyColumn(Modifier.heightIn(max = 480.dp)) {
+                        item { Text(localizedString(R.string.inbox_retention, locale)) }
+                        if (state.notices.isEmpty()) item { Text(localizedString(R.string.inbox_empty, locale)) }
+                        items(state.notices, key = { it.id }) { notice ->
+                            TextButton(onClick = { appState.openNotice(notice.id) }) {
+                                Text((if (notice.read) "" else "• ") + notice.title.resolve(locale), fontWeight = if (notice.read) FontWeight.Normal else FontWeight.Bold)
+                            }
+                        }
+                    }
+                }, confirmButton = { TextButton(onClick = { showInbox = false }) { Text(localizedString(R.string.inbox_close, locale)) } })
             Scaffold(
                 topBar = {
                     Surface {
                         Row(Modifier.fillMaxWidth().statusBarsPadding().padding(horizontal = GenSpace.lg, vertical = GenSpace.sm)) {
                             BrandWordmark()
+                            Spacer(Modifier.weight(1f))
+                            if (state.remoteAccount) TextButton(onClick = { showInbox = true; appState.onResume() }, modifier = Modifier.testTag("notification-inbox")) {
+                                Text(localizedString(R.string.inbox_title, locale) + " (${state.notices.count { !it.read }})")
+                            }
                         }
                     }
                 },
@@ -129,11 +151,17 @@ fun GenerosityApp(
                 }
             ) { padding ->
                 Box(Modifier.fillMaxSize().padding(padding).imePadding()) {
+                    Column {
+                    if (state.pushBanner != null) Row(verticalAlignment = Alignment.CenterVertically) {
+                        TextButton(onClick = { showInbox = true; appState.dismissPushBanner() }, modifier = Modifier.weight(1f)) { Text(localizedString(R.string.push_new, locale)) }
+                        TextButton(onClick = appState::dismissPushBanner) { Text(localizedString(R.string.inbox_close, locale)) }
+                    }
                     when (tab) {
                         AppTab.MAP -> DiscoveryScreen(state, appState, true, mapRenderer, mapState, search, location, locationSource)
                         AppTab.LIST -> DiscoveryScreen(state, appState, false, mapRenderer, mapState, search, location, locationSource)
                         AppTab.PROFILE -> ProfileScreen(state, appState, onSignIn, onSignOut, onCreate, authBusy, authFailed)
                         AppTab.SETTINGS -> SettingsScreen(state, appState, onLanguageSelected, savingLanguage, languageSaveFailed)
+                    }
                     }
                 }
             }
@@ -154,6 +182,9 @@ private fun DiscoveryScreen(
     val listState = rememberLazyListState()
     val keyboard = LocalSoftwareKeyboardController.current
     var showDetail by remember { mutableStateOf(false) }
+    LaunchedEffect(state.noticeDestinationId, showMap) {
+        if (state.noticeDestinationId != null && !showMap) { showDetail = true; appState.clearNoticeDestination() }
+    }
     var showAreaSearch by remember { mutableStateOf(false) }
     var scrollTarget by remember { mutableStateOf<String?>(null) }
     fun selectCenter(id: String, details: Boolean = false) {
@@ -467,6 +498,7 @@ private fun EmptyMessage(text: String) {
 private fun SettingsScreen(state: GenerosityUiState, appState: GenerosityAppState, onLanguageSelected: (SupportedLocale?) -> Unit, savingLanguage: Boolean, languageSaveFailed: Boolean) {
     val locale = state.locale
     val preferences = state.preferences
+    val context = LocalContext.current
     Column(Modifier.fillMaxSize().verticalScroll(rememberScrollState()).padding(GenSpace.lg), verticalArrangement = Arrangement.spacedBy(GenSpace.lg)) {
         Text(TextKey.TAB_SETTINGS.label(locale), style = MaterialTheme.typography.headlineSmall, fontWeight = FontWeight.Bold)
         Text(localizedString(R.string.language, locale), style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.SemiBold)
@@ -489,14 +521,17 @@ private fun SettingsScreen(state: GenerosityUiState, appState: GenerosityAppStat
         Surface(shape = RoundedCornerShape(GenRadius.card)) {
             Column(Modifier.padding(GenSpace.md), verticalArrangement = Arrangement.spacedBy(GenSpace.md)) {
                 NotificationToggle(TextKey.NEARBY_NOTIFICATIONS.label(locale), preferences.nearbyCentersEnabled) { appState.setPreferences(preferences.copy(nearbyCentersEnabled = it)) }
+                Text(localizedString(R.string.push_consent, locale), style = MaterialTheme.typography.bodySmall)
                 NotificationToggle(TextKey.URGENT_NOTIFICATIONS.label(locale), preferences.urgentNeedsEnabled) { appState.setPreferences(preferences.copy(urgentNeedsEnabled = it)) }
+                NotificationToggle(localizedString(R.string.push_all_categories, locale), preferences.allCategoryInterests) { appState.setPreferences(preferences.copy(allCategoryInterests = it)) }
                 NotificationToggle(TextKey.REMINDER_NOTIFICATIONS.label(locale), preferences.remindersEnabled) { appState.setPreferences(preferences.copy(remindersEnabled = it)) }
                 Text(org.generosity.usecase.NearbyAlertPolicy().settingsNotice().resolve(locale), style = MaterialTheme.typography.bodySmall)
             }
         }
         Text(localizedString(R.string.notifications_pending, locale), style = MaterialTheme.typography.bodySmall)
         if (state.syncError != null) Text(localizedString(R.string.sync_failed, locale), color = MaterialTheme.colorScheme.error)
-        PlatformPermissionActions(locale)
+        Text(localizedString(if (state.pushSyncError) R.string.push_failed else if (state.pushConfigured) R.string.push_ready else R.string.push_unavailable, locale), style = MaterialTheme.typography.bodySmall)
+        PlatformPermissionActions(locale) { AndroidPush.update(context, state.remoteAccount && preferences.urgentNeedsEnabled, appState) }
     }
 }
 

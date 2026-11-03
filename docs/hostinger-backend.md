@@ -71,7 +71,7 @@ Use hPanel Cron Jobs, since shell `crontab` is unavailable in this account. Sele
 
 The deployed private application path is `/home/u643005321/domains/api.generosity.global/private`. Keep both scripts in future releases. hPanel does not accept output-redirection characters directly, so the scripts contain the commands and redirect to private `storage/logs/queue-cron.log` and `scheduler-cron.log`. They use PHP 8.4, `umask 077` and independent `flock` locks; a competing invocation exits successfully without starting a second worker. The queue drains with `--stop-when-empty --max-time=45 --timeout=20 --tries=3 --backoff=60`. The scheduler runs existing hourly/daily auth cleanup at its defined time, not every task every minute.
 
-Mail may wait until the next cron run. Monitor mailbox quotas, failed jobs and private log growth; retry failed jobs only after fixing delivery configuration. An SMTP acceptance does not establish inbox placement. This does not implement push delivery or domain reminders. No resident daemon or supervisor is required.
+Mail may wait until the next cron run. Monitor mailbox quotas, failed jobs and private log growth; retry failed jobs only after fixing delivery configuration. An SMTP acceptance does not establish inbox placement. The same bounded queue now also processes the [urgent FCM delivery slice](push-notifications.md); domain reminders remain pending. No resident daemon or supervisor is required.
 
 ## SMTP activation evidence — 2026-11-01
 

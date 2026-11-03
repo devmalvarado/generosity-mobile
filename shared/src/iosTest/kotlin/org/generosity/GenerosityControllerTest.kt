@@ -59,7 +59,7 @@ class GenerosityControllerTest {
             ios.setLocale("es")
             runCurrent()
             assertTrue(ios.currentState.centers.isEmpty())
-            assertNull(ios.currentState.selectedCenter)
+            assertEquals("kc-children-001", ios.currentState.selectedCenter?.id) // Open details survive discovery filters.
             assertEquals(android.state.value, ios.currentState)
             android.setSearchText(" hogar ")
             ios.setSearchText(" hogar ")

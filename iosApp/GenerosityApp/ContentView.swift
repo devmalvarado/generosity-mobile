@@ -15,6 +15,9 @@ struct ContentView: View {
     @StateObject private var account: AccountSession
     @StateObject private var permissions = PermissionService()
     @State private var hasDeviceOrigin = false
+    @ObservedObject private var push = IOSPush.shared
+    @State private var tab = 0
+    @State private var showInbox = false
     init() {
         let account = AccountSession()
         let connection = IOSConnection()
@@ -31,23 +34,56 @@ struct ContentView: View {
         if !entered && !store.state.profile.isRegistered {
             WelcomeView(locale: locale, account: account, store: store, onGuest: { entered = true })
         } else {
-        TabView {
+        TabView(selection: $tab) {
             discovery(showMap: true)
                 .tabItem { Label(L10n.text(.tabMap, locale: locale), systemImage: "map") }
+                .tag(0)
             discovery(showMap: false)
                 .tabItem { Label(L10n.text(.tabList, locale: locale), systemImage: "list.bullet") }
+                .tag(1)
             ProfileView(locale: locale, state: store.state, account: account, store: store)
                 .tabItem { Label(L10n.text(.tabProfile, locale: locale), systemImage: "person") }
+                .tag(2)
             SettingsView(
-                locale: locale, saveFailed: store.state.syncError == "save_failed", permissions: permissions, languageMode: Binding(get: { store.languageMode }, set: store.setLocale),
+                store: store, locale: locale, saveFailed: store.state.syncError == "save_failed", permissions: permissions, languageMode: Binding(get: { store.languageMode }, set: store.setLocale),
                 nearbyNotifications: Binding(get: { store.state.preferences.nearbyCentersEnabled }, set: { store.setPreferences(nearby: $0, urgent: store.state.preferences.urgentNeedsEnabled, reminders: store.state.preferences.remindersEnabled) }),
                 urgentNotifications: Binding(get: { store.state.preferences.urgentNeedsEnabled }, set: { store.setPreferences(nearby: store.state.preferences.nearbyCentersEnabled, urgent: $0, reminders: store.state.preferences.remindersEnabled) }),
                 reminderNotifications: Binding(get: { store.state.preferences.remindersEnabled }, set: { store.setPreferences(nearby: store.state.preferences.nearbyCentersEnabled, urgent: store.state.preferences.urgentNeedsEnabled, reminders: $0) })
             )
             .tabItem { Label(L10n.text(.tabSettings, locale: locale), systemImage: "slider.horizontal.3") }
+                .tag(3)
         }
         }
         }
+        .sheet(isPresented: $showInbox) {
+            NavigationStack {
+                List {
+                    Text(L10n.resource("inbox_retention", locale: locale)).font(GenTypography.font(.footnote))
+                    if store.state.notices.isEmpty { Text(L10n.resource("inbox_empty", locale: locale)) }
+                    ForEach(store.state.notices, id: \.id) { notice in
+                        Button { store.openNotice(notice.id) } label: {
+                            Text((notice.read ? "" : "• ") + notice.title.resolve(locale))
+                                .fontWeight(notice.read ? .regular : .bold)
+                        }
+                    }
+                }.navigationTitle(L10n.resource("inbox_title", locale: locale))
+                .toolbar { Button(L10n.resource("inbox_close", locale: locale)) { showInbox = false } }
+            }
+        }
+        .safeAreaInset(edge: .top) {
+            if store.state.pushBanner != nil {
+                HStack {
+                    Button(L10n.resource("push_new", locale: locale)) { showInbox = true; store.dismissPushBanner() }
+                    Button(L10n.resource("inbox_close", locale: locale)) { store.dismissPushBanner() }
+                }.padding(GenSpace.sm).background(GenPalette.surface)
+            }
+        }
+        .onChange(of: store.state.noticeDestinationId) { id in if id != nil { showInbox = false; tab = 1 } }
+        .onChange(of: store.state.profile.id) { _ in updatePush(); consumePush() }
+        .onChange(of: store.state.preferences.urgentNeedsEnabled) { _ in updatePush() }
+        .onChange(of: permissions.notificationsAuthorized) { _ in updatePush() }
+        .onChange(of: push.token) { _ in updatePush() }
+        .onChange(of: push.signal) { _ in consumePush() }
         .onChange(of: store.state.profile.isRegistered) { registered in entered = registered }
         .tint(GenPalette.accent)
         .font(GenTypography.font(.body))
@@ -56,6 +92,7 @@ struct ContentView: View {
         .onChange(of: scenePhase) { phase in
             if phase == .active {
                 store.onResume()
+                updatePush()
                 if entered && !Self.demoCatalog { permissions.resumeLocation() }
                 Task { if !Self.demoCatalog { await account.restore(store: store) } }
             } else if phase == .background {
@@ -72,12 +109,18 @@ struct ContentView: View {
                 store.setDiscoveryArea(nil, preserveSelection: true)
             }
         }
-        .task { if !Self.demoCatalog { await account.restore(store: store) } }
+        .task { if !Self.demoCatalog { await account.restore(store: store); updatePush(); consumePush() } }
         .onReceive(NotificationCenter.default.publisher(for: NSLocale.currentLocaleDidChangeNotification)) { _ in
             store.refreshDeviceLanguages()
         }
     }
 
+    private func updatePush() { if !Self.demoCatalog { Task { await push.update(store: store) } } }
+    private func consumePush() {
+        guard let signal = push.signal, store.state.profile.id != nil else { return }
+        store.receivePush(accountId: signal.accountId, noticeId: signal.noticeId, open: signal.open)
+        push.signal = nil
+    }
     private func discovery(showMap: Bool) -> some View {
         NavigationStack {
             DiscoveryView(locale: locale, store: store, permissions: permissions, hasDeviceOrigin: hasDeviceOrigin,
@@ -88,7 +131,16 @@ struct ContentView: View {
             })
                 .onAppear { if !Self.demoCatalog { permissions.resumeLocation() } }
                 .navigationBarTitleDisplayMode(.inline)
-                .toolbar { ToolbarItem(placement: .principal) { BrandWordmark() } }
+                 .toolbar {
+                    ToolbarItem(placement: .principal) { BrandWordmark() }
+                    ToolbarItem(placement: .navigationBarTrailing) {
+                        if store.state.remoteAccount {
+                            Button { showInbox = true; store.onResume() } label: {
+                                Label(L10n.resource("inbox_title", locale: locale), systemImage: store.state.notices.contains { !$0.read } ? "bell.badge" : "bell")
+                            }.accessibilityIdentifier("notification-inbox")
+                        }
+                    }
+                }
                 .toolbarBackground(GenPalette.surface, for: .navigationBar)
                 .toolbarBackground(.visible, for: .navigationBar)
         }
@@ -238,6 +290,12 @@ private struct DiscoveryView: View {
             Button(L10n.resource("offer_cancel", locale: locale), role: .cancel) { }
         } message: {
             Text(L10n.resource("location_denied", locale: locale))
+        }
+        .onChange(of: store.state.noticeDestinationId) { id in
+            if id != nil && !showMap { showDetail = true; store.clearNoticeDestination() }
+        }
+        .onAppear {
+            if store.state.noticeDestinationId != nil && !showMap { showDetail = true; store.clearNoticeDestination() }
         }
         .fullScreenCover(isPresented: $showDetail) {
             NavigationStack {
@@ -691,6 +749,7 @@ private struct ProfileView: View {
 }
 
 private struct SettingsView: View {
+    @ObservedObject var store: GenerosityStore
     let locale: AppLocale
     let saveFailed: Bool
     @ObservedObject var permissions: PermissionService
@@ -716,7 +775,10 @@ private struct SettingsView: View {
                 }
                 Section {
                     Toggle(isOn: $nearbyNotifications) { settingsLabel(.nearbyNotifications) }
+                    Text(L10n.resource("push_consent", locale: locale)).font(GenTypography.font(.footnote))
                     Toggle(isOn: $urgentNotifications) { settingsLabel(.urgentNotifications) }
+                    Toggle(L10n.resource("push_all_categories", locale: locale), isOn: Binding(get: { store.state.preferences.allCategoryInterests }, set: store.setAllNotificationCategories))
+                    Text(L10n.resource(store.state.pushSyncError ? "push_failed" : (store.state.pushConfigured ? "push_ready" : "push_unavailable"), locale: locale)).font(GenTypography.font(.footnote))
                     Toggle(isOn: $reminderNotifications) { settingsLabel(.reminderNotifications) }
                     Text(L10n.resource("nearby_foreground_only", locale: locale)).font(GenTypography.font(.footnote))
                     Text(L10n.resource("permissions_explanation", locale: locale)).font(GenTypography.font(.footnote))

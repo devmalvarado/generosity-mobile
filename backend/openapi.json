@@ -1638,6 +1638,249 @@
           }
         ]
       }
+    },
+    "/me/notification-preferences": {
+      "post": {
+        "summary": "Save explicit urgent notice consent and category interests",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "Idempotency-Key",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "urgent",
+                  "all",
+                  "categories"
+                ],
+                "properties": {
+                  "urgent": {
+                    "type": "boolean"
+                  },
+                  "all": {
+                    "type": "boolean"
+                  },
+                  "categories": {
+                    "type": "array",
+                    "maxItems": 30,
+                    "items": {
+                      "type": "string",
+                      "pattern": "^[a-z_]+$",
+                      "maxLength": 60
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Saved for the authenticated account"
+          },
+          "401": {
+            "description": "Authentication required"
+          },
+          "403": {
+            "description": "Verified account and mobile token required for installation registration"
+          },
+          "409": {
+            "description": "Installation ownership or idempotency conflict"
+          },
+          "422": {
+            "description": "Invalid input"
+          }
+        }
+      }
+    },
+    "/me/push-installations/{installation}": {
+      "post": {
+        "summary": "Bind or rotate an encrypted FCM registration for this installation and current mobile session",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "installation",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "Idempotency-Key",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "token",
+                  "secret",
+                  "platform",
+                  "locale",
+                  "authorized"
+                ],
+                "properties": {
+                  "token": {
+                    "type": "string",
+                    "minLength": 20,
+                    "maxLength": 4096,
+                    "writeOnly": true
+                  },
+                  "secret": {
+                    "type": "string",
+                    "format": "uuid",
+                    "writeOnly": true
+                  },
+                  "platform": {
+                    "enum": [
+                      "android",
+                      "ios"
+                    ]
+                  },
+                  "locale": {
+                    "enum": [
+                      "en",
+                      "es"
+                    ]
+                  },
+                  "authorized": {
+                    "type": "boolean"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Registration saved; provider readiness is not device delivery",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "registered",
+                    "deliveryConfigured"
+                  ],
+                  "properties": {
+                    "registered": {
+                      "type": "boolean"
+                    },
+                    "deliveryConfigured": {
+                      "type": "boolean"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authentication required"
+          },
+          "403": {
+            "description": "Verified account and mobile token required for installation registration"
+          },
+          "409": {
+            "description": "Installation ownership or idempotency conflict"
+          },
+          "422": {
+            "description": "Invalid input"
+          }
+        }
+      }
+    },
+    "/me/notifications/{notice}/read": {
+      "post": {
+        "summary": "Mark an owned notice read; idempotent and independent from push receipt",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "notice",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "Idempotency-Key",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [],
+                "properties": {}
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Saved for the authenticated account"
+          },
+          "401": {
+            "description": "Authentication required"
+          },
+          "403": {
+            "description": "Verified account and mobile token required for installation registration"
+          },
+          "409": {
+            "description": "Installation ownership or idempotency conflict"
+          },
+          "422": {
+            "description": "Invalid input"
+          },
+          "404": {
+            "description": "Notice not owned or no longer retained"
+          }
+        }
+      }
     }
   },
   "components": {
@@ -3080,6 +3323,46 @@
           "updatedAt"
         ]
       },
+      "InboxNotice": {
+        "type": "object",
+        "required": [
+          "id",
+          "eventId",
+          "centerId",
+          "needId",
+          "title",
+          "createdAt",
+          "read"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "eventId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "centerId": {
+            "type": "string"
+          },
+          "needId": {
+            "type": "string"
+          },
+          "title": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "string"
+            }
+          },
+          "createdAt": {
+            "type": "string"
+          },
+          "read": {
+            "type": "boolean"
+          }
+        }
+      },
       "AccountSnapshot": {
         "type": "object",
         "properties": {
@@ -3119,13 +3402,38 @@
           "updatedAt": {
             "type": "string",
             "format": "date-time"
+          },
+          "notices": {
+            "type": "object",
+            "required": [
+              "items",
+              "unread",
+              "hasMore"
+            ],
+            "properties": {
+              "items": {
+                "type": "array",
+                "maxItems": 100,
+                "items": {
+                  "$ref": "#/components/schemas/InboxNotice"
+                }
+              },
+              "unread": {
+                "type": "integer",
+                "minimum": 0
+              },
+              "hasMore": {
+                "type": "boolean"
+              }
+            }
           }
         },
         "required": [
           "user",
           "contributions",
           "visits",
-          "updatedAt"
+          "updatedAt",
+          "notices"
         ]
       },
       "AssignedCenters": {

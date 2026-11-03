@@ -79,6 +79,18 @@ The backend SHALL deliver opted-in urgent-need alerts for current needs matching
 - **WHEN** the delivery service reports an invalid registration
 - **THEN** the backend deactivates it rather than retrying indefinitely
 
+#### Scenario: Quantity-only edit
+- **WHEN** a center changes the quantity of an already published urgent need without a new urgency transition
+- **THEN** catalog synchronization reflects the change without creating another urgent publication notification
+
+#### Scenario: Permission revoked before a cold start
+- **WHEN** OS notification permission was revoked while the app was not running
+- **THEN** the next authenticated refresh disables the existing installation using its protected saved token without requiring new Firebase registration
+
+#### Scenario: iOS push prerequisites are unavailable
+- **WHEN** institutional signing, an APNs credential or a matching push entitlement is absent
+- **THEN** phone delivery remains inactive and the owned inbox stays usable without claiming APNs delivery
+
 ### Requirement: Notification Destination Safety
 Opening an alert SHALL resolve its referenced center, need or reminder under the current session. Deleted data SHALL show an unavailable state; private destinations SHALL require the owning account. Alert text SHALL not include private notes or unnecessary personal data on the lock screen.
 

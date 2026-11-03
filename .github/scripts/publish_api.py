@@ -25,6 +25,8 @@ ORIGIN = "https://api.generosity.global"
 SKIP_DIRS = {"tests", "public", "node_modules", ".git"}
 SKIP_NAMES = {".env", ".env.example", ".env.backup", ".env.production", ".phpunit.result.cache"}
 RUNTIME_PREFIXES = (
+    ".deployments/",
+    "storage/app/private/",
     "storage/logs/",
     "storage/framework/cache/data/",
     "storage/framework/sessions/",
