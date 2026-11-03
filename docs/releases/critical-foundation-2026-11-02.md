@@ -140,6 +140,45 @@ checkpoint is `.deployments/demo-needs-20261102/catalog-before.json` under the
 API domain directory. To stop displaying the request, close this specific need;
 do not restore the old catalog over newer activity or delete contribution history.
 
+## Android needs acceptance — 2026-11-02
+
+`NeedCatalogSyncTest` passed **3/3 instrumented tests, zero failures/skips**, on
+the Android 14 Google APIs ARM64 emulator. The two deterministic Spanish/English
+tests use controlled API responses through the real shared `BackendStore` and
+Compose screens: draft/closed absence, publication with 10 remaining, manual
+Refresh, resume updating an already-open detail to 20 and Urgent, failed refresh
+preserving the cached need, and closure removing it from both UI and cache.
+
+The explicitly opted-in live test uses `AndroidConnection` HTTPS and encrypted
+storage against the published API. It searched DEMO, opened its center detail,
+asserted the returned need title/count in Compose, and verified reloading the
+same need from the protected cache. The public snapshot still had need
+`ca6be1ba-7d4e-45fe-8db6-1db5bacbd985`, 20 required, zero committed, urgent.
+The live test only reads public server data; it does not publish or edit needs.
+
+Reproduce the three tests with the normal Android SDK/JDK environment:
+
+```sh
+./gradlew :androidApp:connectedDebugAndroidTest \
+  -Pandroid.testInstrumentationRunnerArguments.class=org.generosity.app.NeedCatalogSyncTest \
+  -Pandroid.testInstrumentationRunnerArguments.liveCatalog=true --offline
+```
+
+Omit `liveCatalog=true` for offline-independent regression runs (the live test
+is then skipped). `--offline` applies to Gradle dependencies; the opted-in live
+test still requires network access and the published DEMO need. Results are in
+`androidApp/build/outputs/androidTest-results/connected/debug/`.
+
+The existing `build/releases/Generosity-0.1.0-build2.apk` exactly matches the
+tested application APK, SHA-256
+`9c183ab1cf643cbe211636ad371c68db4e2525910cae8dae5dd848d168deafae`.
+No application runtime code or production settings changed for these checks.
+Physical Android, true activity/process restart, background push delivery and
+the complete native contribution/fulfillment journey remain separate acceptance
+items. Android also currently displays the remaining quantity as generic units.
+The selected in-app inbox/FCM/APNs design is documented in the foundation and
+reference-product OpenSpec changes, with delivery tasks still unchecked.
+
 ## Recovery
 
 The exact pre-release private backup is

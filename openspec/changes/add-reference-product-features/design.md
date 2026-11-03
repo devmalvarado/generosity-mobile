@@ -161,7 +161,7 @@ points are neither money nor proof of official center verification.
 
 ### Inbox and Event Delivery
 
-Use the existing durable event outbox to derive inbox records and separately
+Use the foundation's planned durable event outbox to derive inbox records and separately
 attempt opted-in push delivery. In-app transactional notices do not depend on
 OS push permission; optional urgency/proximity/reminder categories still honor
 their preferences. Use explicit event-notification preference for event push.
@@ -173,6 +173,13 @@ inbox row does not remove its contribution/payment record. Query read counts
 from retained authorized rows. Deleting/retrying events must not create negative
 badges or leak private notices on account switch. Older links resolve current
 cancelled/deleted target state rather than resurrecting actions.
+
+The foundation's **In-App Notices and Phone Push — 2026-11-02** decision selects
+FCM HTTP v1 for Android and iOS (through APNs), driven by Laravel/MySQL and the
+bounded Hostinger cron worker. This inbox is the shared history for those events;
+foreground banners and OS alerts must reconcile the same stable event IDs.
+Provider/OS delivery failure must not remove an authorized inbox item. This is
+pending implementation, not evidence of an existing notification outbox.
 
 ### Volunteer Events and Attendance
 

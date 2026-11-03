@@ -205,6 +205,7 @@ complete the separate forms/history, real clock, persistence or backend tasks.
 - [x] 8.11 Implement configurable 500 m nearby range and 24 h per-center cooldown plus explicit category/All interests; test boundaries, stale data and unsupported background-state messaging.
 - [ ] 8.12 Deliver eligible nearby and urgent alerts on Android within platform limits, with opt-out tests.
 - [ ] 8.13 Deliver eligible nearby and urgent alerts on iOS within platform limits, with opt-out tests.
+- [ ] 8.14 Configure institutional Firebase messaging for Android and iOS (FCM → APNs), private HTTP v1 server credentials and signed iOS push entitlements; verify actual foreground/background/locked-device delivery, token rotation and revoked permissions. Maps/OAuth credentials are not messaging credentials. Follow the 2026-11-02 delivery design; keep unavailable providers visibly inactive.
 
 ## 9. Visit Signals and Verification Boundary
 
@@ -252,7 +253,7 @@ The Kotlin-specific evidence remains available on the preserved mockup branch.
 - [ ] 12.2 Implement shared durable operation dispatch and reconciliation; test lost responses, replays with changed payloads, rejection rollback and account-switch suspension.
 - [ ] 12.3 Connect Android to catalog/account sync; test offline bundle/cache, stale indicators, full resync and preserved history for removed catalog items.
 - [ ] 12.4 Connect iOS to the same sync contracts; test equivalent offline/reconnect outcomes and cross-device history updates.
-- [ ] 12.5 Add durable backend notification events and provider delivery worker; test opt-in/category/expiry checks, transient retry, per-installation deduplication and invalid-token retirement.
+- [ ] 12.5 Add transactional domain outbox and idempotent owned-inbox/FCM delivery jobs using the bounded Hostinger database queue; test opt-in/category/expiry checks, publication vs quantity-only edits, transient retry, per-installation deduplication, invalid-token retirement and provider acceptance distinct from user receipt. Coordinate inbox APIs with reference-product task 9.1.
 - [ ] 12.6 Document sync/alert conflict and retry semantics; verify the documented offline preference behavior using an interrupted-network integration test.
 
 ## 13. Contribution Lifecycle
@@ -295,6 +296,15 @@ were unchanged. The DEMO remains published for owner use. This does not close
 15.1 (native offers/fulfillment/history and Android remain), 15.2, or 15.3:
 publishing a need still sends no push notification. See the
 [published demo evidence](../../../docs/releases/critical-foundation-2026-11-02.md#owner-authorized-published-demo--2026-11-02).
+
+15.1 Android publication follow-up (2026-11-02): `NeedCatalogSyncTest` passed
+3/3 on the Android 14 Google APIs emulator. Spanish/English controlled responses
+cover publish/quantity/urgency/close, manual Refresh, resume updating open detail
+and failed-refresh cache preservation. The opt-in live test used Android HTTPS
+and encrypted storage to display the same published DEMO need and restore it
+from cache. Build 2's APK is unchanged. This completes the emulator publication
+check only; physical Android, native offers/fulfillment/history and push delivery
+remain open. See [Android evidence](../../../docs/releases/critical-foundation-2026-11-02.md#android-needs-acceptance--2026-11-02).
 
 ## 16. Mobile-First Center Web Portal
 

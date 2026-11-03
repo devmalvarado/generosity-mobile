@@ -64,6 +64,7 @@
 - [ ] 9.2 Add shared local/remote notice reconciliation; test local-only proximity notices, guest/account separation, pending reads and private-state clearing at sign-out.
 - [ ] 9.3 Implement Android bell/list/unread/target actions; UI-test denied push permission, offline badges and removed/cancelled targets.
 - [ ] 9.4 Implement equivalent iOS inbox; verify cross-device read state, safe private targets and no implicit push/location opt-in.
+- [ ] 9.5 Reconcile FCM/APNs receipt with the same owned inbox and current target data; test one foreground banner per event, duplicate retries, missed-push recovery on resume, no implicit read acknowledgement, and private-target rejection after account switch. Coordinate provider setup with foundation task 8.14; verify OS alerts separately from in-app notices.
 
 ## 10. External Donations
 

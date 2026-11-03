@@ -30,3 +30,18 @@ Notice navigation SHALL re-resolve current public/private targets and enforce ow
 #### Scenario: Open a cancelled event notice
 - **WHEN** an event linked by a notice has been cancelled
 - **THEN** the app shows cancellation and current enrollment state without offering a new reservation or exposing another attendee's data
+
+### Requirement: Common Event Across In-App and System Presentation
+Eligible backend events SHALL share stable IDs across owned inbox items, foreground banners and OS alerts. Clients SHALL reconcile current data on receipt/resume/refresh without duplicating in-app notices. Provider submission or OS presentation SHALL NOT mark notices read. Payloads SHALL omit beneficiary data and private notes; targets SHALL resolve allowlisted entity IDs under the current session.
+
+#### Scenario: Retry or foreground receipt
+- **WHEN** the same event arrives repeatedly while the app is foregrounded
+- **THEN** the inbox retains one item and the app does not append duplicate banners or increment unread counts for that event
+
+#### Scenario: Missed phone notification
+- **WHEN** the OS denies or delays a push and the user later resumes the app
+- **THEN** synchronization retrieves the authorized notice and current target state without claiming that the phone displayed the alert
+
+#### Scenario: Notification belongs to the previous account
+- **WHEN** a previously delivered notification is opened after an account switch
+- **THEN** the app resolves its target under the current account and does not reveal the previous account's private notice or target

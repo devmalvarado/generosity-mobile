@@ -545,6 +545,63 @@ lock-screen text. Offline preference updates take effect locally immediately,
 while the UI shows remote synchronization pending. Already-in-flight pushes are
 not claimed to be retractable. No provider-specific delivery guarantee is promised.
 
+### In-App Notices and Phone Push — 2026-11-02
+
+Status: selected delivery design, **not implemented or activated**. Catalog
+refresh already runs at launch/resume and explicit Refresh on both platforms;
+it does not provide a foreground event stream or a phone notification.
+Reuse the owned inbox/read-state contract in
+`add-reference-product-features/specs/notification-inbox/spec.md` rather than
+creating separate histories for banners and operating-system notifications.
+
+Keep Laravel/MySQL authoritative. Commit the domain change and a durable outbox
+event together. An idempotent fan-out job records one inbox item per account/event
+and eligible pending deliveries per installation. Inbox availability does not
+depend on push permission or provider success. Initial urgent-need events cover
+publication while urgent and a nonurgent-to-urgent transition; quantity-only edits
+refresh catalog data without sending an alert for every edit. Preferences still
+govern optional notices; account-owned contribution transitions are transactional.
+
+Use Firebase Cloud Messaging HTTP v1 as the server delivery gateway: Android via
+FCM, iOS via FCM and Apple's APNs. This does not require Firestore, Firebase Auth
+or moving the PHP backend. Configure Firebase under the institute's existing
+Google project, register both app identifiers, store least-privilege server
+credentials privately, and add the native messaging SDKs. The Maps API key and
+Google OAuth client do not authorize messaging. iOS also requires the Apple
+Developer push capability, an APNs key uploaded to Firebase, and signed builds
+with the appropriate entitlement/environment; the free personal signing setup
+does not complete this configuration.
+
+Use the existing Hostinger database queue and bounded, locked minute-based cron
+worker. Bound network timeouts, retry transient failures with backoff, retire
+invalid tokens, and recheck account/permission/preferences/current need before
+each attempt. Minute-based pickup plus provider/OS scheduling is delayed delivery,
+not an immediate or guaranteed alert. Provider acceptance is not proof of display
+or reading. Event IDs deduplicate inbox items; stable notification identifiers
+and client reconciliation limit repeated presentation after retries, without
+promising exactly-once network delivery.
+
+On foreground receipt, reconcile the inbox and referenced catalog/account state,
+then present at most one in-app banner for that event, suppressing the OS banner
+where the chosen SDK permits. In background/locked state the OS may show the
+opted-in alert; tapping it resolves an allowlisted entity ID under the current
+session and fetches current state. Resume and explicit Refresh recover missed
+events even when push is denied, delayed or lost. Payloads contain only an event
+ID, target type/ID and minimal localized public text, never beneficiary details,
+private contribution notes, credentials or arbitrary navigation URLs. Logout,
+account deletion and token rotation revoke/rebind installation ownership; guests
+retain only local public notices. No continuous GPS trail is uploaded.
+
+Implementation order: durable inbox/outbox and APIs, Android FCM and foreground
+reconciliation, then iOS FCM/APNs after institutional signing is available. Verify
+foreground/background/locked/terminated states, revoked permission, token rotation,
+account switching, expired/closed targets and retry duplicates on both platforms.
+Physical-device delivery remains a separate acceptance gate.
+
+Primary references: [FCM HTTP v1](https://firebase.google.com/docs/cloud-messaging/send/v1-api),
+[FCM Android receipt](https://firebase.google.com/docs/cloud-messaging/android/receive-messages),
+[FCM Apple/APNs setup](https://firebase.google.com/docs/cloud-messaging/ios/get-started).
+
 ## Implementation Selections
 
 PHP/Laravel, MySQL/MariaDB and the first-party identity provider are selected
