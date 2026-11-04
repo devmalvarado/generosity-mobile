@@ -33,8 +33,13 @@ context: |
   with provider selection still open. Nothing authorizes production charges.
   On 2026-11-01 the user specified permanent account deletion: immediate
   irreversible access closure plus personal-data purge/anonymization and limited
-  justified retention, not a full-profile soft delete. Legal identity/contact
-  fields remain pending by request in docs/legal/terms-and-conditions.es.md.
+  justified retention, not a full-profile soft delete. The owner subsequently
+  accepted an operator-assisted permanent access block as the initial scope;
+  it is implemented, but does not complete self-service deletion or erasure.
+  Institute identity, adult-only terms/privacy and versioned registration
+  acceptance are published. The temporary working contact is
+  notificaciones@generosity.global, handled by institute staff. Separate support,
+  legal and privacy mailboxes and independent policy review remain pending.
   The institute would receive money in its Mexican BBVA account and then
   distribute it to centers. SAT donee authorization is absent or pending.
   Keep payments and deductible-receipt claims gated pending review of the actual
@@ -99,8 +104,13 @@ context: |
     not required for sign-in/discovery or beneficiaries. Creating groups and events
     requires verified mobile contact; the delivery provider remains undecided.
     Hostinger publishes the API at api.generosity.global, including catalog/account
-    sync. Hostinger SMTP and the queue/scheduler cron are active. Provider
-    credentials and the live center workspace are not a completed deployment.
+    sync. Hostinger SMTP and the queue/scheduler cron are active. Google OAuth
+    is configured in Testing mode with recorded web and physical-iOS acceptance;
+    Android and remaining authorization/linking/expiry cases are still open.
+    The center workspace and owner-authorized demo publication are live. Apple
+    sign-in and APNs activation require institutional Apple credentials/signing.
+    Android urgent-need FCM delivery has emulator evidence; physical delivery,
+    proximity alerts and reminders remain separate acceptance gates.
     Kotlin service mockup is preserved on codex/mockup-backend-kotlin at 36eab89.
   - SwiftUI for the native iOS user interface.
   - Jetpack Compose / Kotlin Compose for the native Android user interface.
@@ -109,6 +119,16 @@ context: |
     shared domain/state/repositories. MapLibre itself is not installed yet.
   - Platform-specific adapters for maps, location permissions, notifications,
     authentication, and future payment handoff.
+
+  Current local increments (2026-11-04): add-release-channels-and-feature-controls
+  separates production/preview identities and adds audited backend flags. Its
+  preview infrastructure and deployment/acceptance tasks remain open.
+  add-native-design-preview implements 34 SwiftUI/Compose routes behind those
+  flags. Supported destinations reuse real shared catalog/account/outbox/inbox
+  state; unsupported destinations retain isolated fixtures. Neither fixtures nor
+  a successful build complete their underlying product specs. Public-web
+  participation has partial local API/browser work; its migration, operational
+  configuration, mobile contracts and end-to-end acceptance remain pending.
 
   Product constraints:
   - Product name is "Generosity"; do not use "Generosity.Global" unless a

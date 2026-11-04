@@ -8,14 +8,16 @@ IDs are stable references, not the execution order; follow the dependency
 sequence in [spec-index.md](spec-index.md).
 
 
-2026-10-31 integration update: catalog/account snapshots, protected native
-cache/outbox, entered contribution forms, owned lifecycle actions, durable visits,
-local preferences, safe contact actions, welcome routing and an authenticated
-center workspace are implemented. The API sync increment is published (`1adf57a`);
-the center workspace is not on the live landing until its portal files reach
-`main`. See [verification and remaining acceptance](../../../docs/testing/backend-integration.md).
-Tasks stay unchecked unless every acceptance condition is evidenced. No change
-is ready to archive.
+2026-11-04 reconciliation: both native roots use the PHP catalog/account APIs,
+protected cache/outbox, entered forms and server history. The center workspace,
+Google web/iOS entry and Android urgent FCM have recorded published checkpoints.
+The new connected design, release controls and partial-goods progress have local
+evidence but retain their deployment/device gates. See
+[the current implementation summary](implementation-status.md) and
+[closeout evidence](../../../docs/testing/openspec-closeout-2026-11-04.md).
+Tasks remain open when any required behavior or acceptance is missing; local
+fixtures and builds do not establish live multi-client acceptance. No foundation
+archive is appropriate.
 
 ## 1. Project Foundation
 
@@ -46,7 +48,7 @@ is ready to archive.
 - [x] 4.3 Add Android user-settings choices system/en/es and persist installation mode; verify first launch, regional/ordered device languages, explicit override, restart and return to system mode.
 - [x] 4.4 Map shared domain label codes for categories, help methods, verification states, notification types, and empty states to localized platform strings.
 - [x] 4.5 Add localization coverage checks or tests to prevent missing Spanish or English strings for app-controlled text.
-- [ ] 4.6 Add the equivalent iOS settings through shared state; verify device changes, guest access, restart and no language flash on welcome.
+- [x] 4.6 Add the equivalent iOS settings through shared state; verify device changes, guest access, restart and no language flash on welcome.
 - [ ] 4.7 Localize contribution errors and notification text through app resources; test live language propagation to search/sort, dates and schedules without losing entered form data.
 
 Language implementation update (2026-10-30): native settings now persist
@@ -54,11 +56,17 @@ system/en/es per installation, resolving ordered device languages in shared
 Kotlin before the first screen. Android handles locale configuration/resume
 without resetting its search; iOS now links SharedBridge for language state
 and owns one cancellable observer. Android storage/recreation/search tests and
-shared fallback/account-isolation/stale-query tests pass. Task 4.6 remains open
-until its welcome-screen acceptance can run: welcome itself is not implemented.
+shared fallback/account-isolation/stale-query tests pass. Welcome and iOS language
+settings are now implemented; the 2026-11-04 reconciliation records their current
+acceptance separately from this historical checkpoint.
 Task 4.7 remains open for errors, dates and scheduled/remote notifications;
 search/sort propagation is only part of that task. This language slice did not
 replace iOS sample discovery; the later task 5.4 update records that integration.
+
+4.6 acceptance (2026-11-04): synchronous shared language resolution, ordered
+device languages, fallback, persisted override/restart/device changes and
+bilingual welcome/guest restart passed on the iOS 27 simulator. See
+[closeout evidence](../../../docs/testing/openspec-closeout-2026-11-04.md).
 
 ## 5. Discovery Experience
 
@@ -177,7 +185,7 @@ complete the separate forms/history, real clock, persistence or backend tasks.
 - [ ] 7.5 Verify registered-user empty history states on Android and iOS; current UI tests cover anonymous users only.
 - [ ] 7.6 Add iOS shared history/impact with units and provenance; test the same loading/empty/offline/error and no-fabricated-totals cases as Android.
 - [ ] 7.7 Add iOS personal-help forms; verify entered values, self-reported labels and field validation in UI tests.
-- [ ] 7.8 Document the selected identity provider and account/session contract, including registration, recovery, required verification and backend validation; review against user-authentication scenarios.
+- [x] 7.8 Document the selected identity provider and account/session contract, including registration, recovery, required verification and backend validation; review against user-authentication scenarios.
 - [ ] 7.9 Integrate Android real registration/sign-in/renewal/sign-out/recovery; test cancellation, expiry, protected credential storage and absence of demo identity fallback.
 - [ ] 7.10 Integrate the equivalent iOS identity flow; test cancellation, expiry, protected credential storage and shared account state.
 - [ ] 7.11 Add Android durable private stores/outbox and public cache; test restart, migration, save failure, sign-out suspension and account isolation.
@@ -318,9 +326,9 @@ the complete notification acceptance matrix. See [push evidence](../../../docs/r
 
 ## 16. Mobile-First Center Web Portal
 
-- [ ] 16.1 Review and consolidate the provided landing source/assets into canonical `portal/` without deleting the PoC; document asset provenance, local preview/test commands and browser deployment/session choices without adding an unnecessary UI framework.
-- [ ] 16.2 Replace false submission/review/payment claims and fabricated public metrics with real data, explicit samples or unavailable states; test that disconnected forms preserve input and never report acceptance, and public center entry routes to sign-in.
-- [ ] 16.3 Rework landing/navigation/form CSS from narrow-screen defaults with wider enhancements; test shrinkable inputs, long labels, wrapping, hidden menu/filter items and 44-pixel primary touch targets.
+- [x] 16.1 Review and consolidate the provided landing source/assets into canonical `portal/` without deleting the PoC; document asset provenance, local preview/test commands and browser deployment/session choices without adding an unnecessary UI framework.
+- [x] 16.2 Replace false submission/review/payment claims and fabricated public metrics with real data, explicit samples or unavailable states; test that disconnected forms preserve input and never report acceptance, and public center entry routes to sign-in.
+- [x] 16.3 Rework landing/navigation/form CSS from narrow-screen defaults with wider enhancements; test shrinkable inputs, long labels, wrapping, hidden menu/filter items and 44-pixel primary touch targets.
 - [ ] 16.4 Connect provider-backed staff sign-in, assigned-center selection and sign-out; test no-assignment, role revocation, private-view clearing and session renewal without leaking or automatically submitting another account's work.
 - [ ] 16.5 Implement center-scoped backend draft/create/publish/edit/close endpoints and audit events; test payload/date validation, private drafts, restart durability, idempotent publication, version conflicts and closing without cancelling accepted contributions.
 - [ ] 16.6 Integrate staff writes with public catalog revisions and urgent events; test atomic capacity checks, forbidden unit/method changes, import source ownership and stale-import rejection without losing center-managed needs.
@@ -329,8 +337,15 @@ the complete notification acceptance matrix. See [push evidence](../../../docs/r
 - [ ] 16.9 Connect paginated contribution list/detail and permitted confirmation/fulfillment actions; test donor-cancellation races, minimal donor disclosure and matching native history/impact.
 - [ ] 16.10 Add Spanish/English web resources and browser-local system/en/es settings; test ordered language fallback, persisted override, localized errors/dates, keyboard navigation, screen-reader labels and focus restoration.
 - [ ] 16.11 Add browser acceptance tests and screenshots at 320/360/390/768/1280 CSS pixels in Chromium and WebKit; assert no horizontal page overflow, no false success and functional menu/forms, then record 200-percent text and real Safari/Chrome virtual-keyboard checks.
-- [ ] 16.12 Test direct API cross-center denial, public draft/private-field exclusion, script-content rendering, CSRF/origin protection and revoked sessions; document unresolved failures as release blockers rather than treating browser-only validation as authorization.
+- [x] 16.12 Test direct API cross-center denial, public draft/private-field exclusion, script-content rendering, CSRF/origin protection and revoked sessions; document unresolved failures as release blockers rather than treating browser-only validation as authorization.
 - [ ] 16.13 Serve the landing's center entry at `/kindness-center`; verify help entry does not open it, an unassigned account sees no publishing controls, and `kidness-center` is not an alias.
+
+16.1–16.3 and 16.12 acceptance (2026-11-04): canonical-source/provenance review,
+111 passing browser cases, and the final 119-test PHP suite. New real-cookie
+tests run production CSRF middleware, reject missing/invalid tokens, deny foreign
+origin and revoked-session staff writes, and verify domain data is unchanged.
+Existing tests cover cross-center denial, public/private separation and escaped
+rendering. See [closeout evidence](../../../docs/testing/openspec-closeout-2026-11-04.md).
 
 ## 17. Native Visual Alignment
 

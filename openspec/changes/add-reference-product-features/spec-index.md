@@ -1,8 +1,11 @@
 # Reference Product Features
 
 Planning date: 2026-10-25. This follow-up adds **10 capability specs**, separate
-from the foundation's **16**. All new tasks are pending. Structural validation
-does not mean the backend, native features or payments are implemented.
+from the foundation's **16**. Task 9.6 closes the initial urgent-inbox subset;
+the full feature tasks remain open. Connected native discovery/needs/account
+layouts and local participation APIs provide partial progress, not completion
+of the feed, events, favorites, gamification or payments. Structural validation
+does not certify implementation or deployment; consult tasks.md and its evidence.
 
 ## Image Coverage
 

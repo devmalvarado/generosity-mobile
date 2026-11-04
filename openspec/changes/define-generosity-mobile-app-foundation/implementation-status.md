@@ -1,4 +1,58 @@
-# Foundation Implementation Audit
+# Foundation implementation status
+
+## Current reconciliation — 2026-11-04
+
+This section and [tasks.md](tasks.md) are the current status. The dated snapshots
+below are historical evidence and can contain superseded implementation claims.
+See [this reconciliation's checks and task decisions](../../../docs/testing/openspec-closeout-2026-11-04.md).
+Checked tasks certify only their stated scope; unchecked tasks can contain working
+code while retaining missing behavior or acceptance. Do not infer completion from
+artifact presence, a screen, a build or strict structural validation.
+
+| Area | Implemented and evidenced | Remaining foundation work |
+| --- | --- | --- |
+| Shared/native integration | Both native roots use SharedBridge/shared Kotlin, real clocks, PHP catalog/account snapshots, protected account-bound storage and durable outbox. The new design reuses these connections. | Full sync cursors/tombstones, store migration/failure recovery, profile updates, rejected-draft correction and complete cross-device acceptance. |
+| Catalog and maps | Imported catalog and blood category, current/manual origins, Google Maps/MapKit, synchronized card/pin/detail selection and external map actions. Latest recorded release has 171 centers. | Import ownership/removals, Google failure/recovery acceptance, iOS lookup error cases, contact-handler acceptance and full directory rendering/editing. |
+| Contributions | Entered goods/time/personal forms, authoritative lifecycle, atomic reservation, cancellation, center fulfillment and self-reported provenance. Partial-goods progress is tested locally. | Native lifecycle/empty-state/unit-display coverage, editable rejected drafts, and deployment/device acceptance for progress. Monetary goals are separately gated. |
+| Identity and legal | Hosted registration/recovery/verification, native PKCE, protected sessions, Google web/physical-iOS checkpoints, published adult-only terms/privacy and operator access closure. | Remaining Android/native email/provider cases, Apple activation, Facebook, verified mobile contact, self-service deletion/erasure, unlinking and independent policy review. |
+| Notifications and visits | Owned urgent inbox, durable reads/preferences/visits, server outbox and actual Android emulator FCM receipt. | Reminder CRUD/scheduling, proximity alerts, explicit pending/received visit UI, signed iOS APNs and physical locked/terminated delivery. |
+| Center portal | Canonical static source and published assigned-center workspace with needs/contribution operations; public intake/tracker. | Session-expiry draft recovery, complete authoring/preview/audit/conflict UX, import authority, browser route, accessibility and full native-to-center acceptance. |
+| Design and localization | Central brand/tokens, ES/EN system/override settings, native themes, 34 native design routes and supported service bindings. | Complete language/error/date/form matrix, welcome illustration/legal actions and full screen-reader/size/device acceptance. Unsupported design destinations remain fixtures. |
+
+## Local work versus release
+
+- The API, center workspace, Google entry, SMTP/cron and urgent Android messaging
+  have dated release evidence. The catalog count above is a recorded checkpoint,
+  not a new production query.
+- Feature controls, isolated preview builds, connected design activation and
+  partial-progress distribution retain open deployment tasks. A separate preview
+  API/database/credentials has not been provisioned. The last recorded public
+  `/api/v1/features` probe returned 404 on 2026-11-04.
+- Public web discovery and participation APIs are partial local increments;
+  event/meal/campaign/assisted services are not a deployed, accepted product flow.
+- Apple membership/signing, phone delivery, authorized reviewers and a real-center
+  pilot remain external inputs. The owner-authorized DEMO center is not that pilot.
+- The initial account access-block flag satisfies the owner's temporary scope;
+  it does not satisfy the separate permanent-erasure or store-deletion tasks.
+
+## Archive gate
+
+The foundation remains active. Complete each remaining task and its normative
+scenarios, reconcile main/delta requirements and run strict validation before
+archive. Completed local increments must not silently remove deployment,
+accessibility, provider or data-retention acceptance criteria.
+
+<details>
+<summary>Historical checkpoints through 2026-11-03 (superseded where noted above)</summary>
+
+## Release controls follow-up — 2026-11-03
+
+The active [release channels and feature controls](../add-release-channels-and-feature-controls/proposal.md)
+change adds side-by-side preview builds and audited creation/publication/progress
+flags around existing functionality. It does not mark unfinished foundation work
+implemented or replace center roles. Preview hosting/provider setup and live
+acceptance remain open in that change; see `docs/release-channels.md`.
+
 
 ## Android current-location discovery — 2026-11-02
 
@@ -452,3 +506,6 @@ The [visual reference](../../../docs/design-reference.md) is recorded
 separately. Welcome belongs to this foundation; ratings, rewards, events
 and payments have their own active changes and remain unimplemented here. Backend alert delivery is
 planned, not evidence that real-time data or notifications already work.
+
+
+</details>

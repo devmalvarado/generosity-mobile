@@ -4,6 +4,8 @@ Planning update: 2026-11-01. This active change contains 16 capability specs:
 seven extensions of the previously synchronized baseline and nine new
 capabilities. They specify required behavior, not completed features. The
 new planning deltas have not been archived or synchronized into main specs.
+The [2026-11-04 reconciliation](implementation-status.md) records current
+implementation separately from this scope and the historical planning date.
 
 The subsequent [reference product features](../add-reference-product-features/spec-index.md)
 change adds 10 separate capabilities for the image's missing functions, including
@@ -16,8 +18,8 @@ apply to this foundation; they do not cancel that explicitly requested follow-up
 - Language follows the device by default and can be overridden in user settings.
 - Backend, authentication, durable server data and multiuser synchronization are now in scope.
 - Social entry includes Google, Apple and planned Facebook for Generosity web/Android/iOS only; no institute-wide SSO.
-- Account deletion permanently closes access, including recovery/social entry; soft deletion is supplemented by actual personal-data removal and justified limited retention. The institute's supplied fiscal identity/address and approved support/legal/privacy addresses are recorded in the [Spanish terms draft](../../../docs/legal/terms-and-conditions.es.md); institute personnel will handle these channels, but mailbox creation and operational checks remain pending.
-- Mobile contact is private and progressive, verified only for explicitly approved action requirements; the action list and delivery provider remain open decisions.
+- Account deletion permanently closes access, including recovery/social entry; the full contract includes personal-data removal and justified limited retention. The owner accepted an implemented operator access block as the initial scope. Current terms/privacy use the institute's identity and temporary working `notificaciones@generosity.global`, handled by institute staff; separate mailbox creation, self-service erasure and independent review remain pending.
+- Mobile contact is private and progressive. Creating groups or events requires a verified number; delivery provider and remaining verification/retention policy decisions are open.
 - Users submit/cancel their own offers; authorized center staff confirm/fulfill them through the backend.
 - Personal helping activities are explicitly self-reported, not center-verified.
 - The existing landing also becomes a mobile-first web portal for centers to publish needs, using the same backend as the apps.
