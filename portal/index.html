@@ -1,13 +1,15 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
+  <meta name="generosity-api-origin" content="https://api.generosity.global">
+  <meta name="generosity-channel" content="production">
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Generosity — Encuentra dónde ayudar, cerca de ti</title>
   <meta name="description" content="Generosity, una iniciativa del Instituto de Deberes y Derechos Humanos para conectar personas, organizaciones y causas. Registra tu sede y coordina la ayuda de tu comunidad.">
   <link rel="icon" href="assets/favicon.png" type="image/png" sizes="192x192">
   <link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
-  <link rel="stylesheet" href="styles.css?v=fb2cc0976038">
+  <link rel="stylesheet" href="styles.css?v=284ecc4d1171">
 </head>
 <body>
   <a class="skip" href="#contenido" data-i18n="skip">Saltar al contenido</a>
@@ -22,7 +24,7 @@
       <a href="#centros" data-i18n="nav.centers">Para centros</a>
     </nav>
     <div class="topactions">
-      <a class="ghost" href="#donar" data-i18n="nav.donate">Cómo ayudar</a>
+      <a class="ghost" href="#descubrir" data-i18n="nav.donate">Cómo ayudar</a>
       <a class="solid" href="#registrar-sede" data-i18n="application.nav">Registrar una sede</a>
     </div>
     <label class="lang">
@@ -40,7 +42,7 @@
     <a href="#como-funciona" data-i18n="nav.how">Cómo funciona</a>
     <a href="#necesidades" data-i18n="nav.needs">Causas</a>
     <a href="#centros" data-i18n="nav.centers">Para centros</a>
-    <a href="#donar" data-i18n="nav.donate">Cómo ayudar</a>
+    <a href="#descubrir" data-i18n="nav.donate">Cómo ayudar</a>
     <a href="#registrar-sede" data-i18n="application.nav">Registrar una sede</a>
     <button class="ghost close-menu" type="button" data-i18n="menu.close">Cerrar menú</button>
   </nav>
@@ -139,6 +141,7 @@
         <div>
 
           <h2 data-i18n="needs.title">Hay muchas formas de hacer el bien.</h2>
+          <p class="fine" data-i18n="needs.illustration">Estas tarjetas ilustran causas. No son necesidades publicadas.</p>
         </div>
         <div class="filters" role="group" data-i18n-aria="needs.filters" aria-label="Explorar causas">
           <button type="button" class="on" data-filter="todas" aria-pressed="true" data-i18n="filter.all">Todas</button>
@@ -153,37 +156,108 @@
 
           <header>
             <span class="cause" data-i18n="card.food.cause">Comedor comunitario</span>
+            <span class="illustration-label" data-i18n="card.illustration">Ilustración, no es el catálogo</span>
 
           </header>
           <h3 data-i18n="card.food.title">Alimentación que une</h3>
           <p data-i18n="card.food.body">Alimentos, preparación de comidas y apoyo a comedores comunitarios. Compartir una mesa también construye comunidad.</p>
 
-          <a class="solid" href="#donar" data-i18n="card.food.action">Conoce cómo participar</a>
+          <a class="solid" href="#descubrir" data-i18n="card.food.action">Ver el catálogo publicado</a>
         </article>
 
         <article class="need" id="hogar" data-cause="infancia" tabindex="-1">
 
           <header>
             <span class="cause" data-i18n="card.kids.cause">Infancia y educación</span>
+            <span class="illustration-label" data-i18n="card.illustration">Ilustración, no es el catálogo</span>
           </header>
           <h3 data-i18n="card.kids.title">Oportunidades para crecer</h3>
           <p data-i18n="card.kids.body">Materiales escolares, tutorías y acompañamiento educativo para fortalecer el aprendizaje y el desarrollo.</p>
 
-          <a class="solid" href="#donar" data-i18n="card.kids.action">Conoce cómo participar</a>
+          <a class="solid" href="#descubrir" data-i18n="card.kids.action">Ver el catálogo publicado</a>
         </article>
 
         <article class="need" id="puente" data-cause="salud" tabindex="-1">
 
           <header>
             <span class="cause" data-i18n="card.health.cause">Salud</span>
+            <span class="illustration-label" data-i18n="card.illustration">Ilustración, no es el catálogo</span>
           </header>
           <h3 data-i18n="card.health.title">Cuidado y acompañamiento</h3>
           <p data-i18n="card.health.body">Apoyo a centros de atención, insumos solicitados por sus responsables y tiempo para acompañar a quienes lo necesitan.</p>
 
-          <a class="solid" href="#donar" data-i18n="card.health.action">Conoce cómo participar</a>
+          <a class="solid" href="#descubrir" data-i18n="card.health.action">Ver el catálogo publicado</a>
         </article>
       </div>
       <p class="empty" hidden data-i18n="needs.empty">Elige otra causa para conocer más formas de ayudar.</p>
+    </section>
+
+    <section class="discovery" id="descubrir" tabindex="-1" aria-labelledby="discovery-title">
+      <div>
+        <p class="where" data-i18n="discovery.eyebrow">Catálogo publicado</p>
+        <h2 id="discovery-title" data-i18n="discovery.title">Ayuda con lo que está publicado</h2>
+        <p class="lead" data-i18n="discovery.lead">Elige un centro o una necesidad publicada. Entrar aquí no envía una oferta, no pide datos de pago y no abre el espacio de centros.</p>
+      </div>
+      <form id="discovery-search" role="search">
+        <label for="discovery-query" data-i18n="discovery.searchLabel">Filtrar lo cargado</label>
+        <input id="discovery-query" name="query" type="search" maxlength="200" autocomplete="off" spellcheck="false" data-i18n-placeholder="discovery.searchPlaceholder" placeholder="Nombre o descripción">
+        <p class="fine" data-i18n="discovery.searchHint">Filtra lo ya cargado en esta página. No busca en todo el catálogo ni usa tu ubicación.</p>
+      </form>
+      <p id="discovery-status" class="result" role="status" tabindex="-1"></p>
+      <div class="discovery-pages">
+        <button type="button" id="discovery-centers-prev" class="ghost" data-i18n="discovery.prevCenters">Centros, página anterior</button>
+        <button type="button" id="discovery-centers-next" class="ghost" data-i18n="discovery.nextCenters">Centros, página siguiente</button>
+        <button type="button" id="discovery-needs-prev" class="ghost" data-i18n="discovery.prevNeeds">Necesidades, página anterior</button>
+        <button type="button" id="discovery-needs-next" class="ghost" data-i18n="discovery.nextNeeds">Necesidades, página siguiente</button>
+      </div>
+      <div id="discovery-results"></div>
+      <article id="discovery-detail" hidden></article>
+      <form id="discovery-offer">
+        <h3 data-i18n="discovery.offerTitle">Preparar una oferta</h3>
+        <p class="fine" data-i18n="discovery.offerNote">Elige una necesidad publicada. Entrar o iniciar sesión no envía la oferta. Esta página no pide datos de pago.</p>
+        <p id="discovery-offer-limit" class="fine"></p>
+        <fieldset id="discovery-methods">
+          <legend data-i18n="discovery.method">Forma de ayudar</legend>
+          <label class="choice"><input type="radio" name="discovery-method" value="goods"> <span data-i18n="discovery.goods">Bienes</span></label>
+          <label class="choice"><input type="radio" name="discovery-method" value="time"> <span data-i18n="discovery.time">Tiempo</span></label>
+        </fieldset>
+        <label for="discovery-quantity" data-i18n="discovery.quantity">Cantidad</label>
+        <input id="discovery-quantity" inputmode="numeric" maxlength="7" autocomplete="off">
+        <label for="discovery-minutes" data-i18n="discovery.minutes">Minutos</label>
+        <input id="discovery-minutes" inputmode="numeric" maxlength="6" autocomplete="off">
+        <label for="discovery-activity" data-i18n="discovery.activity">Actividad</label>
+        <input id="discovery-activity" maxlength="500" autocomplete="off">
+        <label for="discovery-availability" data-i18n="discovery.availability">Disponibilidad (opcional)</label>
+        <input id="discovery-availability" maxlength="500" autocomplete="off">
+        <label for="discovery-notes" data-i18n="discovery.notes">Nota (opcional)</label>
+        <textarea id="discovery-notes" maxlength="2000" rows="3"></textarea>
+        <button type="button" id="discovery-submit" class="solid" data-i18n="discovery.submit">Enviar oferta</button>
+        <button type="button" id="discovery-retry" class="ghost" hidden data-i18n="discovery.retry">Reintentar la misma oferta</button>
+        <a id="discovery-sign-in" class="ghost" href="https://api.generosity.global/auth/sign-in?client=web&amp;locale=es" data-i18n="discovery.signIn">Iniciar sesión para enviar</a>
+        <p id="discovery-offer-status" class="result" role="status" tabindex="-1"></p>
+      </form>
+      <div id="discovery-history" hidden>
+        <h3 data-i18n="discovery.historyTitle">Tus ofertas</h3>
+        <p class="fine" data-i18n="discovery.historyNote">Esta lista muestra el estado que devolvió el servidor. No indica puntos ni una entrega confirmada si el estado no lo dice.</p>
+        <p id="discovery-history-status" class="result" role="status"></p>
+        <div id="discovery-history-list"></div>
+        <div class="discovery-pages">
+          <button type="button" id="discovery-history-prev" class="ghost" data-i18n="discovery.prev">Anterior</button>
+          <button type="button" id="discovery-history-next" class="ghost" data-i18n="discovery.next">Siguiente</button>
+          <button type="button" id="discovery-history-retry" class="ghost" hidden data-i18n="discovery.cancelRetry">Reintentar la misma cancelación</button>
+        </div>
+      </div>
+      <form id="discovery-share" hidden>
+        <label for="discovery-link" data-i18n="discovery.linkLabel">Enlace de este registro</label>
+        <input id="discovery-link" readonly spellcheck="false">
+        <p class="fine" data-i18n="discovery.downloadNote">El archivo incluye el enlace y la fecha de descarga. No indica lugares disponibles. No es una imagen para escanear.</p>
+        <div class="discovery-pages">
+          <button type="button" id="discovery-copy" class="ghost" data-i18n="discovery.copy">Copiar enlace</button>
+          <button type="button" id="discovery-share-button" class="ghost" hidden data-i18n="discovery.share">Compartir</button>
+          <button type="button" id="discovery-download" class="ghost" data-i18n="discovery.download">Descargar invitación</button>
+        </div>
+        <p id="discovery-share-status" class="result" role="status"></p>
+      </form>
     </section>
 
     <section class="split" id="donar" tabindex="-1">
@@ -419,6 +493,6 @@
     </nav>
   </footer>
 
-  <script src="portal.js?v=e301e1fb6a6d"></script>
+  <script src="portal.js?v=18251e764c02"></script>
 </body>
 </html>

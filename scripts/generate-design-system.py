@@ -119,7 +119,7 @@ def digest(path):
 
 
 def brand_inputs(data):
-    return {"brand": data["brand"], "symbol": digest(ROOT / "assets/brand/master/symbol.svg"),
+    return {"brand": data["brand"], "previewBadge": data["web"]["focus"], "symbol": digest(ROOT / "assets/brand/master/symbol.svg"),
             "wordmark": digest(ROOT / "assets/brand/master/wordmark.svg"),
             "generator": digest(ROOT / "scripts/generate-brand-assets.py"),
             "readme": digest(ROOT / "assets/brand/README.md")}
@@ -131,7 +131,8 @@ def brand_paths():
         paths.extend(p for p in (ROOT / folder).rglob("*") if p.is_file())
     for pattern in ["androidApp/src/main/res/drawable/generosity_*.xml", "androidApp/src/main/res/values*/brand_colors.xml",
                     "androidApp/src/main/res/mipmap-*/ic_launcher.*", "iosApp/GenerosityApp/Assets.xcassets/Generosity*/*",
-                    "iosApp/GenerosityApp/Assets.xcassets/AppIcon.appiconset/*"]:
+                    "iosApp/GenerosityApp/Assets.xcassets/AppIcon*.appiconset/*",
+                    "androidApp/src/preview/res/drawable/generosity_*.xml", "androidApp/src/preview/res/mipmap-*/ic_launcher.*"]:
         paths.extend(ROOT.glob(pattern))
     paths.extend(ROOT / p for p in ["portal/assets/logo.png", "portal/assets/favicon.png", "portal/assets/apple-touch-icon.png"])
     paths.extend(ROOT / "assets/brand" / name for name in ["preview.svg", "preview.png", "verification.json", "generosity-brand-kit.zip"])

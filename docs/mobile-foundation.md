@@ -14,7 +14,9 @@ The mobile foundation includes imported Kindness Center discovery, localized Spa
 The user expanded the active scope on 2026-10-25 to include backend APIs,
 authentication, durable storage/sync and center-authorized contribution
 transitions. The supplied landing and a mobile-first center web workspace for
-need publishing/management were subsequently included. These remain planned.
+need publishing/management were subsequently included. Their initial integration
+is implemented, with published API and portal checkpoints; remaining implementation
+and cross-platform acceptance are tracked in the active task list.
 Official verification, payments, tax receipts, moderation and general admin UI
 remain outside the change. See the [spec index](../openspec/changes/define-generosity-mobile-app-foundation/spec-index.md)
 and [portal assessment](center-portal.md).

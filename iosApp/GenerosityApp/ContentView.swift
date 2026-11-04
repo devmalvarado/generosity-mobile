@@ -6,11 +6,26 @@ import Shared
 struct ContentView: View {
     private static var demoCatalog: Bool {
         #if DEBUG
-        return ProcessInfo.processInfo.arguments.contains("--demo-catalog")
+        return ProcessInfo.processInfo.arguments.contains("--demo-catalog") || Self.previewHarness
         #else
         return false
         #endif
     }
+    private static var previewHarness: Bool {
+        #if DEBUG
+        return ProcessInfo.processInfo.arguments.contains("--native-preview")
+        #else
+        return false
+        #endif
+    }
+    private static var connectedHarness: Bool {
+        #if DEBUG
+        return ProcessInfo.processInfo.arguments.contains("--connected-design")
+        #else
+        return false
+        #endif
+    }
+    @State private var showPreview = false
     @StateObject private var store: GenerosityStore
     @StateObject private var account: AccountSession
     @StateObject private var permissions = PermissionService()
@@ -31,7 +46,11 @@ struct ContentView: View {
 
     var body: some View {
         Group {
-        if !entered && !store.state.profile.isRegistered {
+        if Self.previewHarness {
+            NativePreview(groups: PreviewSession.companion.groupNames, language: locale.rawValue)
+        } else if Self.connectedHarness {
+            connectedPreview(groups: PreviewSession.companion.groupNames)
+        } else if !entered && !store.state.profile.isRegistered {
             WelcomeView(locale: locale, account: account, store: store, onGuest: { entered = true })
         } else {
         TabView(selection: $tab) {
@@ -55,6 +74,12 @@ struct ContentView: View {
         }
         }
         }
+        .fullScreenCover(isPresented: $showPreview) {
+            connectedPreview(groups: store.state.features.previewGroups)
+                .id(store.state.profile.id)
+        }
+        .onChange(of: store.state.profile.id) { _ in showPreview = false }
+        .onChange(of: store.state.features.previewGroups) { if $0.isEmpty { showPreview = false } }
         .sheet(isPresented: $showInbox) {
             NavigationStack {
                 List {
@@ -71,6 +96,10 @@ struct ContentView: View {
             }
         }
         .safeAreaInset(edge: .top) {
+            if !Self.previewHarness && !Self.connectedHarness && !store.state.features.previewGroups.isEmpty {
+                Button(locale.rawValue == "es" ? "Explorar diseño de prueba" : "Explore design preview") { showPreview = true }
+                    .frame(minHeight: 44).accessibilityIdentifier("open-native-preview")
+            }
             if store.state.pushBanner != nil {
                 HStack {
                     Button(L10n.resource("push_new", locale: locale)) { showInbox = true; store.dismissPushBanner() }
@@ -78,7 +107,7 @@ struct ContentView: View {
                 }.padding(GenSpace.sm).background(GenPalette.surface)
             }
         }
-        .onChange(of: store.state.noticeDestinationId) { id in if id != nil { showInbox = false; tab = 1 } }
+        .onChange(of: store.state.noticeDestinationId) { id in if id != nil && !showPreview && !Self.connectedHarness { showInbox = false; tab = 1 } }
         .onChange(of: store.state.profile.id) { _ in updatePush(); consumePush() }
         .onChange(of: store.state.preferences.urgentNeedsEnabled) { _ in updatePush() }
         .onChange(of: permissions.notificationsAuthorized) { _ in updatePush() }
@@ -115,6 +144,15 @@ struct ContentView: View {
         }
     }
 
+    private func connectedPreview(groups: [String]) -> some View {
+        NativePreview(groups: groups, language: locale.rawValue, connectedContent: { route, navigate in
+            AnyView(ConnectedDesignScreen(route: route, navigate: navigate, groups: groups, store: store, account: account,
+                permissions: permissions, hasDeviceOrigin: hasDeviceOrigin, onSelectArea: { area in
+                    hasDeviceOrigin = false; permissions.useManualArea(); store.setDiscoveryArea(area)
+                }).id(route))
+        }, onClose: { showPreview = false }).id(store.state.profile.id)
+    }
+
     private func updatePush() { if !Self.demoCatalog { Task { await push.update(store: store) } } }
     private func consumePush() {
         guard let signal = push.signal, store.state.profile.id != nil else { return }
@@ -124,7 +162,7 @@ struct ContentView: View {
     private func discovery(showMap: Bool) -> some View {
         NavigationStack {
             DiscoveryView(locale: locale, store: store, permissions: permissions, hasDeviceOrigin: hasDeviceOrigin,
-                          showMap: showMap, onSelectArea: { area in
+                          showMap: showMap, handlesNotices: !showPreview && !Self.connectedHarness, onSelectArea: { area in
                 hasDeviceOrigin = false
                 permissions.useManualArea()
                 store.setDiscoveryArea(area)
@@ -147,12 +185,166 @@ struct ContentView: View {
     }
 }
 
+
+private struct ConnectedDesignScreen: View {
+    let route: String
+    let navigate: (String) -> Void
+    let groups: [String]
+    private var allowContributions: Bool { groups.contains("contributions") }
+    @ObservedObject var store: GenerosityStore
+    @ObservedObject var account: AccountSession
+    @ObservedObject var permissions: PermissionService
+    let hasDeviceOrigin: Bool
+    let onSelectArea: (DiscoveryArea?) -> Void
+    @State private var areaSearch = false
+    @State private var personalMethod = "goods"
+    @State private var offering = false
+    @FocusState private var searching: Bool
+    @Environment(\.dynamicTypeSize) private var textSize
+    private var locale: AppLocale { AppLocale(rawValue: store.localeCode) ?? .fallback }
+    private var state: GenerosityUiState { store.state }
+
+    var body: some View {
+        content
+            .sheet(isPresented: $areaSearch) { AreaSearchView(locale: locale, onSelect: { area in store.setSearchText(""); onSelectArea(area); areaSearch = false }, initialQuery: state.searchText) }
+            .sheet(isPresented: $offering) { OfferForm(locale: locale, store: store, need: nil, method: personalMethod) }
+            .onChange(of: state.noticeDestinationId) { id in
+                if id != nil { navigate("center"); store.clearNoticeDestination() }
+            }
+    }
+    @ViewBuilder private var content: some View {
+        switch route {
+        case "map":
+            if textSize.isAccessibilitySize { ScrollView { map.frame(height: 900) } }
+            else { map }
+        case "list":
+            SyncStatusView(locale: locale, store: store)
+            if state.centers.isEmpty { Text(L10n.text(.emptyCenters, locale: locale)) }
+            ForEach(state.centers, id: \.id) { center in
+                Button { store.selectCenter(center.id); navigate("center") } label: { CenterIdentity(locale: locale, center: center) }
+                    .frame(minHeight: GenSize.iosTouch).accessibilityIdentifier("connected-center-" + center.id)
+            }
+        case "filters":
+            CategoryFilterView(locale: locale, selectedCategories: state.selectedCategories, onToggle: { store.toggleCategory($0.code) })
+            Button(L10n.resource("area_search", locale: locale)) { areaSearch = true }.frame(minHeight: GenSize.iosTouch)
+            locationControls
+            if state.discoveryArea != nil { Button(L10n.resource("area_clear", locale: locale)) { onSelectArea(nil) }.frame(minHeight: GenSize.iosTouch) }
+            SyncStatusView(locale: locale, store: store)
+        case "profile", "history", "impact":
+            VStack {
+                if route == "profile" {
+                    HStack {
+                        if allowContributions { Button(L10n.resource("history", locale: locale)) { navigate("history") } }
+                        Button(L10n.text(.tabSettings, locale: locale)) { navigate("settings") }
+                    }.frame(minHeight: GenSize.iosTouch)
+                }
+                ProfileView(locale: locale, state: state, account: account, store: store, section: route)
+            }
+        case "settings":
+            SettingsView(store: store, locale: locale, saveFailed: state.syncError != nil, permissions: permissions,
+                languageMode: Binding(get: { store.languageMode }, set: store.setLocale),
+                nearbyNotifications: Binding(get: { state.preferences.nearbyCentersEnabled }, set: { store.setPreferences(nearby: $0, urgent: state.preferences.urgentNeedsEnabled, reminders: state.preferences.remindersEnabled) }),
+                urgentNotifications: Binding(get: { state.preferences.urgentNeedsEnabled }, set: { store.setPreferences(nearby: state.preferences.nearbyCentersEnabled, urgent: $0, reminders: state.preferences.remindersEnabled) }),
+                reminderNotifications: Binding(get: { state.preferences.remindersEnabled }, set: { store.setPreferences(nearby: state.preferences.nearbyCentersEnabled, urgent: state.preferences.urgentNeedsEnabled, reminders: $0) }), embedded: true)
+        case "welcome":
+            WelcomeView(locale: locale, account: account, store: store, onGuest: { navigate("map") })
+        default:
+            ScrollView {
+                LazyVStack(alignment: .leading, spacing: GenSpace.md) {
+                    SyncStatusView(locale: locale, store: store)
+                    switch route {
+                    case "center", "offer":
+                        if let center = state.selectedCenter {
+                            CenterDetail(locale: locale, center: center, store: store, currentNeeds: state.currentNeeds,
+                                visitNoted: state.visitSignalCenterId == center.id || state.visitedCenterIds.contains(center.id),
+                                onVisit: { store.signalVisit(center.id) }, allowContributions: allowContributions)
+                        } else { Text(L10n.text(.emptyCenters, locale: locale)) }
+                    case "needs":
+                        if state.discoveredNeeds.isEmpty { Text(L10n.text(.noCurrentNeeds, locale: locale)) }
+                        ForEach(state.discoveredNeeds, id: \.id) { need in
+                            if let center = state.centers.first(where: { $0.id == need.centerId }) {
+                                Button(center.name.resolve(locale)) { store.selectCenter(center.id); navigate("center") }.frame(minHeight: GenSize.iosTouch)
+                            }
+                            NeedView(locale: locale, need: need, store: store, allowContributions: allowContributions)
+                            Divider()
+                        }
+                    case "help", "personal":
+                        if route == "help" && groups.contains("discovery") { Button(L10n.text(.currentNeeds, locale: locale)) { navigate("needs") }.buttonStyle(.borderedProminent) }
+                        Text(L10n.resource("personal_add", locale: locale)).font(GenTypography.font(.headline))
+                        Text(L10n.resource("personal_notice", locale: locale))
+                        ForEach(["goods", "time"], id: \.self) { method in
+                            Button(L10n.resource(method == "goods" ? "offer_goods_action" : "offer_time", locale: locale)) { personalMethod = method; offering = true }
+                                .buttonStyle(.bordered).disabled(!state.canRecordContributions).frame(minHeight: GenSize.iosTouch)
+                        }
+                        if !state.canRecordContributions { Text(L10n.resource(state.profile.isRegistered ? "feature_unavailable" : "registration_required", locale: locale)) }
+                    case "inbox":
+                        Text(L10n.resource("inbox_retention", locale: locale))
+                        if !state.profile.isRegistered { Button(L10n.resource("auth_sign_in", locale: locale)) { account.signIn(store: store) }.frame(minHeight: GenSize.iosTouch) }
+                        if state.notices.isEmpty { Text(L10n.resource("inbox_empty", locale: locale)) }
+                        ForEach(state.notices, id: \.id) { notice in
+                            Button { store.openNotice(notice.id) } label: { Text((notice.read ? "" : "• ") + notice.title.resolve(locale)).fontWeight(notice.read ? .regular : .bold) }.frame(minHeight: GenSize.iosTouch)
+                        }
+                    default: EmptyView()
+                    }
+                }.padding(GenSpace.md)
+            }
+        }
+    }
+    private var mapCenter: KindnessCenter? { state.selectedCenter ?? state.centers.first }
+    private var map: some View {
+        ZStack {
+            CenterMapView(locale: locale, centers: state.centers, selectedCenterId: mapCenter?.id,
+                onSelect: { store.selectCenter($0) }, origin: state.discoveryArea?.coordinates, deviceOrigin: hasDeviceOrigin)
+            VStack(spacing: GenSpace.xs) {
+                searchBar
+                CategoryFilterView(locale: locale, selectedCategories: state.selectedCategories, onToggle: { store.toggleCategory($0.code) }, horizontal: true)
+                    .background(.regularMaterial, in: RoundedRectangle(cornerRadius: GenRadius.card))
+                Spacer(minLength: GenSpace.lg)
+                VStack(alignment: .leading, spacing: GenSpace.sm) {
+                    if state.syncing { ProgressView() }
+                    if state.syncError != nil { Text(L10n.resource("sync_failed", locale: locale)).font(GenTypography.font(.footnote)).foregroundStyle(GenPalette.error) }
+                    if let message = permissions.locationMessage { Text(L10n.resource(message, locale: locale)).font(GenTypography.font(.footnote)) }
+                    if permissions.locationDenied { locationControls }
+                    if let area = state.discoveryArea { Text(hasDeviceOrigin ? L10n.resource("location_scope", locale: locale) : area.label).font(GenTypography.font(.caption)) }
+                    if let center = mapCenter {
+                        CenterIdentity(locale: locale, center: center)
+                        Button(L10n.resource("view_details", locale: locale)) { searching = false; store.selectCenter(center.id); navigate("center") }
+                            .buttonStyle(.borderedProminent).accessibilityIdentifier("connected-details")
+                    } else { Text(L10n.text(.emptyCenters, locale: locale)) }
+                }.padding(GenSpace.md).frame(maxWidth: .infinity, alignment: .leading)
+                    .background(GenPalette.surface, in: RoundedRectangle(cornerRadius: GenRadius.card))
+            }.padding(GenSpace.sm).padding(.bottom, 28) // Keep MapKit attribution visible.
+        }.onAppear { permissions.resumeLocation() }
+    }
+    private var searchContent: some View {
+        HStack {
+            Button { searching = false; areaSearch = true } label: { Image(systemName: "magnifyingglass").frame(minWidth: 44, minHeight: 44) }
+                .accessibilityLabel(L10n.resource("area_search", locale: locale)).accessibilityIdentifier("connected-area")
+            TextField("", text: Binding(get: { state.searchText }, set: store.setSearchText), prompt: Text(L10n.text(.searchPlaceholder, locale: locale)).foregroundColor(GenPalette.secondary))
+                .focused($searching).submitLabel(.search).onSubmit { searching = false; areaSearch = true }.accessibilityIdentifier("connected-query")
+            Button { searching = false; permissions.requestCurrentLocation() } label: { Image(systemName: "location").frame(minWidth: 44, minHeight: 44) }
+                .accessibilityLabel(L10n.resource("location_use", locale: locale)).accessibilityIdentifier("location-use").disabled(permissions.locating)
+        }.padding(GenSpace.sm)
+    }
+    @ViewBuilder private var searchBar: some View {
+        if #available(iOS 26.0, *) { searchContent.glassEffect(.regular, in: Capsule()) }
+        else { searchContent.background(.regularMaterial, in: Capsule()) }
+    }
+    private var locationControls: some View {
+        VStack(alignment: .leading) {
+            Button(L10n.resource("location_use", locale: locale)) { permissions.requestCurrentLocation() }.disabled(permissions.locating).frame(minHeight: GenSize.iosTouch)
+            if permissions.locationDenied { Button(L10n.resource("location_settings", locale: locale)) { if let url = URL(string: UIApplication.openSettingsURLString) { UIApplication.shared.open(url) } }.frame(minHeight: GenSize.iosTouch) }
+        }
+    }
+}
+
 private struct DiscoveryView: View {
     let locale: AppLocale
     @ObservedObject var store: GenerosityStore
     @ObservedObject var permissions: PermissionService
     let hasDeviceOrigin: Bool
     let showMap: Bool
+    var handlesNotices = true
     let onSelectArea: (DiscoveryArea?) -> Void
     @State private var showDetail = false
     @State private var showAreaSearch = false
@@ -292,7 +484,7 @@ private struct DiscoveryView: View {
             Text(L10n.resource("location_denied", locale: locale))
         }
         .onChange(of: store.state.noticeDestinationId) { id in
-            if id != nil && !showMap { showDetail = true; store.clearNoticeDestination() }
+            if id != nil && !showMap && handlesNotices { showDetail = true; store.clearNoticeDestination() }
         }
         .onAppear {
             if store.state.noticeDestinationId != nil && !showMap { showDetail = true; store.clearNoticeDestination() }
@@ -548,6 +740,7 @@ private struct CenterDetail: View {
     let currentNeeds: [CenterNeed]
     let visitNoted: Bool
     let onVisit: () -> Void
+    var allowContributions = true
     @Environment(\.openURL) private var openURL
     @State private var contactFailed = false
 
@@ -576,7 +769,7 @@ private struct CenterDetail: View {
                 Text(L10n.text(.noCurrentNeeds, locale: locale)).foregroundStyle(GenPalette.secondary)
             }
             ForEach(currentNeeds, id: \.id) { need in
-                NeedView(locale: locale, need: need, store: store)
+                NeedView(locale: locale, need: need, store: store, allowContributions: allowContributions)
                 Divider()
             }
             Button(L10n.text(.visitSignal, locale: locale), action: onVisit)
@@ -626,6 +819,7 @@ private struct NeedView: View {
     let locale: AppLocale
     let need: CenterNeed
     @ObservedObject var store: GenerosityStore
+    var allowContributions = true
     @State private var method = "goods"
     @State private var offering = false
     var body: some View {
@@ -636,16 +830,16 @@ private struct NeedView: View {
                     .font(GenTypography.font(.caption).weight(.bold)).foregroundStyle(need.isUrgent ? GenPalette.error : GenPalette.accent)
                 Text(need.title.resolve(locale)).font(GenTypography.font(.subheadline).weight(.semibold))
                 Text(need.description_.resolve(locale)).font(GenTypography.font(.subheadline)).foregroundStyle(GenPalette.secondary)
-                NeedProgressView(locale: locale, need: need)
+                if store.state.features.showNeedProgress { NeedProgressView(locale: locale, need: need) }
                 Text(need.helpMethods.sorted { $0.ordinal < $1.ordinal }.map { $0.label(locale) }.joined(separator: " · "))
                     .font(GenTypography.font(.footnote))
-                if store.state.canRecordContributions {
+                if allowContributions && store.state.canRecordContributions {
                     ForEach(["goods", "time"].filter { code in need.helpMethods.contains { $0.code == code } }, id: \.self) { code in
                         Button(L10n.resource(code == "goods" ? "offer_goods_action" : "offer_time", locale: locale)) { method = code; offering = true }
                             .buttonStyle(.bordered).frame(minHeight: GenSize.iosTouch)
                             .disabled(!need.status.isOpen || (code == "goods" && need.quantityRemaining?.intValue == 0))
                     }
-                } else { Text(L10n.resource("registration_required", locale: locale)).font(GenTypography.font(.footnote)) }
+                } else { Text(L10n.resource(store.state.profile.isRegistered ? "feature_unavailable" : "registration_required", locale: locale)).font(GenTypography.font(.footnote)) }
                 if need.helpMethods.contains(.money) {
                     Text(L10n.text(.moneyBoundary, locale: locale)).font(GenTypography.font(.footnote)).foregroundStyle(GenPalette.secondary)
                 }
@@ -661,12 +855,17 @@ private struct ProfileView: View {
     let state: GenerosityUiState
     @ObservedObject var account: AccountSession
     @ObservedObject var store: GenerosityStore
+    var section = "all"
     @State private var personalMethod = "goods"
     @State private var offering = false
-    var body: some View {
-        NavigationStack {
+    @ViewBuilder var body: some View {
+        if section == "all" { NavigationStack { content } }
+        else { content }
+    }
+    private var content: some View {
             ScrollView {
                 VStack(alignment: .leading, spacing: GenSpace.xl) {
+                    if section == "all" || section == "profile" {
                     HStack(spacing: GenSpace.md) {
                         IconTile(symbol: "person", size: 52)
                         Text(state.profile.isRegistered ? state.profile.displayName ?? L10n.text(.registeredProfile, locale: locale) : L10n.text(.anonymousProfile, locale: locale))
@@ -685,13 +884,15 @@ private struct ProfileView: View {
                     if account.busy { ProgressView() }
                     if account.failed { Text(L10n.resource("auth_failed", locale: locale)).foregroundStyle(.red).accessibilityAddTraits(.updatesFrequently) }
                     Text(L10n.resource("auth_scope", locale: locale)).font(GenTypography.font(.footnote))
+                    }
                     SyncStatusView(locale: locale, store: store)
-                    if state.canRecordContributions {
+                    if section == "all" && state.canRecordContributions {
                         Menu(L10n.resource("personal_add", locale: locale)) {
                             Button(L10n.resource("offer_goods_action", locale: locale)) { personalMethod = "goods"; offering = true }
                             Button(L10n.resource("offer_time", locale: locale)) { personalMethod = "time"; offering = true }
                         }.frame(minHeight: GenSize.iosTouch)
                     }
+                    if section == "all" || section == "profile" {
                     VStack(alignment: .leading, spacing: GenSpace.sm) {
                         Text(L10n.resource("points_title", locale: locale)).font(GenTypography.font(.subheadline))
                         Text(L10n.resource("unavailable", locale: locale)).font(GenTypography.font(.title2).weight(.bold))
@@ -699,12 +900,16 @@ private struct ProfileView: View {
                     }
                     .padding(GenSpace.xl).frame(maxWidth: .infinity, alignment: .leading)
                     .foregroundStyle(GenPalette.onAccent).background(GenPalette.accent, in: RoundedRectangle(cornerRadius: GenRadius.card))
+                    }
+                    if section == "all" || section == "impact" {
                     Text(L10n.resource("impact_summary", locale: locale)).font(GenTypography.font(.headline))
                     LazyVGrid(columns: [GridItem(.adaptive(minimum: 140), alignment: .leading)], alignment: .leading, spacing: GenSpace.md) {
                         metric("centers_supported", value: state.profile.isRegistered ? L10n.number(state.impact.centersSupported, locale: locale) : "—")
                         metric("needs_supported", value: state.profile.isRegistered ? L10n.number(state.impact.needsSupported, locale: locale) : "—")
                     }
                     Text(L10n.resource("impact_basis", locale: locale)).font(GenTypography.font(.footnote)).foregroundStyle(GenPalette.secondary)
+                    }
+                    if section == "all" || section == "history" {
                     Text(L10n.resource("history", locale: locale)).font(GenTypography.font(.headline))
                     if state.contributions.isEmpty {
                         Text(L10n.text(.contributionHistoryEmpty, locale: locale)).foregroundStyle(GenPalette.secondary)
@@ -726,14 +931,14 @@ private struct ProfileView: View {
                             Divider()
                         }
                     }
+                    }
                 }
                 .padding(GenSpace.lg)
             }
             .background(GenPalette.background).foregroundStyle(GenPalette.text)
             .sheet(isPresented: $offering) { OfferForm(locale: locale, store: store, need: nil, method: personalMethod) }
-            .navigationTitle(L10n.text(.tabProfile, locale: locale)).navigationBarTitleDisplayMode(.inline)
+            .navigationTitle(L10n.resource(section == "history" ? "history" : section == "impact" ? "impact_summary" : "tab_profile", locale: locale)).navigationBarTitleDisplayMode(.inline)
             .toolbarBackground(GenPalette.surface, for: .navigationBar).toolbarBackground(.visible, for: .navigationBar)
-        }
     }
     private func metric(_ key: String, value: String) -> some View {
         VStack(alignment: .leading, spacing: GenSpace.sm) {
@@ -756,8 +961,13 @@ private struct SettingsView: View {
     @Binding var urgentNotifications: Bool
     @Binding var reminderNotifications: Bool
 
-    var body: some View {
-        NavigationStack {
+    var embedded = false
+
+    @ViewBuilder var body: some View {
+        if embedded { content }
+        else { NavigationStack { content } }
+    }
+    private var content: some View {
             Form {
                 Section {
                     Picker(L10n.text(.language, locale: locale), selection: $languageMode) {
@@ -793,7 +1003,6 @@ private struct SettingsView: View {
             .scrollContentBackground(.hidden).background(GenPalette.background)
             .navigationTitle(L10n.text(.tabSettings, locale: locale)).navigationBarTitleDisplayMode(.inline)
             .toolbarBackground(GenPalette.surface, for: .navigationBar).toolbarBackground(.visible, for: .navigationBar)
-        }
     }
 
     private func settingsLabel(_ key: L10nKey) -> some View {

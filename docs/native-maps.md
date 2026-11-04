@@ -271,7 +271,7 @@ See the [upstream 8.3.0 version catalog](https://github.com/googlemaps/android-m
 
 ```bash
 ./gradlew :androidApp:signingReport
-./gradlew :androidApp:installDebug
+./gradlew :androidApp:installProductionDebug
 ```
 
 The key is injected into `com.google.android.geo.API_KEY` in the merged
@@ -290,7 +290,7 @@ Android and package `org.generosity.app` with the local debug certificate SHA-1
 The value is present only in ignored `local.properties`; a local assertion
 confirmed that the merged debug manifest uses it without printing the value.
 
-`:androidApp:assembleDebug` and `:androidApp:verifyMapProviderBoundary` passed.
+`:androidApp:assembleProductionDebug` and `:androidApp:verifyMapProviderBoundary` passed.
 `apksigner` verified the APK and its certificate matched the Cloud restriction.
 The APK was installed in `Generosity_Google_API_36`, Android 36 Google APIs ARM64
 revision 7, after the owner explicitly accepted its SDK license. This is a local
@@ -376,10 +376,10 @@ or responses into domain models and persisted catalog data.
 ## Verification
 
 ```bash
-./gradlew :androidApp:assembleDebug :androidApp:testDebugUnitTest \
+./gradlew :androidApp:assembleProductionDebug :androidApp:testProductionDebugUnitTest \
   :androidApp:verifyMapProviderBoundary :androidApp:lintDebug
 ./gradlew :shared:jvmTest :shared:testAndroidHostTest
-./gradlew :androidApp:connectedDebugAndroidTest
+./gradlew :androidApp:connectedProductionDebugAndroidTest
 ```
 
 Automated coverage includes marker identity/coordinates, invalid/empty data,

@@ -45,7 +45,7 @@ class AccountSession(private val context: Context, private val scope: CoroutineS
             write(saved)
             val uri = Uri.parse(base + "/auth/sign-in").buildUpon()
                 .apply { if (register) appendQueryParameter("screen", "register") }
-                .appendQueryParameter("client", "android")
+                .appendQueryParameter("client", BuildConfig.AUTH_CLIENT)
                 .appendQueryParameter("locale", appState.state.value.locale.code)
                 .appendQueryParameter("state", pending.getString("state"))
                 .appendQueryParameter("code_challenge", challenge(pending.getString("verifier")))
@@ -56,7 +56,7 @@ class AccountSession(private val context: Context, private val scope: CoroutineS
     }
 
     fun callback(uri: Uri?): Boolean {
-        if (uri?.scheme != "org.generosity.app.android" || uri.path != "/oauth/callback" || uri.host != null) return false
+        if (uri?.scheme != BuildConfig.AUTH_SCHEME || uri.path != "/oauth/callback" || uri.host != null) return false
         if (busy) return true
         runAction {
             val saved = read()
@@ -69,7 +69,7 @@ class AccountSession(private val context: Context, private val scope: CoroutineS
             check(code.matches(Regex("[a-zA-Z0-9]{64}")))
             saved.remove("pending")
             write(saved)
-            val result = request("/api/v1/auth/exchange", JSONObject().put("client", "android").put("code", code).put("code_verifier", pending.getString("verifier")))
+            val result = request("/api/v1/auth/exchange", JSONObject().put("client", BuildConfig.AUTH_CLIENT).put("code", code).put("code_verifier", pending.getString("verifier")))
             write(JSONObject().put("token", result.getString("token")))
             identify(result.getJSONObject("user"))
         }
@@ -125,6 +125,7 @@ class AccountSession(private val context: Context, private val scope: CoroutineS
             connection.readTimeout = 15_000
             connection.instanceFollowRedirects = false
             connection.setRequestProperty("Accept", "application/json")
+            connection.setRequestProperty("X-Generosity-Channel", BuildConfig.CHANNEL)
             if (token != null) connection.setRequestProperty("Authorization", "Bearer $token")
             if (body != null) {
                 connection.requestMethod = "POST"

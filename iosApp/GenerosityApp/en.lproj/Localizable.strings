@@ -158,3 +158,4 @@
 "need_progress_received_unknown" = "Receipt data is not available yet.";
 "need_progress_units" = "units";
 "offer_partial_hint" = "You can contribute part of the total. Use the stated unit: for example, 1 box of 10 items, not 10 boxes.";
+"feature_unavailable" = "This feature is currently unavailable. You can still view your history.";

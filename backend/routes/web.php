@@ -1,15 +1,18 @@
 <?php
 
 use App\Http\Controllers\BrowserAuthController;
+use App\Http\Controllers\FeatureController;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Str;
 
 Route::get('/', fn () => ['service' => 'Generosity API', 'version' => 1]);
-Route::get('/legal/{document}', function (\Illuminate\Http\Request $request, string $document) {
+Route::get('/legal/{document}', function (Request $request, string $document) {
     $locale = $request->query('locale', 'es');
     abort_unless(in_array($locale, ['es', 'en'], true), 404);
     app()->setLocale($locale);
     $markdown = file_get_contents(resource_path('legal/'.$document.'.'.$locale.'.md'));
-    $content = \Illuminate\Support\Str::markdown($markdown, ['html_input' => 'strip', 'allow_unsafe_links' => false]);
+    $content = Str::markdown($markdown, ['html_input' => 'strip', 'allow_unsafe_links' => false]);
 
     return response()->view('legal', compact('content', 'locale', 'document'));
 })->whereIn('document', ['terms', 'privacy'])->name('legal');
@@ -26,4 +29,9 @@ Route::prefix('auth')->middleware('throttle:identity')->group(function () {
     Route::post('{provider}/start', [BrowserAuthController::class, 'start'])->whereIn('provider', ['google', 'apple']);
     Route::get('google/callback', [BrowserAuthController::class, 'callback'])->defaults('provider', 'google');
     Route::post('apple/callback', [BrowserAuthController::class, 'callback'])->defaults('provider', 'apple');
+});
+
+Route::middleware(['auth', 'throttle:identity'])->prefix('admin')->group(function () {
+    Route::get('features', [FeatureController::class, 'index']);
+    Route::post('features/{name}', [FeatureController::class, 'update']);
 });

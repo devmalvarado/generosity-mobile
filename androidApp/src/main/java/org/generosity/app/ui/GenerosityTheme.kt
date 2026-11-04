@@ -102,9 +102,9 @@ fun GenerosityTheme(content: @Composable () -> Unit) {
 }
 
 @Composable
-fun BrandWordmark() {
+fun BrandWordmark(width: Dp = GenSize.wordmarkWidth) {
     Image(painterResource(R.drawable.generosity_wordmark), "Generosity",
-        Modifier.size(GenSize.wordmarkWidth, GenSize.wordmarkHeight).testTag("brand-wordmark"))
+        Modifier.size(width, width * (GenSize.wordmarkHeight / GenSize.wordmarkWidth)).testTag("brand-wordmark"))
 }
 
 @Composable

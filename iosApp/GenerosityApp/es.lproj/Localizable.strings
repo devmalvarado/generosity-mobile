@@ -158,3 +158,4 @@
 "need_progress_received_unknown" = "Aún no hay datos de recepción.";
 "need_progress_units" = "unidades";
 "offer_partial_hint" = "Puedes aportar una parte. Usa la unidad indicada: por ejemplo, 1 caja de 10 piezas, no 10 cajas.";
+"feature_unavailable" = "Esta función no está disponible en este momento. Puedes seguir consultando tu historial.";

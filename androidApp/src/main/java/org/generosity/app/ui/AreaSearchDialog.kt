@@ -23,9 +23,9 @@ import org.generosity.domain.SupportedLocale
 @Composable
 internal fun AreaSearchDialog(
     locale: SupportedLocale, search: suspend (String, SupportedLocale) -> List<DiscoveryArea>,
-    onSelect: (DiscoveryArea) -> Unit, onDismiss: () -> Unit
+    onSelect: (DiscoveryArea) -> Unit, onDismiss: () -> Unit, initialQuery: String = ""
 ) {
-    var query by remember { mutableStateOf("") }
+    var query by remember { mutableStateOf(initialQuery.take(200)) }
     var results by remember { mutableStateOf<List<DiscoveryArea>>(emptyList()) }
     var message by remember { mutableStateOf<Int?>(null) }
     var busy by remember { mutableStateOf(false) }

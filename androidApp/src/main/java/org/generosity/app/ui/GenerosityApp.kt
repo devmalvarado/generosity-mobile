@@ -26,6 +26,7 @@ import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import androidx.compose.ui.platform.LocalContext
 import org.generosity.app.ui.map.searchPlaces
+import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalDensity
@@ -67,7 +68,8 @@ fun GenerosityApp(
     onSignIn: () -> Unit = {}, onSignOut: () -> Unit = {}, onCreate: () -> Unit = {},
     authBusy: Boolean = false, authFailed: Boolean = false,
     placeSearch: (suspend (String, SupportedLocale) -> List<DiscoveryArea>)? = null,
-    locationSource: DeviceLocationSource? = null
+    locationSource: DeviceLocationSource? = null,
+    designHarness: Boolean = false
 ) {
     val context = LocalContext.current
     val search: suspend (String, SupportedLocale) -> List<DiscoveryArea> = placeSearch ?: { query, locale -> searchPlaces(context, query, locale) }
@@ -76,6 +78,9 @@ fun GenerosityApp(
     val location = locationSource?.let { rememberDiscoveryLocation(it, appState) }
     var tab by rememberSaveable { mutableStateOf(AppTab.MAP) }
     var showInbox by rememberSaveable { mutableStateOf(false) }
+    var showPreview by remember(state.profile.id) { mutableStateOf(designHarness) }
+    val previewGroups = if (designHarness && org.generosity.app.BuildConfig.DEBUG) org.generosity.preview.PreviewSession.groupNames else state.features.previewGroups
+    LaunchedEffect(previewGroups) { if (previewGroups.isEmpty()) showPreview = false }
     LaunchedEffect(state.noticeDestinationId) {
         if (state.noticeDestinationId != null) { tab = AppTab.LIST; showInbox = false }
     }
@@ -84,6 +89,11 @@ fun GenerosityApp(
         LayoutDirection.Rtl else LayoutDirection.Ltr
     CompositionLocalProvider(LocalLayoutDirection provides direction) {
         GenerosityTheme {
+            if (showPreview && previewGroups.isNotEmpty()) {
+                ConnectedDesign(state, appState, previewGroups, mapRenderer, mapState, search, location, locationSource,
+                    onLanguageSelected, savingLanguage, languageSaveFailed, onSignIn, onSignOut, onCreate, authBusy, authFailed) { showPreview = false }
+                return@GenerosityTheme
+            }
             if (showInbox) AlertDialog(onDismissRequest = { showInbox = false },
                 title = { Text(localizedString(R.string.inbox_title, locale)) },
                 text = {
@@ -152,6 +162,9 @@ fun GenerosityApp(
             ) { padding ->
                 Box(Modifier.fillMaxSize().padding(padding).imePadding()) {
                     Column {
+                    if (state.features.previewGroups.isNotEmpty()) TextButton(onClick = { showPreview = true }, modifier = Modifier.fillMaxWidth().testTag("open-native-preview")) {
+                        Text(if (locale.code == "es") "Explorar diseño de prueba" else "Explore design preview")
+                    }
                     if (state.pushBanner != null) Row(verticalAlignment = Alignment.CenterVertically) {
                         TextButton(onClick = { showInbox = true; appState.dismissPushBanner() }, modifier = Modifier.weight(1f)) { Text(localizedString(R.string.push_new, locale)) }
                         TextButton(onClick = appState::dismissPushBanner) { Text(localizedString(R.string.inbox_close, locale)) }
@@ -167,6 +180,134 @@ fun GenerosityApp(
             }
         }
     }
+}
+
+
+@Composable
+private fun ConnectedDesign(
+    state: GenerosityUiState, app: GenerosityAppState, groups: List<String>,
+    renderer: CenterMapRenderer, mapState: SaveableStateHolder,
+    search: suspend (String, SupportedLocale) -> List<DiscoveryArea>,
+    location: DiscoveryLocation?, source: DeviceLocationSource?,
+    onLanguage: (SupportedLocale?) -> Unit, savingLanguage: Boolean, languageFailed: Boolean,
+    onSignIn: () -> Unit, onSignOut: () -> Unit, onCreate: () -> Unit, authBusy: Boolean, authFailed: Boolean,
+    onClose: () -> Unit
+) {
+    val canOffer = state.canRecordContributions && "contributions" in groups
+    val mapCenter = state.selectedCenter ?: state.centers.firstOrNull()
+    val density = LocalDensity.current
+    var mapTop by remember { mutableStateOf(0.dp) }
+    var mapBottom by remember { mutableStateOf(0.dp) }
+    val locale = state.locale
+    val device = location?.state?.collectAsState()?.value
+    val areaLabel = localizedString(R.string.area_search, locale)
+    var areaSearch by remember { mutableStateOf(false) }
+    var offer by remember(state.profile.id) { mutableStateOf<Pair<CenterNeed?, HelpMethod>?>(null) }
+    if (areaSearch) AreaSearchDialog(locale, search, {
+        location?.useManualOrigin(); app.setSearchText(""); app.setDiscoveryArea(it); areaSearch = false
+    }, { areaSearch = false }, initialQuery = state.searchText)
+    offer?.let { (need, method) -> OfferDialog(state, app, need, method) { offer = null } }
+    NativePreview(groups, locale.code, state.profile.id.orEmpty(), connectedContent = { route, navigate ->
+        LaunchedEffect(state.noticeDestinationId) {
+            if (state.noticeDestinationId != null) { navigate("center"); app.clearNoticeDestination() }
+        }
+        when (route) {
+            "map" -> Box(Modifier.fillMaxSize().testTag("connected-map")) {
+                mapState.SaveableStateProvider("connected-map") {
+                    renderer.Render(state.centers.toMapMarkers(locale), mapCenter?.id, locale, app::selectCenter,
+                        Modifier.fillMaxSize(), state.discoveryArea?.coordinates, state.discoveryArea?.label, PaddingValues(top = mapTop, bottom = mapBottom))
+                }
+                Column(Modifier.align(Alignment.TopCenter).onSizeChanged { mapTop = with(density) { it.height.toDp() } }.padding(GenSpace.sm), verticalArrangement = Arrangement.spacedBy(GenSpace.xs)) {
+                    Surface(shape = RoundedCornerShape(GenRadius.pill), shadowElevation = 4.dp) {
+                        TextField(state.searchText, app::setSearchText, modifier = Modifier.fillMaxWidth().testTag("connected-query"),
+                            placeholder = { Text(TextKey.SEARCH_PLACEHOLDER.label(locale), maxLines = 1) }, singleLine = true,
+                            leadingIcon = { IconButton(onClick = { areaSearch = true }) { AppIcon(R.drawable.ic_search, Modifier.semantics { contentDescription = areaLabel }) } },
+                            trailingIcon = { if (location != null && source != null) LocationActions(location, source, locale, compact = true) },
+                            keyboardOptions = KeyboardOptions(imeAction = ImeAction.Search),
+                            keyboardActions = KeyboardActions(onSearch = { areaSearch = true }))
+                    }
+                    Surface(shape = RoundedCornerShape(GenRadius.card)) { CategoryFilters(locale, state.selectedCategories, app::toggleCategory, horizontal = true) }
+                }
+                Surface(Modifier.align(Alignment.BottomCenter).fillMaxWidth().onSizeChanged { mapBottom = with(density) { it.height.toDp() } }.padding(GenSpace.sm), shape = RoundedCornerShape(GenRadius.card), shadowElevation = 3.dp) {
+                    Column(Modifier.padding(GenSpace.md), verticalArrangement = Arrangement.spacedBy(GenSpace.xs)) {
+                        if (state.syncing) LinearProgressIndicator(Modifier.fillMaxWidth())
+                        if (state.syncError != null) Text(localizedString(R.string.sync_failed, locale), color = MaterialTheme.colorScheme.error)
+                        if (device?.problem != null) Text(localizedString(when (device.problem) {
+                            org.generosity.app.LocationProblem.DENIED -> R.string.location_denied
+                            org.generosity.app.LocationProblem.DISABLED -> R.string.location_disabled
+                            else -> R.string.location_unavailable
+                        }, locale), style = MaterialTheme.typography.bodySmall)
+                        state.discoveryArea?.let { Text(if (device?.fix != null) localizedString(R.string.location_scope, locale) else it.label, style = MaterialTheme.typography.bodySmall) }
+                        mapCenter?.let { center ->
+                            CenterIdentity(locale, center)
+                            Button(onClick = { app.selectCenter(center.id); navigate("center") }, modifier = Modifier.testTag("connected-details")) { Text(localizedString(R.string.view_details, locale)) }
+                        } ?: Text(TextKey.EMPTY_CENTERS.label(locale))
+                    }
+                }
+            }
+            "list" -> {
+                SyncStatus(state, app)
+                if (state.centers.isEmpty()) EmptyMessage(TextKey.EMPTY_CENTERS.label(locale))
+                state.centers.forEach { center ->
+                    TextButton(onClick = { app.selectCenter(center.id); navigate("center") }, modifier = Modifier.testTag("connected-center-${center.id}")) { CenterIdentity(locale, center) }
+                }
+            }
+            "filters" -> {
+                CategoryFilters(locale, state.selectedCategories, app::toggleCategory)
+                TextButton(onClick = { areaSearch = true }) { Text(localizedString(R.string.area_search, locale)) }
+                if (location != null && source != null) LocationActions(location, source, locale)
+                if (state.discoveryArea != null) TextButton(onClick = { location?.useManualOrigin(); app.setDiscoveryArea(null) }) { Text(localizedString(R.string.area_clear, locale)) }
+                SyncStatus(state, app)
+            }
+            "settings" -> SettingsScreen(state, app, onLanguage, savingLanguage, languageFailed)
+            "profile", "history", "impact" -> Column {
+                if (route == "profile") Row {
+                    if ("contributions" in groups) TextButton(onClick = { navigate("history") }) { Text(localizedString(R.string.history, locale)) }
+                    TextButton(onClick = { navigate("settings") }) { Text(TextKey.TAB_SETTINGS.label(locale)) }
+                }
+                ProfileScreen(state, app, onSignIn, onSignOut, onCreate, authBusy, authFailed, section = route)
+            }
+            "welcome" -> WelcomeScreen(locale, authBusy, authFailed, { navigate("map") }, onSignIn, onCreate)
+            else -> Column(Modifier.fillMaxSize().verticalScroll(rememberScrollState()).padding(GenSpace.lg).testTag("connected-content"), verticalArrangement = Arrangement.spacedBy(GenSpace.md)) {
+                SyncStatus(state, app)
+                when (route) {
+                    "center", "offer" -> state.selectedCenter?.let { center ->
+                        CenterDetail(locale, center, state.currentNeeds, center.id in state.visitedCenterIds || state.visitSignalCenterId == center.id,
+                            state.lastRejection, !canOffer, state.backendConfigured, state.features.showNeedProgress, state.profile.isRegistered,
+                            { app.signalVisit(center.id) },
+                            { id -> state.currentNeeds.firstOrNull { it.id == id }?.let { offer = it to HelpMethod.GOODS } },
+                            { id -> state.currentNeeds.firstOrNull { it.id == id }?.let { offer = it to HelpMethod.TIME } })
+                    } ?: Text(TextKey.EMPTY_CENTERS.label(locale))
+                    "needs" -> {
+                        if (state.discoveredNeeds.isEmpty()) EmptyMessage(TextKey.NO_CURRENT_NEEDS.label(locale))
+                        state.discoveredNeeds.forEach { need ->
+                            state.centers.firstOrNull { it.id == need.centerId }?.let { center ->
+                                TextButton(onClick = { app.selectCenter(center.id); navigate("center") }) { Text(center.name.resolve(locale)) }
+                            }
+                            NeedRow(locale, need, !canOffer, state.features.showNeedProgress,
+                                { app.selectCenter(need.centerId); offer = need to HelpMethod.GOODS },
+                                { app.selectCenter(need.centerId); offer = need to HelpMethod.TIME })
+                            HorizontalDivider()
+                        }
+                    }
+                    "help", "personal" -> {
+                        if (route == "help" && "discovery" in groups) Button(onClick = { navigate("needs") }) { Text(TextKey.CURRENT_NEEDS.label(locale)) }
+                        Text(localizedString(R.string.personal_add, locale), style = MaterialTheme.typography.titleMedium)
+                        Text(localizedString(R.string.personal_notice, locale))
+                        Button(onClick = { offer = null to HelpMethod.GOODS }, enabled = canOffer) { Text(localizedString(R.string.offer_goods_action, locale)) }
+                        Button(onClick = { offer = null to HelpMethod.TIME }, enabled = canOffer) { Text(TextKey.OFFER_TIME.label(locale)) }
+                        if (!canOffer) Text(localizedString(if (state.profile.isRegistered) R.string.feature_unavailable else R.string.registration_required, locale))
+                    }
+                    "inbox" -> {
+                        Text(localizedString(R.string.inbox_retention, locale))
+                        if (!state.profile.isRegistered) TextButton(onClick = onSignIn) { Text(localizedString(R.string.auth_sign_in, locale)) }
+                        if (state.notices.isEmpty()) Text(localizedString(R.string.inbox_empty, locale))
+                        state.notices.forEach { notice -> TextButton(onClick = { app.openNotice(notice.id) }) { Text((if (notice.read) "" else "• ") + notice.title.resolve(locale), fontWeight = if (notice.read) FontWeight.Normal else FontWeight.Bold) } }
+                    }
+                }
+            }
+        }
+    }, onClose = onClose)
 }
 
 @Composable
@@ -280,7 +421,7 @@ private fun DiscoveryScreen(
                 Column(Modifier.weight(1f).verticalScroll(rememberScrollState()).testTag("detail-scroll")) {
                     state.selectedCenter?.let { center ->
                         CenterDetail(locale, center, state.currentNeeds,
-                            state.visitSignalCenterId == center.id || center.id in state.visitedCenterIds, state.lastRejection, !state.canRecordContributions, state.backendConfigured,
+                            state.visitSignalCenterId == center.id || center.id in state.visitedCenterIds, state.lastRejection, !state.canRecordContributions, state.backendConfigured, state.features.showNeedProgress, state.profile.isRegistered,
                             { appState.signalVisit(center.id) },
                             { id -> state.currentNeeds.firstOrNull { it.id == id }?.let { offer = it to HelpMethod.GOODS } },
                             { id -> state.currentNeeds.firstOrNull { it.id == id }?.let { offer = it to HelpMethod.TIME } })
@@ -335,7 +476,7 @@ private fun VerifiedCenterBadge(locale: SupportedLocale, status: VerificationSta
 @Composable
 private fun CenterDetail(
     locale: SupportedLocale, center: KindnessCenter, needs: List<CenterNeed>,
-    visitRecorded: Boolean, rejection: RejectionReason?, remoteAccount: Boolean, backendConfigured: Boolean, onVisitSignal: () -> Unit,
+    visitRecorded: Boolean, rejection: RejectionReason?, remoteAccount: Boolean, backendConfigured: Boolean, showProgress: Boolean, registered: Boolean, onVisitSignal: () -> Unit,
     onOfferGoods: (String) -> Unit, onOfferTime: (String) -> Unit
 ) {
     Column(
@@ -356,11 +497,11 @@ private fun CenterDetail(
         Text(TextKey.CURRENT_NEEDS.label(locale), style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.Bold)
         if (needs.isEmpty()) EmptyMessage(TextKey.NO_CURRENT_NEEDS.label(locale))
         needs.forEach { need ->
-            NeedRow(locale, need, remoteAccount, onOfferGoods, onOfferTime)
+            NeedRow(locale, need, remoteAccount, showProgress, onOfferGoods, onOfferTime)
             HorizontalDivider(color = MaterialTheme.colorScheme.outlineVariant)
         }
         if (remoteAccount || rejection == RejectionReason.REGISTRATION_REQUIRED) {
-            Text(TextKey.REGISTRATION_REQUIRED.label(locale), color = MaterialTheme.colorScheme.error)
+            Text(if (registered) localizedString(R.string.feature_unavailable, locale) else TextKey.REGISTRATION_REQUIRED.label(locale), color = MaterialTheme.colorScheme.error)
         }
         OutlinedButton(onClick = onVisitSignal, enabled = !visitRecorded, modifier = Modifier.fillMaxWidth()) {
             Text(TextKey.VISIT_SIGNAL.label(locale))
@@ -371,7 +512,7 @@ private fun CenterDetail(
 }
 
 @Composable
-private fun NeedRow(locale: SupportedLocale, need: CenterNeed, remoteAccount: Boolean, onOfferGoods: (String) -> Unit, onOfferTime: (String) -> Unit) {
+private fun NeedRow(locale: SupportedLocale, need: CenterNeed, remoteAccount: Boolean, showProgress: Boolean, onOfferGoods: (String) -> Unit, onOfferTime: (String) -> Unit) {
     Row(horizontalArrangement = Arrangement.spacedBy(GenSpace.md)) {
         Box(Modifier.size(40.dp).background(MaterialTheme.colorScheme.primaryContainer, RoundedCornerShape(GenRadius.control)), contentAlignment = Alignment.Center) {
             AppIcon(if (HelpMethod.GOODS in need.helpMethods) R.drawable.ic_gift else R.drawable.ic_clock, tint = MaterialTheme.colorScheme.onPrimaryContainer)
@@ -387,7 +528,7 @@ private fun NeedRow(locale: SupportedLocale, need: CenterNeed, remoteAccount: Bo
                 style = MaterialTheme.typography.labelMedium, fontWeight = FontWeight.Bold)
             Text(need.title.resolve(locale), fontWeight = FontWeight.SemiBold)
             Text(need.description.resolve(locale), style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
-            NeedProgress(need, locale)
+            if (showProgress) NeedProgress(need, locale)
             Text(need.helpMethods.map { it.label(locale) }.joinToString(" · "), style = MaterialTheme.typography.bodySmall)
             if (HelpMethod.MONEY in need.helpMethods) Text(TextKey.MONEY_BOUNDARY.label(locale), style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
             FlowRow(horizontalArrangement = Arrangement.spacedBy(GenSpace.sm)) {
@@ -403,11 +544,12 @@ private fun NeedRow(locale: SupportedLocale, need: CenterNeed, remoteAccount: Bo
 }
 
 @Composable
-private fun ProfileScreen(state: GenerosityUiState, appState: GenerosityAppState, onSignIn: () -> Unit, onSignOut: () -> Unit, onCreate: () -> Unit, authBusy: Boolean, authFailed: Boolean) {
+private fun ProfileScreen(state: GenerosityUiState, appState: GenerosityAppState, onSignIn: () -> Unit, onSignOut: () -> Unit, onCreate: () -> Unit, authBusy: Boolean, authFailed: Boolean, section: String = "all") {
     val locale = state.locale
     var personalMethod by remember { mutableStateOf<HelpMethod?>(null) }
     personalMethod?.let { OfferDialog(state, appState, null, it) { personalMethod = null } }
     Column(Modifier.fillMaxSize().verticalScroll(rememberScrollState()).padding(GenSpace.lg), verticalArrangement = Arrangement.spacedBy(GenSpace.xl)) {
+        if (section in listOf("all", "profile")) {
         Text(TextKey.TAB_PROFILE.label(locale), style = MaterialTheme.typography.headlineSmall, fontWeight = FontWeight.Bold)
         Surface(shape = RoundedCornerShape(GenRadius.card)) {
             Row(Modifier.fillMaxWidth().padding(GenSpace.lg), horizontalArrangement = Arrangement.spacedBy(GenSpace.md), verticalAlignment = Alignment.CenterVertically) {
@@ -437,20 +579,24 @@ private fun ProfileScreen(state: GenerosityUiState, appState: GenerosityAppState
                 Text(TextKey.GENEROSITY_POINTS.label(locale), style = MaterialTheme.typography.bodySmall)
             }
         }
+        }
         SyncStatus(state, appState)
-        if (state.canRecordContributions) {
+        if (section == "all" && state.canRecordContributions) {
             Text(localizedString(R.string.personal_add, locale), style = MaterialTheme.typography.titleMedium)
             Row(horizontalArrangement = Arrangement.spacedBy(GenSpace.sm)) {
                 Button(onClick = { personalMethod = HelpMethod.GOODS }) { Text(localizedString(R.string.offer_goods_action, locale)) }
                 Button(onClick = { personalMethod = HelpMethod.TIME }) { Text(TextKey.OFFER_TIME.label(locale)) }
             }
         }
+        if (section in listOf("all", "impact")) {
         Text(TextKey.IMPACT_TITLE.label(locale), style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.Bold)
         FlowRow(horizontalArrangement = Arrangement.spacedBy(GenSpace.md), verticalArrangement = Arrangement.spacedBy(GenSpace.md)) {
             Metric(localizedString(R.string.centers_supported, locale), if (state.profile.isRegistered) localizedNumber(state.impact.centersSupported, locale) else "—")
             Metric(localizedString(R.string.needs_supported, locale), if (state.profile.isRegistered) localizedNumber(state.impact.needsSupported, locale) else "—")
         }
         Text(localizedString(R.string.impact_basis, locale), style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
+        }
+        if (section in listOf("all", "history")) {
         Text(localizedString(R.string.history, locale), style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.Bold)
         if (state.contributions.isEmpty()) EmptyMessage(TextKey.CONTRIBUTION_HISTORY_EMPTY.label(locale))
         state.contributions.forEach { contribution ->
@@ -475,9 +621,9 @@ private fun ProfileScreen(state: GenerosityUiState, appState: GenerosityAppState
                 HorizontalDivider(color = MaterialTheme.colorScheme.outlineVariant)
             }
         }
+        }
     }
 }
-
 @Composable
 private fun Metric(label: String, value: String) {
     Surface(shape = RoundedCornerShape(GenRadius.card)) {

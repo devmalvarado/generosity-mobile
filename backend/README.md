@@ -31,7 +31,7 @@ Open the verification link from Mailpit and log in. API tokens expire after seve
 ## API behavior
 
 - Public paginated centers and published needs use localized language-code dictionaries; all data is UTF-8. Page size is 25.
-- Need `status` describes publication (`draft`, `published`, `closed`). A published need can be expired or fully reserved; clients derive availability from its inclusive UTC expiry date and quantity. Native DTO adaptation is still required.
+- Need `status` describes publication (`draft`, `published`, `closed`). A published need can be expired or fully reserved; clients derive availability from its inclusive UTC expiry date and quantity. Native clients consume the versioned `/sync/catalog` projection through shared Kotlin, including negotiated receipt totals.
 - Native protected requests require an email-verified account and `Authorization: Bearer ...`. Configured first-party Generosity origins may alternatively use a CSRF-protected HttpOnly session. Set exact `CORS_ALLOWED_ORIGINS` and `SANCTUM_STATEFUL_DOMAINS`; never use wildcard origins or persist bearer tokens in browser storage. See [Google/Apple entry and session configuration](../docs/social-sign-in.md).
 - Goods/time offers accept user-entered quantities, activity, minutes, availability and notes. Money is rejected; its presence in catalog help methods does not enable payments.
 - Every contribution write and staff need write requires a UUID `Idempotency-Key`. Keys are scoped to the account, retained durably, and cannot be reused with different validated content/path/method. A retry replays the original successful response after checking current permission, even if later transitions changed the record. Fetch current state separately.
@@ -50,7 +50,7 @@ docker compose exec app php artisan center:staff center-id staff@example.org --r
 docker compose exec app php artisan catalog:import /catalog/reviewed.json --operator=operator-name
 ```
 
-Imports accept the documented schemaVersion 1 public catalog fields and supported shared category codes; malformed/duplicate IDs, cross-center need reassignment and nonzero imported commitments are rejected. Commitments must originate in accepted API offers. Entire imports are transactional. Existing commitments and staff publication states survive updates; missing records are retained. This is an **upsert**, not a deletion/synchronization mechanism. A reviewed import can overwrite descriptive fields; source ownership, stale-source checks and tombstones remain pending. The fixture's verification labels are demonstration data only.
+Imports accept the documented schemaVersion 1 public catalog fields and supported shared category codes; malformed/duplicate IDs, cross-center need reassignment and nonzero imported commitments are rejected. Commitments must originate in accepted API offers. Entire imports are transactional. Existing commitments and staff publication states survive updates; missing records are retained. This is an **upsert**, not a deletion/synchronization mechanism. Reviewed directory imports can supply `expectedVersion` for stale-write rejection; general source ownership, legacy need-description reconciliation, authoritative removals and tombstones remain pending. The fixture's verification labels are demonstration data only.
 
 ## Verification
 

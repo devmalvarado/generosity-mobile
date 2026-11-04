@@ -3,7 +3,7 @@
   "info": {
     "title": "Generosity API",
     "version": "1.0.0",
-    "description": "PHP/MySQL backend. Requests and responses are UTF-8 JSON. UTC timestamps; expiry dates are inclusive UTC days. Native authentication uses 7-day Sanctum bearer tokens. Explicitly configured first-party Generosity browser origins use HttpOnly Laravel sessions with CSRF on writes. Google/Apple sign-in is hosted at /auth/sign-in; native codes are exchanged at /auth/exchange. Other institute platforms are excluded. Idempotency keys are per-account UUIDs retained with committed operations. Same-key retries replay the exact success after current authorization; changed validated content conflicts. Need status denotes publication, not native lifecycle: clients derive covered/expired using quantities and expiry. Money is never accepted. No incremental sync contract yet."
+    "description": "PHP/MySQL backend. Requests and responses are UTF-8 JSON. UTC timestamps; expiry dates are inclusive UTC days. Native authentication uses 7-day Sanctum bearer tokens. Explicitly configured first-party Generosity browser origins use HttpOnly Laravel sessions with CSRF on writes. Google/Apple sign-in is hosted at /auth/sign-in; native codes are exchanged at /auth/exchange. Other institute platforms are excluded. Idempotency keys are per-account UUIDs retained with committed operations. Same-key retries replay the exact success after current authorization; changed validated content conflicts. Need status denotes publication, not native lifecycle: clients derive covered/expired using quantities and expiry. Money is never accepted. No incremental sync contract yet. Published campaign, occurrence, meal, preview, progress, and outcome reads are public. Participation writes stay behind default-off flags. An empty organizer threshold, withdrawal channel, reviewer list, operator list, consent version, or retention period keeps that action unavailable; the API does not invent the missing value. No points ledger is created, and a share-sheet open is not a delivery."
   },
   "servers": [
     {
@@ -17,6 +17,79 @@
     }
   ],
   "paths": {
+    "/features": {
+      "get": {
+        "summary": "Anonymous feature availability",
+        "operationId": "get_features",
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/FeatureAccess"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Stable error codes; validation errors include field keys, conflicts may include current state. HTTP 401/403/404/409/413/422/429/500.",
+            "headers": {
+              "Retry-After": {
+                "schema": {
+                  "type": "string"
+                },
+                "description": "Present when rate limited"
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "security": []
+      }
+    },
+    "/me/features": {
+      "get": {
+        "summary": "Feature availability for the current verified account",
+        "operationId": "get_account_features",
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/FeatureAccess"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Stable error codes; validation errors include field keys, conflicts may include current state. HTTP 401/403/404/409/413/422/429/500.",
+            "headers": {
+              "Retry-After": {
+                "schema": {
+                  "type": "string"
+                },
+                "description": "Present when rate limited"
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/health": {
       "get": {
         "summary": "Database readiness and disabled payment capability",
@@ -1647,6 +1720,17 @@
       }
     },
     "/me/notification-preferences": {
+      "get": {
+        "summary": "Owned preference row. saved is false when no row exists; absence is not consent.",
+        "responses": {
+          "200": {
+            "description": "The saved row, or saved false without implied consent"
+          },
+          "401": {
+            "description": "Authentication required"
+          }
+        }
+      },
       "post": {
         "summary": "Save explicit urgent notice consent and category interests",
         "security": [
@@ -1888,6 +1972,1039 @@
           }
         }
       }
+    },
+    "/needs/{need}/progress": {
+      "get": {
+        "summary": "Public requested, committed, and validated quantities. reported is unknown. fulfilled is never inferred.",
+        "responses": {
+          "200": {
+            "description": "Success"
+          },
+          "default": {
+            "description": "Stable error. 503 means required configuration is absent; the response does not invent a provider, threshold, reviewer, consent version, retention period, or metric."
+          }
+        },
+        "security": [],
+        "parameters": [
+          {
+            "name": "need",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ]
+      }
+    },
+    "/campaigns": {
+      "get": {
+        "summary": "Published campaigns only. Drafts are omitted. private_plan is never selected.",
+        "responses": {
+          "200": {
+            "description": "Success"
+          },
+          "default": {
+            "description": "Stable error. 503 means required configuration is absent; the response does not invent a provider, threshold, reviewer, consent version, retention period, or metric."
+          }
+        },
+        "security": []
+      },
+      "post": {
+        "summary": "Campaign publication stays unavailable. A missing points threshold or the absent points ledger returns 503 and writes no row.",
+        "responses": {
+          "200": {
+            "description": "Success"
+          },
+          "default": {
+            "description": "Stable error. 503 means required configuration is absent; the response does not invent a provider, threshold, reviewer, consent version, retention period, or metric."
+          }
+        },
+        "parameters": [
+          {
+            "name": "Idempotency-Key",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/campaigns/{campaign}": {
+      "get": {
+        "summary": "Published or cancelled campaign. A draft or unknown id is 404 and does not substitute another record.",
+        "responses": {
+          "200": {
+            "description": "Success"
+          },
+          "default": {
+            "description": "Stable error. 503 means required configuration is absent; the response does not invent a provider, threshold, reviewer, consent version, retention period, or metric."
+          }
+        },
+        "security": [],
+        "parameters": [
+          {
+            "name": "campaign",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ]
+      }
+    },
+    "/occurrences": {
+      "get": {
+        "summary": "Published occurrences only. Each item includes its current optimistic version.",
+        "responses": {
+          "200": {
+            "description": "Success"
+          },
+          "default": {
+            "description": "Stable error. 503 means required configuration is absent; the response does not invent a provider, threshold, reviewer, consent version, retention period, or metric."
+          }
+        },
+        "security": []
+      }
+    },
+    "/occurrences/{occurrence}": {
+      "get": {
+        "summary": "Published or cancelled occurrence, including its current optimistic version for subsequent edits or cancellation. alternatives is empty when no replacement was published.",
+        "responses": {
+          "200": {
+            "description": "Success"
+          },
+          "default": {
+            "description": "Stable error. 503 means required configuration is absent; the response does not invent a provider, threshold, reviewer, consent version, retention period, or metric."
+          }
+        },
+        "security": [],
+        "parameters": [
+          {
+            "name": "occurrence",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ]
+      }
+    },
+    "/occurrences/{occurrence}/enrollments": {
+      "post": {
+        "summary": "One account seat. Duplicate returns the existing row. Capacity is shared with assisted seats. payment is prohibited.",
+        "responses": {
+          "200": {
+            "description": "Success"
+          },
+          "default": {
+            "description": "Stable error. 503 means required configuration is absent; the response does not invent a provider, threshold, reviewer, consent version, retention period, or metric."
+          }
+        },
+        "parameters": [
+          {
+            "name": "occurrence",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "Idempotency-Key",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/occurrences/{occurrence}/assisted-enrollments": {
+      "post": {
+        "summary": "Center staff records one assisted seat on the same capacity counter. No account is created.",
+        "responses": {
+          "200": {
+            "description": "Success"
+          },
+          "default": {
+            "description": "Stable error. 503 means required configuration is absent; the response does not invent a provider, threshold, reviewer, consent version, retention period, or metric."
+          }
+        },
+        "parameters": [
+          {
+            "name": "occurrence",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "Idempotency-Key",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/occurrences/{occurrence}/attendance": {
+      "post": {
+        "summary": "Another center staff member validates attendance after the occurrence ends. Assisted attendance creates no contribution and no points.",
+        "responses": {
+          "200": {
+            "description": "Success"
+          },
+          "default": {
+            "description": "Stable error. 503 means required configuration is absent; the response does not invent a provider, threshold, reviewer, consent version, retention period, or metric."
+          }
+        },
+        "parameters": [
+          {
+            "name": "occurrence",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "Idempotency-Key",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/meals": {
+      "get": {
+        "summary": "Approved open meal slots. private_details is not selected.",
+        "responses": {
+          "200": {
+            "description": "Success"
+          },
+          "default": {
+            "description": "Stable error. 503 means required configuration is absent; the response does not invent a provider, threshold, reviewer, consent version, retention period, or metric."
+          }
+        },
+        "security": []
+      }
+    },
+    "/meals/{meal}": {
+      "get": {
+        "summary": "One public meal slot. Unknown, private, or unapproved slots are 404.",
+        "responses": {
+          "200": {
+            "description": "Success"
+          },
+          "default": {
+            "description": "Stable error. 503 means required configuration is absent; the response does not invent a provider, threshold, reviewer, consent version, retention period, or metric."
+          }
+        },
+        "security": [],
+        "parameters": [
+          {
+            "name": "meal",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ]
+      }
+    },
+    "/opportunities/{kind}/{id}": {
+      "get": {
+        "summary": "Canonical preview. channel is ignored and records no attribution. next and url are rejected. No QR image and no remaining-seat promise.",
+        "responses": {
+          "200": {
+            "description": "Success"
+          },
+          "default": {
+            "description": "Stable error. 503 means required configuration is absent; the response does not invent a provider, threshold, reviewer, consent version, retention period, or metric."
+          }
+        },
+        "security": [],
+        "parameters": [
+          {
+            "name": "kind",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ]
+      }
+    },
+    "/outcome-updates/{outcome}": {
+      "get": {
+        "summary": "Published, corrected, or withdrawn aggregate outcome. A withdrawn body and figures are omitted. Drafts are 404.",
+        "responses": {
+          "200": {
+            "description": "Success"
+          },
+          "default": {
+            "description": "Stable error. 503 means required configuration is absent; the response does not invent a provider, threshold, reviewer, consent version, retention period, or metric."
+          }
+        },
+        "security": [],
+        "parameters": [
+          {
+            "name": "outcome",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ]
+      }
+    },
+    "/outcome-updates/{outcome}/transition": {
+      "post": {
+        "summary": "Publish, correct, or withdraw an owned outcome. Withdrawal clears the public body.",
+        "responses": {
+          "200": {
+            "description": "Success"
+          },
+          "default": {
+            "description": "Stable error. 503 means required configuration is absent; the response does not invent a provider, threshold, reviewer, consent version, retention period, or metric."
+          }
+        },
+        "parameters": [
+          {
+            "name": "outcome",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "Idempotency-Key",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/me/notifications": {
+      "get": {
+        "summary": "Owned inbox snapshot. Another account's notices are not included.",
+        "responses": {
+          "200": {
+            "description": "Success"
+          },
+          "default": {
+            "description": "Stable error. 503 means required configuration is absent; the response does not invent a provider, threshold, reviewer, consent version, retention period, or metric."
+          }
+        }
+      }
+    },
+    "/me/follows": {
+      "get": {
+        "summary": "Owned follows, including unsubscribed rows. sent is false because no delivery is attempted.",
+        "responses": {
+          "200": {
+            "description": "Success"
+          },
+          "default": {
+            "description": "Stable error. 503 means required configuration is absent; the response does not invent a provider, threshold, reviewer, consent version, retention period, or metric."
+          }
+        }
+      }
+    },
+    "/me/enrollments": {
+      "get": {
+        "summary": "Owned enrollments. Assisted history appears only after the subject is claimed by this account.",
+        "responses": {
+          "200": {
+            "description": "Success"
+          },
+          "default": {
+            "description": "Stable error. 503 means required configuration is absent; the response does not invent a provider, threshold, reviewer, consent version, retention period, or metric."
+          }
+        }
+      }
+    },
+    "/operator/funnel": {
+      "get": {
+        "summary": "Operator counts. Empty operator configuration returns 503. shareSheetOpens and returnParticipation stay unknown.",
+        "responses": {
+          "200": {
+            "description": "Success"
+          },
+          "default": {
+            "description": "Stable error. 503 means required configuration is absent; the response does not invent a provider, threshold, reviewer, consent version, retention period, or metric."
+          }
+        }
+      }
+    },
+    "/staff/centers/{center}/occurrences": {
+      "post": {
+        "summary": "Center staff publishes one future occurrence. Address and payment fields are prohibited.",
+        "responses": {
+          "200": {
+            "description": "Success"
+          },
+          "default": {
+            "description": "Stable error. 503 means required configuration is absent; the response does not invent a provider, threshold, reviewer, consent version, retention period, or metric."
+          }
+        },
+        "parameters": [
+          {
+            "name": "center",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "Idempotency-Key",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/staff/centers/{center}/occurrences/{occurrence}": {
+      "put": {
+        "summary": "Center staff updates an occurrence. A venue or time change with reserved seats requires a replacement.",
+        "responses": {
+          "200": {
+            "description": "Success"
+          },
+          "default": {
+            "description": "Stable error. 503 means required configuration is absent; the response does not invent a provider, threshold, reviewer, consent version, retention period, or metric."
+          }
+        },
+        "parameters": [
+          {
+            "name": "center",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "occurrence",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "Idempotency-Key",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/staff/centers/{center}/occurrences/{occurrence}/cancel": {
+      "post": {
+        "summary": "Center staff cancels an occurrence. noticesSent is false because inbox notices require a need.",
+        "responses": {
+          "200": {
+            "description": "Success"
+          },
+          "default": {
+            "description": "Stable error. 503 means required configuration is absent; the response does not invent a provider, threshold, reviewer, consent version, retention period, or metric."
+          }
+        },
+        "parameters": [
+          {
+            "name": "center",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "occurrence",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "Idempotency-Key",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/staff/centers/{center}/meal-plans": {
+      "post": {
+        "summary": "Center staff stores a private meal plan. The response does not echo private details.",
+        "responses": {
+          "200": {
+            "description": "Success"
+          },
+          "default": {
+            "description": "Stable error. 503 means required configuration is absent; the response does not invent a provider, threshold, reviewer, consent version, retention period, or metric."
+          }
+        },
+        "parameters": [
+          {
+            "name": "center",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "Idempotency-Key",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/staff/centers/{center}/assisted-subjects": {
+      "post": {
+        "summary": "Center staff records consent for an assisted subject. No user, membership, or email is created.",
+        "responses": {
+          "200": {
+            "description": "Success"
+          },
+          "default": {
+            "description": "Stable error. 503 means required configuration is absent; the response does not invent a provider, threshold, reviewer, consent version, retention period, or metric."
+          }
+        },
+        "parameters": [
+          {
+            "name": "center",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "Idempotency-Key",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/staff/centers/{center}/outcome-updates": {
+      "post": {
+        "summary": "Center staff drafts an aggregate outcome. Identifiable keys, email addresses, and phone numbers are rejected.",
+        "responses": {
+          "200": {
+            "description": "Success"
+          },
+          "default": {
+            "description": "Stable error. 503 means required configuration is absent; the response does not invent a provider, threshold, reviewer, consent version, retention period, or metric."
+          }
+        },
+        "parameters": [
+          {
+            "name": "center",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "Idempotency-Key",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/enrollments/{enrollment}/cancel": {
+      "post": {
+        "summary": "The owner or recording coordinator releases one seat. A second cancel does not decrement again.",
+        "responses": {
+          "200": {
+            "description": "Success"
+          },
+          "default": {
+            "description": "Stable error. 503 means required configuration is absent; the response does not invent a provider, threshold, reviewer, consent version, retention period, or metric."
+          }
+        },
+        "parameters": [
+          {
+            "name": "enrollment",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "Idempotency-Key",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/meal-plans/{plan}/approval": {
+      "post": {
+        "summary": "Records recipient or representative approval without creating an account or a commitment.",
+        "responses": {
+          "200": {
+            "description": "Success"
+          },
+          "default": {
+            "description": "Stable error. 503 means required configuration is absent; the response does not invent a provider, threshold, reviewer, consent version, retention period, or metric."
+          }
+        },
+        "parameters": [
+          {
+            "name": "plan",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "Idempotency-Key",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/meal-plans/{plan}/withdrawal": {
+      "post": {
+        "summary": "Withdrawal stays unavailable until a channel is configured. History is retained and noticesSent is false.",
+        "responses": {
+          "200": {
+            "description": "Success"
+          },
+          "default": {
+            "description": "Stable error. 503 means required configuration is absent; the response does not invent a provider, threshold, reviewer, consent version, retention period, or metric."
+          }
+        },
+        "parameters": [
+          {
+            "name": "plan",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "Idempotency-Key",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/meal-slots/{slot}/commitments": {
+      "post": {
+        "summary": "Meal commitment stays unavailable until a withdrawal channel is configured. No partial quantity is accepted.",
+        "responses": {
+          "200": {
+            "description": "Success"
+          },
+          "default": {
+            "description": "Stable error. 503 means required configuration is absent; the response does not invent a provider, threshold, reviewer, consent version, retention period, or metric."
+          }
+        },
+        "parameters": [
+          {
+            "name": "slot",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "Idempotency-Key",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/assisted-claims": {
+      "post": {
+        "summary": "Claim by subject id only. name, email, and phone are prohibited. Contact is not returned.",
+        "responses": {
+          "200": {
+            "description": "Success"
+          },
+          "default": {
+            "description": "Stable error. 503 means required configuration is absent; the response does not invent a provider, threshold, reviewer, consent version, retention period, or metric."
+          }
+        },
+        "parameters": [
+          {
+            "name": "Idempotency-Key",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/assisted-claims/{claim}/decision": {
+      "post": {
+        "summary": "Review stays unavailable until reviewer ids are configured. Approval sets the claim link and copies no history or points.",
+        "responses": {
+          "200": {
+            "description": "Success"
+          },
+          "default": {
+            "description": "Stable error. 503 means required configuration is absent; the response does not invent a provider, threshold, reviewer, consent version, retention period, or metric."
+          }
+        },
+        "parameters": [
+          {
+            "name": "claim",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "Idempotency-Key",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/follows": {
+      "post": {
+        "summary": "Email follows stay unavailable until consent and delivery are configured. Inbox and push rows record no send.",
+        "responses": {
+          "200": {
+            "description": "Success"
+          },
+          "default": {
+            "description": "Stable error. 503 means required configuration is absent; the response does not invent a provider, threshold, reviewer, consent version, retention period, or metric."
+          }
+        },
+        "parameters": [
+          {
+            "name": "Idempotency-Key",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/follows/{follow}/unsubscribe": {
+      "post": {
+        "summary": "Owner unsubscribe works while follows.update is off. sent is false.",
+        "responses": {
+          "200": {
+            "description": "Success"
+          },
+          "default": {
+            "description": "Stable error. 503 means required configuration is absent; the response does not invent a provider, threshold, reviewer, consent version, retention period, or metric."
+          }
+        },
+        "parameters": [
+          {
+            "name": "follow",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "Idempotency-Key",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ]
+      }
     }
   },
   "components": {
@@ -1898,6 +3015,29 @@
       }
     },
     "schemas": {
+      "FeatureAccess": {
+        "type": "object",
+        "required": [
+          "channel",
+          "features"
+        ],
+        "properties": {
+          "channel": {
+            "type": "string",
+            "enum": [
+              "production",
+              "preview"
+            ]
+          },
+          "features": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "boolean"
+            },
+            "description": "Effective decisions for this caller. Missing or unknown keys must not enable functionality. No tester IDs or rollout rules are exposed."
+          }
+        }
+      },
       "LocalizedText": {
         "type": "object",
         "minProperties": 1,

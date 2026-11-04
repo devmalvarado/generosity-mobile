@@ -13,6 +13,7 @@ final class IOSConnection: NSObject, AppConnection, URLSessionTaskDelegate {
         var outgoing = URLRequest(url: url, cachePolicy: .reloadIgnoringLocalCacheData, timeoutInterval: 15)
         outgoing.httpMethod = request.method
         outgoing.setValue("application/json", forHTTPHeaderField: "Accept")
+        outgoing.setValue(Bundle.main.object(forInfoDictionaryKey: "GenerosityChannel") as? String ?? "production", forHTTPHeaderField: "X-Generosity-Channel")
         if let token { outgoing.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization") }
         if let key = request.operationId { outgoing.setValue(key, forHTTPHeaderField: "Idempotency-Key") }
         if let body = request.body {

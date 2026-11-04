@@ -92,7 +92,7 @@ startup without wiping app data.
 Reproduce the focused Android UI checks with the README JDK/SDK environment:
 
 ```sh
-./gradlew :androidApp:testDebugUnitTest :androidApp:connectedDebugAndroidTest \
+./gradlew :androidApp:testProductionDebugUnitTest :androidApp:connectedProductionDebugAndroidTest \
   -Pandroid.testInstrumentationRunnerArguments.class='org.generosity.app.AccountEntryTest,org.generosity.app.WelcomeScreenTest,org.generosity.app.GenerosityUiTest#profileShowsAnonymousEmptyState,org.generosity.app.GenerosityUiTest#profileOpensTheSelectedHostedAccountMode' --offline
 ```
 

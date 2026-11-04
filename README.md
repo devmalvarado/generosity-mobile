@@ -53,7 +53,7 @@ separate meanings. Contact-only listings do not require public coordinates.
 - Android UI: Jetpack Compose.
 - Native maps: Google Maps on Android behind a replaceable renderer; Apple MapKit on iOS. See [configuration and MapLibre migration boundary](docs/native-maps.md).
 - Backend: PHP 8.4 / Laravel 13 with MySQL/MariaDB; API published on Hostinger with bounded database queue processing.
-- Web: public landing and mobile-first center need publishing/management are planned; see the [portal assessment](docs/center-portal.md). The source still lives in the older PoC.
+- Web: the canonical landing and mobile-first center workspace live in `portal/`; both have published checkpoints. See [portal implementation and remaining acceptance](docs/center-portal.md). The older PoC is preserved.
 - Follow-up scope: reference navigation/feed, favorites/sharing, public profiles, moderated reviews, gamification, inbox, events and gated external-provider donations.
 - Community scope: registered users earn organizing access through validated prior help/level/points; household follow-up is optional and private, and territorial maps use approved aggregates. Organizer status never grants center staff or blanket case access.
 - Center-mediated assistance: consented private referrals, center-assessed needs and center-directed support are planned. A heads-up does not enable purchases/donations; medicine requires separate qualified-service gates, and no unrestricted beneficiary cash transfer is added.
@@ -93,7 +93,7 @@ file or set `ANDROID_HOME` to your SDK installation.
 ./gradlew :shared:jvmTest :shared:testAndroidHostTest
 
 # Android APK and compilation of the Android UI tests.
-./gradlew :androidApp:assembleDebug :androidApp:compileDebugAndroidTestKotlin
+./gradlew :androidApp:assembleProductionDebug :androidApp:compileProductionDebugAndroidTestKotlin
 
 # Kotlin compilation for the iOS simulator, without linking an Apple binary.
 ./gradlew :shared:compileKotlinIosSimulatorArm64
@@ -106,7 +106,7 @@ file or set `ANDROID_HOME` to your SDK installation.
 ./gradlew :shared:prepareSharedBridge
 ```
 
-The debug APK is at `androidApp/build/outputs/apk/debug/androidApp-debug.apk`.
+The debug APK is at `androidApp/build/outputs/apk/production/debug/androidApp-production-debug.apk`.
 Compilation of UI tests does not execute them; running them requires an
 Android device or emulator.
 
@@ -140,13 +140,13 @@ terminal and install the app from another:
 ```
 
 ```bash
-./gradlew :androidApp:installDebug
+./gradlew :androidApp:installProductionDebug
 "$ANDROID_HOME/platform-tools/adb" shell am start -n org.generosity.app/.MainActivity
-./gradlew :androidApp:connectedDebugAndroidTest
+./gradlew :androidApp:connectedProductionDebugAndroidTest
 ```
 
 The connected test task removes its test installation when finished;
-run `:androidApp:installDebug` again for manual use afterward.
+run `:androidApp:installProductionDebug` again for manual use afterward.
 
 For iOS, first run `./gradlew :shared:prepareSharedBridge` after a fresh clone
 or shared Kotlin changes. The app now links the local SharedBridge package;
@@ -246,8 +246,10 @@ authenticated center workspace are implemented locally. Guest visits and
 notification preferences persist on the device; account visits synchronize.
 The [integration report](docs/testing/backend-integration.md) distinguishes local
 test evidence from live acceptance. Catalog, account, visit and urgent-notification
-endpoints are published. The catalog contains 157 imported listings and one
-owner-authorized DEMO center; the authenticated center workspace is also published.
+endpoints are published. The latest recorded catalog checkpoint contains 171
+centers, including the owner-authorized DEMO center and the reviewed Aguascalientes
+additions; see [import evidence](data/aguascalientes-directory-2026-11-02/README.md).
+The authenticated center workspace is also published.
 Google access and Hostinger SMTP have live acceptance evidence. Apple access,
 phone verification, complete Facebook configuration, nearby/reminder delivery,
 physical push acceptance and the full accessibility matrix remain open. Current
@@ -267,3 +269,16 @@ tools alone cannot link the iOS framework or run its native tests; use
 full Xcode. On Apple Silicon, the native ARM64 tests run; Gradle skips
 the Intel simulator test task.
 
+
+## Release channels and feature controls
+
+Production and preview now use explicit Android flavors and iOS configurations.
+See [release channels](docs/release-channels.md) for side-by-side builds, isolated
+preview setup, backend flags and administrator access. Preview hosting and provider
+credentials must be configured separately before live acceptance.
+
+The [native design preview](docs/native-design-preview.md) adds all 34 visual-prototype
+routes as SwiftUI/Compose views behind ten off-by-default backend flags. Supported
+destinations reuse the existing catalog, account, contribution and inbox services;
+unsupported destinations retain isolated session fixtures. Activation and updated
+native distribution remain pending; see the inventory's Connected/Design labels.

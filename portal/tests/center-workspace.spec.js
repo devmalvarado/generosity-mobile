@@ -1,5 +1,6 @@
 const {test,expect}=require('@playwright/test');
 const api='https://api.generosity.global';
+test.beforeEach(async ({page}) => { await page.route(/\/api\/v1\/(me\/)?features$/, r => r.fulfill({json:{channel:'production',features:{'contributions.create':true,'needs.publish':true,'needs.progress':true}}})); });
 const need={id:'need-a',title:{es:'Alimentos',en:'Food'},description:{es:'Paquetes',en:'Packs'},helpMethods:['goods'],urgent:false,status:'published',quantityRequired:20,quantityCommitted:2,quantityReceived:1,unit:'paquetes',version:1};
 const pageOf=data=>({data,current_page:1,last_page:1});
 async function fixture(page){
@@ -69,4 +70,15 @@ test('storage deletion failure does not retain another accounts private view',as
 });
 test('workspace fits narrow screens with large Spanish and English text',async({page})=>{
  await fixture(page);for(const width of [320,360,390,768,1280]){await page.setViewportSize({width,height:900});for(const lang of ['es','en']){await page.locator('#idioma').selectOption(lang);await page.evaluate(()=>document.documentElement.style.fontSize='200%');const size=await page.evaluate(()=>({w:innerWidth,scroll:document.documentElement.scrollWidth}));expect(size.scroll).toBeLessThanOrEqual(size.w+1);await expect(page.locator('#staff-need-form button')).toBeVisible();await page.evaluate(()=>document.documentElement.style.fontSize='');}}
+});
+
+test('switches hide progress and pause publication without blocking existing fulfillment', async ({page}) => {
+ await fixture(page);
+ await page.route(/\/api\/v1\/me\/features$/, r => r.fulfill({json:{channel:'production',features:{'contributions.create':false,'needs.publish':false,'needs.progress':false}}}));
+ await page.locator('#account-retry').click();
+ await expect(page.locator('#staff-needs progress')).toHaveCount(0);
+ await expect(page.locator('#need-status option[value=published]')).toBeDisabled();
+ await expect(page.locator('#staff-contributions button')).toBeEnabled();
+ await page.locator('#staff-needs button').click();
+ await expect(page.locator('#need-status option[value=closed]')).toBeEnabled();
 });

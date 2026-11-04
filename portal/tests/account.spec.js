@@ -1,5 +1,6 @@
 const { test, expect } = require('@playwright/test');
 const api = 'https://api.generosity.global';
+test.beforeEach(async ({page}) => { await page.route(/\/api\/v1\/(me\/)?features$/, r => r.fulfill({json:{channel:'production',features:{'contributions.create':true,'needs.publish':true,'needs.progress':true}}})); });
 
 test('guest entry uses the hosted page and keeps the location application in this tab', async ({ page }) => {
   await page.route(api + '/auth/session', route => route.fulfill({ json: { user: null, csrf_token: 'csrf-test' } }));

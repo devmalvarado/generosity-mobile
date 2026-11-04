@@ -112,7 +112,7 @@ class CurrentLocationTest {
         var origin: Coordinates? = null
         var label: String? = null
         @Composable override fun Render(markers: List<CenterMapMarker>, selectedCenterId: String?, locale: SupportedLocale,
-            onCenterSelected: (String) -> Unit, modifier: Modifier, origin: Coordinates?, originLabel: String?) {
+            onCenterSelected: (String) -> Unit, modifier: Modifier, origin: Coordinates?, originLabel: String?, contentPadding: androidx.compose.foundation.layout.PaddingValues) {
             SideEffect { this.origin = origin; label = originLabel }
             Box(modifier.testTag("location-map")) { Text("Map") }
         }

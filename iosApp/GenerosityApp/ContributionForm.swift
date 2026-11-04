@@ -72,7 +72,7 @@ struct OfferForm: View {
             Form {
                 Text(need?.title.resolve(locale) ?? L10n.resource("personal_add", locale: locale)).font(GenTypography.font(.headline))
                 if method == "goods" {
-                    if let need { NeedProgressView(locale: locale, need: need) }
+                    if let need, store.state.features.showNeedProgress { NeedProgressView(locale: locale, need: need) }
                     Text(L10n.resource("offer_partial_hint", locale: locale)).font(GenTypography.font(.footnote))
                     field("offer_quantity", $quantity).keyboardType(.numberPad)
                     if let need { Text(need.quantityUnit ?? "") }

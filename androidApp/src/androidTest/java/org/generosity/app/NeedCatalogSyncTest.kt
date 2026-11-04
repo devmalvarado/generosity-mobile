@@ -57,6 +57,9 @@ class NeedCatalogSyncTest {
             override fun write(key: String, value: String?) { if (value == null) disk.remove(key) else disk[key] = value }
             override fun newOperationId() = java.util.UUID.randomUUID().toString()
             override fun send(request: ApiRequest, completion: (ApiResponse) -> Unit) {
+                if (request.path.endsWith("/features")) {
+                    completion(ApiResponse(200, """{"features":{"contributions.create":true,"needs.publish":true,"needs.progress":true}}""")); return
+                }
                 assertEquals("GET", request.method)
                 assertEquals("/api/v1/sync/catalog?category_version=2&progress_version=1", request.path)
                 center.put("needs", if (published) JSONArray().put(need) else JSONArray())

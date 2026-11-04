@@ -335,6 +335,56 @@ input, select, textarea {
   color: var(--ink-soft);
 }
 
+.illustration-label {
+  color: var(--ink-soft);
+  font-size: .85rem;
+  font-weight: 560;
+}
+
+.discovery {
+  border-top: 1px solid var(--line);
+  scroll-margin-top: 6rem;
+  overflow-wrap: anywhere;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  min-width: 0;
+}
+
+.discovery form, .discovery article, #discovery-results, #discovery-history {
+  min-width: 0;
+}
+
+.discovery input, .discovery textarea, .discovery button, .discovery a.ghost, .discovery a.solid {
+  max-width: 100%;
+  min-height: var(--gen-touch);
+}
+
+.discovery textarea, .discovery input { width: 100%; font: inherit; padding: .55rem .7rem; }
+
+.discovery-pages {
+  display: flex;
+  flex-wrap: wrap;
+  gap: .5rem;
+}
+
+.discovery-pages > * { flex: 1 1 12rem; }
+
+.catalog-card {
+  margin-top: .8rem;
+  padding: 1rem;
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: .35rem;
+  min-width: 0;
+}
+
+.catalog-card h3, .catalog-card h4 { font-family: var(--serif); font-size: 1.25rem; margin: 0; }
+
+.catalog-card p { margin: 0; }
+
 .ways { margin: 1.2rem 0 0; }
 .ways div { padding: .85rem 0; border-top: 1px solid var(--line); }
 .ways dt { font-family: var(--serif); font-size: 1.25rem; }

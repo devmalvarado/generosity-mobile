@@ -6,6 +6,7 @@ use App\Exceptions\ApiProblem;
 use App\Models\Center;
 use App\Models\Contribution;
 use App\Models\Need;
+use App\Services\FeatureFlags;
 use App\Services\Mutation;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -26,6 +27,7 @@ class ContributionController extends Controller
         ]);
 
         return Mutation::run($request, $data, fn () => null, function () use ($request, $data) {
+            FeatureFlags::require('contributions.create', $request->user()->id);
             $need = ! empty($data['need_id']) ? Need::whereKey($data['need_id'])->lockForUpdate()->firstOrFail() : null;
             if ($need) {
                 if ($need->status !== 'published' || ($need->expires_on && $need->expires_on->lt(today()))) {

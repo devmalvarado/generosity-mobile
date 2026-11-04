@@ -27,6 +27,7 @@ interface CenterMapRenderer {
         onCenterSelected: (String) -> Unit,
         modifier: Modifier,
         origin: org.generosity.domain.Coordinates? = null,
-        originLabel: String? = null
+        originLabel: String? = null,
+        contentPadding: androidx.compose.foundation.layout.PaddingValues = androidx.compose.foundation.layout.PaddingValues()
     )
 }

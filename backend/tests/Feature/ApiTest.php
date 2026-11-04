@@ -20,6 +20,7 @@ use Illuminate\Support\Facades\Password;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\URL;
 use Illuminate\Support\Str;
+use Illuminate\Testing\TestResponse;
 use Illuminate\Validation\ValidationException;
 use Symfony\Component\Process\Process;
 use Tests\TestCase;
@@ -151,6 +152,153 @@ class ApiTest extends TestCase
         DB::table('center_memberships')->where('user_id', $user->id)->delete();
         $this->getJson('/api/v1/staff/centers', $headers)->assertJsonCount(0, 'centers');
         $this->getJson('/api/v1/staff/centers/center-a/needs', $headers)->assertForbidden();
+    }
+
+    public function test_staff_cookie_writes_require_valid_csrf_in_production(): void
+    {
+        try {
+            $browser = $this->staffBrowser();
+            $before = $this->staffWriteSnapshot();
+            foreach ($browser['writes'] as [$method, $path, $body, $status]) {
+                foreach ([null, 'incorrect-csrf'] as $csrf) {
+                    $headers = ['Idempotency-Key' => (string) Str::uuid()];
+                    if ($csrf !== null) {
+                        $headers['X-CSRF-TOKEN'] = $csrf;
+                    }
+                    $this->browserRequest($method, $path, $browser['cookie'], $body, $headers)->assertStatus(419);
+                    $this->assertSame($before, $this->staffWriteSnapshot());
+                }
+            }
+
+            foreach ($browser['writes'] as [$method, $path, $body, $status]) {
+                $this->browserRequest($method, $path, $browser['cookie'], $body, [
+                    'X-CSRF-TOKEN' => $browser['csrf'], 'Idempotency-Key' => (string) Str::uuid(),
+                ])->assertStatus($status)->assertHeader('Access-Control-Allow-Origin', 'https://portal.generosity.test');
+            }
+        } finally {
+            $this->app->instance('env', 'testing');
+        }
+    }
+
+    public function test_foreign_origin_cannot_authorize_staff_writes_with_a_valid_cookie(): void
+    {
+        try {
+            $browser = $this->staffBrowser();
+            $before = $this->staffWriteSnapshot();
+            foreach ($browser['writes'] as [$method, $path, $body]) {
+                $this->browserRequest($method, $path, $browser['cookie'], $body, [
+                    'Origin' => 'https://foreign.example.test', 'Referer' => 'https://foreign.example.test/',
+                    'X-CSRF-TOKEN' => $browser['csrf'], 'Idempotency-Key' => (string) Str::uuid(),
+                ])->assertUnauthorized()->assertJsonPath('error.code', 'unauthenticated')
+                    // The single-origin CORS policy always names the trusted origin, never the caller.
+                    ->assertHeader('Access-Control-Allow-Origin', 'https://portal.generosity.test');
+                $this->assertSame($before, $this->staffWriteSnapshot());
+            }
+
+            // A trusted origin still cannot grant membership in a different center.
+            $this->browserRequest('POST', '/api/v1/staff/centers/center-b/needs', $browser['cookie'], $browser['writes'][0][2], [
+                'X-CSRF-TOKEN' => $browser['csrf'], 'Idempotency-Key' => (string) Str::uuid(),
+            ])->assertForbidden();
+            $this->assertSame($before, $this->staffWriteSnapshot());
+            $this->browserRequest('GET', '/api/v1/staff/centers', $browser['cookie'])
+                ->assertOk()->assertJsonPath('centers.0.id', 'center-a');
+        } finally {
+            $this->app->instance('env', 'testing');
+        }
+    }
+
+    public function test_revoked_browser_cookie_cannot_write_even_with_fresh_guest_csrf(): void
+    {
+        try {
+            $browser = $this->staffBrowser();
+            $before = $this->staffWriteSnapshot();
+            $this->browserRequest('POST', '/auth/logout', $browser['cookie'], [], ['X-CSRF-TOKEN' => $browser['csrf']])
+                ->assertNoContent();
+            $this->assertDatabaseMissing('sessions', ['id' => $browser['sessionId']]);
+            foreach ($browser['writes'] as [$method, $path, $body]) {
+                $this->browserRequest($method, $path, $browser['cookie'], $body, [
+                    'X-CSRF-TOKEN' => $browser['csrf'], 'Idempotency-Key' => (string) Str::uuid(),
+                ])->assertStatus(419);
+                $this->assertSame($before, $this->staffWriteSnapshot());
+            }
+
+            // Pass CSRF with the old cookie's new guest session, so authentication must reject the write.
+            $guest = $this->browserRequest('GET', '/auth/session', $browser['cookie'])
+                ->assertOk()->assertJsonPath('user', null);
+            $this->assertNotEmpty($guest->json('csrf_token'));
+            $this->assertNotSame($browser['csrf'], $guest->json('csrf_token'));
+            foreach ($browser['writes'] as [$method, $path, $body]) {
+                $this->browserRequest($method, $path, $browser['cookie'], $body, [
+                    'X-CSRF-TOKEN' => $guest->json('csrf_token'), 'Idempotency-Key' => (string) Str::uuid(),
+                ])->assertUnauthorized()->assertJsonPath('error.code', 'unauthenticated');
+                $this->assertSame($before, $this->staffWriteSnapshot());
+            }
+        } finally {
+            $this->app->instance('env', 'testing');
+        }
+    }
+
+    private function staffBrowser(): array
+    {
+        $staff = User::factory()->create();
+        DB::table('center_memberships')->insert(['user_id' => $staff->id, 'center_id' => 'center-a']);
+        [, $donor] = $this->actor();
+        $offer = $this->offer($donor)->assertCreated()->json('id');
+        $body = $this->catalog()['centers'][0]['needs'][0];
+        unset($body['id']);
+        $body['status'] = 'draft';
+
+        config([
+            'session.driver' => 'database', 'session.secure' => true, 'session.domain' => null, 'session.lottery' => [0, 100],
+            'sanctum.stateful' => ['portal.generosity.test'], 'cors.allowed_origins' => ['https://portal.generosity.test'],
+            'cors.supports_credentials' => true,
+        ]);
+        $this->app->instance('env', 'production');
+        $this->assertFalse($this->app->runningUnitTests());
+        $session = $this->browserRequest('GET', '/auth/session')->assertOk()->assertJsonPath('user', null);
+        $login = $this->browserRequest('POST', '/auth/password', $session->getCookie(config('session.cookie'), false)->getValue(), [
+            'email' => $staff->email, 'password' => 'password', 'client' => 'web', 'locale' => 'en',
+        ], ['X-CSRF-TOKEN' => $session->json('csrf_token')])->assertRedirect(config('identity.portal_url'));
+        $cookie = $login->getCookie(config('session.cookie'), false)->getValue();
+        $sessionId = $login->getCookie(config('session.cookie'))->getValue();
+        $this->assertDatabaseHas('sessions', ['id' => $sessionId, 'user_id' => $staff->id]);
+        $session = $this->browserRequest('GET', '/auth/session', $cookie)->assertOk()->assertJsonPath('user.id', $staff->id);
+        $this->browserRequest('GET', '/api/v1/staff/centers', $cookie)->assertOk()->assertJsonCount(1, 'centers');
+
+        return ['cookie' => $cookie, 'csrf' => $session->json('csrf_token'), 'sessionId' => $sessionId, 'writes' => [
+            ['POST', '/api/v1/staff/centers/center-a/needs', $body, 201],
+            ['PUT', '/api/v1/staff/centers/center-a/needs/need-a', $body + ['version' => Need::findOrFail('need-a')->version], 200],
+            ['POST', '/api/v1/contributions/'.$offer.'/transition', ['action' => 'confirm', 'version' => 1], 200],
+        ]];
+    }
+
+    private function browserRequest(string $method, string $path, ?string $cookie = null, array $body = [], array $headers = []): TestResponse
+    {
+        // Each request must reload the cookie from storage, never reuse actingAs or an in-memory session.
+        $this->app['auth']->forgetGuards();
+        $this->app['auth']->shouldUse('web');
+        $this->app->forgetInstance('auth.driver');
+        $this->app['session']->forgetDrivers();
+        $this->app->forgetInstance('session.store');
+
+        return $this->call($method, 'https://api.generosity.test'.$path, [],
+            $cookie === null ? [] : [config('session.cookie') => $cookie], [],
+            $this->transformHeadersToServerVars($headers + ['Accept' => 'application/json', 'Content-Type' => 'application/json', 'Origin' => 'https://portal.generosity.test']),
+            json_encode($body, JSON_THROW_ON_ERROR));
+    }
+
+    private function staffWriteSnapshot(): array
+    {
+        $snapshot = [];
+        foreach (['needs' => 'id', 'contributions' => 'id', 'contribution_events' => 'id', 'operations' => 'user_id', 'jobs' => 'id'] as $table => $key) {
+            $query = DB::table($table)->orderBy($key);
+            if ($table === 'operations') {
+                $query->orderBy('key');
+            }
+            $snapshot[$table] = $query->get()->map(fn ($row) => (array) $row)->all();
+        }
+
+        return $snapshot;
     }
 
     public function test_registration_verification_login_and_revocation(): void

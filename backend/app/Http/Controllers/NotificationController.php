@@ -10,6 +10,26 @@ use Laravel\Sanctum\TransientToken;
 
 class NotificationController extends Controller
 {
+    public function showPreferences(Request $request)
+    {
+        $row = DB::table('notification_preferences')->where('user_id', $request->user()->id)->first();
+        if (! $row) {
+            return ['saved' => false];
+        }
+
+        return [
+            'saved' => true,
+            'urgent' => (bool) $row->urgent,
+            'all' => (bool) $row->all_categories,
+            'categories' => json_decode($row->categories, true, 512, JSON_THROW_ON_ERROR),
+        ];
+    }
+
+    public function inbox(Request $request)
+    {
+        return self::snapshot($request->user()->id);
+    }
+
     public function preferences(Request $request)
     {
         $data = $request->validate(['urgent' => 'required|boolean', 'all' => 'required|boolean',

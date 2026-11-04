@@ -10,10 +10,14 @@ class ApiBoundary
 {
     public function handle(Request $request, Closure $next)
     {
+        $channel = $request->header('X-Generosity-Channel');
+        if ($channel !== null && $channel !== config('generosity.channel')) {
+            throw new ApiProblem('environment_mismatch', 409);
+        }
         if ($request->is('api/*')) {
             $request->headers->set('Accept', 'application/json');
         }
-        if (app()->environment('production') && ! $request->secure()) {
+        if ((app()->environment('production') || config('generosity.channel') === 'preview') && ! $request->secure()) {
             throw new ApiProblem('https_required', 400);
         }
         if (strlen($request->getContent()) > 65536) {

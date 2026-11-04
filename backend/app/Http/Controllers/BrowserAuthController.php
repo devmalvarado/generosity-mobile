@@ -198,7 +198,7 @@ class BrowserAuthController extends Controller
         $data = $request->validate([
             'code' => 'required|string|size:64|regex:/^[a-zA-Z0-9]+$/D',
             'code_verifier' => 'required|string|min:43|max:128|regex:/^[a-zA-Z0-9._~-]+$/D',
-            'client' => 'required|in:android,ios',
+            'client' => 'required|in:'.implode(',', array_keys(config('identity.clients'))),
         ]);
 
         return DB::transaction(function () use ($data) {
@@ -246,10 +246,13 @@ class BrowserAuthController extends Controller
 
     private function context(Request $request): array
     {
+        if (! $request->has('client')) {
+            $request->merge(['client' => 'web']);
+        }
         $data = $request->validate([
-            'client' => 'sometimes|in:web,android,ios', 'locale' => 'sometimes|in:es,en', 'screen' => 'sometimes|in:register,recover,verify',
-            'code_challenge' => 'required_if:client,android,ios|string|size:43|regex:/^[a-zA-Z0-9_-]+$/D',
-            'state' => 'required_if:client,android,ios|string|min:32|max:128|regex:/^[a-zA-Z0-9_-]+$/D',
+            'client' => 'sometimes|in:web,'.implode(',', array_keys(config('identity.clients'))), 'locale' => 'sometimes|in:es,en', 'screen' => 'sometimes|in:register,recover,verify',
+            'code_challenge' => 'required_unless:client,web|string|size:43|regex:/^[a-zA-Z0-9_-]+$/D',
+            'state' => 'required_unless:client,web|string|min:32|max:128|regex:/^[a-zA-Z0-9_-]+$/D',
         ]);
 
         $context = $data + ['client' => 'web', 'locale' => app()->getLocale()];

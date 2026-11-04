@@ -69,7 +69,7 @@ internal fun OfferDialog(state: GenerosityUiState, app: GenerosityAppState, need
         text = {
             Column(Modifier.verticalScroll(rememberScrollState()), verticalArrangement = Arrangement.spacedBy(10.dp)) {
                 if (method == HelpMethod.GOODS) {
-                    if (need != null) NeedProgress(need, locale)
+                    if (need != null && state.features.showNeedProgress) NeedProgress(need, locale)
                     Text(localizedString(R.string.offer_partial_hint, locale), style = MaterialTheme.typography.bodySmall)
                     OutlinedTextField(quantity, { quantity = it }, label = { Text(localizedString(R.string.offer_quantity, locale)) }, keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number))
                     OutlinedTextField(unit, { unit = it }, readOnly = need != null, label = { Text(localizedString(R.string.offer_unit, locale)) })

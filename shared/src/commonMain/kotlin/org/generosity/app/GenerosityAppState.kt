@@ -17,6 +17,7 @@ import org.generosity.data.ImportedCatalogRepository
 import org.generosity.data.InMemoryContributionRepository
 import org.generosity.data.InMemoryImportedCatalogDataSource
 import org.generosity.data.InMemoryUserProfileRepository
+import org.generosity.domain.FeatureAccess
 import org.generosity.domain.currentUtcInstant
 import org.generosity.domain.DiscoveryArea
 import org.generosity.domain.CenterCategory
@@ -69,6 +70,7 @@ data class GenerosityUiState(
     val visitedCenterIds: Set<String> = emptySet(),
     val remoteAccount: Boolean = false,
     val backendConfigured: Boolean = false,
+    val features: FeatureAccess = FeatureAccess(true, true, true),
     val syncing: Boolean = false,
     val writing: Boolean = false,
     val savedOffer: Int = 0,
@@ -91,8 +93,11 @@ data class GenerosityUiState(
     val currentNeeds: List<CenterNeed>
         get() = selectedCenter?.let { CurrentNeedsUseCase()(it.needs, referenceIsoDate) }.orEmpty()
 
+    val discoveredNeeds: List<CenterNeed>
+        get() = CurrentNeedsUseCase()(centers.flatMap { it.needs }, referenceIsoDate)
+
     val canRecordContributions: Boolean
-        get() = (!remoteAccount || backendConfigured) && ContributionPolicy().canRecordContribution(profile)
+        get() = features.createContributions && (!remoteAccount || backendConfigured) && ContributionPolicy().canRecordContribution(profile)
 }
 
 class GenerosityAppState(
@@ -167,6 +172,7 @@ class GenerosityAppState(
         GenerosityUiState(
             localePreference = initialLocalePreference,
             backendConfigured = backend != null,
+            features = if (backend == null) FeatureAccess(true, true, true) else FeatureAccess(),
             referenceIsoDate = runCatching { utcDate(clock()) }.getOrDefault("")
         )
     )
@@ -240,7 +246,7 @@ class GenerosityAppState(
         scope.launch {
             val profile = UserProfile(id = userId, mode = UserMode.REGISTERED, displayName = displayName)
             profiles.saveProfile(profile)
-            update { copy(profile = profile, remoteAccount = remoteAccount,
+            update { copy(profile = profile, remoteAccount = remoteAccount, features = if (backend == null) FeatureAccess(true, true, true) else FeatureAccess(),
                 contributions = if (this.profile.id == userId) contributions else emptyList(),
                 impact = if (this.profile.id == userId) impact else PersonalImpact(), notices = if (this.profile.id == userId) notices else emptyList(), noticeDestinationId = null, pushBanner = null, pushConfigured = false, pendingOperations = emptyList(), visitedCenterIds = emptySet(), visitSignalCenterId = null, preferences = NotificationPreference()) }
             refresh()
@@ -251,7 +257,7 @@ class GenerosityAppState(
         scope.launch {
             val profile = UserProfile(mode = UserMode.ANONYMOUS)
             profiles.saveProfile(profile)
-            update { copy(profile = profile, remoteAccount = false, contributions = emptyList(), impact = PersonalImpact(), notices = emptyList(), noticeDestinationId = null, pushBanner = null, pushConfigured = false, pushSyncError = false, pendingOperations = emptyList(), visitedCenterIds = emptySet(), visitSignalCenterId = null, preferences = NotificationPreference()) }
+            update { copy(profile = profile, remoteAccount = false, features = if (backend == null) FeatureAccess(true, true, true) else FeatureAccess(), contributions = emptyList(), impact = PersonalImpact(), notices = emptyList(), noticeDestinationId = null, pushBanner = null, pushConfigured = false, pushSyncError = false, pendingOperations = emptyList(), visitedCenterIds = emptySet(), visitSignalCenterId = null, preferences = NotificationPreference()) }
             refresh()
         }
     }
@@ -260,6 +266,7 @@ class GenerosityAppState(
         scope.launch {
             val current = _state.value
             if (current.remoteAccount) {
+                if (!current.features.createContributions) { update { copy(syncError = "feature_disabled") }; return@launch }
                 if (backend != null) remoteWrite(offer = true) { backend.offer(requireNotNull(current.profile.id), needId, offer) }
                 return@launch
             }
@@ -281,6 +288,7 @@ class GenerosityAppState(
         scope.launch {
             val current = _state.value
             if (current.remoteAccount) {
+                if (!current.features.createContributions) { update { copy(syncError = "feature_disabled") }; return@launch }
                 if (backend != null) remoteWrite(offer = true) { backend.offer(requireNotNull(current.profile.id), null, offer) }
                 return@launch
             }
@@ -334,6 +342,11 @@ class GenerosityAppState(
             catch (_: Exception) { update { copy(syncError = "cache_unavailable") } }
             if (backend != null) {
                 update { copy(syncing = true, syncError = null) }
+                val featureOwner = _state.value.profile.id.takeIf { _state.value.remoteAccount }
+                val access = try { backend.features(featureOwner) }
+                    catch (error: CancellationException) { throw error }
+                    catch (_: Exception) { FeatureAccess() }
+                update { if (profile.id.takeIf { remoteAccount } == featureOwner) copy(features = access) else this }
                 // Public discovery must still refresh when the private session expires.
                 try { backend.refreshCatalog(); refreshCenters(); update { copy(catalogUpdatedAt = backend.updatedAt) } }
                 catch (error: CancellationException) { throw error }

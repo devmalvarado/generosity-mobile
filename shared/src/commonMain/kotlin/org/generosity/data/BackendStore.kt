@@ -5,6 +5,7 @@ import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 import kotlin.coroutines.resume
 import org.generosity.domain.*
+import org.generosity.preview.PreviewSession
 
 data class ApiRequest(val method: String, val path: String, val body: String?, val operationId: String?, val accountId: String?)
 data class ApiResponse(val status: Int, val body: String)
@@ -37,6 +38,14 @@ class BackendStore(private val connection: AppConnection) : KindnessCenterReposi
     override suspend fun needById(id: String) = catalog.flatMap { it.needs }.firstOrNull { it.id == id }
     override suspend fun needsForCenter(centerId: String) = catalog.firstOrNull { it.id == centerId }?.needs.orEmpty()
     override suspend fun save(need: CenterNeed): Unit = error("Only the backend can mutate a remote need")
+
+    suspend fun features(userId: String?): FeatureAccess {
+        val raw = request(ApiRequest("GET", if (userId == null) "/api/v1/features" else "/api/v1/me/features", null, null, userId))
+        val values = ApiJson.parse(raw).objectValue("features")
+        require(values.values.all { it is Boolean })
+        return FeatureAccess(values["contributions.create"] == true, values["needs.publish"] == true, values["needs.progress"] == true,
+            PreviewSession.groupNames.filter { values["preview.$it"] == true })
+    }
 
     suspend fun refreshCatalog() = mutex.withLock {
         val raw = request(ApiRequest("GET", "/api/v1/sync/catalog?category_version=2&progress_version=1", null, null, null))
@@ -198,7 +207,7 @@ class BackendStore(private val connection: AppConnection) : KindnessCenterReposi
         val rows = queue(userId).toMutableList()
         for (row in rows.toList()) {
             if (!stillCurrentAccount()) return@withLock
-            if (row.text("error") != null) continue
+            if (row.text("error") != null && row.text("error") != "feature_disabled") continue
             val response = send(ApiRequest("POST", requireNotNull(row.text("path")), ApiJson.encode(row.objectValue("body")), row.text("id"), userId))
             if (response.status in 200..299) rows.remove(row)
             else if (response.status in listOf(400, 403, 404, 409, 422)) {

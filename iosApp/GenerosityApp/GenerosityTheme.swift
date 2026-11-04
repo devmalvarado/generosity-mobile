@@ -37,11 +37,12 @@ enum GenTypography {
 }
 
 struct BrandWordmark: View {
+    var width: CGFloat = GenSize.wordmarkWidth
     var body: some View {
         Image("GenerosityWordmark")
             .resizable()
             .scaledToFit()
-            .frame(width: GenSize.wordmarkWidth, height: GenSize.wordmarkHeight)
+            .frame(width: width, height: width * GenSize.wordmarkHeight / GenSize.wordmarkWidth)
             .accessibilityLabel("Generosity")
             .accessibilityIdentifier("brand-wordmark")
     }

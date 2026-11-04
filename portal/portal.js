@@ -50,6 +50,8 @@
     "needs.title": "Hay muchas formas de hacer el bien.",
     "needs.filters": "Explorar causas",
     "needs.empty": "Elige otra causa para conocer más formas de ayudar.",
+    "needs.illustration": "Estas tarjetas ilustran causas. No son necesidades publicadas.",
+    "card.illustration": "Ilustración, no es el catálogo",
     "filter.all": "Todas",
     "filter.food": "Comedores",
     "filter.kids": "Infancia",
@@ -57,15 +59,15 @@
     "card.food.cause": "Comedor comunitario",
     "card.food.title": "Alimentación que une",
     "card.food.body": "Alimentos, preparación de comidas y apoyo a comedores comunitarios. Compartir una mesa también construye comunidad.",
-    "card.food.action": "Conoce cómo participar",
+    "card.food.action": "Ver el catálogo publicado",
     "card.kids.cause": "Infancia y educación",
     "card.kids.title": "Oportunidades para crecer",
     "card.kids.body": "Materiales escolares, tutorías y acompañamiento educativo para fortalecer el aprendizaje y el desarrollo.",
-    "card.kids.action": "Conoce cómo participar",
+    "card.kids.action": "Ver el catálogo publicado",
     "card.health.cause": "Salud",
     "card.health.title": "Cuidado y acompañamiento",
     "card.health.body": "Apoyo a centros de atención, insumos solicitados por sus responsables y tiempo para acompañar a quienes lo necesitan.",
-    "card.health.action": "Conoce cómo participar",
+    "card.health.action": "Ver el catálogo publicado",
     "donate.title": "Tu manera de ayudar también cuenta.",
     "donate.lead": "Ayudar puede empezar con unas horas, materiales útiles o algo que sabes hacer. Coordina cada aportación con la organización que la recibe.",
     "donate.time.title": "Tiempo",
@@ -113,7 +115,94 @@
     "contact.team": "Personal del Instituto atiende soporte, asuntos legales y privacidad en este correo.",
     "contact.support": "Soporte",
     "contact.legal": "Asuntos legales",
-    "contact.privacy": "Privacidad y datos personales"
+    "contact.privacy": "Privacidad y datos personales",
+    "discovery.eyebrow": "Catálogo publicado",
+    "discovery.title": "Ayuda con lo que está publicado",
+    "discovery.lead": "Elige un centro o una necesidad publicada. Entrar aquí no envía una oferta, no pide datos de pago y no abre el espacio de centros.",
+    "discovery.searchLabel": "Filtrar lo cargado",
+    "discovery.searchPlaceholder": "Nombre o descripción",
+    "discovery.searchHint": "Filtra lo ya cargado en esta página. No busca en todo el catálogo ni usa tu ubicación.",
+    "discovery.prevCenters": "Centros, página anterior",
+    "discovery.nextCenters": "Centros, página siguiente",
+    "discovery.prevNeeds": "Necesidades, página anterior",
+    "discovery.nextNeeds": "Necesidades, página siguiente",
+    "discovery.prev": "Anterior",
+    "discovery.next": "Siguiente",
+    "discovery.offerTitle": "Preparar una oferta",
+    "discovery.offerNote": "Elige una necesidad publicada. Entrar o iniciar sesión no envía la oferta. Esta página no pide datos de pago.",
+    "discovery.method": "Forma de ayudar",
+    "discovery.goods": "Bienes",
+    "discovery.time": "Tiempo",
+    "discovery.quantity": "Cantidad",
+    "discovery.minutes": "Minutos",
+    "discovery.activity": "Actividad",
+    "discovery.availability": "Disponibilidad (opcional)",
+    "discovery.notes": "Nota (opcional)",
+    "discovery.submit": "Enviar oferta",
+    "discovery.retry": "Reintentar la misma oferta",
+    "discovery.signIn": "Iniciar sesión para enviar",
+    "discovery.historyTitle": "Tus ofertas",
+    "discovery.historyNote": "Esta lista muestra el estado que devolvió el servidor. No indica puntos ni una entrega confirmada si el estado no lo dice.",
+    "discovery.cancelRetry": "Reintentar la misma cancelación",
+    "discovery.linkLabel": "Enlace de este registro",
+    "discovery.downloadNote": "El archivo incluye el enlace y la fecha de descarga. No indica lugares disponibles. No es una imagen para escanear.",
+    "discovery.copy": "Copiar enlace",
+    "discovery.share": "Compartir",
+    "discovery.download": "Descargar invitación",
+    "discovery.loading": "Cargando el catálogo publicado…",
+    "discovery.unavailable": "El catálogo no está disponible. Tu búsqueda se conserva. Las tarjetas de causas no son necesidades vigentes.",
+    "discovery.missing": "Este enlace no corresponde a un registro publicado. No se abrió otro.",
+    "discovery.emptyCenters": "No hay centros publicados en esta página.",
+    "discovery.emptyNeeds": "No hay necesidades publicadas en esta página.",
+    "discovery.back": "Volver al catálogo publicado",
+    "discovery.noMatch": "Nada en esta página coincide con la búsqueda.",
+    "discovery.centers": "Centros publicados",
+    "discovery.needs": "Necesidades publicadas",
+    "discovery.open": "Ver",
+    "discovery.updated": "Actualizado: ",
+    "discovery.address": "Lugar publicado: ",
+    "discovery.urgent": "Marcada como urgente por el centro.",
+    "discovery.expires": "Publicada hasta: ",
+    "discovery.expired": "La fecha publicada ya pasó. No se puede enviar una oferta desde aquí.",
+    "discovery.committed": "Comprometido: ",
+    "discovery.available": "Disponible para ofrecer: ",
+    "discovery.received": "Recibido por el centro: ",
+    "discovery.money": "El dinero no se puede aportar desde esta página.",
+    "discovery.noMethods": "Esta necesidad no acepta bienes ni tiempo desde esta página.",
+    "discovery.needSignIn": "Para enviar hace falta una sesión con correo verificado. La oferta no se envió.",
+    "discovery.sending": "Enviando la oferta…",
+    "discovery.pending": "No se pudo confirmar el resultado. Reintenta la misma oferta para no duplicarla.",
+    "discovery.saved": "El servidor registró la oferta como ofrecida. Esto no confirma la recepción. Referencia: ",
+    "discovery.unconfirmed": "El servidor respondió, pero no confirmó una oferta ofrecida. No se cuenta como registrada.",
+    "discovery.capacity": "No hay cupo para esa cantidad. No se registró la oferta.",
+    "discovery.capacityKnown": "No hay cupo para esa cantidad. Disponible según el servidor: ",
+    "discovery.needUnavailable": "La necesidad no está disponible. No se registró la oferta.",
+    "discovery.denied": "Tu sesión no permite enviar. La oferta no se registró.",
+    "discovery.sessionDenied": "Tu sesión no permite esta acción.",
+    "discovery.rejected": "El servidor rechazó la oferta. No se registró.",
+    "discovery.conflict": "La misma clave no coincide con otro envío. No se duplicó.",
+    "discovery.unsafe": "Este navegador no pudo guardar el envío. No se envió nada.",
+    "discovery.invalid": "Revisa la cantidad, los minutos o la actividad antes de enviar.",
+    "discovery.historyEmpty": "No hay ofertas en esta página.",
+    "discovery.historyFailed": "No se pudieron cargar tus ofertas.",
+    "discovery.historyLoading": "Cargando tus ofertas…",
+    "discovery.cancel": "Cancelar oferta",
+    "discovery.cancelling": "Enviando la cancelación…",
+    "discovery.cancelPending": "No se pudo confirmar la cancelación. Reintenta la misma acción.",
+    "discovery.cancelled": "El servidor marcó la oferta como cancelada.",
+    "discovery.cancelUnconfirmed": "El servidor respondió, pero no confirmó la cancelación.",
+    "discovery.cancelConflict": "Otro cambio actualizó esta oferta. Actualiza la lista antes de volver a intentar.",
+    "discovery.cancelUnavailable": "Esta cancelación no está disponible. La oferta no cambió desde esta página.",
+    "discovery.copied": "Enlace copiado. No se registró un envío.",
+    "discovery.copyFailed": "No se pudo copiar. El enlace sigue visible. No se registró un envío.",
+    "discovery.shareCancelled": "Se cerró la hoja de compartir. No se registró un envío ni una oferta.",
+    "discovery.shareFailed": "No se pudo abrir la hoja de compartir. No se registró un envío.",
+    "discovery.status_offered": "Ofrecida",
+    "discovery.status_confirmed": "Confirmada por el centro",
+    "discovery.status_fulfilled": "Marcada como realizada por el centro",
+    "discovery.status_cancelled": "Cancelada",
+    "discovery.status_other": "Estado no reconocido. Actualiza la lista.",
+    "discovery.contact": "Contacto publicado"
   },
   "en": {
     "auth.signIn": "Sign in ↗",
@@ -161,6 +250,8 @@
     "needs.title": "There are many ways to make a difference.",
     "needs.filters": "Explore causes",
     "needs.empty": "Choose another cause to discover more ways to help.",
+    "needs.illustration": "These cards illustrate causes. They are not published needs.",
+    "card.illustration": "Illustration, not the published catalog",
     "filter.all": "All",
     "filter.food": "Meal centers",
     "filter.kids": "Childhood",
@@ -168,15 +259,15 @@
     "card.food.cause": "Community meal center",
     "card.food.title": "Food that brings us together",
     "card.food.body": "Food, meal preparation and support for community kitchens. Sharing a meal helps build a community.",
-    "card.food.action": "Learn how to get involved",
+    "card.food.action": "View the published catalog",
     "card.kids.cause": "Childhood and education",
     "card.kids.title": "Opportunities to grow",
     "card.kids.body": "School supplies, tutoring and educational support that help children learn and develop.",
-    "card.kids.action": "Learn how to get involved",
+    "card.kids.action": "View the published catalog",
     "card.health.cause": "Health",
     "card.health.title": "Care and companionship",
     "card.health.body": "Support for care centers, supplies requested by their staff and time to accompany people who need it.",
-    "card.health.action": "Learn how to get involved",
+    "card.health.action": "View the published catalog",
     "donate.title": "Your way of helping matters.",
     "donate.lead": "Helping can start with a few hours, useful supplies or a skill you can share. Coordinate each contribution with the organization receiving it.",
     "donate.time.title": "Time",
@@ -224,7 +315,94 @@
     "contact.team": "Institute staff handle support, legal and privacy requests at this email address.",
     "contact.support": "Support",
     "contact.legal": "Legal matters",
-    "contact.privacy": "Privacy and personal data"
+    "contact.privacy": "Privacy and personal data",
+    "discovery.eyebrow": "Published catalog",
+    "discovery.title": "Help with what is published",
+    "discovery.lead": "Choose a published center or need. Opening this page does not send an offer, request payment details, or open the center workspace.",
+    "discovery.searchLabel": "Filter what is loaded",
+    "discovery.searchPlaceholder": "Name or description",
+    "discovery.searchHint": "Filters this loaded page only. It does not search the whole catalog or use your location.",
+    "discovery.prevCenters": "Centers, previous page",
+    "discovery.nextCenters": "Centers, next page",
+    "discovery.prevNeeds": "Needs, previous page",
+    "discovery.nextNeeds": "Needs, next page",
+    "discovery.prev": "Previous",
+    "discovery.next": "Next",
+    "discovery.offerTitle": "Prepare an offer",
+    "discovery.offerNote": "Choose a published need. Opening this page or signing in does not send the offer. This page does not ask for payment details.",
+    "discovery.method": "Way to help",
+    "discovery.goods": "Goods",
+    "discovery.time": "Time",
+    "discovery.quantity": "Quantity",
+    "discovery.minutes": "Minutes",
+    "discovery.activity": "Activity",
+    "discovery.availability": "Availability (optional)",
+    "discovery.notes": "Note (optional)",
+    "discovery.submit": "Send offer",
+    "discovery.retry": "Retry the same offer",
+    "discovery.signIn": "Sign in to send",
+    "discovery.historyTitle": "Your offers",
+    "discovery.historyNote": "This list shows the state returned by the server. It does not award points or claim delivery unless that state says so.",
+    "discovery.cancelRetry": "Retry the same cancellation",
+    "discovery.linkLabel": "Link for this record",
+    "discovery.downloadNote": "The file includes the link and the download date. It does not show remaining places. It is not a scannable image.",
+    "discovery.copy": "Copy link",
+    "discovery.share": "Share",
+    "discovery.download": "Download invitation",
+    "discovery.loading": "Loading the published catalog…",
+    "discovery.unavailable": "The catalog is unavailable. Your search is kept. The cause cards are not current needs.",
+    "discovery.missing": "This link is not a published record. Another record was not opened.",
+    "discovery.emptyCenters": "There are no published centers on this page.",
+    "discovery.emptyNeeds": "There are no published needs on this page.",
+    "discovery.back": "Back to the published catalog",
+    "discovery.noMatch": "Nothing on this page matches the search.",
+    "discovery.centers": "Published centers",
+    "discovery.needs": "Published needs",
+    "discovery.open": "View",
+    "discovery.updated": "Updated: ",
+    "discovery.address": "Published place: ",
+    "discovery.urgent": "Marked urgent by the center.",
+    "discovery.expires": "Published through: ",
+    "discovery.expired": "The published date has passed. An offer cannot be sent from here.",
+    "discovery.committed": "Committed: ",
+    "discovery.available": "Available to offer: ",
+    "discovery.received": "Received by the center: ",
+    "discovery.money": "Money cannot be contributed from this page.",
+    "discovery.noMethods": "This need does not accept goods or time from this page.",
+    "discovery.needSignIn": "Sending requires a session with a verified email. The offer was not sent.",
+    "discovery.sending": "Sending the offer…",
+    "discovery.pending": "The outcome could not be confirmed. Retry the same offer so it is not duplicated.",
+    "discovery.saved": "The server recorded the offer as offered. This does not confirm receipt. Reference: ",
+    "discovery.unconfirmed": "The server responded, but did not confirm an offered state. It is not counted as recorded.",
+    "discovery.capacity": "There is no room for that quantity. The offer was not recorded.",
+    "discovery.capacityKnown": "There is no room for that quantity. Available according to the server: ",
+    "discovery.needUnavailable": "The need is not available. The offer was not recorded.",
+    "discovery.denied": "Your session cannot send this. The offer was not recorded.",
+    "discovery.sessionDenied": "Your session cannot perform this action.",
+    "discovery.rejected": "The server rejected the offer. It was not recorded.",
+    "discovery.conflict": "The same key does not match another submission. It was not duplicated.",
+    "discovery.unsafe": "This browser could not save the submission. Nothing was sent.",
+    "discovery.invalid": "Review the quantity, minutes or activity before sending.",
+    "discovery.historyEmpty": "There are no offers on this page.",
+    "discovery.historyFailed": "Your offers could not be loaded.",
+    "discovery.historyLoading": "Loading your offers…",
+    "discovery.cancel": "Cancel offer",
+    "discovery.cancelling": "Sending the cancellation…",
+    "discovery.cancelPending": "The cancellation could not be confirmed. Retry the same action.",
+    "discovery.cancelled": "The server marked the offer as cancelled.",
+    "discovery.cancelUnconfirmed": "The server responded, but did not confirm the cancellation.",
+    "discovery.cancelConflict": "Another change updated this offer. Refresh the list before trying again.",
+    "discovery.cancelUnavailable": "This cancellation is not available. The offer was not changed from this page.",
+    "discovery.copied": "Link copied. No send was recorded.",
+    "discovery.copyFailed": "The link could not be copied. It remains visible. No send was recorded.",
+    "discovery.shareCancelled": "The share sheet was closed. No send or offer was recorded.",
+    "discovery.shareFailed": "The share sheet could not be opened. No send was recorded.",
+    "discovery.status_offered": "Offered",
+    "discovery.status_confirmed": "Confirmed by the center",
+    "discovery.status_fulfilled": "Marked completed by the center",
+    "discovery.status_cancelled": "Cancelled",
+    "discovery.status_other": "Unrecognized state. Refresh the list.",
+    "discovery.contact": "Published contact"
   }
 };
 
@@ -413,6 +591,7 @@
     if ((location.hash || "").indexOf("#acceso") === 0) {
       document.getElementById("acceso").focus();
     }
+    routeDiscovery(true);
   });
 
   var language = document.getElementById("idioma");
@@ -427,10 +606,24 @@
     applyStatic();
     renderDestination();
     renderAccount();
+    renderDiscovery();
     if (menuAnnounced) menuStatus.textContent = drawer.hidden ? t("menu.closed") : t("menu.open");
   }
 
-  var apiOrigin = "https://api.generosity.global";
+  var apiOrigin = document.querySelector('meta[name="generosity-api-origin"]').content;
+  var appChannel = document.querySelector('meta[name="generosity-channel"]').content;
+  var featureAccess = {};
+  function featureEnabled(name) { return featureAccess[name] === true; }
+  function featureUnavailable() { return effective() === 'es' ? 'Esta función no está disponible en este momento.' : 'This feature is currently unavailable.'; }
+  async function refreshFeatureAccess() {
+    featureAccess = {};
+    try {
+      var response = await fetch(apiOrigin + (accountUser ? '/api/v1/me/features' : '/api/v1/features'), { credentials:'include', cache:'no-store', signal:AbortSignal.timeout(10000), headers:{Accept:'application/json', 'X-Generosity-Channel':appChannel} });
+      if (!response.ok) return;
+      var data = await response.json();
+      if (data.channel === appChannel && data.features && Object.values(data.features).every(function (v) { return typeof v === 'boolean'; })) featureAccess = data.features;
+    } catch (_) { /* Unavailable configuration never enables a new action. */ }
+  }
   var accountUser = null;
   var accountStatus = "auth.loading";
   var accountCsrf = "";
@@ -449,15 +642,17 @@
     accountRetry.disabled = accountBusy;
     syncWorkspace();
     syncApplications();
+    syncDiscovery();
   }
 
   async function checkAccount() {
     if (accountBusy) return;
     accountBusy = true;
+    featureAccess = {};
     accountStatus = "auth.loading";
     renderAccount();
     try {
-      var response = await fetch(apiOrigin + "/auth/session", { credentials: "include", cache: "no-store", signal: AbortSignal.timeout(10000), headers: { Accept: "application/json" } });
+      var response = await fetch(apiOrigin + "/auth/session", { credentials: "include", cache: "no-store", signal: AbortSignal.timeout(10000), headers: { 'X-Generosity-Channel': appChannel, Accept: "application/json" } });
       if (!response.ok) throw new Error("Account unavailable");
       var data = await response.json();
       if (typeof data.csrf_token !== "string" || !data.csrf_token) throw new Error("Invalid session");
@@ -467,7 +662,7 @@
     } catch (_) {
       accountStatus = "auth.failed";
       accountCsrf = "";
-    } finally { accountBusy = false; renderAccount(); }
+    } finally { await refreshFeatureAccess(); accountBusy = false; renderAccount(); }
   }
 
   accountRetry.addEventListener("click", checkAccount);
@@ -476,9 +671,10 @@
     accountBusy = true;
     renderAccount();
     try {
-      var response = await fetch(apiOrigin + "/auth/logout", { method: "POST", credentials: "include", cache: "no-store", signal: AbortSignal.timeout(10000), headers: { Accept: "application/json", "X-CSRF-TOKEN": accountCsrf } });
+      var response = await fetch(apiOrigin + "/auth/logout", { method: "POST", credentials: "include", cache: "no-store", signal: AbortSignal.timeout(10000), headers: { 'X-Generosity-Channel': appChannel, Accept: "application/json", "X-CSRF-TOKEN": accountCsrf } });
       if (!response.ok) throw new Error("Logout failed");
       accountUser = null;
+      featureAccess = {};
       accountCsrf = "";
       accountStatus = "auth.guest";
     } catch (_) { accountStatus = "auth.logoutFailed"; }
@@ -523,7 +719,7 @@
   }
   async function staffRequest(path, method, body, key) {
     var owner = staff.owner;
-    var headers = { Accept:'application/json' };
+    var headers = { 'X-Generosity-Channel':appChannel, Accept:'application/json' };
     if (method !== 'GET') { headers['Content-Type'] = 'application/json'; headers['X-CSRF-TOKEN'] = accountCsrf; headers['Idempotency-Key'] = key; }
     var response = await fetch(apiOrigin + path, { method:method, credentials:'include', cache:'no-store', signal:AbortSignal.timeout(15000), headers:headers, body:method === 'GET' ? undefined : JSON.stringify(body) });
     if (!accountUser || String(accountUser.id) !== owner) throw new Error('Account changed');
@@ -569,6 +765,7 @@
     el('staff-reload').disabled = staff.busy;
     el('staff-retry').hidden = !staff.pending; el('staff-retry').disabled = staff.busy;
     el('need-new').disabled = staff.busy || !!staff.pending;
+    el('need-status').querySelector('[value=published]').disabled = !featureEnabled('needs.publish') && (!staff.editing || staff.editing.status !== 'published');
     ['needs', 'contributions'].forEach(function (kind) {
       var page = kind === 'needs' ? staff.needPage : staff.contributionPage;
       var last = kind === 'needs' ? staff.needLast : staff.contributionLast;
@@ -579,7 +776,7 @@
     if (!staff.needs.length) el('staff-needs').append(node('p', staffText('empty')));
     staff.needs.forEach(function (need) {
       var row = node('article', ''); row.append(node('h4', localized(need.title)), node('p', staffText(need.status)));
-      if (need.helpMethods.includes('goods') && Number.isInteger(need.quantityRequired) && need.quantityRequired > 0 && Number.isInteger(need.quantityCommitted) && need.quantityCommitted >= 0 && need.quantityCommitted <= need.quantityRequired) {
+      if (featureEnabled('needs.progress') && need.helpMethods.includes('goods') && Number.isInteger(need.quantityRequired) && need.quantityRequired > 0 && Number.isInteger(need.quantityCommitted) && need.quantityCommitted >= 0 && need.quantityCommitted <= need.quantityRequired) {
         var format = new Intl.NumberFormat(effective());
         var unit = need.unit || staffText('units');
         var label = staffText('committed') + ': ' + format.format(need.quantityCommitted) + ' / ' + format.format(need.quantityRequired) + ' ' + unit + ' (' + format.format(Math.floor(need.quantityCommitted * 100 / need.quantityRequired)) + '%)';
@@ -611,12 +808,14 @@
   }
   function editNeed(need) {
     staff.editing = need; el('staff-need-form').reset();
+    el('need-status').querySelector('[value=published]').disabled = !featureEnabled('needs.publish') && (!need || need.status !== 'published');
     ['es','en'].forEach(function (lang) { el('need-title-' + lang).value = need && need.title[lang] || ''; el('need-description-' + lang).value = need && need.description[lang] || ''; });
     el('need-goods').checked = !need || need.helpMethods.includes('goods'); el('need-time').checked = !!need && need.helpMethods.includes('time');
     el('need-urgent').checked = !!need && need.urgent; el('need-quantity').value = need && need.quantityRequired || ''; el('need-unit').value = need && need.unit || ''; el('need-expires').value = need && need.expiresOnIsoDate || ''; el('need-status').value = need ? need.status : 'draft';
   }
   async function mutateStaff(path, method, body) {
     if (staff.busy || staff.pending) return;
+    if (path.includes('/needs') && body.status === 'published' && (!staff.editing || staff.editing.status !== 'published') && !featureEnabled('needs.publish')) { el('staff-status').textContent = featureUnavailable(); return; }
     var pending = { owner:staff.owner, path:path, method:method, body:body, key:crypto.randomUUID() };
     try { sessionStorage.setItem(storageKey(), JSON.stringify(pending)); } catch (_) { staffMessage('unsafe'); return; }
     staff.pending = pending; await retryStaff();
@@ -829,7 +1028,7 @@
     try {
       var body = { version:action.version };
       if (action.kind === 'withdraw' && action.rationale) body.rationale = action.rationale;
-      var response = await fetch(apiOrigin + '/api/v1/center-applications/' + encodeURIComponent(action.id) + (action.kind === 'accept' ? '/acceptance' : '/withdrawal'), { method:'POST', credentials:'include', cache:'no-store', signal:AbortSignal.timeout(15000), headers:{Accept:'application/json', 'Content-Type':'application/json', 'X-CSRF-TOKEN':accountCsrf, 'Idempotency-Key':action.key}, body:JSON.stringify(body) });
+      var response = await fetch(apiOrigin + '/api/v1/center-applications/' + encodeURIComponent(action.id) + (action.kind === 'accept' ? '/acceptance' : '/withdrawal'), { method:'POST', credentials:'include', cache:'no-store', signal:AbortSignal.timeout(15000), headers:{'X-Generosity-Channel':appChannel, Accept:'application/json', 'Content-Type':'application/json', 'X-CSRF-TOKEN':accountCsrf, 'Idempotency-Key':action.key}, body:JSON.stringify(body) });
       var data = {};
       try { data = await response.json(); } catch (_) { data = {}; }
       if (generation !== application.generation) return;
@@ -861,7 +1060,7 @@
     var generation = application.generation;
     application.loading = true; application.listStatus = 'loading'; renderApplication();
     try {
-      var response = await fetch(apiOrigin + '/api/v1/me/center-applications?page=' + application.page, { credentials:'include', cache:'no-store', signal:AbortSignal.timeout(15000), headers:{Accept:'application/json'} });
+      var response = await fetch(apiOrigin + '/api/v1/me/center-applications?page=' + application.page, { credentials:'include', cache:'no-store', signal:AbortSignal.timeout(15000), headers:{'X-Generosity-Channel':appChannel, Accept:'application/json'} });
       if (!response.ok) throw new Error('Applications unavailable');
       var data = await response.json();
       if (!Array.isArray(data.data) || !Number.isInteger(data.last_page)) throw new Error('Invalid applications response');
@@ -910,7 +1109,7 @@
     var submission = application.pending, generation = application.generation;
     application.busy = true; application.status = 'sending'; renderApplication();
     try {
-      var response = await fetch(apiOrigin + '/api/v1/center-applications', { method:'POST', credentials:'include', cache:'no-store', signal:AbortSignal.timeout(15000), headers:{Accept:'application/json', 'Content-Type':'application/json', 'X-CSRF-TOKEN':accountCsrf, 'Idempotency-Key':submission.key}, body:JSON.stringify(submission.body) });
+      var response = await fetch(apiOrigin + '/api/v1/center-applications', { method:'POST', credentials:'include', cache:'no-store', signal:AbortSignal.timeout(15000), headers:{'X-Generosity-Channel':appChannel, Accept:'application/json', 'Content-Type':'application/json', 'X-CSRF-TOKEN':accountCsrf, 'Idempotency-Key':submission.key}, body:JSON.stringify(submission.body) });
       var data = await response.json();
       if (generation !== application.generation) return;
       if (!response.ok) {
@@ -941,8 +1140,695 @@
   el('registration-action-retry').addEventListener('click', function () { sendApplicationAction(application.action); });
   ['prev','next'].forEach(function (direction) { el('registration-' + direction).addEventListener('click', function () { application.page += direction === 'next' ? 1 : -1; loadApplications(); }); });
 
+  var discovery = {
+    generation: 0, busy: false, status: '', centers: [], needs: [], centerPage: 1, needPage: 1, centerLast: 1, needLast: 1,
+    record: null, owner: null, offerStatus: '', offerBusy: false, offerPending: null, offerGeneration: 0,
+    history: [], historyPage: 1, historyLast: 1, historyStatus: '', historyBusy: false, historyGeneration: 0, cancelPending: null, cancelGeneration: 0, shareStatus: ''
+  };
+
+  function discoveryRoute() {
+    var hash = location.hash || '';
+    if (hash === '#descubrir') return { view: 'list' };
+    var center = hash.match(/^#centro\/([a-z0-9][a-z0-9-]{0,99})$/);
+    if (center) return { view: 'center', id: center[1] };
+    var need = hash.match(/^#necesidad\/([A-Za-z0-9][A-Za-z0-9-]{0,99})$/);
+    if (need) return { view: 'need', id: need[1] };
+    if (hash.indexOf('#centro/') === 0 || hash.indexOf('#necesidad/') === 0) return { view: 'invalid' };
+    return null;
+  }
+
+  function recordUrl(kind, id) {
+    return location.origin + location.pathname + location.search + (kind === 'center' ? '#centro/' : '#necesidad/') + id;
+  }
+
+  function publicText(value) {
+    if (!value || typeof value !== 'object' || Array.isArray(value)) return '';
+    var text = localized(value);
+    return typeof text === 'string' ? text : '';
+  }
+
+  function isoStamp(value) {
+    return typeof value === 'string' && /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}/.test(value) ? value.slice(0, 16) : '';
+  }
+
+  function isoDate(value) {
+    return typeof value === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(value) ? value : '';
+  }
+
+  function utcToday() { return new Date().toISOString().slice(0, 10); }
+
+  function httpsUrl(value) {
+    if (typeof value !== 'string' || value.length > 500 || value.indexOf('@') !== -1) return '';
+    try {
+      var url = new URL(value);
+      if (url.protocol !== 'https:' || url.username || url.password || url.hostname.indexOf('.') === -1) return '';
+      return url.href;
+    } catch (_) { return ''; }
+  }
+
+  function publicEmail(value) {
+    return typeof value === 'string' && value.length <= 200 && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value) ? value : '';
+  }
+
+  function publicPhone(value) {
+    return typeof value === 'string' && /^\+?[0-9][0-9 ()-]{5,18}$/.test(value) ? value : '';
+  }
+
+  function slugId(value) { return typeof value === 'string' && /^[a-z0-9][a-z0-9-]{0,99}$/.test(value); }
+  function publicId(value) { return typeof value === 'string' && /^[A-Za-z0-9][A-Za-z0-9-]{0,99}$/.test(value); }
+  function uuid(value) { return typeof value === 'string' && /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(value); }
+
+  function pageCount(data) {
+    var last = data && data.last_page;
+    return Number.isInteger(last) && last >= 1 ? last : 1;
+  }
+
+  function searchText() { return (el('discovery-query').value || '').trim().toLowerCase(); }
+
+  function matchesQuery(text) {
+    var query = searchText();
+    return !query || String(text || '').toLowerCase().indexOf(query) !== -1;
+  }
+
+  function verifiedUser() {
+    return !!(accountUser && accountCsrf && typeof accountUser.email_verified_at === 'string' && accountUser.email_verified_at);
+  }
+
+  function selectedNeed() {
+    return discovery.record && discovery.record.kind === 'need' ? discovery.record.data : null;
+  }
+
+  function needMethods(need) {
+    var methods = need && Array.isArray(need.helpMethods) ? need.helpMethods : [];
+    return { goods: methods.indexOf('goods') !== -1, time: methods.indexOf('time') !== -1, money: methods.indexOf('money') !== -1 };
+  }
+
+  function needExpired(need) {
+    var date = isoDate(need && need.expiresOnIsoDate);
+    return !!(date && date < utcToday());
+  }
+
+  function selectedMethod() {
+    var chosen = document.querySelector('input[name="discovery-method"]:checked');
+    return chosen ? chosen.value : '';
+  }
+
+  function setField(id, show) {
+    var field = el(id);
+    var label = document.querySelector('label[for="' + id + '"]');
+    if (!field) return;
+    field.hidden = !show;
+    field.disabled = !show || discovery.offerBusy || !!discovery.offerPending;
+    if (label) label.hidden = !show;
+  }
+
+  function intentKey() { return 'generosity.discovery.intent'; }
+  function offerKey() { return 'generosity.offer.pending.' + discovery.owner; }
+  function cancelKey() { return 'generosity.offer.cancel.' + discovery.owner; }
+
+  function readJson(key) {
+    try { return JSON.parse(sessionStorage.getItem(key) || 'null'); } catch (_) { return null; }
+  }
+
+  function clearOfferPrivate() {
+    discovery.offerGeneration += 1;
+    discovery.cancelGeneration += 1;
+    discovery.historyGeneration += 1;
+    discovery.offerBusy = false;
+    discovery.historyBusy = false;
+    try {
+      sessionStorage.removeItem(intentKey());
+      if (discovery.owner) {
+        sessionStorage.removeItem(offerKey());
+        sessionStorage.removeItem(cancelKey());
+      }
+    } catch (_) { /* Private fields are still cleared in the page. */ }
+    discovery.offerPending = null;
+    discovery.cancelPending = null;
+    discovery.offerStatus = '';
+    discovery.history = [];
+    discovery.historyStatus = '';
+    ['discovery-quantity', 'discovery-minutes', 'discovery-activity', 'discovery-availability', 'discovery-notes'].forEach(function (id) {
+      if (el(id)) el(id).value = '';
+    });
+  }
+
+  function saveIntent() {
+    var need = selectedNeed();
+    if (!need || !publicId(need.id)) return;
+    try {
+      sessionStorage.setItem(intentKey(), JSON.stringify({
+        needId: need.id, method: selectedMethod(),
+        quantity: el('discovery-quantity').value, minutes: el('discovery-minutes').value,
+        activity: el('discovery-activity').value, availability: el('discovery-availability').value,
+        notes: el('discovery-notes').value
+      }));
+    } catch (_) { /* The form remains in this view if storage is blocked. */ }
+  }
+
+  function restoreIntent(id) {
+    var saved = readJson(intentKey());
+    if (!saved || saved.needId !== id) return;
+    if (saved.method === 'goods' || saved.method === 'time') {
+      var radio = document.querySelector('input[name="discovery-method"][value="' + saved.method + '"]');
+      if (radio && !radio.disabled) radio.checked = true;
+    }
+    ['quantity', 'minutes', 'activity', 'availability', 'notes'].forEach(function (name) {
+      if (typeof saved[name] === 'string') el('discovery-' + name).value = saved[name];
+    });
+  }
+
+  function loadStoredPending() {
+    if (!discovery.owner) return;
+    var offer = readJson(offerKey());
+    discovery.offerPending = offer && offer.owner === discovery.owner && uuid(offer.key) && offer.body ? offer : null;
+    var cancel = readJson(cancelKey());
+    discovery.cancelPending = cancel && cancel.owner === discovery.owner && uuid(cancel.key) && uuid(cancel.id) ? cancel : null;
+  }
+
+  function syncDiscovery() {
+    var owner = accountUser && accountUser.id != null ? String(accountUser.id) : null;
+    if (discovery.owner && discovery.owner !== owner) clearOfferPrivate();
+    var arrived = !discovery.owner && owner;
+    discovery.owner = owner;
+    if (owner && arrived) loadStoredPending();
+    if (discoveryRoute() && verifiedUser()) loadHistory();
+    renderDiscovery();
+  }
+
+  function routeDiscovery(focus) {
+    var route = discoveryRoute();
+    if (!route) return;
+    if (focus && el('descubrir')) el('descubrir').focus();
+    if (route.view === 'invalid') {
+      discovery.record = null;
+      discovery.status = 'missing';
+      renderDiscovery();
+      return;
+    }
+    if (route.view === 'list') loadCatalog();
+    else loadRecord(route.view === 'center' ? 'center' : 'need', route.id);
+    if (verifiedUser()) loadHistory();
+  }
+
+  function consumeIntentHash() {
+    if (location.hash) return;
+    var saved = readJson(intentKey());
+    if (saved && publicId(saved.needId)) location.hash = '#necesidad/' + saved.needId;
+  }
+
+  async function publicGet(path) {
+    var response = await fetch(apiOrigin + path, { credentials: 'include', cache: 'no-store', signal: AbortSignal.timeout(15000), headers: { 'X-Generosity-Channel': appChannel, Accept: 'application/json' } });
+    var data = null;
+    try { data = await response.json(); } catch (_) { data = null; }
+    return { ok: response.ok, status: response.status, data: data };
+  }
+
+  async function loadCatalog() {
+    var generation = ++discovery.generation;
+    discovery.busy = true;
+    discovery.status = 'loading';
+    discovery.record = null;
+    renderDiscovery();
+    try {
+      var results = await Promise.all([
+        publicGet('/api/v1/centers?page=' + discovery.centerPage),
+        publicGet('/api/v1/needs?page=' + discovery.needPage)
+      ]);
+      if (generation !== discovery.generation) return;
+      var centers = results[0].ok && results[0].data && Array.isArray(results[0].data.data) ? results[0].data.data : null;
+      var needs = results[1].ok && results[1].data && Array.isArray(results[1].data.data) ? results[1].data.data : null;
+      if (!centers || !needs) {
+        discovery.centers = [];
+        discovery.needs = [];
+        discovery.status = 'unavailable';
+      } else {
+        discovery.centers = centers;
+        discovery.needs = needs;
+        discovery.centerLast = pageCount(results[0].data);
+        discovery.needLast = pageCount(results[1].data);
+        discovery.status = '';
+      }
+    } catch (_) {
+      if (generation !== discovery.generation) return;
+      discovery.centers = [];
+      discovery.needs = [];
+      discovery.status = 'unavailable';
+    } finally {
+      if (generation === discovery.generation) { discovery.busy = false; renderDiscovery(); }
+    }
+  }
+
+  function acceptableRecord(kind, data, id) {
+    if (!data || data.id !== id) return false;
+    if (kind === 'need') return data.status === 'published' && publicText(data.title);
+    return publicText(data.name);
+  }
+
+  async function loadRecord(kind, id) {
+    var generation = ++discovery.generation;
+    discovery.busy = true;
+    discovery.record = null;
+    discovery.status = 'loading';
+    renderDiscovery();
+    var path = kind === 'center' ? '/api/v1/centers/' + encodeURIComponent(id) : '/api/v1/needs/' + encodeURIComponent(id);
+    try {
+      var result = await publicGet(path);
+      if (generation !== discovery.generation) return;
+      if (result.status === 404) discovery.status = 'missing';
+      else if (!result.ok || !acceptableRecord(kind, result.data, id)) discovery.status = 'unavailable';
+      else {
+        discovery.record = { kind: kind, data: result.data };
+        discovery.status = '';
+        if (kind === 'need') restoreIntent(id);
+      }
+    } catch (_) {
+      if (generation !== discovery.generation) return;
+      discovery.status = 'unavailable';
+    } finally {
+      if (generation === discovery.generation) { discovery.busy = false; renderDiscovery(); }
+    }
+  }
+
+  function appendText(parent, tag, text) {
+    if (!text) return;
+    parent.append(node(tag, text));
+  }
+
+  function contactLines(contact) {
+    if (!contact || typeof contact !== 'object') return [];
+    var lines = [];
+    var phone = publicPhone(contact.phone);
+    var email = publicEmail(contact.email);
+    var site = httpsUrl(contact.website);
+    if (phone) lines.push(phone);
+    if (email) lines.push(email);
+    if (site) lines.push(site);
+    return lines;
+  }
+
+  function quantityLine(need) {
+    if (!Number.isInteger(need.quantityRequired) || need.quantityRequired < 1 || !Number.isInteger(need.quantityCommitted) || need.quantityCommitted < 0 || need.quantityCommitted > need.quantityRequired) return '';
+    var format = new Intl.NumberFormat(effective());
+    var unit = typeof need.unit === 'string' && need.unit.length <= 60 ? need.unit : '';
+    return t('discovery.committed') + format.format(need.quantityCommitted) + ' / ' + format.format(need.quantityRequired) + (unit ? ' ' + unit : '') + '. ' + t('discovery.available') + format.format(need.quantityRequired - need.quantityCommitted);
+  }
+
+  function renderRecord(parent, kind, data) {
+    var title = kind === 'center' ? publicText(data.name) : publicText(data.title);
+    var heading = node('h3', title);
+    parent.append(heading);
+    appendText(parent, 'p', kind === 'center' ? publicText(data.description) : publicText(data.description));
+    if (kind === 'center') {
+      appendText(parent, 'p', publicText(data.address) ? t('discovery.address') + publicText(data.address) : '');
+      if (Array.isArray(data.categories)) {
+        var categories = data.categories.filter(function (item) { return typeof item === 'string' && item.length <= 80; }).slice(0, 12);
+        appendText(parent, 'p', categories.join(', '));
+      }
+      contactLines(data.contact).forEach(function (line) { appendText(parent, 'p', t('discovery.contact') + ': ' + line); });
+    } else {
+      var methods = needMethods(data);
+      if (data.urgent === true) appendText(parent, 'p', t('discovery.urgent'));
+      var expires = isoDate(data.expiresOnIsoDate);
+      if (expires) appendText(parent, 'p', t('discovery.expires') + expires);
+      if (needExpired(data)) appendText(parent, 'p', t('discovery.expired'));
+      appendText(parent, 'p', quantityLine(data));
+      if (Number.isInteger(data.quantityReceived) && data.quantityReceived >= 0) appendText(parent, 'p', t('discovery.received') + new Intl.NumberFormat(effective()).format(data.quantityReceived));
+      if (methods.money) appendText(parent, 'p', t('discovery.money'));
+      if (!methods.goods && !methods.time) appendText(parent, 'p', t('discovery.noMethods'));
+      if (slugId(data.centerId)) {
+        var centerLink = node('a', data.centerId);
+        centerLink.href = '#centro/' + data.centerId;
+        parent.append(centerLink);
+      }
+    }
+    var updated = isoStamp(data.updatedAt);
+    appendText(parent, 'p', updated ? t('discovery.updated') + updated : '');
+  }
+
+  function renderDiscovery() {
+    if (!el('discovery-status')) return;
+    el('discovery-status').textContent = discovery.status ? t('discovery.' + discovery.status) : '';
+    var listRoute = discoveryRoute() && discoveryRoute().view === 'list';
+    ['centers', 'needs'].forEach(function (kind) {
+      var page = kind === 'centers' ? discovery.centerPage : discovery.needPage;
+      var last = kind === 'centers' ? discovery.centerLast : discovery.needLast;
+      el('discovery-' + kind + '-prev').disabled = discovery.busy || !listRoute || page <= 1;
+      el('discovery-' + kind + '-next').disabled = discovery.busy || !listRoute || page >= last;
+    });
+    var results = el('discovery-results');
+    results.replaceChildren();
+    if (listRoute && discovery.status !== 'unavailable' && discovery.status !== 'loading' && discovery.status !== 'missing') {
+      results.append(node('h3', t('discovery.centers')));
+      var centers = discovery.centers.filter(function (center) { return publicText(center.name) && matchesQuery(publicText(center.name) + ' ' + publicText(center.description)); });
+      if (!centers.length) results.append(node('p', searchText() ? t('discovery.noMatch') : t('discovery.emptyCenters')));
+      centers.forEach(function (center) {
+        if (!slugId(center.id)) return;
+        var card = document.createElement('article');
+        card.className = 'catalog-card';
+        renderRecord(card, 'center', center);
+        var open = node('a', t('discovery.open'));
+        open.className = 'ghost';
+        open.href = '#centro/' + center.id;
+        card.append(open);
+        results.append(card);
+      });
+      results.append(node('h3', t('discovery.needs')));
+      var needs = discovery.needs.filter(function (need) {
+        return need.status === 'published' && publicText(need.title) && matchesQuery(publicText(need.title) + ' ' + publicText(need.description));
+      });
+      if (!needs.length) results.append(node('p', searchText() ? t('discovery.noMatch') : t('discovery.emptyNeeds')));
+      needs.forEach(function (need) {
+        if (!publicId(need.id)) return;
+        var card = document.createElement('article');
+        card.className = 'catalog-card';
+        renderRecord(card, 'need', need);
+        var open = node('a', t('discovery.open'));
+        open.className = 'ghost';
+        open.href = '#necesidad/' + need.id;
+        card.append(open);
+        results.append(card);
+      });
+    }
+    var detail = el('discovery-detail');
+    detail.replaceChildren();
+    detail.hidden = !discovery.record;
+    if (discovery.record) {
+      var back = node('a', t('discovery.back'));
+      back.className = 'ghost';
+      back.href = '#descubrir';
+      detail.append(back);
+      renderRecord(detail, discovery.record.kind, discovery.record.data);
+    }
+    renderOffer();
+    renderShare();
+    renderHistory();
+  }
+
+  function renderOffer() {
+    var need = selectedNeed();
+    var methods = needMethods(need);
+    var expired = needExpired(need);
+    el('discovery-offer-limit').textContent = !featureEnabled('contributions.create') && accountUser ? featureUnavailable() : !need ? '' : expired ? t('discovery.expired') : methods.money ? t('discovery.money') : (!methods.goods && !methods.time ? t('discovery.noMethods') : '');
+    var goods = el('discovery-methods').querySelector('input[value="goods"]');
+    var time = el('discovery-methods').querySelector('input[value="time"]');
+    goods.disabled = !methods.goods || expired || discovery.offerBusy || !!discovery.offerPending;
+    time.disabled = !methods.time || expired || discovery.offerBusy || !!discovery.offerPending;
+    if (goods.checked && goods.disabled) goods.checked = false;
+    if (time.checked && time.disabled) time.checked = false;
+    if (!selectedMethod()) {
+      if (methods.goods && !goods.disabled) goods.checked = true;
+      else if (methods.time && !time.disabled) time.checked = true;
+    }
+    var method = selectedMethod();
+    el('discovery-methods').hidden = !need || (!methods.goods && !methods.time);
+    setField('discovery-quantity', method === 'goods');
+    setField('discovery-minutes', method === 'time');
+    setField('discovery-activity', method === 'time');
+    setField('discovery-availability', !!method);
+    setField('discovery-notes', !!method);
+    el('discovery-submit').disabled = !featureEnabled('contributions.create') || discovery.offerBusy || !!discovery.offerPending || !method || expired;
+    el('discovery-retry').hidden = !discovery.offerPending;
+    el('discovery-retry').disabled = discovery.offerBusy;
+    el('discovery-sign-in').hidden = verifiedUser();
+    el('discovery-sign-in').href = apiOrigin + '/auth/sign-in?client=web&locale=' + effective();
+    var status = discovery.offerStatus;
+    var text = '';
+    if (status.indexOf('capacity:') === 0) text = t('discovery.capacityKnown') + status.slice('capacity:'.length);
+    else if (status.indexOf('saved:') === 0) text = t('discovery.saved') + status.slice('saved:'.length);
+    else if (status) text = t('discovery.' + status);
+    el('discovery-offer-status').textContent = text;
+  }
+
+  function renderShare() {
+    var share = el('discovery-share');
+    var record = discovery.record;
+    var id = record && (record.kind === 'center' ? (slugId(record.data.id) ? record.data.id : '') : (publicId(record.data.id) ? record.data.id : ''));
+    share.hidden = !id;
+    if (!id) return;
+    el('discovery-link').value = recordUrl(record.kind, id);
+    var canShare = typeof navigator.share === 'function';
+    el('discovery-share-button').hidden = !canShare;
+    el('discovery-share-status').textContent = discovery.shareStatus ? t('discovery.' + discovery.shareStatus) : '';
+  }
+
+  function offerStatusLabel(status) {
+    if (status === 'offered' || status === 'confirmed' || status === 'fulfilled' || status === 'cancelled') return t('discovery.status_' + status);
+    return t('discovery.status_other');
+  }
+
+  function renderHistory() {
+    var box = el('discovery-history');
+    box.hidden = !verifiedUser() || !discoveryRoute();
+    el('discovery-history-status').textContent = discovery.historyStatus ? t('discovery.' + discovery.historyStatus) : '';
+    el('discovery-history-prev').disabled = discovery.historyBusy || !!discovery.cancelPending || discovery.historyPage <= 1;
+    el('discovery-history-next').disabled = discovery.historyBusy || !!discovery.cancelPending || discovery.historyPage >= discovery.historyLast;
+    el('discovery-history-retry').hidden = !discovery.cancelPending;
+    el('discovery-history-retry').disabled = discovery.historyBusy;
+    var list = el('discovery-history-list');
+    list.replaceChildren();
+    if (!box.hidden && !discovery.history.length && !discovery.historyStatus) list.append(node('p', t('discovery.historyEmpty')));
+    discovery.history.forEach(function (item) {
+      if (!uuid(item.id) || String(item.user_id) !== discovery.owner) return;
+      var card = document.createElement('article');
+      card.className = 'catalog-card';
+      card.append(node('h4', publicText(item.title) || item.id));
+      card.append(node('p', offerStatusLabel(item.status)));
+      if (item.method === 'goods' && Number.isInteger(item.quantity)) card.append(node('p', String(item.quantity)));
+      if (item.method === 'time' && Number.isInteger(item.minutes)) card.append(node('p', String(item.minutes)));
+      appendText(card, 'p', typeof item.activity === 'string' ? item.activity : '');
+      appendText(card, 'p', typeof item.notes === 'string' ? item.notes : '');
+      if (['offered', 'confirmed'].indexOf(item.status) !== -1 && Number.isInteger(item.version) && item.version >= 1) {
+        var button = node('button', t('discovery.cancel'));
+        button.type = 'button';
+        button.className = 'ghost';
+        button.disabled = discovery.historyBusy || !!discovery.cancelPending;
+        button.addEventListener('click', function () { sendCancel(item); });
+        card.append(button);
+      }
+      list.append(card);
+    });
+  }
+
+  function offerBody() {
+    var need = selectedNeed();
+    var method = selectedMethod();
+    if (!need || !publicId(need.id) || needExpired(need)) return null;
+    var methods = needMethods(need);
+    if (method === 'goods' && methods.goods) {
+      var quantity = Number(el('discovery-quantity').value);
+      if (!Number.isInteger(quantity) || quantity < 1 || quantity > 1000000) return null;
+      return optionalText({ need_id: need.id, method: 'goods', quantity: quantity });
+    }
+    if (method === 'time' && methods.time) {
+      var minutes = Number(el('discovery-minutes').value);
+      var activity = el('discovery-activity').value.trim();
+      if (!Number.isInteger(minutes) || minutes < 1 || minutes > 525600 || !activity || activity.length > 500) return null;
+      return optionalText({ need_id: need.id, method: 'time', minutes: minutes, activity: activity });
+    }
+    return null;
+  }
+
+  function optionalText(body) {
+    var availability = el('discovery-availability').value.trim();
+    var notes = el('discovery-notes').value.trim();
+    if (availability) body.availability = availability.slice(0, 500);
+    if (notes) body.notes = notes.slice(0, 2000);
+    return body;
+  }
+
+  async function sendOffer(pending) {
+    if (discovery.offerBusy) return;
+    if (!verifiedUser()) {
+      discovery.offerStatus = 'needSignIn';
+      renderDiscovery();
+      el('discovery-sign-in').focus();
+      return;
+    }
+    if (!pending) {
+      if (!featureEnabled('contributions.create')) { el('discovery-offer-status').textContent = featureUnavailable(); return; }
+      if (discovery.offerPending) { discovery.offerStatus = 'pending'; renderDiscovery(); return; }
+      var body = offerBody();
+      if (!body) { discovery.offerStatus = 'invalid'; renderDiscovery(); return; }
+      try {
+        pending = { owner: discovery.owner, key: crypto.randomUUID(), body: body };
+        sessionStorage.setItem(offerKey(), JSON.stringify(pending));
+        discovery.offerPending = pending;
+      } catch (_) { discovery.offerStatus = 'unsafe'; renderDiscovery(); return; }
+    }
+    var generation = ++discovery.offerGeneration;
+    var owner = discovery.owner;
+    discovery.offerBusy = true;
+    discovery.offerStatus = 'sending';
+    renderDiscovery();
+    try {
+      var response = await fetch(apiOrigin + '/api/v1/contributions', {
+        method: 'POST', credentials: 'include', cache: 'no-store', signal: AbortSignal.timeout(15000),
+        headers: { 'X-Generosity-Channel': appChannel, Accept: 'application/json', 'Content-Type': 'application/json', 'X-CSRF-TOKEN': accountCsrf, 'Idempotency-Key': pending.key },
+        body: JSON.stringify(pending.body)
+      });
+      var data = null;
+      try { data = await response.json(); } catch (_) { data = null; }
+      if (generation !== discovery.offerGeneration || discovery.owner !== owner) return;
+      if (!response.ok) {
+        var code = data && data.error && data.error.code;
+        if ([401, 403, 419].indexOf(response.status) !== -1) discovery.offerStatus = 'denied';
+        else if (response.status >= 500) discovery.offerStatus = 'pending';
+        else {
+          try { sessionStorage.removeItem(offerKey()); } catch (_) { /* A rejected key is not retried. */ }
+          discovery.offerPending = null;
+          if (code === 'capacity_exceeded') {
+            var available = data.error.details && data.error.details.available;
+            discovery.offerStatus = Number.isInteger(available) && available >= 0 ? 'capacity:' + available : 'capacity';
+          } else if (code === 'need_unavailable') discovery.offerStatus = 'needUnavailable';
+          else if (code === 'operation_reused') discovery.offerStatus = 'conflict';
+          else discovery.offerStatus = 'rejected';
+        }
+        return;
+      }
+      if (!data || !uuid(data.id) || data.status !== 'offered' || data.method !== pending.body.method || data.need_id !== pending.body.need_id) {
+        try { sessionStorage.removeItem(offerKey()); } catch (_) { /* Do not replay an unconfirmed receipt. */ }
+        discovery.offerPending = null;
+        discovery.offerStatus = 'unconfirmed';
+        return;
+      }
+      try { sessionStorage.removeItem(offerKey()); sessionStorage.removeItem(intentKey()); } catch (_) { /* The receipt is already stored by the server. */ }
+      discovery.offerPending = null;
+      discovery.offerStatus = 'saved:' + data.id;
+      el('discovery-offer-status').focus();
+      if (verifiedUser()) loadHistory();
+    } catch (_) {
+      if (generation === discovery.offerGeneration) discovery.offerStatus = 'pending';
+    } finally {
+      if (generation === discovery.offerGeneration) { discovery.offerBusy = false; renderDiscovery(); }
+    }
+  }
+
+  async function loadHistory() {
+    if (discovery.historyBusy || !verifiedUser()) return;
+    var generation = ++discovery.historyGeneration;
+    var owner = discovery.owner;
+    discovery.historyBusy = true;
+    discovery.historyStatus = 'historyLoading';
+    renderHistory();
+    try {
+      var result = await publicGet('/api/v1/me/contributions?page=' + discovery.historyPage);
+      if (generation !== discovery.historyGeneration || discovery.owner !== owner) return;
+      if (!result.ok || !result.data || !Array.isArray(result.data.data)) discovery.historyStatus = 'historyFailed';
+      else {
+        discovery.history = result.data.data;
+        discovery.historyLast = pageCount(result.data);
+        discovery.historyStatus = '';
+      }
+    } catch (_) {
+      if (generation === discovery.historyGeneration) discovery.historyStatus = 'historyFailed';
+    } finally {
+      if (generation === discovery.historyGeneration) { discovery.historyBusy = false; renderHistory(); }
+    }
+  }
+
+  async function sendCancel(item) {
+    if (discovery.historyBusy || !verifiedUser()) return;
+    var pending = discovery.cancelPending;
+    if (!pending) {
+      if (!item || !uuid(item.id) || !Number.isInteger(item.version) || String(item.user_id) !== discovery.owner) return;
+      try {
+        pending = { owner: discovery.owner, key: crypto.randomUUID(), id: item.id, version: item.version };
+        sessionStorage.setItem(cancelKey(), JSON.stringify(pending));
+        discovery.cancelPending = pending;
+      } catch (_) { discovery.historyStatus = 'unsafe'; renderHistory(); return; }
+    }
+    var generation = ++discovery.cancelGeneration;
+    var owner = discovery.owner;
+    discovery.historyBusy = true;
+    discovery.historyStatus = 'cancelling';
+    renderHistory();
+    try {
+      var response = await fetch(apiOrigin + '/api/v1/contributions/' + encodeURIComponent(pending.id) + '/transition', {
+        method: 'POST', credentials: 'include', cache: 'no-store', signal: AbortSignal.timeout(15000),
+        headers: { 'X-Generosity-Channel': appChannel, Accept: 'application/json', 'Content-Type': 'application/json', 'X-CSRF-TOKEN': accountCsrf, 'Idempotency-Key': pending.key },
+        body: JSON.stringify({ action: 'cancel', version: pending.version })
+      });
+      var data = null;
+      try { data = await response.json(); } catch (_) { data = null; }
+      if (generation !== discovery.cancelGeneration || discovery.owner !== owner) return;
+      if (!response.ok) {
+        var code = data && data.error && data.error.code;
+        if ([401, 403, 419].indexOf(response.status) !== -1) discovery.historyStatus = 'sessionDenied';
+        else if (response.status >= 500) discovery.historyStatus = 'cancelPending';
+        else {
+          try { sessionStorage.removeItem(cancelKey()); } catch (_) { /* The rejected cancellation is not retried. */ }
+          discovery.cancelPending = null;
+          discovery.historyStatus = code === 'version_conflict' ? 'cancelConflict' : 'cancelUnavailable';
+        }
+        return;
+      }
+      try { sessionStorage.removeItem(cancelKey()); } catch (_) { /* The server already stored the cancellation. */ }
+      discovery.cancelPending = null;
+      discovery.historyStatus = data && data.status === 'cancelled' ? 'cancelled' : 'cancelUnconfirmed';
+    } catch (_) {
+      if (generation === discovery.cancelGeneration) discovery.historyStatus = 'cancelPending';
+    } finally {
+      if (generation === discovery.cancelGeneration) {
+        discovery.historyBusy = false;
+        renderHistory();
+        if (discovery.historyStatus === 'cancelled' || discovery.historyStatus === 'cancelConflict') loadHistory();
+      }
+    }
+  }
+
+  el('discovery-search').addEventListener('submit', function (event) { event.preventDefault(); renderDiscovery(); });
+  el('discovery-offer').addEventListener('submit', function (event) { event.preventDefault(); });
+  el('discovery-query').addEventListener('input', renderDiscovery);
+  el('discovery-centers-prev').addEventListener('click', function () { if (discovery.busy || discovery.centerPage <= 1) return; discovery.centerPage -= 1; loadCatalog(); });
+  el('discovery-centers-next').addEventListener('click', function () { if (discovery.busy || discovery.centerPage >= discovery.centerLast) return; discovery.centerPage += 1; loadCatalog(); });
+  el('discovery-needs-prev').addEventListener('click', function () { if (discovery.busy || discovery.needPage <= 1) return; discovery.needPage -= 1; loadCatalog(); });
+  el('discovery-needs-next').addEventListener('click', function () { if (discovery.busy || discovery.needPage >= discovery.needLast) return; discovery.needPage += 1; loadCatalog(); });
+  el('discovery-methods').addEventListener('change', function () { saveIntent(); renderDiscovery(); });
+  ['discovery-quantity', 'discovery-minutes', 'discovery-activity', 'discovery-availability', 'discovery-notes'].forEach(function (id) {
+    el(id).addEventListener('input', saveIntent);
+  });
+  el('discovery-submit').addEventListener('click', function () { sendOffer(null); });
+  el('discovery-retry').addEventListener('click', function () { sendOffer(discovery.offerPending); });
+  el('discovery-history-prev').addEventListener('click', function () { if (discovery.historyBusy || discovery.historyPage <= 1) return; discovery.historyPage -= 1; loadHistory(); });
+  el('discovery-history-next').addEventListener('click', function () { if (discovery.historyBusy || discovery.historyPage >= discovery.historyLast) return; discovery.historyPage += 1; loadHistory(); });
+  el('discovery-history-retry').addEventListener('click', function () { sendCancel(null); });
+  el('discovery-copy').addEventListener('click', async function () {
+    var url = el('discovery-link').value;
+    try {
+      await navigator.clipboard.writeText(url);
+      discovery.shareStatus = 'copied';
+    } catch (_) { discovery.shareStatus = 'copyFailed'; }
+    renderShare();
+  });
+  el('discovery-share-button').addEventListener('click', async function () {
+    try {
+      await navigator.share({ url: el('discovery-link').value });
+      discovery.shareStatus = '';
+    } catch (error) { discovery.shareStatus = error && error.name === 'AbortError' ? 'shareCancelled' : 'shareFailed'; }
+    renderShare();
+  });
+  el('discovery-download').addEventListener('click', function () {
+    var record = discovery.record;
+    if (!record) return;
+    var title = record.kind === 'center' ? publicText(record.data.name) : publicText(record.data.title);
+    var text = 'Generosity\n' + title + '\n' + el('discovery-link').value + '\n' + new Date().toISOString().slice(0, 10) + '\n' + t('discovery.downloadNote') + '\n';
+    var blob = new Blob([text], { type: 'text/plain;charset=utf-8' });
+    var url = URL.createObjectURL(blob);
+    var link = document.createElement('a');
+    link.href = url;
+    link.download = 'generosity-invitation.txt';
+    document.body.append(link);
+    link.click();
+    link.remove();
+    URL.revokeObjectURL(url);
+  });
+  el('discovery-share').addEventListener('submit', function (event) { event.preventDefault(); });
+
   var stored = readStored();
   if (stored === "es" || stored === "en" || stored === "system") mode = stored;
+  consumeIntentHash();
   applyAll();
+  routeDiscovery(!!discoveryRoute());
   checkAccount();
 })();

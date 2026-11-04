@@ -47,7 +47,8 @@ object GoogleCenterMapRenderer : CenterMapRenderer {
         onCenterSelected: (String) -> Unit,
         modifier: Modifier,
         origin: org.generosity.domain.Coordinates?,
-        originLabel: String?
+        originLabel: String?,
+        contentPadding: androidx.compose.foundation.layout.PaddingValues
     ) {
         val context = LocalContext.current
         val selectedColor = MaterialTheme.colorScheme.primary
@@ -73,6 +74,7 @@ object GoogleCenterMapRenderer : CenterMapRenderer {
                         GoogleMap(
                             modifier = Modifier.fillMaxWidth().weight(1f),
                             cameraPositionState = camera,
+                            contentPadding = contentPadding,
                             contentDescription = TextKey.TAB_MAP.label(locale),
                             properties = MapProperties(isMyLocationEnabled = false),
                             uiSettings = MapUiSettings(

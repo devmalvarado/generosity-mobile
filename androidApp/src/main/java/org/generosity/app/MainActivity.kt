@@ -21,6 +21,7 @@ import org.generosity.app.ui.map.google.GoogleCenterMapRenderer
 
 open class MainActivity : ComponentActivity() {
     protected open val usesDemoCatalog = false
+    protected open val usesConnectedDesign = false
     private val languageSettings by lazy { AndroidLanguageSettings(this) }
     private val connection by lazy { AndroidConnection(this, lifecycleScope) }
     private val appState by lazy {
@@ -65,7 +66,7 @@ open class MainActivity : ComponentActivity() {
                 }
                 wasRegistered = state.profile.isRegistered
             }
-            if (!entered && !state.profile.isRegistered) WelcomeScreen(state.locale, account.busy, account.failed || entryError,
+            if (!entered && !state.profile.isRegistered && !usesConnectedDesign) WelcomeScreen(state.locale, account.busy, account.failed || entryError,
                 onGuest = {
                     entryError = !settings.edit().putBoolean("entered", true).commit()
                     if (!entryError) entered = true
@@ -73,7 +74,8 @@ open class MainActivity : ComponentActivity() {
             else GenerosityApp(appState, GoogleCenterMapRenderer, ::selectLanguage, savingLanguage, languageSaveFailed,
                 onSignIn = { account.signIn() }, onSignOut = account::signOut, onCreate = { account.signIn(register = true) },
                 authBusy = account.busy, authFailed = account.failed,
-                locationSource = if (usesDemoCatalog) null else remember { AndroidDeviceLocationSource(applicationContext) })
+                locationSource = if (usesDemoCatalog) null else remember { AndroidDeviceLocationSource(applicationContext) },
+                designHarness = usesConnectedDesign)
         }
     }
 

@@ -1,4 +1,5 @@
 import java.util.Properties
+import java.net.URI
 
 plugins {
     id("com.android.application")
@@ -6,7 +7,7 @@ plugins {
     id("com.google.gms.google-services") version "4.5.0" apply false
 }
 
-if (file("google-services.json").exists()) apply(plugin = "com.google.gms.google-services")
+if (file("google-services.json").exists() || file("src/preview/google-services.json").exists()) apply(plugin = "com.google.gms.google-services")
 
 val localProperties = Properties().apply {
     val file = rootProject.file("local.properties")
@@ -16,6 +17,9 @@ val mapsApiKey = providers.environmentVariable("MAPS_API_KEY")
     .orElse(provider { localProperties.getProperty("MAPS_API_KEY", "") })
     .get().trim()
 
+val previewApiUrl = providers.gradleProperty("generosityPreviewApiUrl").orElse("https://api-preview.generosity.global").get()
+require(previewApiUrl.matches(Regex("https://[A-Za-z0-9.-]+(:[0-9]+)?")) && URI(previewApiUrl).host.lowercase().trimEnd('.') !in listOf("api.generosity.global", "generosity.global", "www.generosity.global")) { "Preview requires a separate HTTPS API" }
+val previewMapsKey = providers.environmentVariable("MAPS_PREVIEW_API_KEY").orElse(provider { localProperties.getProperty("MAPS_PREVIEW_API_KEY", "") }).get().trim()
 val apiBaseUrl = providers.gradleProperty("generosityApiUrl").orElse("https://api.generosity.global").get()
 require(apiBaseUrl.matches(Regex("https://[A-Za-z0-9.-]+(:[0-9]+)?"))) { "generosityApiUrl must be an HTTPS origin" }
 
@@ -33,6 +37,30 @@ android {
         manifestPlaceholders["MAPS_API_KEY"] = mapsApiKey
         buildConfigField("String", "API_BASE_URL", "\"$apiBaseUrl\"")
         buildConfigField("boolean", "MAPS_API_KEY_CONFIGURED", mapsApiKey.isNotEmpty().toString())
+    }
+
+    flavorDimensions += "environment"
+    productFlavors {
+        create("production") {
+            dimension = "environment"
+            isDefault = true
+            buildConfigField("String", "CHANNEL", "\"production\"")
+            buildConfigField("String", "AUTH_CLIENT", "\"android\"")
+            buildConfigField("String", "AUTH_SCHEME", "\"org.generosity.app.android\"")
+            manifestPlaceholders["AUTH_SCHEME"] = "org.generosity.app.android"
+        }
+        create("preview") {
+            dimension = "environment"
+            applicationIdSuffix = ".preview"
+            versionNameSuffix = "-preview"
+            buildConfigField("String", "CHANNEL", "\"preview\"")
+            buildConfigField("String", "API_BASE_URL", "\"$previewApiUrl\"")
+            buildConfigField("String", "AUTH_CLIENT", "\"android-preview\"")
+            buildConfigField("String", "AUTH_SCHEME", "\"org.generosity.app.preview.android\"")
+            buildConfigField("boolean", "MAPS_API_KEY_CONFIGURED", previewMapsKey.isNotEmpty().toString())
+            manifestPlaceholders["MAPS_API_KEY"] = previewMapsKey
+            manifestPlaceholders["AUTH_SCHEME"] = "org.generosity.app.preview.android"
+        }
     }
 
     buildFeatures {
@@ -90,3 +118,16 @@ val verifyMapProviderBoundary by tasks.registering {
 }
 tasks.named("check") { dependsOn(verifyMapProviderBoundary) }
 tasks.named("preBuild") { dependsOn(rootProject.tasks.named("checkDesignSystem")) }
+
+// A preview build never falls back to the root production Firebase configuration.
+tasks.matching { it.name.startsWith("processProduction") && it.name.endsWith("GoogleServices") }.configureEach {
+    enabled = file("google-services.json").isFile
+}
+tasks.matching { it.name.startsWith("processPreview") && it.name.endsWith("GoogleServices") }.configureEach {
+    enabled = file("src/preview/google-services.json").isFile
+    doFirst {
+        val config = groovy.json.JsonSlurper().parse(file("src/preview/google-services.json")) as Map<*, *>
+        val project = config["project_info"] as Map<*, *>
+        require(project["project_id"] != "generosity-v01") { "Use a separate Firebase project for preview" }
+    }
+}

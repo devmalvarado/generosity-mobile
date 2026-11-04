@@ -1,5 +1,6 @@
 const { test, expect } = require('@playwright/test');
 const api = 'https://api.generosity.global';
+test.beforeEach(async ({page}) => { await page.route(/\/api\/v1\/(me\/)?features$/, r => r.fulfill({json:{channel:'production',features:{'contributions.create':true,'needs.publish':true,'needs.progress':true}}})); });
 const user = { id: 42, name: 'María Peña', email: 'maria@example.test', email_verified_at: '2026-11-01T00:00:00Z' };
 const receipt = { id: 'application-test-1', organization_name: 'Asociación de Apoyo', site_name: 'Sede Niñez', status: 'pending' };
 

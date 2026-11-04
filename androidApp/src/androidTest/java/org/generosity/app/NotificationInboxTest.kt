@@ -19,7 +19,9 @@ class NotificationInboxTest {
     @Test fun spanishInboxOpensCurrentCenterWithoutPushPermission() = checkInbox(SupportedLocale.SPANISH)
     @Test fun englishInboxOpensCurrentCenterWithoutPushPermission() = checkInbox(SupportedLocale.ENGLISH)
 
-    private fun checkInbox(locale: SupportedLocale) {
+    @Test fun connectedInboxOpensRealCenterAndClearsOnSignOut() = checkInbox(SupportedLocale.ENGLISH, connected = true)
+
+    private fun checkInbox(locale: SupportedLocale, connected: Boolean = false) {
         val disk = mutableMapOf<String, String>()
         var read = false
         val connection = object : AppConnection {
@@ -28,6 +30,7 @@ class NotificationInboxTest {
             override fun newOperationId() = java.util.UUID.randomUUID().toString()
             override fun send(request: ApiRequest, completion: (ApiResponse) -> Unit) {
                 completion(when {
+                    request.path.endsWith("/features") -> ApiResponse(200, """{"features":{"contributions.create":true,"needs.publish":true,"needs.progress":true,"preview.discovery":$connected,"preview.communication":$connected}}""")
                     request.path.startsWith("/api/v1/sync/catalog") -> ApiResponse(200, """{"catalog":${BundledKindnessCatalog.JSON}}""")
                     request.path.endsWith("/read") -> { read = true; ApiResponse(200, "{}") }
                     else -> ApiResponse(200, """{"user":{"id":1},"contributions":[],"notices":{"items":[{"id":"notice-1","eventId":"event-1","centerId":"kc-children-001","needId":"need-school-supplies","title":{"es":"Aviso de útiles escolares","en":"School supplies notice"},"createdAt":"2026-11-02T00:00:00Z","read":$read}]}}""")
@@ -39,10 +42,14 @@ class NotificationInboxTest {
         ui.runOnIdle { app.setLocale(locale); app.signIn("1", "María", remoteAccount = true) }
         ui.waitUntil(5000) { !app.state.value.syncing && app.state.value.notices.size == 1 }
         val title = if (locale == SupportedLocale.SPANISH) "Avisos" else "Notifications"
-        ui.onNodeWithTag("notification-inbox").assertTextContains("$title (1)").performClick()
+        if (connected) {
+            ui.onNodeWithTag("open-native-preview").performClick()
+            ui.onNodeWithTag("preview-notifications").performClick()
+        } else ui.onNodeWithTag("notification-inbox").assertTextContains("$title (1)").performClick()
         ui.onNodeWithText(if (locale == SupportedLocale.SPANISH) "• Aviso de útiles escolares" else "• School supplies notice").performClick()
         ui.waitUntil(5000) { read && app.state.value.selectedCenterId == "kc-children-001" }
-        ui.onNodeWithTag("notification-inbox").assertTextContains("$title (0)")
+        if (connected) ui.onNodeWithTag("detail-kc-children-001").assertExists()
+        else ui.onNodeWithTag("notification-inbox").assertTextContains("$title (0)")
         assertFalse(app.state.value.pushConfigured)
         assertTrue(app.state.value.notices.single().read)
         ui.runOnIdle { app.continueAnonymously() }

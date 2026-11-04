@@ -36,6 +36,7 @@ class AndroidConnection(context: Context, private val scope: CoroutineScope) : A
                         requestMethod = request.method; instanceFollowRedirects = false
                         connectTimeout = 15_000; readTimeout = 15_000
                         setRequestProperty("Accept", "application/json")
+                        setRequestProperty("X-Generosity-Channel", BuildConfig.CHANNEL)
                         token?.let { setRequestProperty("Authorization", "Bearer $it") }
                         request.operationId?.let { setRequestProperty("Idempotency-Key", it) }
                         request.body?.let { body ->

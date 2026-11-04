@@ -59,9 +59,11 @@ at 320/360/390/768/1280 pixels with 200% text. Backend feature tests independent
 exercise ownership, membership revocation, transactions and browser session writes.
 Mocked browser tests are not a production HTTPS/CORS or live provider acceptance.
 
-Still pending: full preview/field-specific error UX, audit/urgent-event integration,
-independent real-device keyboard/screen-reader acceptance, live identity and
-cross-device acceptance. No foundation change is ready to archive.
+Still pending: full preview/field-specific error UX, need-mutation audit coverage,
+independent real-device keyboard/screen-reader acceptance, remaining provider
+cases and cross-device acceptance. Google web access and urgent-need publication
+have recorded live evidence; they do not complete that broader matrix.
+No foundation change is ready to archive.
 
 ## Deployment boundary
 
@@ -89,8 +91,11 @@ See [integration status](testing/backend-integration.md),
 Published the additive review migration and API routes before the three changed
 portal files. No credentials or existing business rows were changed. The empty
 reviewer allowlist keeps decisions disabled until an authorized reviewer is named.
-Production still contains 157 centers, no needs and no staff memberships; the
-owner has not yet supplied the pilot center, responsible account and actual need.
+At that release checkpoint production contained 157 centers, no needs and no
+staff memberships. Later owner-authorized DEMO publication added a need and scoped
+staff access; the reviewed Aguascalientes import brought the recorded catalog to
+171 centers. See [the latest catalog checkpoint](../data/aguascalientes-directory-2026-11-02/README.md).
+A real-center pilot still needs its responsible account and actual need.
 
 Corrected `SANCTUM_STATEFUL_DOMAINS` to `generosity.global`, preserving host-only
 cookies and exact credentialed CORS. Real Google web access now loads the empty

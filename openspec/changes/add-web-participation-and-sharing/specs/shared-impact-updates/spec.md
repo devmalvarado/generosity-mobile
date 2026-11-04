@@ -17,6 +17,11 @@ Authorized organizers/centers SHALL draft and publish attributed outcome updates
 - **WHEN** a beneficiary declines permission to appear in an update
 - **THEN** the update can describe safe aggregate results without identifying them or reducing their access to assistance
 
+#### Scenario: Publication is paused after drafting
+- **WHEN** an authorized center has drafted an update and its effective publication flag is then disabled
+- **THEN** a new publish transition is rejected without making the update public
+- **AND** authorized withdrawal of previously published content remains available
+
 ### Requirement: Opt-In Continuity
 Users SHALL choose whether to follow public center/campaign updates and receive available email/inbox/push notices. Channels SHALL require their own consent and permissions, support unsubscribe, and avoid duplicate sends. Following SHALL not imply enrollment, location tracking or public membership. Relevant next opportunities SHALL remain optional and use current availability.
 

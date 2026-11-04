@@ -73,7 +73,7 @@ fun rememberDiscoveryLocation(source: DeviceLocationSource, appState: Generosity
 
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
-fun LocationActions(location: DiscoveryLocation, source: DeviceLocationSource, locale: SupportedLocale) {
+fun LocationActions(location: DiscoveryLocation, source: DeviceLocationSource, locale: SupportedLocale, compact: Boolean = false) {
     val context = LocalContext.current
     val state by location.state.collectAsState()
     var settingsFailed by remember { mutableStateOf(false) }
@@ -88,14 +88,19 @@ fun LocationActions(location: DiscoveryLocation, source: DeviceLocationSource, l
                 if (source.access == LocationAccess.NONE) launcher.launch(arrayOf(
                     Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION))
             }, enabled = !state.locating, modifier = Modifier.testTag("location-use")) {
-                Text(localizedString(if (state.locating) R.string.location_loading else R.string.location_use, locale))
+                if (compact) androidx.compose.material3.Icon(androidx.compose.ui.res.painterResource(R.drawable.ic_location),
+                    contentDescription = localizedString(if (state.locating) R.string.location_loading else R.string.location_use, locale))
+                else Text(localizedString(if (state.locating) R.string.location_loading else R.string.location_use, locale))
             }
             if (state.problem == LocationProblem.DENIED || state.problem == LocationProblem.DISABLED) {
                 TextButton(onClick = {
                     val intent = if (state.problem == LocationProblem.DISABLED) Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS)
                     else Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS, Uri.parse("package:${context.packageName}"))
                     settingsFailed = runCatching { context.startActivity(intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)) }.isFailure
-                }, modifier = Modifier.testTag("location-settings")) { Text(localizedString(R.string.location_settings, locale)) }
+                }, modifier = Modifier.testTag("location-settings")) {
+                    if (compact) androidx.compose.material3.Icon(androidx.compose.ui.res.painterResource(R.drawable.ic_settings), contentDescription = localizedString(R.string.location_settings, locale))
+                    else Text(localizedString(R.string.location_settings, locale))
+                }
             }
         }
         val message = if (settingsFailed) R.string.location_unavailable else when (state.problem) {
@@ -104,6 +109,6 @@ fun LocationActions(location: DiscoveryLocation, source: DeviceLocationSource, l
             LocationProblem.UNAVAILABLE -> R.string.location_unavailable
             null -> null
         }
-        message?.let { Text(localizedString(it, locale), Modifier.testTag("location-status"), style = MaterialTheme.typography.bodySmall) }
+        if (!compact) message?.let { Text(localizedString(it, locale), Modifier.testTag("location-status"), style = MaterialTheme.typography.bodySmall) }
     }
 }

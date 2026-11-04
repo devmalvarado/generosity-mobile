@@ -60,3 +60,7 @@ xcuserdata/
 
 # Python authoring tools
 __pycache__/
+
+androidApp/src/preview/google-services.json
+iosApp/GenerosityApp/GoogleService-Info.preview.plist
+!backend/.env.preview.example

@@ -242,19 +242,33 @@ def main():
     json_file(ROOT / "iosApp/GenerosityApp/Assets.xcassets/Contents.json", {"info": {"author": "xcode", "version": 1}})
     image_set("GenerosityWordmark", [(False, outputs["wordmark"]), (True, outputs["wordmark-dark"])])
     image_set("GenerositySymbol", [(False, outputs["symbol"])])
+    # The test channel keeps the same master mark with a vector P badge.
+    badge_color = json.loads((ROOT / "design/tokens.json").read_text())["web"]["focus"]
+    badge = f'<rect x="0" y="0" width="24" height="24" rx="5" fill="{badge_color}"/>' + '<path fill="#FFFFFF" fill-rule="evenodd" d="M7 5H13C21 5 21 16 13 16H11V20H7ZM11 9V12H13C16 12 16 9 13 9Z"/>'
+    preview_icon = icon.replace('</svg>', '<g transform="translate(680 680) scale(10)">' + badge + '</g></svg>')
+    preview_res = ROOT / "androidApp/src/preview/res"
+    for name, mono in [("generosity_launcher_foreground", False), ("generosity_launcher_monochrome", True)]:
+        color = "#000000" if mono else badge_color
+        badge_vector = f'<group android:translateX="60" android:translateY="57" android:scaleX="0.75" android:scaleY="0.75"><path android:fillColor="{color}" android:pathData="M0 0H24V24H0Z"/><path android:fillColor="#FFFFFF" android:fillType="evenOdd" android:pathData="M7 5H13C21 5 21 16 13 16H11V20H7ZM11 9V12H13C16 12 16 9 13 9Z"/></group>'
+        # A monochrome badge is a P cutout, not an opaque white path.
+        if mono:
+            badge_vector = '<group android:translateX="60" android:translateY="57" android:scaleX="0.75" android:scaleY="0.75"><path android:fillColor="#000000" android:fillType="evenOdd" android:pathData="M0 0H24V24H0Z M7 5H13C21 5 21 16 13 16H11V20H7Z M11 9V12H13C16 12 16 9 13 9Z"/></group>'
+        write(preview_res / "drawable" / (name + ".xml"), android_vector(symbol, (108, 108), offset, scale, mono).replace('</vector>', badge_vector + '</vector>'))
+    for density, size in [("mdpi", 48), ("hdpi", 72), ("xhdpi", 96), ("xxhdpi", 144), ("xxxhdpi", 192)]:
+        write(preview_res / f"mipmap-{density}/ic_launcher.png", png(preview_icon, size))
     appicon = ROOT / "iosApp/GenerosityApp/Assets.xcassets/AppIcon.appiconset"
     # iPhone/iPad slots keep the project's iOS 16 deployment target supported.
     slots = [("iphone", size, scale) for size, scales in [(20, [2, 3]), (29, [2, 3]), (40, [2, 3]), (60, [2, 3])] for scale in scales]
     slots += [("ipad", size, scale) for size, scales in [(20, [1, 2]), (29, [1, 2]), (40, [1, 2]), (76, [1, 2]), (83.5, [2])] for scale in scales]
     slots += [("ios-marketing", 1024, 1)]
-    for size in sorted({int(size * scale) for _, size, scale in slots}):
-        raster = Image.open(BytesIO(png(icon, size))).convert("RGB")
-        target = appicon / f"icon-{size}.png"
-        target.parent.mkdir(parents=True, exist_ok=True)
-        raster.save(target)
-    json_file(appicon / "Contents.json", {"info": {"author": "xcode", "version": 1}, "images": [
-        {"idiom": idiom, "size": f"{size:g}x{size:g}", "scale": f"{scale}x", "filename": f"icon-{int(size*scale)}.png"}
-        for idiom, size, scale in slots]})
+    for folder, artwork in [(appicon, icon), (appicon.with_name("AppIconPreview.appiconset"), preview_icon)]:
+        folder.mkdir(parents=True, exist_ok=True)
+        for size in sorted({int(size * scale) for _, size, scale in slots}):
+            Image.open(BytesIO(png(artwork, size))).convert("RGB").save(folder / f"icon-{size}.png")
+        json_file(folder / "Contents.json", {"info": {"author": "xcode", "version": 1}, "images": [
+            {"idiom": idiom, "size": f"{size:g}x{size:g}", "scale": f"{scale}x", "filename": f"icon-{int(size*scale)}.png"}
+            for idiom, size, scale in slots]})
+    assert (appicon / "icon-1024.png").read_bytes() != (appicon.with_name("AppIconPreview.appiconset") / "icon-1024.png").read_bytes()
 
     # Verify actual vector output against the supplied silhouettes and format contracts.
     quality = None

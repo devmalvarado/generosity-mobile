@@ -128,7 +128,7 @@ class BackendStoreTest {
             if (value == null) disk.remove(key) else disk[key] = value
         }
         override fun newOperationId() = "00000000-0000-4000-8000-${(++counter).toString().padStart(12, '0')}"
-        override fun send(request: ApiRequest, completion: (ApiResponse) -> Unit) { requests += request; completion(handler?.invoke(request) ?: response) }
+        override fun send(request: ApiRequest, completion: (ApiResponse) -> Unit) { requests += request; completion(if (request.path.endsWith("/features")) ApiResponse(200, """{"features":{"contributions.create":true,"needs.publish":true,"needs.progress":true}}""") else handler?.invoke(request) ?: response) }
     }
 
     @Test fun lostResponseRetainsSameOperationAcrossRestartAndDoesNotLeakToOtherAccount() = runTest {

@@ -279,7 +279,8 @@ private class ProbeMapRenderer : CenterMapRenderer {
         onCenterSelected: (String) -> Unit,
         modifier: Modifier,
         origin: org.generosity.domain.Coordinates?,
-        originLabel: String?
+        originLabel: String?,
+        contentPadding: androidx.compose.foundation.layout.PaddingValues
     ) {
         var cameraEdits by rememberSaveable { mutableIntStateOf(0) }
         SideEffect { this.markers = markers; this.selectedCenterId = selectedCenterId; this.origin = origin }

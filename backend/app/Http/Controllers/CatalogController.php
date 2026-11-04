@@ -7,6 +7,7 @@ use App\Jobs\PublishUrgentNeed;
 use App\Models\Center;
 use App\Models\Need;
 use App\Services\CatalogRules;
+use App\Services\FeatureFlags;
 use App\Services\Mutation;
 use App\Services\PushMessaging;
 use Illuminate\Http\Request;
@@ -54,7 +55,10 @@ class CatalogController extends Controller
     {
         $data = $request->validate(CatalogRules::need() + ['status' => 'required|in:draft,published,closed']);
 
-        return Mutation::run($request, $data, fn () => Mutation::staff($request->user()->id, $center->id), function () use ($center, $data) {
+        return Mutation::run($request, $data, fn () => Mutation::staff($request->user()->id, $center->id), function () use ($request, $center, $data) {
+            if ($data['status'] === 'published') {
+                FeatureFlags::require('needs.publish', $request->user()->id);
+            }
             $need = Need::create(['id' => (string) Str::uuid(), 'center_id' => $center->id] + $this->attributes($data));
             $this->notifyPublication($need, false);
 
@@ -67,7 +71,7 @@ class CatalogController extends Controller
         abort_unless($need->center_id === $center->id, 404);
         $data = $request->validate(CatalogRules::need() + ['status' => 'required|in:draft,published,closed', 'version' => 'required|integer|min:1']);
 
-        return Mutation::run($request, $data, fn () => Mutation::staff($request->user()->id, $center->id), function () use ($need, $data) {
+        return Mutation::run($request, $data, fn () => Mutation::staff($request->user()->id, $center->id), function () use ($request, $need, $data) {
             $current = Need::whereKey($need->id)->lockForUpdate()->firstOrFail();
             if ($current->version !== (int) $data['version']) {
                 throw new ApiProblem('version_conflict', 409, ['current' => $current->publicData()]);
@@ -77,6 +81,9 @@ class CatalogController extends Controller
             }
             if ($current->quantity_committed > 0 && ($data['unit'] ?? null) !== ($current->details['unit'] ?? null)) {
                 throw new ApiProblem('reserved_unit_immutable');
+            }
+            if ($data['status'] === 'published' && $current->status !== 'published') {
+                FeatureFlags::require('needs.publish', $request->user()->id);
             }
             $wasUrgent = $current->status === 'published' && ($current->details['urgent'] ?? false);
             $current->fill($this->attributes($data));

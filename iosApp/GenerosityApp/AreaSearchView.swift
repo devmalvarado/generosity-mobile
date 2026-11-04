@@ -14,6 +14,11 @@ struct AreaSearchView: View {
     @State private var timeout: Task<Void, Never>?
     @State private var generation = UUID()
 
+    init(locale: AppLocale, onSelect: @escaping (DiscoveryArea) -> Void, initialQuery: String = "") {
+        self.locale = locale; self.onSelect = onSelect
+        _query = State(initialValue: String(initialQuery.prefix(200)))
+    }
+
     var body: some View {
         NavigationStack {
             ScrollView {

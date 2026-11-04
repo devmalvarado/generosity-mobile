@@ -3,11 +3,13 @@
 namespace Tests\Feature;
 
 use App\Models\User;
+use App\Services\AccountPolicy;
 use Firebase\JWT\JWT;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Illuminate\Http\Client\Factory;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Notification;
 use Illuminate\Support\Facades\Password;
 use Tests\TestCase;
 
@@ -32,7 +34,7 @@ class SocialAuthTest extends TestCase
 
     public function test_hosted_registration_and_recovery_preserve_native_context(): void
     {
-        \Illuminate\Support\Facades\Notification::fake();
+        Notification::fake();
         $context = ['client' => 'ios', 'locale' => 'es', 'state' => str_repeat('s', 43), 'code_challenge' => str_repeat('c', 43)];
         $this->get('/auth/sign-in?'.http_build_query($context))->assertOk()->assertSee('Crear cuenta')->assertSee('Recuperar contraseña');
         $registration = $context + ['screen' => 'register'];
@@ -40,7 +42,7 @@ class SocialAuthTest extends TestCase
             ->assertSee('id="new-name"', false)->assertDontSee('id="email"', false)
             ->assertSee('client=ios')->assertSee('locale=es')
             ->assertSee('state='.$context['state'])->assertSee('code_challenge='.$context['code_challenge']);
-        $this->post('/auth/account/register', $context + ['adult_confirmed' => true, 'terms_accepted' => true, 'privacy_acknowledged' => true, 'policy_version' => \App\Services\AccountPolicy::VERSION, 'name' => 'María Peña', 'email' => 'native@example.test', 'password' => 'StrongPassword123'])->assertStatus(202)->assertSee('siguientes pasos')->assertSee(str_repeat('c', 43));
+        $this->post('/auth/account/register', $context + ['adult_confirmed' => true, 'terms_accepted' => true, 'privacy_acknowledged' => true, 'policy_version' => AccountPolicy::VERSION, 'name' => 'María Peña', 'email' => 'native@example.test', 'password' => 'StrongPassword123'])->assertStatus(202)->assertSee('siguientes pasos')->assertSee(str_repeat('c', 43));
         $this->assertDatabaseHas('users', ['email' => 'native@example.test', 'email_verified_at' => null]);
         $this->post('/auth/account/recover', $context + ['email' => 'unknown@example.test'])->assertStatus(202)->assertSee('siguientes pasos');
         $this->assertGuest();
@@ -142,6 +144,21 @@ class SocialAuthTest extends TestCase
         $this->assertAuthenticatedAs($user);
     }
 
+    public function test_preview_native_return_is_separate_and_production_client_is_rejected(): void
+    {
+        config(['identity.clients' => ['ios-preview' => 'org.generosity.app.preview.ios:/oauth/callback']]);
+        $context = ['client' => 'ios-preview', 'code_challenge' => $this->url64(hash('sha256', str_repeat('v', 64), true)), 'state' => str_repeat('s', 32)];
+        $this->getJson('/auth/sign-in?'.http_build_query(array_replace($context, ['client' => 'ios'])))->assertUnprocessable();
+        $this->getJson('/auth/sign-in?client=ios-preview')->assertUnprocessable();
+        [$state, $nonce] = $this->begin($context);
+        $this->provider($nonce);
+        $response = $this->get('/auth/google/callback?state='.$state.'&code=test')->assertRedirect();
+        $location = $response->headers->get('Location');
+        $this->assertStringStartsWith('org.generosity.app.preview.ios:/oauth/callback?', $location);
+        parse_str(parse_url($location, PHP_URL_QUERY), $query);
+        $this->postJson('/api/v1/auth/exchange', ['client' => 'ios-preview', 'code' => $query['code'], 'code_verifier' => str_repeat('v', 64)])->assertOk();
+    }
+
     public function test_native_handoff_is_bound_to_pkce_client_and_can_be_exchanged_only_once(): void
     {
         $verifier = str_repeat('v', 64);
@@ -239,7 +256,7 @@ class SocialAuthTest extends TestCase
 
     private function begin(array $context = [], string $provider = 'google'): array
     {
-        $response = $this->post('/auth/'.$provider.'/start', $context + ['adult_confirmed' => true, 'terms_accepted' => true, 'privacy_acknowledged' => true, 'policy_version' => \App\Services\AccountPolicy::VERSION, ])->assertRedirect();
+        $response = $this->post('/auth/'.$provider.'/start', $context + ['adult_confirmed' => true, 'terms_accepted' => true, 'privacy_acknowledged' => true, 'policy_version' => AccountPolicy::VERSION])->assertRedirect();
         preg_match('/(?:^|; )form-action ([^;]+)/', $response->headers->get('Content-Security-Policy'), $directive);
         $destination = parse_url($response->headers->get('Location'));
         $this->assertContains($destination['scheme'].'://'.$destination['host'], explode(' ', $directive[1]));

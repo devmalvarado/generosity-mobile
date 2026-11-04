@@ -45,7 +45,8 @@ private final class FixtureConnection: NSObject, AppConnection {
     func doNewOperationId() -> String { UUID().uuidString }
     func send(request: ApiRequest, completion: @escaping (ApiResponse) -> Void) {
         let body: String
-        if request.path.hasSuffix("/catalog") { body = #"{"catalog":{"schemaVersion":1,"centers":[]}}"# }
+        if request.path.hasSuffix("/features") { body = #"{"features":{"contributions.create":true,"needs.publish":true,"needs.progress":true}}"# }
+        else if request.path.hasPrefix("/api/v1/sync/catalog") { body = #"{"catalog":{"schemaVersion":1,"centers":[]}}"# }
         else if request.method == "POST" {
             lastBody = request.body ?? ""; lastKey = request.operationId ?? ""
             body = "{}"

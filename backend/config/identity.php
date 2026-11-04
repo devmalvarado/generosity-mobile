@@ -1,8 +1,10 @@
 <?php
 
+$preview = env('GENEROSITY_CHANNEL', 'production') === 'preview';
+
 return [
     'portal_url' => env('GENEROSITY_PORTAL_URL', 'https://generosity.global/#acceso'),
-    'clients' => [
+    'clients' => $preview ? ['android-preview' => 'org.generosity.app.preview.android:/oauth/callback', 'ios-preview' => 'org.generosity.app.preview.ios:/oauth/callback'] : [
         'android' => 'org.generosity.app.android:/oauth/callback',
         'ios' => 'org.generosity.app.ios:/oauth/callback',
     ],

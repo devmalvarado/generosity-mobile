@@ -24,12 +24,21 @@ Participants SHALL receive their chosen permitted confirmation channel or a pape
 - **WHEN** an unverified person requests private changes using only a name
 - **THEN** the coordinator follows the approved identity/consent check before disclosure or mutation
 
+#### Scenario: Former coordinator retries a cancellation
+- **WHEN** a coordinator loses center access and submits a fresh or previously accepted cancellation request for an assisted participant
+- **THEN** the server rechecks current center authority before mutation or idempotent receipt disclosure and denies the request
+- **AND** historical authorship alone does not authorize private access or release capacity
+
 ### Requirement: Controlled Account Association
 A participant who later registers SHALL explicitly request association of their own assisted records through a verified claim/review process. Matching names or contact details alone SHALL not transfer history. Association SHALL preserve canonical activity IDs, reconcile duplicate reservations once and require review for conflicts. Sensitive case/referral data SHALL not transfer through this process.
 
 #### Scenario: Existing self-service record overlaps a claim
 - **WHEN** a verified account claim identifies an assisted reservation for the same person and occurrence
 - **THEN** the overlap is reviewed/reconciled without double capacity, duplicated history or erasing validation provenance
+
+#### Scenario: Associated participant enrolls again
+- **WHEN** an account with an approved assisted association requests a seat for an occurrence already reserved through that association
+- **THEN** the server prevents another reservation and exposes an association conflict for review without consuming a second seat or copying validation evidence
 
 ### Requirement: Validation Remains Independent
 Assisted attendance and material delivery SHALL distinguish reported from independently center-validated completion. The participant SHALL receive no account awards before verified association; association itself SHALL not validate help. Only eligible evidence under the existing award policy SHALL qualify once after association. Coordinators SHALL not earn rewards for registering others or validate their own organized activity.

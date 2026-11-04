@@ -11,8 +11,9 @@ final class AccountSession: NSObject, ObservableObject, ASWebAuthenticationPrese
     @Published private(set) var failed = false
     private var browser: ASWebAuthenticationSession?
     private let base = Bundle.main.object(forInfoDictionaryKey: "GenerosityAPIURL") as? String ?? "https://api.generosity.global"
-    private let service = "org.generosity.app.session"
-    private let callbackScheme = "org.generosity.app.ios"
+    private let service = (Bundle.main.bundleIdentifier ?? "org.generosity.app") + ".session"
+    private let callbackScheme = Bundle.main.object(forInfoDictionaryKey: "GenerosityAuthScheme") as? String ?? "org.generosity.app.ios"
+    private let client = Bundle.main.object(forInfoDictionaryKey: "GenerosityAuthClient") as? String ?? "ios"
 
     func signIn(store: GenerosityStore, register: Bool = false) {
         guard !busy else { return }
@@ -22,7 +23,7 @@ final class AccountSession: NSObject, ObservableObject, ASWebAuthenticationPrese
             let state = try Self.random()
             guard var components = URLComponents(string: base + "/auth/sign-in"), components.scheme == "https" else { throw AuthError.invalidResponse }
             components.queryItems = [
-                URLQueryItem(name: "client", value: "ios"), URLQueryItem(name: "locale", value: store.localeCode),
+                URLQueryItem(name: "client", value: client), URLQueryItem(name: "locale", value: store.localeCode),
                 URLQueryItem(name: "state", value: state),
                 URLQueryItem(name: "code_challenge", value: Self.challenge(verifier))
             ]
@@ -37,8 +38,8 @@ final class AccountSession: NSObject, ObservableObject, ASWebAuthenticationPrese
                     if let authError = error as? ASWebAuthenticationSessionError, authError.code == .canceledLogin { return }
                     do {
                         guard let callback else { throw AuthError.invalidResponse }
-                        let code = try Self.handoff(callback, expectedState: state)
-                        let result = try await self.request("/api/v1/auth/exchange", body: ["client": "ios", "code": code, "code_verifier": verifier])
+                        let code = try Self.handoff(callback, expectedState: state, expectedScheme: self.callbackScheme)
+                        let result = try await self.request("/api/v1/auth/exchange", body: ["client": self.client, "code": code, "code_verifier": verifier])
                         guard let token = result["token"] as? String, let user = result["user"] as? [String: Any] else { throw AuthError.invalidResponse }
                         try self.saveToken(token, user: user)
                         try self.identify(user, store: store)
@@ -89,8 +90,8 @@ final class AccountSession: NSObject, ObservableObject, ASWebAuthenticationPrese
 
     static func challenge(_ verifier: String) -> String { url64(Data(SHA256.hash(data: Data(verifier.utf8)))) }
 
-    static func handoff(_ url: URL, expectedState: String) throws -> String {
-        guard url.scheme == "org.generosity.app.ios", url.host == nil, url.path == "/oauth/callback",
+    static func handoff(_ url: URL, expectedState: String, expectedScheme: String = "org.generosity.app.ios") throws -> String {
+        guard url.scheme == expectedScheme, url.host == nil, url.path == "/oauth/callback",
               let parts = URLComponents(url: url, resolvingAgainstBaseURL: false),
               parts.queryItems?.filter({ $0.name == "state" }).count == 1,
               parts.queryItems?.filter({ $0.name == "code" }).count == 1,
@@ -117,6 +118,7 @@ final class AccountSession: NSObject, ObservableObject, ASWebAuthenticationPrese
         guard let url = URL(string: base + path), url.scheme == "https" else { throw AuthError.invalidResponse }
         var request = URLRequest(url: url, cachePolicy: .reloadIgnoringLocalCacheData, timeoutInterval: 15)
         request.setValue("application/json", forHTTPHeaderField: "Accept")
+        request.setValue(Bundle.main.object(forInfoDictionaryKey: "GenerosityChannel") as? String ?? "production", forHTTPHeaderField: "X-Generosity-Channel")
         if let token { request.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization") }
         if let body {
             request.httpMethod = "POST"
