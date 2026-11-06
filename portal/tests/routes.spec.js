@@ -10,7 +10,7 @@ test('public deployment inventory includes route dependencies and current tour a
   for (const file of files) {
     expect(file).not.toMatch(/(^\/|\.\.|node_modules|screenshots|tests\/|\.env)/);
     const bytes = readFileSync(path.join(root, file));
-    if (!/\.(html|mjs)$/.test(file)) continue;
+    if (!file.endsWith('.html') && !/^app\/.*\.(mjs|js)$/.test(file)) continue;
     for (const match of bytes.toString().matchAll(/\b(?:src|href)="([^"]+)"|\bfrom\s+'([^']+)'|\bfetch\('([^']+)'\)/g)) {
       const reference = match[1] || match[2] || match[3];
       if (/^(https?:|mailto:|#)/.test(reference) || reference.includes('${')) continue;

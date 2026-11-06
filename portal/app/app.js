@@ -1,5 +1,5 @@
-import {centers, categories, needs, screens, filterCenters, routeInfo, toggleSaved} from './model.mjs?v=7e49a455fa16';
-import {pageContent} from './pages.mjs?v=1f86924caaa1';
+import {centers, categories, needs, screens, filterCenters, routeInfo, toggleSaved} from './model.js?v=7e49a455fa16';
+import {pageContent} from './pages.js?v=8b700e25c7a5';
 
 const state={route:'map',language:'es',dark:false,category:'all',funding:'all',query:'',selected:'c1',saved:['c1'],origin:false,mode:'all',scenario:'normal',stack:[],joined:false,meal:'',organization:false,individualRank:false,read:false,offer:false};
 try { const locale=localStorage.getItem('generosity.locale'); state.language=['es','en'].includes(locale)?locale:((navigator.languages||[navigator.language]).find(tag=>/^(es|en)(-|$)/i.test(tag))||'en').slice(0,2).toLowerCase(); } catch (_) { state.language=(navigator.language||'en').slice(0,2)==='es'?'es':'en'; }

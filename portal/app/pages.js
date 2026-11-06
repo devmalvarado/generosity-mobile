@@ -1,4 +1,4 @@
-import {centers,needs} from './model.mjs';
+import {centers,needs} from './model.js?v=7e49a455fa16';
 
 export function pageContent(s,h) {
   const {t,escape:e,icon:i,button:b,link:l,notice:n,field:f,choice:q,name,center,badge,funding,centerRow,needCard}=h;

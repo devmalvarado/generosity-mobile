@@ -110,3 +110,18 @@ jobs:
                       raise SystemExit('Published bytes differ: ' + name)
           print(f'Origin matches all {len(files)} public files; CDN transformations are separate.')
           PY
+
+      - name: Check browser module content types
+        run: |
+          python3 - <<'PY'
+          import hashlib
+          from pathlib import Path
+          from urllib.request import urlopen
+          for name in ['model.js', 'pages.js', 'app.js']:
+              version = hashlib.sha256((Path('portal/app') / name).read_bytes()).hexdigest()[:12]
+              with urlopen(f'https://generosity.global/app/{name}?v={version}', timeout=30) as response:
+                  mime = response.headers.get_content_type()
+                  if response.status != 200 or mime not in ['text/javascript', 'application/javascript', 'application/x-javascript']:
+                      raise SystemExit(f'Browser would reject {name}: {response.status} {mime}')
+                  print(f'{name}: {mime}')
+          PY

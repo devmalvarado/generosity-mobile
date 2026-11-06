@@ -5,9 +5,9 @@ ayudar/index.html
 registrar-sede/index.html
 kindness-center/index.html
 app/index.html
-app/app.mjs
-app/model.mjs
-app/pages.mjs
+app/app.js
+app/model.js
+app/pages.js
 app/preview.css
 assets/apple-touch-icon.png
 assets/favicon.png

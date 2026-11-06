@@ -344,6 +344,7 @@ the complete notification acceptance matrix. See [push evidence](../../../docs/r
 - [x] 16.14 Move location applications to `/registrar-sede/` and discovery/offers/history to `/ayudar/`; remove operational forms from the landing, preserve legacy fragments, locale and hosted-account form/retry boundaries, and test responsive pages.
 - [x] 16.15 Adapt all 34 reference screens into the isolated public `/app/` tour with ES/EN, light/dark appearance, canonical brand tokens, mobile navigation and no specification/task links; verify tour actions do not call the API or send data.
 - [x] 16.16 Update the explicit static-file deployment inventory, cache versions and isolated-preview packaging for every route; validate generated assets and the public package without deploying it.
+- [ ] 16.17 Repair the published tour's module MIME compatibility, check every module response during deployment, and verify rendered navigation and screen changes on the domain.
 
 16.13a–16.16 local evidence (2026-11-05): existing portal regression checks pass
 in Chromium/WebKit after moving fixtures to their dedicated routes. The 12
