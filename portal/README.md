@@ -100,7 +100,8 @@ are hosted by the API.
 An explicit `portal-release-*` Git tag also publishes that exact revision without
 merging unrelated mobile/backend work into `main`. The workflow updates only the
 two hosted privacy notices before the map, verifies and privately backs up their
-previous contents, and leaves API code, credentials and data unchanged. It then
+previous contents, and repairs an outdated portal CORS configuration/cache when
+needed. It does not publish API controllers, credentials or data. It then
 uploads the public inventory. Old legal-page URLs redirect to the canonical API
 documents. Do not move or reuse a published release tag.
 
@@ -122,7 +123,9 @@ See [center portal documentation](../docs/center-portal.md) and
 [integration status](../docs/testing/backend-integration.md).
 See [location intake checks and remaining work](../docs/testing/center-applications.md).
 
-Route separation is locally validated on 2026-11-05 and has not been deployed.
+The reviewed route separation and map were published as `portal-release-2026-11-05.2`.
+See [release evidence and remaining write prerequisites](../docs/releases/portal-map-2026-11-05.md).
+This checkpoint does not include later local changes.
 `tests/routes.spec.js` verifies legacy redirects, direct entry, isolated requests,
 mobile reflow, every tour screen in both languages and tour exit. The preview
 packager uses the same public-file inventory and rewrites API metadata on every

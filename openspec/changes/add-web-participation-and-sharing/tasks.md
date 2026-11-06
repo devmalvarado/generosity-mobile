@@ -62,4 +62,5 @@ unavailable, and no task below is complete. See
 - [x] 7.3 Add opt-in location, timeout/denial/manual-search fallbacks, distance ordering and pin/list selection; test that visitor coordinates never enter API requests or browser storage.
 - [x] 7.4 Keep hosted sign-in reachable when session checks fail; retain drafts and add an explicitly public-only loopback relay for live catalog preview.
 - [x] 7.5 Verify Chromium/WebKit regression and focused map/access tests with intercepted tiles; manually inspect real OSM cartography and the public catalog locally.
-- [ ] 7.6 Publish the routes, include OpenStreetMap in the hosted privacy provider disclosure, and verify real HTTPS login/return plus Safari/Chrome location permissions. The local read-only relay does not establish this acceptance.
+- [x] 7.6a Publish the routes and OpenStreetMap privacy disclosure; verify origin files, public catalog, hosted account entry and guest session after the CORS repair. See [release evidence](../../../docs/releases/portal-map-2026-11-05.md).
+- [ ] 7.6b Deploy the missing feature-flag API before enabling dependent writes, then verify authenticated HTTPS login/return and physical Safari/Chrome location permissions. Public publication and guest-session checks do not complete this acceptance.
