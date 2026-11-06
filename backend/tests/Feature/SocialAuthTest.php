@@ -213,6 +213,14 @@ class SocialAuthTest extends TestCase
         $this->post('https://api.generosity.test/reset-password')->assertStatus(419);
         $this->withHeader('Origin', 'https://unrelated-institute.test')->getJson('https://api.generosity.test/auth/session')->assertHeaderMissing('Access-Control-Allow-Origin');
         $this->withHeader('Origin', 'https://generosity.global')->getJson('https://api.generosity.test/auth/session')->assertHeader('Access-Control-Allow-Origin', 'https://generosity.global')->assertHeader('Access-Control-Allow-Credentials', 'true');
+        $preflight = $this->withHeaders([
+            'Origin' => 'https://generosity.global', 'Access-Control-Request-Method' => 'GET',
+            'Access-Control-Request-Headers' => 'x-generosity-channel',
+        ])->options('https://api.generosity.test/auth/session')->assertNoContent()
+            ->assertHeader('Access-Control-Allow-Origin', 'https://generosity.global')
+            ->assertHeader('Access-Control-Allow-Credentials', 'true');
+        $this->assertContains('x-generosity-channel', array_map('trim', explode(',', strtolower($preflight->headers->get('Access-Control-Allow-Headers')))));
+        $this->withHeader('Origin', 'https://unrelated-institute.test')->options('https://api.generosity.test/auth/session')->assertHeaderMissing('Access-Control-Allow-Origin');
         $this->app->instance('env', 'testing');
     }
 

@@ -1,9 +1,11 @@
-"""Publish only the two map-provider notices; preserve all API code and runtime data."""
+"""Publish map notices and repair the portal CORS preflight without deploying the API."""
 import io
 import os
+import secrets
 from pathlib import Path
+from urllib.request import Request, urlopen
 
-from publish_api import connect, require_env
+from publish_api import connect, require_env, delete_if_present
 
 NOTICES = ('privacy.es.md', 'privacy.en.md')
 ROOT = '/private/resources/legal'
@@ -54,6 +56,61 @@ def publish(ftp, release):
     print('Published privacy notices; backup: ' + backup)
 
 
+def refresh_cors(ftp, release):
+    request = Request('https://api.generosity.global/auth/session', method='OPTIONS', headers={
+        'Origin': 'https://generosity.global', 'Access-Control-Request-Method': 'GET',
+        'Access-Control-Request-Headers': 'x-generosity-channel',
+    })
+    with urlopen(request, timeout=30) as response:
+        if 'x-generosity-channel' in response.headers.get('Access-Control-Allow-Headers', '').lower():
+            print('Portal channel preflight already supported')
+            return
+    target = '/private/config/cors.php'
+    previous = read(ftp, target)
+    backup = '/private/.deployments/portal-cors-' + release
+    ftp.mkd(backup)
+    ftp.sendcmd('SITE CHMOD 700 ' + backup)
+    ftp.storbinary('STOR ' + backup + '/cors.php', io.BytesIO(previous))
+    if read(ftp, backup + '/cors.php') != previous:
+        raise RuntimeError('CORS backup failed; configuration unchanged')
+    token = secrets.token_hex(32)
+    helper = '_portal_' + secrets.token_hex(12) + '.php'
+    script = '''<?php
+declare(strict_types=1);
+header('Cache-Control: no-store');
+if ($_SERVER['REQUEST_METHOD'] !== 'POST' || !hash_equals('__DEPLOY_VALUE__', $_SERVER['HTTP_X_DEPLOY_TOKEN'] ?? '')) { http_response_code(404); exit; }
+$private = dirname(__DIR__) . '/private';
+$cache = $private . '/bootstrap/cache/config.php';
+$backup = $private . '/.deployments/portal-cors-RELEASE/config.php';
+try {
+    if (is_file($cache) && (!copy($cache, $backup) || !chmod($backup, 0600))) { throw new RuntimeException(); }
+    require $private . '/vendor/autoload.php';
+    $app = require $private . '/bootstrap/app.php';
+    $app->make(Illuminate\\Contracts\\Console\\Kernel::class)->bootstrap();
+    if (Illuminate\\Support\\Facades\\Artisan::call('config:cache') !== 0 || !chmod($cache, 0600)) { throw new RuntimeException(); }
+    $configuration = require $cache;
+    if (!in_array('X-Generosity-Channel', $configuration['cors']['allowed_headers'], true)) { throw new RuntimeException(); }
+    echo 'portal_cors_ready';
+} catch (Throwable $error) {
+    if (is_file($backup)) { copy($backup, $cache); chmod($cache, 0600); }
+    http_response_code(500);
+    echo 'portal_cors_failed';
+} finally { unlink(__FILE__); }
+'''.replace('__DEPLOY_VALUE__', token).replace('RELEASE', release)
+    try:
+        replace(ftp, target, Path('backend/config/cors.php').read_bytes())
+        ftp.storbinary('STOR /public_html/' + helper, io.BytesIO(script.encode()))
+        request = Request('https://api.generosity.global/' + helper, method='POST', data=b'', headers={'X-Deploy-Token': token})
+        with urlopen(request, timeout=60) as response:
+            if response.read() != b'portal_cors_ready':
+                raise RuntimeError('CORS cache refresh did not confirm success')
+    finally:
+        delete_if_present(ftp, '/public_html/' + helper)
+    print('Updated portal CORS configuration; backup: ' + backup)
+
+
 if __name__ == '__main__':
     with connect(require_env('API_FTP_SERVER'), require_env('API_FTP_USERNAME'), require_env('API_FTP_PASSWORD')) as ftp:
-        publish(ftp, os.environ['GITHUB_RUN_ID'] + '-' + os.environ['GITHUB_RUN_ATTEMPT'])
+        release = os.environ['GITHUB_RUN_ID'] + '-' + os.environ['GITHUB_RUN_ATTEMPT']
+        publish(ftp, release)
+        refresh_cors(ftp, release)
