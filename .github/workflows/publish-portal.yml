@@ -3,6 +3,7 @@ name: Publish portal
 on:
   push:
     branches: [main]
+    tags: ['portal-release-*']
     paths:
       - portal/index.html
       - portal/styles.css

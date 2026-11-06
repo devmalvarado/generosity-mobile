@@ -97,6 +97,13 @@ upload the repository or delete the rest of the site. Keep dependencies, tests,
 screenshots and server secrets out of the web root. Published legal destinations
 are hosted by the API.
 
+An explicit `portal-release-*` Git tag also publishes that exact revision without
+merging unrelated mobile/backend work into `main`. The workflow updates only the
+two hosted privacy notices before the map, verifies and privately backs up their
+previous contents, and leaves API code, credentials and data unchanged. It then
+uploads the public inventory. Old legal-page URLs redirect to the canonical API
+documents. Do not move or reuse a published release tag.
+
 The new intake additionally needs its PHP routes/controller and
 `2026_11_01_000003_create_center_applications.php` migration released before the
 landing form is published. These are not part of the static deployment workflow.
