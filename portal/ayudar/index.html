@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta name="generosity-api-origin" content="https://api.generosity.global">
+  <meta name="generosity-channel" content="production">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Encuentra dónde ayudar · Generosity</title>
+  <meta name="description" content="Generosity, una iniciativa del Instituto de Deberes y Derechos Humanos para conectar personas, organizaciones y causas. Registra tu sede y coordina la ayuda de tu comunidad.">
+  <link rel="icon" href="/assets/favicon.png?v=f175327256ea" type="image/png" sizes="192x192">
+  <link rel="apple-touch-icon" href="/assets/apple-touch-icon.png?v=9416dc4d1257">
+  <link rel="stylesheet" href="/assets/vendor/leaflet/leaflet.css">
+  <link rel="stylesheet" href="/styles.css?v=464ef25fdd65">
+</head>
+<body data-page="help">
+  <a class="skip" href="#contenido" data-i18n="skip">Saltar al contenido</a>
+
+  <header class="topbar">
+    <a class="brand" href="/#inicio">
+      <img src="/assets/logo.png" alt="generosity" width="1046" height="585">
+    </a>
+    <nav class="topnav" aria-label="Secciones" data-i18n-aria="nav.sections">
+      <a href="/#como-funciona" data-i18n="nav.how">Cómo funciona</a>
+      <a href="/app/" data-i18n="nav.app">Explora la app</a>
+      <a href="/kindness-center/" data-i18n="nav.centers">Para centros</a>
+    </nav>
+    <div class="topactions">
+      <a class="ghost" href="/ayudar/" data-i18n="nav.donate">Cómo ayudar</a>
+      <a class="solid" href="/registrar-sede/" data-i18n="application.nav">Registrar una sede</a>
+    </div>
+    <button class="menu" type="button" aria-expanded="false" aria-controls="movil" data-i18n="menu.label">Menú</button>
+    <label class="lang">
+      <span class="visually-hidden" id="idioma-label" data-i18n="lang.label">Idioma</span>
+      <select id="idioma" aria-labelledby="idioma-label">
+        <option value="system" data-i18n="lang.system">Automático</option>
+        <option value="es">Español</option>
+        <option value="en">English</option>
+      </select>
+    </label>
+  </header>
+
+  <nav class="drawer" id="movil" hidden aria-label="Secciones" data-i18n-aria="nav.sections">
+    <a href="/#como-funciona" data-i18n="nav.how">Cómo funciona</a>
+    <a href="/app/" data-i18n="nav.app">Explora la app</a>
+    <a href="/kindness-center/" data-i18n="nav.centers">Para centros</a>
+    <a href="/ayudar/" data-i18n="nav.donate">Cómo ayudar</a>
+    <a href="/registrar-sede/" data-i18n="application.nav">Registrar una sede</a>
+    <button class="ghost close-menu" type="button" data-i18n="menu.close">Cerrar menú</button>
+  </nav>
+  <p class="visually-hidden" id="menu-estado" role="status"></p>
+
+  <main id="contenido" tabindex="-1">
+    <section class="discovery help-discovery" id="descubrir" tabindex="-1" aria-labelledby="discovery-title">
+      <header class="help-heading">
+        <div>
+          <p class="where" data-i18n="discovery.eyebrow">Cerca de ti</p>
+          <h1 id="discovery-title" data-i18n="discovery.title">Encuentra dónde ayudar</h1>
+          <p class="lead" data-i18n="discovery.lead">Conoce los centros y descubre qué necesitan.</p>
+        </div>
+        <section id="acceso" class="help-account" aria-label="Tu cuenta" data-i18n-aria="discovery.account">
+          <div class="account-actions">
+            <a id="account-sign-in" class="ghost" target="_blank" rel="noopener" href="https://api.generosity.global/auth/sign-in?client=web&amp;locale=es" data-i18n="auth.signIn">Iniciar sesión ↗</a>
+            <button id="account-sign-out" class="ghost" type="button" hidden data-i18n="auth.signOut">Cerrar sesión</button>
+            <button id="account-retry" class="text-button" type="button" hidden data-i18n="auth.retry">Comprobar conexión</button>
+          </div>
+          <p id="account-status" class="fine" role="status" aria-live="polite"></p>
+          <p id="destino-previsto" hidden></p>
+        </section>
+      </header>
+      <div id="discovery-browse">
+        <form id="discovery-search" class="help-search" role="search">
+          <div>
+            <label for="discovery-query" class="visually-hidden" data-i18n="discovery.searchLabel">Buscar centros y necesidades</label>
+            <input id="discovery-query" name="query" type="search" maxlength="200" autocomplete="off" spellcheck="false" data-i18n-placeholder="discovery.searchPlaceholder" placeholder="Centro, colonia o ciudad">
+          </div>
+          <button id="discovery-locate" type="button" class="solid" data-i18n="discovery.locate">Usar mi ubicación</button>
+          <button id="discovery-location-clear" type="button" class="text-button" hidden data-i18n="discovery.clearLocation">Ver todos</button>
+        </form>
+        <p class="fine location-status" id="discovery-location-status" role="status" data-i18n="discovery.searchHint">Busca en el directorio o usa tu ubicación para ordenar por cercanía.</p>
+        <div class="help-explorer">
+          <div class="help-map-panel">
+            <button type="button" id="discovery-list-focus" class="ghost map-list-shortcut" data-i18n="discovery.toList">Ir a la lista</button>
+            <div id="discovery-map" role="region" aria-label="Mapa de centros" data-i18n-aria="discovery.map"></div>
+            <p id="discovery-map-status" class="fine" role="status"></p>
+            <a class="map-privacy fine" href="https://osmfoundation.org/wiki/Privacy_Policy" target="_blank" rel="noopener" data-i18n="discovery.mapPrivacy">Privacidad del mapa · OpenStreetMap ↗</a>
+          </div>
+          <div class="help-list-panel">
+            <div class="help-list-toolbar">
+              <div class="help-tabs" role="group" aria-label="Mostrar" data-i18n-aria="discovery.show">
+                <button id="discovery-centers-tab" type="button" aria-pressed="true" data-i18n="discovery.centers">Centros</button>
+                <button id="discovery-needs-tab" type="button" aria-pressed="false" data-i18n="discovery.needs">Necesidades</button>
+              </div>
+              <button id="discovery-refresh" class="text-button" type="button" data-i18n="discovery.refresh">Actualizar</button>
+            </div>
+            <p id="discovery-count" class="fine" role="status"></p>
+            <p id="discovery-status" class="result" role="status" tabindex="-1"></p>
+            <div id="discovery-results" tabindex="-1"></div>
+            <div class="discovery-pages help-pagination">
+              <button type="button" id="discovery-centers-prev" class="ghost" data-i18n="discovery.prev">Anterior</button>
+              <button type="button" id="discovery-centers-next" class="ghost" data-i18n="discovery.next">Siguiente</button>
+              <button type="button" id="discovery-needs-prev" class="ghost" data-i18n="discovery.prev">Anterior</button>
+              <button type="button" id="discovery-needs-next" class="ghost" data-i18n="discovery.next">Siguiente</button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <article id="discovery-detail" hidden></article>
+      <form id="discovery-offer" hidden>
+        <h3 data-i18n="discovery.offerTitle">Preparar una oferta</h3>
+        <p class="fine" data-i18n="discovery.offerNote">Elige una necesidad publicada. Entrar o iniciar sesión no envía la oferta. Esta página no pide datos de pago.</p>
+        <p id="discovery-offer-limit" class="fine"></p>
+        <fieldset id="discovery-methods">
+          <legend data-i18n="discovery.method">Forma de ayudar</legend>
+          <label class="choice"><input type="radio" name="discovery-method" value="goods"> <span data-i18n="discovery.goods">Bienes</span></label>
+          <label class="choice"><input type="radio" name="discovery-method" value="time"> <span data-i18n="discovery.time">Tiempo</span></label>
+        </fieldset>
+        <label for="discovery-quantity" data-i18n="discovery.quantity">Cantidad</label>
+        <input id="discovery-quantity" inputmode="numeric" maxlength="7" autocomplete="off">
+        <label for="discovery-minutes" data-i18n="discovery.minutes">Minutos</label>
+        <input id="discovery-minutes" inputmode="numeric" maxlength="6" autocomplete="off">
+        <label for="discovery-activity" data-i18n="discovery.activity">Actividad</label>
+        <input id="discovery-activity" maxlength="500" autocomplete="off">
+        <label for="discovery-availability" data-i18n="discovery.availability">Disponibilidad (opcional)</label>
+        <input id="discovery-availability" maxlength="500" autocomplete="off">
+        <label for="discovery-notes" data-i18n="discovery.notes">Nota (opcional)</label>
+        <textarea id="discovery-notes" maxlength="2000" rows="3"></textarea>
+        <button type="button" id="discovery-submit" class="solid" data-i18n="discovery.submit">Enviar oferta</button>
+        <button type="button" id="discovery-retry" class="ghost" hidden data-i18n="discovery.retry">Reintentar la misma oferta</button>
+        <a target="_blank" rel="noopener" id="discovery-sign-in" class="ghost" href="https://api.generosity.global/auth/sign-in?client=web&amp;locale=es" data-i18n="discovery.signIn">Iniciar sesión para enviar</a>
+        <p id="discovery-offer-status" class="result" role="status" tabindex="-1"></p>
+      </form>
+      <div id="discovery-history" hidden>
+        <h3 data-i18n="discovery.historyTitle">Tus ofertas</h3>
+        <p class="fine" data-i18n="discovery.historyNote">Esta lista muestra el estado que devolvió el servidor. No indica puntos ni una entrega confirmada si el estado no lo dice.</p>
+        <p id="discovery-history-status" class="result" role="status"></p>
+        <div id="discovery-history-list"></div>
+        <div class="discovery-pages">
+          <button type="button" id="discovery-history-prev" class="ghost" data-i18n="discovery.prev">Anterior</button>
+          <button type="button" id="discovery-history-next" class="ghost" data-i18n="discovery.next">Siguiente</button>
+          <button type="button" id="discovery-history-retry" class="ghost" hidden data-i18n="discovery.cancelRetry">Reintentar la misma cancelación</button>
+        </div>
+      </div>
+      <form id="discovery-share" hidden>
+        <label for="discovery-link" data-i18n="discovery.linkLabel">Enlace de este registro</label>
+        <input id="discovery-link" readonly spellcheck="false">
+        <p class="fine" data-i18n="discovery.downloadNote">El archivo incluye el enlace y la fecha de descarga. No indica lugares disponibles. No es una imagen para escanear.</p>
+        <div class="discovery-pages">
+          <button type="button" id="discovery-copy" class="ghost" data-i18n="discovery.copy">Copiar enlace</button>
+          <button type="button" id="discovery-share-button" class="ghost" hidden data-i18n="discovery.share">Compartir</button>
+          <button type="button" id="discovery-download" class="ghost" data-i18n="discovery.download">Descargar invitación</button>
+        </div>
+        <p id="discovery-share-status" class="result" role="status"></p>
+      </form>
+    </section>
+
+  </main>
+
+  <footer>
+    <a class="brand" href="/#inicio">
+      <img src="/assets/logo.png" alt="generosity" width="1046" height="585">
+    </a>
+    <p data-i18n="footer.tag">Pequeñas acciones, gran impacto. Una iniciativa del Instituto de Deberes y Derechos Humanos.</p>
+    <nav data-i18n-aria="footer.nav" aria-label="Pie">
+      <a href="https://api.generosity.global/legal/privacy?locale=es" data-legal="privacy" data-i18n="footer.privacy">Aviso de privacidad</a>
+      <a href="https://api.generosity.global/legal/terms?locale=es" data-legal="terms" data-i18n="footer.terms">Términos y condiciones</a>
+      <a href="/#contacto" data-i18n="footer.contact">Instituto y contacto</a>
+    </nav>
+  </footer>
+
+  <script src="/assets/vendor/leaflet/leaflet.js"></script>
+  <script src="/portal.js?v=ff9d9d18178d"></script>
+</body>
+</html>

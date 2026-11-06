@@ -1,4 +1,16 @@
 (function () {
+  function redirectLegacyRoute() {
+    if (document.body.dataset.page !== 'landing') return false;
+    var hash = location.hash;
+    var path = /^#(descubrir|centro\/|necesidad\/)/.test(hash) ? '/ayudar/'
+      : /^#registrar-sede(?:$|\?)/.test(hash) ? '/registrar-sede/'
+      : /^#(acceso(?:$|\?)|center-workspace$)/.test(hash) ? '/kindness-center/' : '';
+    if (!path) return false;
+    location.replace(path + location.search + hash);
+    return true;
+  }
+  if (redirectLegacyRoute()) return;
+
   var STORAGE_KEY = "generosity.locale";
   var mode = "system";
   var menuAnnounced = false;
@@ -9,6 +21,7 @@
     "auth.signOut": "Cerrar sesión",
     "auth.retry": "Comprobar conexión",
     "auth.loading": "Comprobando tu sesión…",
+    "auth.preview": "Explora el catálogo aquí. El acceso a tu cuenta se abre en el sitio publicado.",
     "auth.guest": "Estás navegando como invitado.",
     "auth.failed": "No se pudo conectar con el servicio de cuentas. Puedes seguir navegando como invitado y reintentar.",
     "auth.signedIn": "Sesión iniciada: ",
@@ -38,15 +51,41 @@
     "map.food": "Comedor",
     "map.kids": "Infancia",
     "map.health": "Salud",
-    "how.title": "La ayuda empieza con una conexión.",
-    "how.discover.title": "Descubres",
-    "how.discover.body": "Acércate a una causa que te importe: alimentación, infancia, salud o educación.",
-    "how.understand.title": "Entiendes",
-    "how.understand.body": "Conoce las necesidades de cada organización y sus condiciones para recibir apoyo.",
-    "how.help.title": "Ayudas",
-    "how.help.body": "Acuerda con el centro qué aportar, cómo hacerlo y cuándo entregar tu ayuda.",
-    "how.return.title": "Vuelves",
-    "how.return.body": "Da seguimiento a tu aportación y mantén el vínculo con quienes trabajan por tu comunidad.",
+    "how.eyebrow": "La ayuda, paso a paso",
+    "how.title": "De una necesidad a una ayuda concreta.",
+    "how.lead": "Un centro comparte lo que necesita. Alguien cerca recibe el aviso. Entre todos, la ayuda llega a su destino.",
+    "how.publish.title": "El centro publica",
+    "how.publish.body": "Desde su portal, el centro indica qué necesita, la cantidad y cómo recibir la ayuda. La necesidad aparece en Generosity.",
+    "how.notify.title": "La comunidad se entera",
+    "how.notify.body": "Con las notificaciones activadas, puedes recibir un aviso en tu teléfono y conocer una necesidad cerca de ti.",
+    "how.help.title": "Tú ayudas. El centro confirma.",
+    "how.help.body": "Ofreces lo que puedes aportar, aunque sea una parte. El centro coordina la entrega y confirma lo recibido para actualizar el avance.",
+    "how.action": "Encuentra dónde ayudar",
+    "journey.needs": "Necesidades",
+    "journey.published": "Publicada por el centro",
+    "journey.center": "Comedor comunitario",
+    "journey.need": "Alimentos para compartir",
+    "journey.description": "Buscamos 10 cajas de alimentos para preparar las comidas de esta semana.",
+    "journey.goalLabel": "Meta del centro",
+    "journey.goal": "10 cajas",
+    "journey.unit": "Cada caja contiene 10 piezas.",
+    "journey.offer": "Quiero ayudar",
+    "journey.lockDate": "Miércoles, 4 de noviembre",
+    "journey.now": "ahora",
+    "journey.notificationTitle": "Hay una forma de ayudar cerca de ti",
+    "journey.notificationBody": "Un comedor de tu comunidad necesita alimentos. Tu aportación puede hacer la diferencia.",
+    "journey.notificationHint": "Una conexión que se convierte en ayuda.",
+    "journey.history": "Mi aportación",
+    "journey.thanks": "Tu ayuda ya llegó",
+    "journey.received": "El centro confirmó la recepción.",
+    "journey.contribution": "Aportaste 1 caja",
+    "journey.progressLabel": "Avance de la necesidad",
+    "journey.progress": "1 de 10 cajas recibidas",
+    "journey.remaining": "Faltan 9 cajas. Cada aportación suma.",
+    "journey.sent": "Oferta enviada",
+    "journey.accepted": "Coordinada con el centro",
+    "journey.delivered": "Entrega confirmada",
+    "journey.historyAction": "Ver mi historial",
     "needs.title": "Hay muchas formas de hacer el bien.",
     "needs.filters": "Explorar causas",
     "needs.empty": "Elige otra causa para conocer más formas de ayudar.",
@@ -116,20 +155,41 @@
     "contact.support": "Soporte",
     "contact.legal": "Asuntos legales",
     "contact.privacy": "Privacidad y datos personales",
-    "discovery.eyebrow": "Catálogo publicado",
-    "discovery.title": "Ayuda con lo que está publicado",
-    "discovery.lead": "Elige un centro o una necesidad publicada. Entrar aquí no envía una oferta, no pide datos de pago y no abre el espacio de centros.",
-    "discovery.searchLabel": "Filtrar lo cargado",
-    "discovery.searchPlaceholder": "Nombre o descripción",
-    "discovery.searchHint": "Filtra lo ya cargado en esta página. No busca en todo el catálogo ni usa tu ubicación.",
+    "discovery.eyebrow": "Cerca de ti",
+    "discovery.title": "Encuentra dónde ayudar",
+    "discovery.mapPrivacy": "Privacidad del mapa · OpenStreetMap ↗",
+    "discovery.toList": "Ir a la lista",
+    "discovery.account": "Tu cuenta",
+    "discovery.locate": "Usar mi ubicación",
+    "discovery.clearLocation": "Ver todos",
+    "discovery.map": "Mapa de centros",
+    "discovery.show": "Mostrar",
+    "discovery.refresh": "Actualizar",
+    "discovery.locating": "Buscando tu ubicación…",
+    "discovery.located": "Centros ordenados por cercanía a tu ubicación.",
+    "discovery.locationDenied": "No se permitió el acceso a tu ubicación. Puedes buscar por colonia o ciudad.",
+    "discovery.locationFailed": "No pudimos obtener tu ubicación. Inténtalo de nuevo o busca una ciudad.",
+    "discovery.mapFailed": "No pudimos cargar el mapa. Puedes seguir usando la lista.",
+    "discovery.onMap": "Ver en el mapa",
+    "discovery.details": "Ver centro",
+    "discovery.needDetails": "Quiero ayudar",
+    "discovery.result": "resultado",
+    "discovery.results": "resultados",
+    "discovery.verified": "Centro verificado",
+    "discovery.yourLocation": "Tu ubicación",
+    "discovery.needsAtCenter": "Necesidades del centro",
+    "discovery.lead": "Conoce los centros y descubre qué necesitan.",
+    "discovery.searchLabel": "Buscar centros y necesidades",
+    "discovery.searchPlaceholder": "Centro, colonia o ciudad",
+    "discovery.searchHint": "Busca en el directorio o usa tu ubicación para ordenar por cercanía.",
     "discovery.prevCenters": "Centros, página anterior",
     "discovery.nextCenters": "Centros, página siguiente",
     "discovery.prevNeeds": "Necesidades, página anterior",
     "discovery.nextNeeds": "Necesidades, página siguiente",
     "discovery.prev": "Anterior",
     "discovery.next": "Siguiente",
-    "discovery.offerTitle": "Preparar una oferta",
-    "discovery.offerNote": "Elige una necesidad publicada. Entrar o iniciar sesión no envía la oferta. Esta página no pide datos de pago.",
+    "discovery.offerTitle": "Quiero ayudar",
+    "discovery.offerNote": "Indica cuánto puedes aportar. El centro confirmará tu ofrecimiento.",
     "discovery.method": "Forma de ayudar",
     "discovery.goods": "Bienes",
     "discovery.time": "Tiempo",
@@ -142,7 +202,7 @@
     "discovery.retry": "Reintentar la misma oferta",
     "discovery.signIn": "Iniciar sesión para enviar",
     "discovery.historyTitle": "Tus ofertas",
-    "discovery.historyNote": "Esta lista muestra el estado que devolvió el servidor. No indica puntos ni una entrega confirmada si el estado no lo dice.",
+    "discovery.historyNote": "Consulta el estado de tus aportaciones y coordina tu ayuda.",
     "discovery.cancelRetry": "Reintentar la misma cancelación",
     "discovery.linkLabel": "Enlace de este registro",
     "discovery.downloadNote": "El archivo incluye el enlace y la fecha de descarga. No indica lugares disponibles. No es una imagen para escanear.",
@@ -150,14 +210,14 @@
     "discovery.share": "Compartir",
     "discovery.download": "Descargar invitación",
     "discovery.loading": "Cargando el catálogo publicado…",
-    "discovery.unavailable": "El catálogo no está disponible. Tu búsqueda se conserva. Las tarjetas de causas no son necesidades vigentes.",
+    "discovery.unavailable": "No pudimos cargar el directorio. Conservamos tu búsqueda; pulsa Actualizar para intentarlo de nuevo.",
     "discovery.missing": "Este enlace no corresponde a un registro publicado. No se abrió otro.",
-    "discovery.emptyCenters": "No hay centros publicados en esta página.",
-    "discovery.emptyNeeds": "No hay necesidades publicadas en esta página.",
-    "discovery.back": "Volver al catálogo publicado",
-    "discovery.noMatch": "Nada en esta página coincide con la búsqueda.",
-    "discovery.centers": "Centros publicados",
-    "discovery.needs": "Necesidades publicadas",
+    "discovery.emptyCenters": "Aún no hay centros publicados.",
+    "discovery.emptyNeeds": "Por ahora no hay necesidades publicadas.",
+    "discovery.back": "Volver al mapa",
+    "discovery.noMatch": "No encontramos coincidencias. Prueba con otra colonia o ciudad.",
+    "discovery.centers": "Centros",
+    "discovery.needs": "Necesidades",
     "discovery.open": "Ver",
     "discovery.updated": "Actualizado: ",
     "discovery.address": "Lugar publicado: ",
@@ -209,6 +269,7 @@
     "auth.signOut": "Sign out",
     "auth.retry": "Check connection",
     "auth.loading": "Checking your session…",
+    "auth.preview": "Explore the directory here. Account access opens on the published site.",
     "auth.guest": "You are browsing as a guest.",
     "auth.failed": "Could not reach the account service. You can keep browsing as a guest and retry.",
     "auth.signedIn": "Signed in: ",
@@ -238,15 +299,41 @@
     "map.food": "Meals",
     "map.kids": "Childhood",
     "map.health": "Health",
-    "how.title": "Helping starts with a connection.",
-    "how.discover.title": "You find",
-    "how.discover.body": "Find a cause you care about: food, children, health or education.",
-    "how.understand.title": "You understand",
-    "how.understand.body": "Learn what each organization needs and how it receives support.",
-    "how.help.title": "You help",
-    "how.help.body": "Agree with the center on what you can contribute, how to help and when to deliver it.",
-    "how.return.title": "You return",
-    "how.return.body": "Follow up on your contribution and stay connected with the people supporting your community.",
+    "how.eyebrow": "How helping happens",
+    "how.title": "From a need to a helping hand.",
+    "how.lead": "A center shares what it needs. Someone nearby gets the news. Together, people turn that need into real support.",
+    "how.publish.title": "A center shares a need",
+    "how.publish.body": "The center uses its portal to say what it needs, how much and how to help. The need appears in Generosity.",
+    "how.notify.title": "The community hears about it",
+    "how.notify.body": "With notifications enabled, you can receive an alert on your phone and learn about a need near you.",
+    "how.help.title": "You help. The center confirms.",
+    "how.help.body": "Offer what you can, even part of the total. The center coordinates delivery and confirms what it receives to update progress.",
+    "how.action": "Find a place to help",
+    "journey.needs": "Needs",
+    "journey.published": "Published by the center",
+    "journey.center": "Community kitchen",
+    "journey.need": "Food to share",
+    "journey.description": "We need 10 boxes of food to prepare this week’s meals.",
+    "journey.goalLabel": "The center’s goal",
+    "journey.goal": "10 boxes",
+    "journey.unit": "Each box contains 10 items.",
+    "journey.offer": "I want to help",
+    "journey.lockDate": "Wednesday, November 4",
+    "journey.now": "now",
+    "journey.notificationTitle": "Someone nearby could use your help",
+    "journey.notificationBody": "A community kitchen near you needs food. Your contribution can make a difference.",
+    "journey.notificationHint": "A connection that turns into care.",
+    "journey.history": "My contribution",
+    "journey.thanks": "Your help has arrived",
+    "journey.received": "The center confirmed your delivery.",
+    "journey.contribution": "You donated 1 box",
+    "journey.progressLabel": "Progress toward the goal",
+    "journey.progress": "1 of 10 boxes received",
+    "journey.remaining": "9 boxes to go. Every contribution counts.",
+    "journey.sent": "Offer sent",
+    "journey.accepted": "Arranged with the center",
+    "journey.delivered": "Delivery confirmed",
+    "journey.historyAction": "View my history",
     "needs.title": "There are many ways to make a difference.",
     "needs.filters": "Explore causes",
     "needs.empty": "Choose another cause to discover more ways to help.",
@@ -316,20 +403,41 @@
     "contact.support": "Support",
     "contact.legal": "Legal matters",
     "contact.privacy": "Privacy and personal data",
-    "discovery.eyebrow": "Published catalog",
-    "discovery.title": "Help with what is published",
-    "discovery.lead": "Choose a published center or need. Opening this page does not send an offer, request payment details, or open the center workspace.",
-    "discovery.searchLabel": "Filter what is loaded",
-    "discovery.searchPlaceholder": "Name or description",
-    "discovery.searchHint": "Filters this loaded page only. It does not search the whole catalog or use your location.",
+    "discovery.eyebrow": "Near you",
+    "discovery.title": "Find a place to help",
+    "discovery.mapPrivacy": "Map privacy · OpenStreetMap ↗",
+    "discovery.toList": "Go to list",
+    "discovery.account": "Your account",
+    "discovery.locate": "Use my location",
+    "discovery.clearLocation": "Show all",
+    "discovery.map": "Map of centers",
+    "discovery.show": "Show",
+    "discovery.refresh": "Refresh",
+    "discovery.locating": "Finding your location…",
+    "discovery.located": "Centers sorted by distance from your location.",
+    "discovery.locationDenied": "Location access was denied. You can search by neighborhood or city.",
+    "discovery.locationFailed": "We couldn’t find your location. Try again or search for a city.",
+    "discovery.mapFailed": "We couldn’t load the map. You can still use the list.",
+    "discovery.onMap": "Show on map",
+    "discovery.details": "View center",
+    "discovery.needDetails": "I want to help",
+    "discovery.result": "result",
+    "discovery.results": "results",
+    "discovery.verified": "Verified center",
+    "discovery.yourLocation": "Your location",
+    "discovery.needsAtCenter": "This center’s needs",
+    "discovery.lead": "Explore centers and discover what they need.",
+    "discovery.searchLabel": "Search centers and needs",
+    "discovery.searchPlaceholder": "Center, neighborhood or city",
+    "discovery.searchHint": "Search the directory or use your location to see the nearest centers first.",
     "discovery.prevCenters": "Centers, previous page",
     "discovery.nextCenters": "Centers, next page",
     "discovery.prevNeeds": "Needs, previous page",
     "discovery.nextNeeds": "Needs, next page",
     "discovery.prev": "Previous",
     "discovery.next": "Next",
-    "discovery.offerTitle": "Prepare an offer",
-    "discovery.offerNote": "Choose a published need. Opening this page or signing in does not send the offer. This page does not ask for payment details.",
+    "discovery.offerTitle": "I want to help",
+    "discovery.offerNote": "Tell the center how much you can contribute. They will confirm your offer.",
     "discovery.method": "Way to help",
     "discovery.goods": "Goods",
     "discovery.time": "Time",
@@ -342,7 +450,7 @@
     "discovery.retry": "Retry the same offer",
     "discovery.signIn": "Sign in to send",
     "discovery.historyTitle": "Your offers",
-    "discovery.historyNote": "This list shows the state returned by the server. It does not award points or claim delivery unless that state says so.",
+    "discovery.historyNote": "Check the status of your contributions and coordinate your help.",
     "discovery.cancelRetry": "Retry the same cancellation",
     "discovery.linkLabel": "Link for this record",
     "discovery.downloadNote": "The file includes the link and the download date. It does not show remaining places. It is not a scannable image.",
@@ -350,14 +458,14 @@
     "discovery.share": "Share",
     "discovery.download": "Download invitation",
     "discovery.loading": "Loading the published catalog…",
-    "discovery.unavailable": "The catalog is unavailable. Your search is kept. The cause cards are not current needs.",
+    "discovery.unavailable": "We couldn’t load the directory. Your search is saved; select Refresh to try again.",
     "discovery.missing": "This link is not a published record. Another record was not opened.",
-    "discovery.emptyCenters": "There are no published centers on this page.",
-    "discovery.emptyNeeds": "There are no published needs on this page.",
-    "discovery.back": "Back to the published catalog",
-    "discovery.noMatch": "Nothing on this page matches the search.",
-    "discovery.centers": "Published centers",
-    "discovery.needs": "Published needs",
+    "discovery.emptyCenters": "No centers have been published yet.",
+    "discovery.emptyNeeds": "There are no published needs right now.",
+    "discovery.back": "Back to the map",
+    "discovery.noMatch": "No matches found. Try another neighborhood or city.",
+    "discovery.centers": "Centers",
+    "discovery.needs": "Needs",
     "discovery.open": "View",
     "discovery.updated": "Updated: ",
     "discovery.address": "Published place: ",
@@ -461,7 +569,7 @@
     });
     var meta = document.querySelector('meta[name="description"]');
     document.documentElement.lang = effective();
-    document.title = t("meta.title");
+    document.title = document.body.dataset.page === "landing" ? t("meta.title") : t("page." + document.body.dataset.page + ".title") + " · Generosity";
     if (meta) meta.setAttribute("content", t("meta.description"));
     each("[data-i18n]", function (el) {
       el.textContent = t(el.getAttribute("data-i18n"));
@@ -549,7 +657,7 @@
   else if (wide.addListener) wide.addListener(closeIfWide);
 
   var empty = document.querySelector(".empty");
-  document.querySelector(".filters").addEventListener("click", function (event) {
+  document.querySelector(".filters")?.addEventListener("click", function (event) {
     var button = event.target.closest("button");
     if (!button) return;
     each(".filters button", function (item) {
@@ -581,12 +689,14 @@
   }
 
   function renderDestination() {
+    if (!destination) return;
     var dest = readDestination();
     var key = dest ? "access.dest." + dest : "access.dest.none";
     destination.textContent = t(key);
   }
 
   window.addEventListener("hashchange", function () {
+    if (redirectLegacyRoute()) return;
     renderDestination();
     if ((location.hash || "").indexOf("#acceso") === 0) {
       document.getElementById("acceso").focus();
@@ -611,6 +721,7 @@
   }
 
   var apiOrigin = document.querySelector('meta[name="generosity-api-origin"]').content;
+  var localCatalogPreview = document.querySelector('meta[name="generosity-public-api-origin"]')?.content === '/__public';
   var appChannel = document.querySelector('meta[name="generosity-channel"]').content;
   var featureAccess = {};
   function featureEnabled(name) { return featureAccess[name] === true; }
@@ -633,10 +744,12 @@
   var accountRetry = document.getElementById("account-retry");
 
   function renderAccount() {
+    if (!accountLink) return;
     document.getElementById("account-status").textContent = accountStatus === "auth.signedIn"
       ? t(accountStatus) + accountUser.name : t(accountStatus);
     accountLink.href = apiOrigin + "/auth/sign-in?client=web&locale=" + effective();
-    accountLink.hidden = !accountCsrf;
+    accountLink.hidden = !!(accountUser && accountCsrf);
+    accountRetry.hidden = localCatalogPreview;
     accountLogout.hidden = !accountUser;
     accountLogout.disabled = accountBusy || !accountCsrf;
     accountRetry.disabled = accountBusy;
@@ -646,7 +759,8 @@
   }
 
   async function checkAccount() {
-    if (accountBusy) return;
+    if (!accountLink || accountBusy) return;
+    if (localCatalogPreview) { accountStatus = "auth.preview"; renderAccount(); return; }
     accountBusy = true;
     featureAccess = {};
     accountStatus = "auth.loading";
@@ -665,8 +779,8 @@
     } finally { await refreshFeatureAccess(); accountBusy = false; renderAccount(); }
   }
 
-  accountRetry.addEventListener("click", checkAccount);
-  accountLogout.addEventListener("click", async function () {
+  accountRetry?.addEventListener("click", checkAccount);
+  accountLogout?.addEventListener("click", async function () {
     if (accountBusy || !accountCsrf) return;
     accountBusy = true;
     renderAccount();
@@ -703,7 +817,7 @@
     el('staff-need-form').reset(); el('staff-needs').replaceChildren(); el('staff-contributions').replaceChildren(); el('staff-center').replaceChildren(); el('staff-content').hidden = true;
   }
   function syncWorkspace() {
-    if (!staff) return;
+    if (!staff || !el("center-workspace")) return;
     var owner = accountUser && String(accountUser.id);
     if (staff.owner && staff.owner !== owner) clearStaff();
     el('center-workspace').hidden = !owner || !accountCsrf;
@@ -838,6 +952,7 @@
     } finally { if (generation === staff.generation) { staff.busy = false; renderStaff(); } }
     if (generation === staff.generation && !staff.pending) await loadStaffData();
   }
+  if (el('center-workspace')) {
   el('staff-center').addEventListener('change', function () { staff.center = this.value; staff.needPage = staff.contributionPage = 1; editNeed(null); loadStaffData(); });
   el('staff-reload').addEventListener('click', loadStaff); el('staff-retry').addEventListener('click', retryStaff); el('need-new').addEventListener('click', function () { editNeed(null); });
   ['needs','contributions'].forEach(function (kind) { ['prev','next'].forEach(function (direction) { el(kind + '-' + direction).addEventListener('click', function () { var property = kind === 'needs' ? 'needPage' : 'contributionPage'; staff[property] += direction === 'next' ? 1 : -1; loadStaffData(); }); }); });
@@ -853,6 +968,8 @@
     if (old) body.version = old.version;
     mutateStaff('/api/v1/staff/centers/' + encodeURIComponent(staff.center) + '/needs' + (old ? '/' + encodeURIComponent(old.id) : ''), old ? 'PUT' : 'POST', body);
   });
+
+  }
 
   var applicationCopy = {
     es: {
@@ -901,7 +1018,7 @@
   }
   function applicationReady() { return accountStatus === 'auth.signedIn' && accountCsrf && accountUser && accountUser.email_verified_at; }
   function syncApplications() {
-    if (!application) return;
+    if (!application || !registrationForm) return;
     var owner = accountUser && String(accountUser.id);
     if (application.owner !== owner) {
       if (application.owner) {
@@ -1084,6 +1201,7 @@
     if (first) { var details = first.closest('details'); if (details) details.open = true; first.focus(); }
     else el('registration-errors').focus();
   }
+  if (registrationForm) {
   registrationForm.addEventListener('submit', async function (event) {
     event.preventDefault();
     if (!applicationReady() || application.busy || accountBusy) return;
@@ -1140,15 +1258,19 @@
   el('registration-action-retry').addEventListener('click', function () { sendApplicationAction(application.action); });
   ['prev','next'].forEach(function (direction) { el('registration-' + direction).addEventListener('click', function () { application.page += direction === 'next' ? 1 : -1; loadApplications(); }); });
 
+  }
+
   var discovery = {
+    view: 'centers', origin: null, locationStatus: '', locating: false, selected: '',
     generation: 0, busy: false, status: '', centers: [], needs: [], centerPage: 1, needPage: 1, centerLast: 1, needLast: 1,
-    record: null, owner: null, offerStatus: '', offerBusy: false, offerPending: null, offerGeneration: 0,
+    record: null, relatedNeeds: null, owner: null, offerStatus: '', offerBusy: false, offerPending: null, offerGeneration: 0,
     history: [], historyPage: 1, historyLast: 1, historyStatus: '', historyBusy: false, historyGeneration: 0, cancelPending: null, cancelGeneration: 0, shareStatus: ''
   };
 
   function discoveryRoute() {
-    var hash = location.hash || '';
-    if (hash === '#descubrir') return { view: 'list' };
+    if (!el('descubrir')) return null;
+    var hash = location.hash || '#descubrir';
+    if (['#descubrir', '#contenido', '#acceso'].includes(hash)) return { view: 'list' };
     var center = hash.match(/^#centro\/([a-z0-9][a-z0-9-]{0,99})$/);
     if (center) return { view: 'center', id: center[1] };
     var need = hash.match(/^#necesidad\/([A-Za-z0-9][A-Za-z0-9-]{0,99})$/);
@@ -1203,11 +1325,13 @@
     return Number.isInteger(last) && last >= 1 ? last : 1;
   }
 
-  function searchText() { return (el('discovery-query').value || '').trim().toLowerCase(); }
+  function searchText() { return normalizedSearch(el('discovery-query').value); }
+
+  function normalizedSearch(text) { return String(text || '').trim().toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, ''); }
 
   function matchesQuery(text) {
     var query = searchText();
-    return !query || String(text || '').toLowerCase().indexOf(query) !== -1;
+    return !query || normalizedSearch(text).indexOf(query) !== -1;
   }
 
   function verifiedUser() {
@@ -1307,6 +1431,7 @@
   }
 
   function syncDiscovery() {
+    if (!el('descubrir')) return;
     var owner = accountUser && accountUser.id != null ? String(accountUser.id) : null;
     if (discovery.owner && discovery.owner !== owner) clearOfferPrivate();
     var arrived = !discovery.owner && owner;
@@ -1332,16 +1457,30 @@
   }
 
   function consumeIntentHash() {
-    if (location.hash) return;
+    if (!el('descubrir') || location.hash) return;
     var saved = readJson(intentKey());
     if (saved && publicId(saved.needId)) location.hash = '#necesidad/' + saved.needId;
   }
 
   async function publicGet(path) {
-    var response = await fetch(apiOrigin + path, { credentials: 'include', cache: 'no-store', signal: AbortSignal.timeout(15000), headers: { 'X-Generosity-Channel': appChannel, Accept: 'application/json' } });
+    var publicOrigin = document.querySelector('meta[name="generosity-public-api-origin"]')?.content || apiOrigin;
+    var response = await fetch(publicOrigin + path, { credentials: 'omit', cache: 'no-store', signal: AbortSignal.timeout(15000), headers: { Accept: 'application/json' } });
     var data = null;
     try { data = await response.json(); } catch (_) { data = null; }
     return { ok: response.ok, status: response.status, data: data };
+  }
+
+  function readCatalog(data) {
+    var catalog = data && data.catalog;
+    if (!catalog || catalog.schemaVersion !== 1 || !Array.isArray(catalog.centers)) throw new Error('Invalid catalog');
+    // The shared API bounds this public snapshot to 2,000 centers / 10,000 needs.
+    var centers = catalog.centers.filter(function (center) { return center && slugId(center.id) && publicText(center.name); });
+    var needs = centers.flatMap(function (center) {
+      return (Array.isArray(center.needs) ? center.needs : []).filter(function (need) {
+        return need && publicId(need.id) && need.centerId === center.id && ['active', 'covered', 'expired'].includes(need.status) && publicText(need.title);
+      }).map(function (need) { return Object.assign({}, need, { status: 'published' }); });
+    });
+    return { centers: centers, needs: needs };
   }
 
   async function loadCatalog() {
@@ -1351,24 +1490,12 @@
     discovery.record = null;
     renderDiscovery();
     try {
-      var results = await Promise.all([
-        publicGet('/api/v1/centers?page=' + discovery.centerPage),
-        publicGet('/api/v1/needs?page=' + discovery.needPage)
-      ]);
+      var result = await publicGet('/api/v1/sync/catalog?category_version=2&progress_version=1');
       if (generation !== discovery.generation) return;
-      var centers = results[0].ok && results[0].data && Array.isArray(results[0].data.data) ? results[0].data.data : null;
-      var needs = results[1].ok && results[1].data && Array.isArray(results[1].data.data) ? results[1].data.data : null;
-      if (!centers || !needs) {
-        discovery.centers = [];
-        discovery.needs = [];
-        discovery.status = 'unavailable';
-      } else {
-        discovery.centers = centers;
-        discovery.needs = needs;
-        discovery.centerLast = pageCount(results[0].data);
-        discovery.needLast = pageCount(results[1].data);
-        discovery.status = '';
-      }
+      if (!result.ok) throw new Error('Catalog unavailable');
+      var catalog = readCatalog(result.data);
+      discovery.centers = catalog.centers; discovery.needs = catalog.needs;
+      discovery.status = '';
     } catch (_) {
       if (generation !== discovery.generation) return;
       discovery.centers = [];
@@ -1389,6 +1516,7 @@
     var generation = ++discovery.generation;
     discovery.busy = true;
     discovery.record = null;
+    discovery.relatedNeeds = null;
     discovery.status = 'loading';
     renderDiscovery();
     var path = kind === 'center' ? '/api/v1/centers/' + encodeURIComponent(id) : '/api/v1/needs/' + encodeURIComponent(id);
@@ -1398,6 +1526,15 @@
       if (result.status === 404) discovery.status = 'missing';
       else if (!result.ok || !acceptableRecord(kind, result.data, id)) discovery.status = 'unavailable';
       else {
+        if (kind === 'center') {
+          var relatedNeeds = null;
+          try {
+            var snapshot = await publicGet('/api/v1/sync/catalog?category_version=2&progress_version=1');
+            if (snapshot.ok) relatedNeeds = readCatalog(snapshot.data).needs.filter(function (need) { return need.centerId === id; });
+          } catch (_) { /* Center details remain usable if the needs request fails. */ }
+          if (generation !== discovery.generation) return;
+          discovery.relatedNeeds = relatedNeeds;
+        }
         discovery.record = { kind: kind, data: result.data };
         discovery.status = '';
         if (kind === 'need') restoreIntent(id);
@@ -1446,6 +1583,12 @@
         appendText(parent, 'p', categories.join(', '));
       }
       contactLines(data.contact).forEach(function (line) { appendText(parent, 'p', t('discovery.contact') + ': ' + line); });
+      appendText(parent, 'h4', t('discovery.needsAtCenter'));
+      if (discovery.relatedNeeds === null) appendText(parent, 'p', t('discovery.unavailable'));
+      else if (!discovery.relatedNeeds.length) appendText(parent, 'p', t('discovery.emptyNeeds'));
+      (discovery.relatedNeeds || []).forEach(function (need) {
+        var link = node('a', publicText(need.title)); link.className = 'related-need'; link.href = '#necesidad/' + need.id; parent.append(link);
+      });
     } else {
       var methods = needMethods(data);
       if (data.urgent === true) appendText(parent, 'p', t('discovery.urgent'));
@@ -1466,50 +1609,163 @@
     appendText(parent, 'p', updated ? t('discovery.updated') + updated : '');
   }
 
+  var discoveryMap = null, mapMarkers = {}, mapSignature = '', originMarker = null;
+
+  function centerCoordinates(center) {
+    var point = center && center.coordinates;
+    if (!point || !Number.isFinite(point.latitude) || !Number.isFinite(point.longitude) || Math.abs(point.latitude) > 90 || Math.abs(point.longitude) > 180) return null;
+    return [point.latitude, point.longitude];
+  }
+
+  function centerDistance(center) {
+    var point = centerCoordinates(center);
+    if (!point || !discovery.origin) return Infinity;
+    var rad = Math.PI / 180;
+    var a = Math.sin((point[0] - discovery.origin[0]) * rad / 2) ** 2 + Math.cos(point[0] * rad) * Math.cos(discovery.origin[0] * rad) * Math.sin((point[1] - discovery.origin[1]) * rad / 2) ** 2;
+    return 6371 * 2 * Math.asin(Math.sqrt(Math.min(1, a)));
+  }
+
+  function filteredCenters() {
+    var centers = discovery.centers.filter(function (center) {
+      return matchesQuery(publicText(center.name) + ' ' + publicText(center.address) + ' ' + publicText(center.description));
+    });
+    if (discovery.origin) centers.sort(function (a, b) { return centerDistance(a) - centerDistance(b); });
+    return centers;
+  }
+
+  function selectMapCenter(center, fromCard) {
+    if (!discoveryMap || !mapMarkers[center.id]) return;
+    discovery.selected = center.id;
+    if (discovery.view === 'centers') {
+      var index = filteredCenters().findIndex(function (row) { return row.id === center.id; });
+      if (index >= 0) discovery.centerPage = Math.floor(index / 12) + 1;
+    }
+    renderDiscovery();
+    discoveryMap.setView(centerCoordinates(center), Math.max(discoveryMap.getZoom(), 14));
+    mapMarkers[center.id].openPopup();
+    if (fromCard) el('discovery-map').scrollIntoView({ block: 'nearest' });
+  }
+
+  function renderDiscoveryMap(centers) {
+    if (!window.L) { el('discovery-map-status').textContent = t('discovery.mapFailed'); return; }
+    if (!discoveryMap) {
+      discoveryMap = L.map('discovery-map', { scrollWheelZoom: false }).setView([23, -102], 5);
+      // Public OSM tiles: visible attribution, normal browser cache/referrer, no prefetch.
+      L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        maxZoom: 19, attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap contributors</a>'
+      }).on('tileerror', function () { el('discovery-map-status').textContent = t('discovery.mapFailed'); })
+        .on('tileload', function () { el('discovery-map-status').textContent = ''; }).addTo(discoveryMap);
+      new ResizeObserver(function () { discoveryMap.invalidateSize(); }).observe(el('discovery-map'));
+    }
+    var points = centers.filter(function (center) { return centerCoordinates(center); });
+    var signature = effective() + JSON.stringify(points.map(function (center) { return [center.id, publicText(center.name), centerCoordinates(center)]; })) + JSON.stringify(discovery.origin);
+    if (signature === mapSignature) return;
+    mapSignature = signature;
+    Object.values(mapMarkers).forEach(function (marker) { marker.remove(); });
+    mapMarkers = {};
+    points.forEach(function (center) {
+      var popup = node('div', ''); popup.className = 'map-center-popup';
+      popup.append(node('strong', publicText(center.name)));
+      var link = node('a', t('discovery.details')); link.href = '#centro/' + center.id; popup.append(link);
+      var marker = L.marker(centerCoordinates(center), {
+        title: publicText(center.name), alt: publicText(center.name),
+        icon: L.divIcon({ className: 'center-pin', html: '<span aria-hidden="true">♥</span>', iconSize: [32, 32], iconAnchor: [16, 32] })
+      }).bindPopup(popup).addTo(discoveryMap);
+      marker.on('click', function () { selectMapCenter(center, false); });
+      mapMarkers[center.id] = marker;
+    });
+    if (originMarker) { originMarker.remove(); originMarker = null; }
+    if (discovery.origin) {
+      originMarker = L.circleMarker(discovery.origin, { radius: 8, color: '#fff', weight: 3, fillColor: '#2563eb', fillOpacity: 1 }).bindTooltip(t('discovery.yourLocation')).addTo(discoveryMap);
+      var nearest = points.slice().sort(function (a, b) { return centerDistance(a) - centerDistance(b); }).slice(0, 5);
+      discoveryMap.fitBounds([discovery.origin].concat(nearest.map(centerCoordinates)), { padding: [40, 40], maxZoom: 14 });
+    } else if (points.length) discoveryMap.fitBounds(points.map(centerCoordinates), { padding: [40, 40], maxZoom: 14 });
+  }
+
+  function locateDiscovery() {
+    if (discovery.locating) return;
+    if (!navigator.geolocation || !window.isSecureContext) { discovery.locationStatus = 'locationFailed'; renderDiscovery(); return; }
+    discovery.locating = true; discovery.locationStatus = 'locating'; renderDiscovery();
+    navigator.geolocation.getCurrentPosition(function (position) {
+      var point = centerCoordinates({ coordinates: position.coords });
+      discovery.locating = false;
+      if (!point) { discovery.locationStatus = 'locationFailed'; renderDiscovery(); return; }
+      // Visitor coordinates stay in memory; never store them or send them to the API.
+      discovery.origin = point; discovery.locationStatus = 'located';
+      discovery.centerPage = discovery.needPage = 1; renderDiscovery();
+    }, function (error) {
+      discovery.locating = false;
+      discovery.locationStatus = error.code === 1 ? 'locationDenied' : 'locationFailed'; renderDiscovery();
+    }, { enableHighAccuracy: false, timeout: 10000, maximumAge: 60000 });
+  }
+
   function renderDiscovery() {
     if (!el('discovery-status')) return;
     el('discovery-status').textContent = discovery.status ? t('discovery.' + discovery.status) : '';
     var listRoute = discoveryRoute() && discoveryRoute().view === 'list';
-    ['centers', 'needs'].forEach(function (kind) {
-      var page = kind === 'centers' ? discovery.centerPage : discovery.needPage;
-      var last = kind === 'centers' ? discovery.centerLast : discovery.needLast;
-      el('discovery-' + kind + '-prev').disabled = discovery.busy || !listRoute || page <= 1;
-      el('discovery-' + kind + '-next').disabled = discovery.busy || !listRoute || page >= last;
+    el('discovery-browse').hidden = !listRoute;
+    // Keep missing-record feedback reachable when the list is hidden.
+    if (!listRoute) el('discovery-detail').before(el('discovery-status'));
+    else el('discovery-results').before(el('discovery-status'));
+    var centers = filteredCenters();
+    var needs = discovery.needs.filter(function (need) {
+      var center = discovery.centers.find(function (row) { return row.id === need.centerId; });
+      return matchesQuery(publicText(need.title) + ' ' + publicText(need.description) + ' ' + publicText(center?.name) + ' ' + publicText(center?.address));
     });
+    if (discovery.origin) needs.sort(function (a, b) { return centerDistance(discovery.centers.find(function (c) { return c.id === a.centerId; })) - centerDistance(discovery.centers.find(function (c) { return c.id === b.centerId; })); });
+    var rows = discovery.view === 'centers' ? centers : needs;
+    ['centers', 'needs'].forEach(function (kind) {
+      var pageKey = kind === 'centers' ? 'centerPage' : 'needPage';
+      var lastKey = kind === 'centers' ? 'centerLast' : 'needLast';
+      discovery[lastKey] = Math.max(1, Math.ceil((kind === 'centers' ? centers : needs).length / 12));
+      discovery[pageKey] = Math.min(discovery[pageKey], discovery[lastKey]);
+      el('discovery-' + kind + '-tab').setAttribute('aria-pressed', String(discovery.view === kind));
+      ['prev', 'next'].forEach(function (direction) {
+        var button = el('discovery-' + kind + '-' + direction);
+        button.hidden = !listRoute || discovery.view !== kind || discovery[lastKey] === 1 || !!discovery.status;
+        button.disabled = discovery.busy || (direction === 'prev' ? discovery[pageKey] <= 1 : discovery[pageKey] >= discovery[lastKey]);
+      });
+    });
+    el('discovery-count').textContent = !discovery.status ? rows.length + ' ' + t('discovery.' + (rows.length === 1 ? 'result' : 'results')) : '';
+    el('discovery-refresh').disabled = discovery.busy;
+    el('discovery-locate').disabled = discovery.locating;
+    el('discovery-location-clear').hidden = !discovery.origin;
+    el('discovery-location-status').textContent = t('discovery.' + (discovery.locationStatus || 'searchHint'));
     var results = el('discovery-results');
     results.replaceChildren();
-    if (listRoute && discovery.status !== 'unavailable' && discovery.status !== 'loading' && discovery.status !== 'missing') {
-      results.append(node('h3', t('discovery.centers')));
-      var centers = discovery.centers.filter(function (center) { return publicText(center.name) && matchesQuery(publicText(center.name) + ' ' + publicText(center.description)); });
-      if (!centers.length) results.append(node('p', searchText() ? t('discovery.noMatch') : t('discovery.emptyCenters')));
-      centers.forEach(function (center) {
-        if (!slugId(center.id)) return;
-        var card = document.createElement('article');
+    if (listRoute && !discovery.status) {
+      if (!rows.length) results.append(node('p', t('discovery.' + (searchText() ? 'noMatch' : discovery.view === 'centers' ? 'emptyCenters' : 'emptyNeeds'))));
+      var page = discovery.view === 'centers' ? discovery.centerPage : discovery.needPage;
+      rows.slice((page - 1) * 12, page * 12).forEach(function (row) {
+        var card = node('article', '');
         card.className = 'catalog-card';
-        renderRecord(card, 'center', center);
-        var open = node('a', t('discovery.open'));
-        open.className = 'ghost';
-        open.href = '#centro/' + center.id;
-        card.append(open);
-        results.append(card);
-      });
-      results.append(node('h3', t('discovery.needs')));
-      var needs = discovery.needs.filter(function (need) {
-        return need.status === 'published' && publicText(need.title) && matchesQuery(publicText(need.title) + ' ' + publicText(need.description));
-      });
-      if (!needs.length) results.append(node('p', searchText() ? t('discovery.noMatch') : t('discovery.emptyNeeds')));
-      needs.forEach(function (need) {
-        if (!publicId(need.id)) return;
-        var card = document.createElement('article');
-        card.className = 'catalog-card';
-        renderRecord(card, 'need', need);
-        var open = node('a', t('discovery.open'));
-        open.className = 'ghost';
-        open.href = '#necesidad/' + need.id;
-        card.append(open);
-        results.append(card);
+        card.dataset.id = row.id;
+        card.setAttribute('aria-current', String(discovery.selected === row.id));
+        card.append(node('h3', publicText(discovery.view === 'centers' ? row.name : row.title)));
+        if (discovery.view === 'centers') {
+          if (row.verificationStatus === 'officially_verified') {
+            var verified = node('span', '✓ ' + t('discovery.verified')); verified.className = 'verified-center'; card.append(verified);
+          }
+          appendText(card, 'p', publicText(row.address));
+          if (Number.isFinite(centerDistance(row))) appendText(card, 'p', new Intl.NumberFormat(effective(), { maximumFractionDigits: 1 }).format(centerDistance(row)) + ' km');
+        } else {
+          var description = node('p', publicText(row.description)); description.className = 'catalog-description'; card.append(description);
+          appendText(card, 'p', quantityLine(row));
+        }
+        var actions = node('div', ''); actions.className = 'catalog-actions';
+        var open = node('a', t('discovery.' + (discovery.view === 'centers' ? 'details' : 'needDetails')));
+        open.className = 'text-button';
+        open.href = (discovery.view === 'centers' ? '#centro/' : '#necesidad/') + row.id;
+        actions.append(open);
+        if (discovery.view === 'centers' && centerCoordinates(row)) {
+          var show = node('button', t('discovery.onMap')); show.type = 'button'; show.className = 'text-button';
+          show.addEventListener('click', function () { selectMapCenter(row, true); }); actions.append(show);
+        }
+        card.append(actions); results.append(card);
       });
     }
+    var mapCenters = discovery.view === 'centers' ? centers : discovery.centers.filter(function (center) { return needs.some(function (need) { return need.centerId === center.id; }); });
+    if (listRoute) renderDiscoveryMap(discovery.status ? [] : mapCenters);
     var detail = el('discovery-detail');
     detail.replaceChildren();
     detail.hidden = !discovery.record;
@@ -1527,6 +1783,7 @@
 
   function renderOffer() {
     var need = selectedNeed();
+    el('discovery-offer').hidden = !need;
     var methods = needMethods(need);
     var expired = needExpired(need);
     el('discovery-offer-limit').textContent = !featureEnabled('contributions.create') && accountUser ? featureUnavailable() : !need ? '' : expired ? t('discovery.expired') : methods.money ? t('discovery.money') : (!methods.goods && !methods.time ? t('discovery.noMethods') : '');
@@ -1777,13 +2034,20 @@
     }
   }
 
+  if (el('descubrir')) {
   el('discovery-search').addEventListener('submit', function (event) { event.preventDefault(); renderDiscovery(); });
   el('discovery-offer').addEventListener('submit', function (event) { event.preventDefault(); });
-  el('discovery-query').addEventListener('input', renderDiscovery);
-  el('discovery-centers-prev').addEventListener('click', function () { if (discovery.busy || discovery.centerPage <= 1) return; discovery.centerPage -= 1; loadCatalog(); });
-  el('discovery-centers-next').addEventListener('click', function () { if (discovery.busy || discovery.centerPage >= discovery.centerLast) return; discovery.centerPage += 1; loadCatalog(); });
-  el('discovery-needs-prev').addEventListener('click', function () { if (discovery.busy || discovery.needPage <= 1) return; discovery.needPage -= 1; loadCatalog(); });
-  el('discovery-needs-next').addEventListener('click', function () { if (discovery.busy || discovery.needPage >= discovery.needLast) return; discovery.needPage += 1; loadCatalog(); });
+  el('discovery-query').addEventListener('input', function () { discovery.centerPage = discovery.needPage = 1; renderDiscovery(); });
+  el('discovery-refresh').addEventListener('click', loadCatalog);
+  el('discovery-list-focus').addEventListener('click', function () { el('discovery-results').focus(); });
+  el('discovery-locate').addEventListener('click', locateDiscovery);
+  el('discovery-location-clear').addEventListener('click', function () { discovery.origin = null; discovery.locationStatus = ''; mapSignature = ''; renderDiscovery(); });
+  ['centers', 'needs'].forEach(function (kind) { el('discovery-' + kind + '-tab').addEventListener('click', function () { discovery.view = kind; renderDiscovery(); }); });
+  el('discovery-sign-in').addEventListener('click', saveIntent);
+  el('discovery-centers-prev').addEventListener('click', function () { if (discovery.busy || discovery.centerPage <= 1) return; discovery.centerPage -= 1; renderDiscovery(); });
+  el('discovery-centers-next').addEventListener('click', function () { if (discovery.busy || discovery.centerPage >= discovery.centerLast) return; discovery.centerPage += 1; renderDiscovery(); });
+  el('discovery-needs-prev').addEventListener('click', function () { if (discovery.busy || discovery.needPage <= 1) return; discovery.needPage -= 1; renderDiscovery(); });
+  el('discovery-needs-next').addEventListener('click', function () { if (discovery.busy || discovery.needPage >= discovery.needLast) return; discovery.needPage += 1; renderDiscovery(); });
   el('discovery-methods').addEventListener('change', function () { saveIntent(); renderDiscovery(); });
   ['discovery-quantity', 'discovery-minutes', 'discovery-activity', 'discovery-availability', 'discovery-notes'].forEach(function (id) {
     el(id).addEventListener('input', saveIntent);
@@ -1824,6 +2088,11 @@
     URL.revokeObjectURL(url);
   });
   el('discovery-share').addEventListener('submit', function (event) { event.preventDefault(); });
+
+  }
+
+  Object.assign(copy.es, {"nav.app": "Explora la app", "nav.home": "Inicio", "account.title": "Tu cuenta Generosity", "account.lead": "Inicia sesión para continuar. Después vuelve a esta página; tu información se actualizará automáticamente.", "page.centers.title": "Portal de centros", "page.centers.lead": "Selecciona tu centro, publica sus necesidades y da seguimiento a las aportaciones.", "page.registration.title": "Registra tu sede", "page.registration.lead": "Comparte los datos de tu organización y consulta el avance de tu solicitud.", "page.help.title": "Encuentra dónde ayudar", "page.help.lead": "Descubre centros, consulta sus necesidades y da seguimiento a tus aportaciones."});
+  Object.assign(copy.en, {"nav.app": "Explore the app", "nav.home": "Home", "account.title": "Your Generosity account", "account.lead": "Sign in to continue, then return to this page. Your information will refresh automatically.", "page.centers.title": "Center portal", "page.centers.lead": "Select your center, publish its needs and follow up on contributions.", "page.registration.title": "Register your location", "page.registration.lead": "Share your organization’s details and track your application.", "page.help.title": "Find ways to help", "page.help.lead": "Discover centers, explore their needs and track your contributions."});
 
   var stored = readStored();
   if (stored === "es" || stored === "en" || stored === "system") mode = stored;

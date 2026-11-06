@@ -9,7 +9,9 @@
     "previewBadge": "#265FA4",
     "symbol": "464091b1d44ac2e4b223551b9a743af176ba5f4374d9312e4a6fa92abd578d4e",
     "wordmark": "48fb5109d8234343e4a1a008f81a131c9ef9b5e893d558d53cbad9aff010f978",
-    "generator": "54606e5c7ba978b9f9083eba4c7598b5d994c5b4653161214cf3734f92ec1eb2",
+    "siteFavicon": "f175327256ea81a3a910c55b48a963963e2c38559168252cfa6c9ef59e0d15dc",
+    "siteTouchIcon": "9416dc4d125796addcdb0262a5c87985ac7da211f6f0e41702fa5aee19ef6e98",
+    "generator": "19c24784222c1fc3c9d0dbf2a4a8819bf347856edc7f05c7cfe8ff456fa57fc9",
     "readme": "6aa312354bb579fd2ee7906ac63e758dd62b7dc41b83e72e7a298b0a5a0196ca"
   },
   "files": {
@@ -95,8 +97,11 @@
     "iosApp/GenerosityApp/Assets.xcassets/GenerosityWordmark.imageset/Contents.json": "29db7b2fb9a2a491ec6a99a884f0da649df1ee71fd746744b188c3ac447b47d8",
     "iosApp/GenerosityApp/Assets.xcassets/GenerosityWordmark.imageset/GenerosityWordmark-dark.svg": "467c2c41e11a99aec1fea6209ac039433451b33336dad9ecaf487f8920e2a48f",
     "iosApp/GenerosityApp/Assets.xcassets/GenerosityWordmark.imageset/GenerosityWordmark.svg": "30d6d796993a6e1cecee96fb8b67926da8dec0a313900d0c858ee88abe8f3567",
-    "portal/assets/apple-touch-icon.png": "a2fb07c6b3d7ffabf4ca1a4f37f8b6616a4c783ab6b4dedd157da2bfe3ba02ad",
-    "portal/assets/favicon.png": "c1a87eb41d0b0e4acd7857c08b0863541b1f0ef470cfea7bb9763bee6f1e854a",
-    "portal/assets/logo.png": "581e79ac58ec8f30f189d2736c3160b3f97cb05a0eaa19b0430bb4e31a823117"
+    "portal/assets/apple-touch-icon.png": "9416dc4d125796addcdb0262a5c87985ac7da211f6f0e41702fa5aee19ef6e98",
+    "portal/assets/favicon.png": "f175327256ea81a3a910c55b48a963963e2c38559168252cfa6c9ef59e0d15dc",
+    "portal/assets/logo.png": "581e79ac58ec8f30f189d2736c3160b3f97cb05a0eaa19b0430bb4e31a823117",
+    "portal/assets/symbol.svg": "d944f3f49b5f117fb4cd2a5b11f5975933fb821add86e1a5e724d2a5b341b2eb",
+    "portal/assets/wordmark-dark.svg": "467c2c41e11a99aec1fea6209ac039433451b33336dad9ecaf487f8920e2a48f",
+    "portal/assets/wordmark.svg": "30d6d796993a6e1cecee96fb8b67926da8dec0a313900d0c858ee88abe8f3567"
   }
 }

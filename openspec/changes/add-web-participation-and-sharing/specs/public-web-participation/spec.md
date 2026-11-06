@@ -52,3 +52,34 @@ The web SHALL use server-enforced authorization, secure sessions, CSRF protectio
 #### Scenario: Small phone without location access
 - **WHEN** a user browses in Spanish at 320 CSS pixels with location denied
 - **THEN** manual-area search and readable participation forms remain usable without horizontal page overflow
+
+### Requirement: Public Directory Map and Optional Location
+The public helping route SHALL show real map tiles and valid public center markers
+alongside a searchable list using shared brand tokens. Full-snapshot name/address
+search SHALL work without login or location access. Provider attribution and
+privacy information SHALL remain accessible.
+
+#### Scenario: Incomplete center location
+- **WHEN** a valid center has missing or invalid coordinates
+- **THEN** its text details remain in the list and no marker is fabricated
+
+#### Scenario: Location requested by the visitor
+- **WHEN** a visitor presses the location action and grants permission
+- **THEN** the page orders results by straight-line distance and frames nearby centers, including those beyond the first results page
+- **AND** it offers a way to clear the location ordering without clearing the search
+- **AND** visitor coordinates remain only in page memory, never in API catalog requests, storage or shared links
+
+#### Scenario: Location or cartography unavailable
+- **WHEN** permission is denied, location times out, or the map renderer/tiles fail
+- **THEN** the page gives concise recovery guidance and keeps text search and center/need links usable
+- **AND** it does not invent a location or request permission again automatically
+
+#### Scenario: Focused helping and account access
+- **WHEN** a visitor opens the directory or a center
+- **THEN** the page hides the offer form until a published need is selected
+- **AND** the hosted sign-in link remains available after a failed session check, preserves the originating draft and never submits it automatically
+
+#### Scenario: Local preview reads the published directory
+- **WHEN** the developer starts the loopback preview with public-catalog support
+- **THEN** only allowlisted public GETs are relayed without credentials, private routes, writes or redirects
+- **AND** the page explains that hosted account access is separate and does not pretend to hold an authenticated local session

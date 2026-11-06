@@ -1,4 +1,4 @@
-const {test,expect}=require('@playwright/test');
+const {test,expect}=require('./browser');
 const api='https://api.generosity.global';
 test.beforeEach(async ({page}) => { await page.route(/\/api\/v1\/(me\/)?features$/, r => r.fulfill({json:{channel:'production',features:{'contributions.create':true,'needs.publish':true,'needs.progress':true}}})); });
 const need={id:'need-a',title:{es:'Alimentos',en:'Food'},description:{es:'Paquetes',en:'Packs'},helpMethods:['goods'],urgent:false,status:'published',quantityRequired:20,quantityCommitted:2,quantityReceived:1,unit:'paquetes',version:1};
@@ -8,7 +8,7 @@ async function fixture(page){
  await page.route(api+'/api/v1/staff/centers',r=>r.fulfill({json:{centers:[{id:'center-a',name:{es:'Centro Ñ',en:'Center'}}]}}));
  await page.route(api+'/api/v1/staff/centers/center-a/needs?*',r=>r.fulfill({json:pageOf([need])}));
  await page.route(api+'/api/v1/staff/centers/center-a/contributions?*',r=>r.fulfill({json:pageOf([{id:'offer-a',user_id:7,title:{es:'Alimentos'},status:'offered',version:1,method:'goods',quantity:3,notes:'<img src=x onerror=alert(1)>'}])}));
- await page.goto('/#center-workspace');await page.locator('#idioma').selectOption('es');await expect(page.locator('#staff-needs button')).toBeEnabled();
+ await page.goto('/kindness-center/');await page.locator('#idioma').selectOption('es');await expect(page.locator('#staff-needs button')).toBeEnabled();
 }
 test('partial progress separates commitments from receipts and keeps a full target visible',async({page})=>{
  await fixture(page);

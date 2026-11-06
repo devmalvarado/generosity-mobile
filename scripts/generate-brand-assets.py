@@ -289,9 +289,11 @@ def main():
     json_file(BRAND / "verification.json", {"source": "master/symbol.svg and master/wordmark.svg", "output_profile": "sRGB",
         "orange_srgb": orange, "silhouette_intersection_over_union": quality, "ico_sizes": [s for s, _ in ico_parts],
         "svg_contains_embedded_raster_or_font_text": False, "ios_marketing_icon_has_alpha": False})
-    # The same masters feed the public site, native headers, favicons and app icons.
-    for source, target in [("png/stacked.png", "logo.png"), ("web/favicon-32.png", "favicon.png"),
-                           ("web/apple-touch-icon.png", "apple-touch-icon.png")]:
+    # Keep the published web icons; app launcher exports use their own opaque canvas.
+    for source, target in [("png/stacked.png", "logo.png"), ("svg/wordmark.svg", "wordmark.svg"),
+                           ("svg/wordmark-dark.svg", "wordmark-dark.svg"), ("svg/symbol.svg", "symbol.svg"),
+                           ("source/published-favicon.png", "favicon.png"),
+                           ("source/published-apple-touch-icon.png", "apple-touch-icon.png")]:
         write(ROOT / "portal/assets" / target, (BRAND / source).read_bytes())
     with ZipFile(BRAND / "generosity-brand-kit.zip", "w", ZIP_DEFLATED) as archive:
         for folder in ["svg", "png", "web"]:

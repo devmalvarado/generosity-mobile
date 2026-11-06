@@ -1,0 +1,34 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="color-scheme" content="light dark">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; connect-src 'self'; font-src 'self'; form-action 'none'; base-uri 'none'">
+  <title>Generosity · Explora la app</title>
+  <link rel="icon" href="/assets/favicon.png?v=f175327256ea" type="image/png" sizes="192x192">
+  <link rel="stylesheet" href="preview.css?v=aafac849be0c">
+</head>
+<body>
+  <div class="review-bar">
+    <div class="tour-brand"><a href="/" aria-label="Generosity · Inicio">Generosity</a><span id="prototype-label">Recorrido interactivo</span></div>
+    <div class="review-controls">
+      <button id="screens-button" aria-label="Pantallas">☷</button>
+      <button id="language" aria-label="Cambiar idioma">EN</button>
+      <button id="theme" aria-label="Cambiar apariencia">◐</button>
+      <button id="text-size" aria-label="Ampliar texto" aria-pressed="false">A+</button>
+    </div>
+  </div>
+  <div class="workspace">
+    <aside id="inventory" aria-label="Funcionalidades de Generosity"></aside>
+    <main id="phone" aria-label="Recorrido de Generosity">
+      <div id="app"></div>
+      <nav id="navigation" aria-label="Navegación principal"></nav>
+      <div id="toast" role="status" aria-live="polite"></div>
+    </main>
+    <aside class="review-note" id="review-note"></aside>
+  </div>
+  <dialog id="sheet"></dialog>
+  <script type="module" src="app.mjs?v=141e2fe5b27d"></script>
+</body>
+</html>

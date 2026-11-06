@@ -14,6 +14,7 @@ and Dynamic Type, and the web keeps its existing CSS components.
 | Landing's editorial neutral colors and focus/disabled states | `web` in the same file |
 | Body/heading font families and Android type scale | `typography` in the same file |
 | Common spacing, corners, logo bounds and minimum touch targets | `spacing`, `radii`, `sizes` in the same file |
+| Published website favicon and Apple touch icon | `assets/brand/source/published-favicon.png` and `published-apple-touch-icon.png`; copied unchanged, independently of app launcher exports |
 | Symbol and wordmark outlines | `assets/brand/master/symbol.svg` and `wordmark.svg` |
 
 The action accent is shared by native themes, landing buttons and hosted
@@ -40,8 +41,9 @@ python3 scripts/generate-design-system.py --check
 The generator writes Kotlin/Swift tokens, portal/account CSS, and (when the
 brand inputs change) native vector resources, launcher/store icons, SVG/PNG/ICO
 exports, the downloadable brand kit and the portal's logo/favicon files.
-`design/generated.json` records the brand inputs and output hashes. Do not edit
-generated files manually. `--check` needs only Python's standard library and
+`design/generated.json` records the brand inputs and output hashes. The published website icons retain their approved raster artwork and do not
+follow changes to the app-icon background or palette; replace their source files
+when a new web icon is approved. Do not edit generated files manually. `--check` needs only Python's standard library and
 does not modify files. Android pre-build, Xcode pre-build, portal pre-test and
 the publishing workflows reject stale resources. CI also checks changes.
 

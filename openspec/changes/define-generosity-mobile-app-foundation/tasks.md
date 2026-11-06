@@ -338,7 +338,21 @@ the complete notification acceptance matrix. See [push evidence](../../../docs/r
 - [ ] 16.10 Add Spanish/English web resources and browser-local system/en/es settings; test ordered language fallback, persisted override, localized errors/dates, keyboard navigation, screen-reader labels and focus restoration.
 - [ ] 16.11 Add browser acceptance tests and screenshots at 320/360/390/768/1280 CSS pixels in Chromium and WebKit; assert no horizontal page overflow, no false success and functional menu/forms, then record 200-percent text and real Safari/Chrome virtual-keyboard checks.
 - [x] 16.12 Test direct API cross-center denial, public draft/private-field exclusion, script-content rendering, CSRF/origin protection and revoked sessions; document unresolved failures as release blockers rather than treating browser-only validation as authorization.
-- [ ] 16.13 Serve the landing's center entry at `/kindness-center`; verify help entry does not open it, an unassigned account sees no publishing controls, and `kidness-center` is not an alias.
+- [x] 16.13a Implement and locally verify `/kindness-center/` as the dedicated center entry; help opens `/ayudar/`, unassigned accounts have no publishing controls and `kidness-center` is not an alias.
+- [ ] 16.13b Publish the dedicated portal routes and repeat direct entry, legacy links and real HTTPS/session acceptance on the hosted site.
+- [x] 16.14 Move location applications to `/registrar-sede/` and discovery/offers/history to `/ayudar/`; remove operational forms from the landing, preserve legacy fragments, locale and hosted-account form/retry boundaries, and test responsive pages.
+- [x] 16.15 Adapt all 34 reference screens into the isolated public `/app/` tour with ES/EN, light/dark appearance, canonical brand tokens, mobile navigation and no specification/task links; verify tour actions do not call the API or send data.
+- [x] 16.16 Update the explicit static-file deployment inventory, cache versions and isolated-preview packaging for every route; validate generated assets and the public package without deploying it.
+
+16.13a–16.16 local evidence (2026-11-05): existing portal regression checks pass
+in Chromium/WebKit after moving fixtures to their dedicated routes. The 12
+additional route/tour checks pass, including all 34 screens in both languages,
+legacy redirects, account without membership, 320-pixel enlarged text and public
+asset versions. No new live account writes or hosting changes were performed.
+Screenshots: `portal/screenshots/route-*-390.png` and `app-tour-{390,1440}.png`.
+The explicitly inventoried isolated preview package has preview API/channel metadata on all four
+operational pages. Foundation-wide physical-device and production acceptance
+remain separate; this does not implement pending service-backed tour features.
 
 16.1–16.3 and 16.12 acceptance (2026-11-04): canonical-source/provenance review,
 111 passing browser cases, and the final 119-test PHP suite. New real-cookie

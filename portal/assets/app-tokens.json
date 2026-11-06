@@ -1,0 +1,76 @@
+{
+  "colors": {
+    "accent": [
+      "#C6401D",
+      "#FFB197"
+    ],
+    "onAccent": [
+      "#FFFFFF",
+      "#4C1500"
+    ],
+    "accentContainer": [
+      "#FFEDE5",
+      "#592717"
+    ],
+    "onAccentContainer": [
+      "#8F2C14",
+      "#FFD9CC"
+    ],
+    "background": [
+      "#FAF8F5",
+      "#17191C"
+    ],
+    "surface": [
+      "#FFFFFF",
+      "#222529"
+    ],
+    "text": [
+      "#191C22",
+      "#F7F5F2"
+    ],
+    "surfaceVariant": [
+      "#F2F0ED",
+      "#30343A"
+    ],
+    "secondary": [
+      "#59616C",
+      "#B8BCC3"
+    ],
+    "outline": [
+      "#757B83",
+      "#9299A3"
+    ],
+    "line": [
+      "#E4E2DF",
+      "#444950"
+    ],
+    "error": [
+      "#B3261E",
+      "#FFB4AB"
+    ],
+    "onError": [
+      "#FFFFFF",
+      "#690005"
+    ],
+    "categoryHealth": [
+      "#357D64",
+      "#A7DAC7"
+    ],
+    "categoryCommunity": [
+      "#9A581D",
+      "#EEC095"
+    ],
+    "categoryOther": [
+      "#7060A5",
+      "#D6C9FF"
+    ]
+  },
+  "radii": {
+    "control": 10,
+    "card": 12,
+    "panel": 20,
+    "feature": 24,
+    "map": 28,
+    "pill": 999
+  }
+}

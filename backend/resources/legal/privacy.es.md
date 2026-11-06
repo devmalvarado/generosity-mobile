@@ -2,6 +2,8 @@
 
 Versión 2026-11-01 · Vigente desde el 1 de noviembre de 2026.
 
+Información sobre el mapa web actualizada el 5 de noviembre de 2026.
+
 ## 1. Responsable y atención
 
 INSTITUTO DE DEBERES Y DERECHOS HUMANOS, constituido como asociación civil, RFC IDD190329L69, es responsable de los datos tratados mediante Generosity. Domicilio fiscal: Temixco 7, acceso 1er callejón, colonia Pedregal de Santo Domingo, Coyoacán, Ciudad de México, C.P. 04369, México.
@@ -38,6 +40,8 @@ Puedes controlar permisos de ubicación y notificaciones desde el sistema operat
 Utilizamos Hostinger para alojar la API, la base de datos, el sitio y el correo. La infraestructura de alojamiento configurada para este servicio está en Estados Unidos; por ello puede existir almacenamiento o tratamiento fuera de México. Los prestadores que actúan por cuenta del Instituto deben tratar los datos conforme a nuestras instrucciones y medidas de confidencialidad y seguridad aplicables.
 
 Cuando eliges un acceso externo o utilizas mapas de Google o Apple, esos proveedores también tratan datos conforme a sus propias políticas. La landing utiliza fuentes de Google Fonts, cuya carga comunica datos técnicos de conexión al proveedor. Puedes consultar sus políticas: [Google](https://policies.google.com/privacy?hl=es) y [Apple](https://www.apple.com/legal/privacy/es/).
+
+El mapa web carga cartografía de OpenStreetMap Foundation. Para entregar las imágenes del mapa, este proveedor recibe tu dirección IP, datos técnicos de la conexión y solicitudes que identifican la zona del mapa consultada, conforme a su [política de privacidad](https://osmfoundation.org/wiki/Privacy_Policy). «Usar mi ubicación» solicita permiso al navegador: las coordenadas se usan en memoria para ordenar los centros y centrar el mapa, sin guardarse ni enviarse a la API de Generosity en este recorrido. La cartografía solicitada permite al proveedor conocer el área que estás viendo. Puedes buscar centros por nombre o dirección sin permitir tu ubicación.
 
 Al dirigir una oferta a un centro, se comunica al personal autorizado de ese centro la información de la operación necesaria para coordinarla y registrar su resultado. No se concede acceso general a tu historial, contraseña o solicitudes privadas. Compartir datos adicionales para contacto o atención debe responder a la finalidad informada y a tu decisión o a una excepción legal aplicable.
 

@@ -2,6 +2,8 @@
 
 Version 2026-11-01 · Effective November 1, 2026.
 
+Web map information updated November 5, 2026.
+
 ## 1. Controller and contact
 
 INSTITUTO DE DEBERES Y DERECHOS HUMANOS, a civil association, Mexican tax ID (RFC) IDD190329L69, is responsible for personal data processed through Generosity. Registered tax address: Temixco 7, acceso 1er callejón, colonia Pedregal de Santo Domingo, Coyoacán, Ciudad de México, C.P. 04369, Mexico.
@@ -38,6 +40,8 @@ You can control location and notification permissions in your operating system a
 We use Hostinger to host the API, database, website and email. Hosting infrastructure configured for this service is in the United States, so storage or processing may occur outside Mexico. Providers acting on the Institute's behalf must follow our instructions and applicable confidentiality and security measures.
 
 When you choose external sign-in or use Google or Apple maps, these providers also process data under their own policies. The landing uses Google Fonts, whose loading communicates technical connection data to that provider. See [Google's policy](https://policies.google.com/privacy?hl=en) and [Apple's policy](https://www.apple.com/legal/privacy/en-ww/).
+
+The web map loads map imagery from the OpenStreetMap Foundation. To deliver it, this provider receives your IP address, technical connection data and requests identifying the map area being viewed, under its [privacy policy](https://osmfoundation.org/wiki/Privacy_Policy). “Use my location” asks for browser permission: coordinates are used in memory to sort centers and position the map, without being stored or sent to the Generosity API in this flow. The requested map imagery lets the provider know which area you are viewing. You can search for centers by name or address without allowing your location.
 
 When you direct an offer to a center, its authorized staff receive the transaction information necessary to coordinate it and record the outcome. They do not receive general access to your history, password or private applications. Additional contact or assistance data must be shared for the stated purpose based on your decision or an applicable legal exception.
 

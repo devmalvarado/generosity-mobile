@@ -1,4 +1,4 @@
-const { test, expect } = require("@playwright/test");
+const { test, expect } = require("./browser");
 const path = require("path");
 const { readFileSync } = require("fs");
 const { createHash } = require("crypto");
@@ -17,7 +17,7 @@ test("HTML versions the CSS and script by their contents", async ({ page }) => {
     ['portal.js', 'script[src]', 'src']
   ]) {
     const version = createHash('sha256').update(readFileSync(path.join(__dirname, '..', file))).digest('hex').slice(0, 12);
-    await expect(page.locator(selector)).toHaveAttribute(attribute, file + '?v=' + version);
+    await expect(page.locator(selector)).toHaveAttribute(attribute, '/' + file + '?v=' + version);
   }
   const tokens = readFileSync(path.join(__dirname, '../assets/design-tokens.css'));
   const tokenVersion = createHash('sha256').update(tokens).digest('hex').slice(0, 12);
@@ -51,6 +51,7 @@ test.describe("layout", () => {
         expect(await overflow(page)).toBeLessThanOrEqual(1);
         await page.keyboard.press("Escape");
       }
+      await page.goto("/registrar-sede/");
       await page.locator("#application-organization_name").fill("X".repeat(80));
       expect(await overflow(page)).toBeLessThanOrEqual(1);
     });
@@ -119,10 +120,11 @@ test.describe("forms and language", () => {
       .filter(id => !document.getElementById(id)));
     expect(brokenAnchors).toEqual([]);
     await page.locator(".hero-actions .solid").click();
-    await expect(page).toHaveURL(/#registrar-sede$/);
-    await page.locator("#publicar .solid").click();
-    await expect(page).toHaveURL(/#acceso\?destino=publicar$/);
-    await expect(page.locator("#destino-previsto")).toContainText("centro autorizado");
+    await expect(page).toHaveURL(/\/registrar-sede\/$/);
+    await page.locator('#registrar-sede a[data-i18n="application.existing"]').click();
+    await expect(page).toHaveURL(/\/kindness-center\/$/);
+    await expect(page.locator("h1")).toHaveText("Portal de centros");
+    await page.goto("/");
     await expect(page.locator("input[type=password]")).toHaveCount(0);
     for (const locale of ["es", "en"]) {
       await page.locator("#idioma").selectOption(locale);
@@ -132,26 +134,22 @@ test.describe("forms and language", () => {
     }
   });
 
-  test("language change keeps fields, filters and can return to automatic", async ({ page }) => {
+  test("language changes preserve landing filters and registration fields", async ({ page }) => {
     await prepare(page, 390);
-    await page.locator("#application-city").fill("Puebla");
-    await page.locator("#application-site_name").fill("Mantas");
     await page.locator("[data-filter=salud]").click();
-
     await page.locator("#idioma").selectOption("en");
-    await expect(page.locator("html")).toHaveAttribute("lang", "en");
-    await expect(page.locator("h1")).toHaveText("Help arrives when you know exactly who needs it.");
-    await expect(page.locator("#application-city")).toHaveValue("Puebla");
-    await expect(page.locator("#application-site_name")).toHaveValue("Mantas");
     await expect(page.locator("#puente")).toBeVisible();
     await expect(page.locator("#comedor")).toBeHidden();
     await expect(page.locator("[data-filter=salud]")).toHaveAttribute("aria-pressed", "true");
-
-    await page.locator("#idioma").selectOption("es");
-    await expect(page.locator("html")).toHaveAttribute("lang", "es");
-    await expect(page.locator("#application-city")).toHaveValue("Puebla");
-    await expect(page.locator("#application-site_name")).toHaveValue("Mantas");
-    await expect(page.locator("[data-filter=salud]")).toHaveAttribute("aria-pressed", "true");
+    await page.goto("/registrar-sede/");
+    await expect(page.locator("html")).toHaveAttribute("lang", "en");
+    await page.locator("#application-city").fill("Puebla");
+    await page.locator("#application-site_name").fill("Mantas");
+    for (const locale of ["es", "en", "system"]) {
+      await page.locator("#idioma").selectOption(locale);
+      await expect(page.locator("#application-city")).toHaveValue("Puebla");
+      await expect(page.locator("#application-site_name")).toHaveValue("Mantas");
+    }
   });
 });
 
@@ -186,7 +184,7 @@ test.describe("locale resolution", () => {
     });
     await context.route("https://api.generosity.global/**", route => route.fulfill({ status: 503, body: "unavailable" }));
     const page = await context.newPage();
-    await page.goto(BASE);
+    await page.goto(BASE + "registrar-sede/");
     await expect(page.locator("html")).toHaveAttribute("lang", "es");
     await expect(page.locator("#idioma")).toHaveValue("system");
 
@@ -225,7 +223,7 @@ test.describe("locale resolution", () => {
     const page = await context.newPage();
     const errors = [];
     page.on("pageerror", (error) => errors.push(String(error)));
-    await page.goto(BASE);
+    await page.goto(BASE + "registrar-sede/");
     await expect(page.locator("html")).toHaveAttribute("lang", "es");
     await page.locator("#application-site_name").fill("Mantas");
     await page.locator("#idioma").selectOption("en");

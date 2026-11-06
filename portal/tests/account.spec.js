@@ -1,11 +1,11 @@
-const { test, expect } = require('@playwright/test');
+const { test, expect } = require('./browser');
 const api = 'https://api.generosity.global';
 test.beforeEach(async ({page}) => { await page.route(/\/api\/v1\/(me\/)?features$/, r => r.fulfill({json:{channel:'production',features:{'contributions.create':true,'needs.publish':true,'needs.progress':true}}})); });
 
 test('guest entry uses the hosted page and keeps the location application in this tab', async ({ page }) => {
   await page.route(api + '/auth/session', route => route.fulfill({ json: { user: null, csrf_token: 'csrf-test' } }));
   await page.setViewportSize({ width: 320, height: 800 });
-  await page.goto('/#acceso');
+  await page.goto('/registrar-sede/');
   await page.locator('#idioma').selectOption('es');
   await page.locator('#application-activities').fill('Medicinas para el centro');
   await expect(page.locator('#account-status')).toContainText('invitado');
@@ -43,10 +43,10 @@ test('unavailable backend remains guest-capable and retry restores account entry
   await page.route(api + '/auth/session', route => available
     ? route.fulfill({ json: { user: null, csrf_token: 'csrf-test' } })
     : route.fulfill({ status: 503 }));
-  await page.goto('/#acceso');
+  await page.goto('/registrar-sede/');
   await page.locator('#idioma').selectOption('es');
   await expect(page.locator('#account-status')).toContainText('No se pudo conectar');
-  await expect(page.locator('#account-sign-in')).toBeHidden();
+  await expect(page.locator('#account-sign-in')).toBeVisible();
   await page.locator('#application-activities').fill('Mantas');
   available = true;
   await page.locator('#account-retry').click();

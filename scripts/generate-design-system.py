@@ -109,6 +109,7 @@ def render(data):
         "androidApp/src/main/java/org/generosity/app/ui/DesignTokens.kt": "\n".join(android) + "\n",
         "iosApp/GenerosityApp/DesignTokens.swift": "\n".join(swift) + "\n",
         "portal/assets/design-tokens.css": content,
+        "portal/assets/app-tokens.json": json.dumps({key: data[key] for key in ["colors", "radii"]}, indent=2) + "\n",
         # Auth intentionally keeps system fonts and does not request portal font services.
         "backend/public/auth-assets/design-tokens.css": "\n".join(line for line in css if not line.startswith("@import")),
     }
@@ -121,6 +122,8 @@ def digest(path):
 def brand_inputs(data):
     return {"brand": data["brand"], "previewBadge": data["web"]["focus"], "symbol": digest(ROOT / "assets/brand/master/symbol.svg"),
             "wordmark": digest(ROOT / "assets/brand/master/wordmark.svg"),
+            "siteFavicon": digest(ROOT / "assets/brand/source/published-favicon.png"),
+            "siteTouchIcon": digest(ROOT / "assets/brand/source/published-apple-touch-icon.png"),
             "generator": digest(ROOT / "scripts/generate-brand-assets.py"),
             "readme": digest(ROOT / "assets/brand/README.md")}
 
@@ -134,7 +137,7 @@ def brand_paths():
                     "iosApp/GenerosityApp/Assets.xcassets/AppIcon*.appiconset/*",
                     "androidApp/src/preview/res/drawable/generosity_*.xml", "androidApp/src/preview/res/mipmap-*/ic_launcher.*"]:
         paths.extend(ROOT.glob(pattern))
-    paths.extend(ROOT / p for p in ["portal/assets/logo.png", "portal/assets/favicon.png", "portal/assets/apple-touch-icon.png"])
+    paths.extend(ROOT / p for p in ["portal/assets/logo.png", "portal/assets/wordmark.svg", "portal/assets/wordmark-dark.svg", "portal/assets/symbol.svg", "portal/assets/favicon.png", "portal/assets/apple-touch-icon.png"])
     paths.extend(ROOT / "assets/brand" / name for name in ["preview.svg", "preview.png", "verification.json", "generosity-brand-kit.zip"])
     return sorted(paths)
 

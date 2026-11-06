@@ -1,4 +1,4 @@
-const { test, expect } = require('@playwright/test');
+const { test, expect } = require('./browser');
 const api = 'https://api.generosity.global';
 test.beforeEach(async ({page}) => { await page.route(/\/api\/v1\/(me\/)?features$/, r => r.fulfill({json:{channel:'production',features:{'contributions.create':true,'needs.publish':true,'needs.progress':true}}})); });
 const user = { id: 42, name: 'María Peña', email: 'maria@example.test', email_verified_at: '2026-11-01T00:00:00Z' };
@@ -18,7 +18,7 @@ async function fixture(page, initialUser = user) {
     return route.fulfill({ status: 404 });
   });
   await page.setViewportSize({ width: 390, height: 850 });
-  await page.goto('/#registrar-sede');
+  await page.goto('/registrar-sede/');
   await page.locator('#idioma').selectOption('es');
   return state;
 }

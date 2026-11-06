@@ -1,6 +1,6 @@
 # Tasks
 
-All tasks are pending. Dependencies are planned capabilities, not verified
+Broad participation tasks remain pending; the scoped directory-map work below is locally complete. Dependencies are planned capabilities, not verified
 services. Test with synthetic participants; production communication requires
 separate channel and consent configuration.
 
@@ -20,7 +20,7 @@ unavailable, and no task below is complete. See
 
 ## 2. Public Web Participation
 
-- [ ] 2.1 Add public center/need/campaign/occurrence/meal browser routes; verify direct entry, unknown/removed records, sanitized metadata and map-free low-bandwidth browsing. The landing reads existing `GET /api/v1/centers` and `GET /api/v1/needs` at `#descubrir`, `#centro/{id}` and `#necesidad/{id}`. A direct 404 or invalid prefix does not open another record or fetch. Rendering allowlists localized public text and validated contact fields. The landing still has no campaign, occurrence, or meal route. The API reads exist and are not wired into the page, so this task is not complete.
+- [ ] 2.1 Add public center/need/campaign/occurrence/meal browser routes; verify direct entry, unknown/removed records, sanitized metadata and map-free low-bandwidth browsing. The dedicated `/ayudar/` route reads the public sync snapshot and center/need detail endpoints; legacy fragments redirect to it. A direct 404 or invalid prefix does not open another record or fetch. Rendering allowlists localized public text and validated contact fields. The landing still has no campaign, occurrence, or meal route. The additional campaign/occurrence/meal APIs are not wired into this page, so this broad task is not complete.
 - [ ] 2.6 Open the landing help action into public discovery without an account; verify demonstration cards stay labeled, catalog failure does not present them as current needs, and the action does not submit or open `/kindness-center`. The help action and cause-card actions open `#descubrir` without an account, without a POST and without `/kindness-center`. Illustration cards stay labeled in `#necesidades`. A catalog failure keeps the search and does not present those cards as current needs. Browser fixtures are not a production round trip, so this task is not complete.
 - [ ] 2.2 Add provider-backed browser entry with preserved intent and session/CSRF protection; verify cancelled login, embedded-browser fallback, expired session and no automatic submission.
 - [ ] 2.3 Implement browser goods/time/event/meal/personal-help forms against existing endpoints; verify concurrent native/web capacity, stale availability, lost-response retry and gated monetary actions. The landing can prepare goods or time against a published, unexpired need and submits only with a verified session, CSRF, a UUID `Idempotency-Key` and `contributions.create`. Fixtures verified a goods lost-response retry and `capacity_exceeded`. They did not submit time, events, meals or personal help, and they did not race a native client. Money stays disabled. This task is not complete.
@@ -54,3 +54,12 @@ unavailable, and no task below is complete. See
 
 - [ ] 6.1 Exercise shared link -> browser participation -> center validation -> corrected shared outcome plus assisted claim across backend/web/Android/iOS; verify one capacity/evidence identity and no referral rewards.
 - [ ] 6.2 Run Chromium/WebKit screenshots/overflow at 320/360/390/768/1280, real mobile keyboard and social-browser checks, ES/EN 200-percent text and private-cache inspection; record evidence and run strict OpenSpec validation without marking unverified work complete.
+
+## 7. Focused directory and access — 2026-11-05
+
+- [x] 7.1 Clean `/ayudar/` into compact account access, search/location, real map and separate center/need lists; hide the offer form until a need is opened.
+- [x] 7.2 Reuse the bounded public snapshot for full-directory/address search, validated coordinate markers and local result pagination; preserve authoritative need detail, CSRF and idempotent write paths.
+- [x] 7.3 Add opt-in location, timeout/denial/manual-search fallbacks, distance ordering and pin/list selection; test that visitor coordinates never enter API requests or browser storage.
+- [x] 7.4 Keep hosted sign-in reachable when session checks fail; retain drafts and add an explicitly public-only loopback relay for live catalog preview.
+- [x] 7.5 Verify Chromium/WebKit regression and focused map/access tests with intercepted tiles; manually inspect real OSM cartography and the public catalog locally.
+- [ ] 7.6 Publish the routes, include OpenStreetMap in the hosted privacy provider disclosure, and verify real HTTPS login/return plus Safari/Chrome location permissions. The local read-only relay does not establish this acceptance.

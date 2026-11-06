@@ -14,6 +14,14 @@ The public landing SHALL remain accessible without an account and expose a cente
 - **WHEN** an unauthenticated visitor chooses to publish a need
 - **THEN** the site routes to real sign-in while preserving the intended destination, without granting publishing permission
 
+### Requirement: Illustrated Helping Journey
+The public landing SHALL explain center publication, an iPhone notification and partial help confirmed by the center, using shared branding, Spanish/English text and accessible captions. The sequence SHALL reflow on phones and at 200 percent text size. Illustrations SHALL NOT submit data, request notification permission or represent live records or proof of push delivery.
+
+#### Scenario: Visitor learns how a need receives help
+- **WHEN** a visitor opens the landing's how-it-works section
+- **THEN** a three-step illustration explains publication from the center portal, an alert with notifications enabled, and progress updated after the center confirms receipt of a partial contribution
+- **AND** the real helping action leads to public discovery rather than submitting the illustrated offer
+
 ### Requirement: Staff workspace path
 The landing's center entry SHALL open `/kindness-center`. That path SHALL be the staff workspace, not public helping. Choosing the landing's help action SHALL NOT send the visitor there. A misspelled `kidness-center` path SHALL NOT be published as an alias.
 
@@ -24,6 +32,28 @@ The landing's center entry SHALL open `/kindness-center`. That path SHALL be the
 #### Scenario: Helper opens the staff path
 - **WHEN** a signed-in person without a center assignment opens `/kindness-center`
 - **THEN** the page explains that access is not granted and shows no publishing controls
+
+### Requirement: Dedicated Web Journeys
+The landing SHALL present entry links instead of embedding forms or account controls. Registration SHALL use `/registrar-sede/`, staff operations `/kindness-center/` and discovery/offers/history `/ayudar/`. Routes SHALL support direct opening, reload and language selection while initializing only their own components. Legacy fragments SHALL redirect without losing their record or destination. Hosted sign-in SHALL preserve the originating form without automatically submitting it.
+
+#### Scenario: Visitor follows an old need link
+- **WHEN** a visitor opens a landing URL with a `#necesidad/...` fragment
+- **THEN** the browser opens the same need under `/ayudar/`, preserving the query and fragment, without exposing a staff editor or sending an offer
+
+#### Scenario: Organization works without navigating the landing
+- **WHEN** a representative directly opens or reloads `/registrar-sede/` or `/kindness-center/`
+- **THEN** the relevant account and form controls are available independently of the landing, retaining existing account isolation, membership, CSRF and retry boundaries
+
+### Requirement: Public Interactive App Tour
+The public `/app/` tour SHALL present all 34 reference screens in Spanish/English, light/dark appearance and mobile navigation with shared branding. It SHALL explain current and planned capabilities without specification names, task IDs or repository-document links. Tour actions SHALL remain in memory without authentication, API mutations, location requests or payments. The tour SHALL distinguish exploration from operational actions and link back to real participation routes.
+
+#### Scenario: Visitor explores a capability
+- **WHEN** a visitor selects a screen, changes language or opens a simulated action
+- **THEN** the tour renders the corresponding localized screen without an API mutation, credential request or technical specification link
+
+#### Scenario: Static release includes dedicated routes
+- **WHEN** the portal is packaged for production or the isolated preview environment
+- **THEN** its explicit public-file inventory includes every route and required asset, excludes repository/private files, and preview API metadata is applied to every operational route
 
 ### Requirement: Center-Scoped Workspace
 Only authenticated staff with an active backend-issued center assignment SHALL access that center's private workspace. The workspace SHALL show the active center and allow switching only among assigned centers. Missing or revoked access SHALL block reads and writes. Sign-out SHALL clear private views and account-scoped browser state; account registration SHALL NOT grant a center role.

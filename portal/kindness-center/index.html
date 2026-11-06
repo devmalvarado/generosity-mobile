@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta name="generosity-api-origin" content="https://api.generosity.global">
+  <meta name="generosity-channel" content="production">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Portal de centros · Generosity</title>
+  <meta name="description" content="Generosity, una iniciativa del Instituto de Deberes y Derechos Humanos para conectar personas, organizaciones y causas. Registra tu sede y coordina la ayuda de tu comunidad.">
+  <link rel="icon" href="/assets/favicon.png?v=f175327256ea" type="image/png" sizes="192x192">
+  <link rel="apple-touch-icon" href="/assets/apple-touch-icon.png?v=9416dc4d1257">
+  <link rel="stylesheet" href="/styles.css?v=464ef25fdd65">
+</head>
+<body data-page="centers">
+  <a class="skip" href="#contenido" data-i18n="skip">Saltar al contenido</a>
+
+  <header class="topbar">
+    <a class="brand" href="/#inicio">
+      <img src="/assets/logo.png" alt="generosity" width="1046" height="585">
+    </a>
+    <nav class="topnav" aria-label="Secciones" data-i18n-aria="nav.sections">
+      <a href="/#como-funciona" data-i18n="nav.how">Cómo funciona</a>
+      <a href="/app/" data-i18n="nav.app">Explora la app</a>
+      <a href="/kindness-center/" data-i18n="nav.centers">Para centros</a>
+    </nav>
+    <div class="topactions">
+      <a class="ghost" href="/ayudar/" data-i18n="nav.donate">Cómo ayudar</a>
+      <a class="solid" href="/registrar-sede/" data-i18n="application.nav">Registrar una sede</a>
+    </div>
+    <button class="menu" type="button" aria-expanded="false" aria-controls="movil" data-i18n="menu.label">Menú</button>
+    <label class="lang">
+      <span class="visually-hidden" id="idioma-label" data-i18n="lang.label">Idioma</span>
+      <select id="idioma" aria-labelledby="idioma-label">
+        <option value="system" data-i18n="lang.system">Automático</option>
+        <option value="es">Español</option>
+        <option value="en">English</option>
+      </select>
+    </label>
+  </header>
+
+  <nav class="drawer" id="movil" hidden aria-label="Secciones" data-i18n-aria="nav.sections">
+    <a href="/#como-funciona" data-i18n="nav.how">Cómo funciona</a>
+    <a href="/app/" data-i18n="nav.app">Explora la app</a>
+    <a href="/kindness-center/" data-i18n="nav.centers">Para centros</a>
+    <a href="/ayudar/" data-i18n="nav.donate">Cómo ayudar</a>
+    <a href="/registrar-sede/" data-i18n="application.nav">Registrar una sede</a>
+    <button class="ghost close-menu" type="button" data-i18n="menu.close">Cerrar menú</button>
+  </nav>
+  <p class="visually-hidden" id="menu-estado" role="status"></p>
+
+  <main id="contenido" tabindex="-1">
+    <header class="route-intro">
+      <h1 data-i18n="page.centers.title">Portal de centros</h1>
+      <p class="lead" data-i18n="page.centers.lead">Selecciona tu centro, publica sus necesidades y da seguimiento a las aportaciones.</p>
+      <nav class="route-links" aria-label="Opciones" data-i18n-aria="nav.sections">
+        <a href="/" data-i18n="nav.home">Inicio</a>
+        <a href="/ayudar/" data-i18n="nav.donate">Cómo ayudar</a>
+        <a href="/registrar-sede/" data-i18n="application.nav">Registrar una sede</a>
+      </nav>
+    </header>
+    <section class="access" id="acceso" tabindex="-1">
+      <div class="access-card">
+        <p class="pending-flag" data-i18n="access.flag">Cuenta Generosity</p>
+        <h2 data-i18n="account.title">Acceso de centros</h2>
+        <p class="lead" data-i18n="account.lead">Inicia sesión con tu cuenta Generosity para gestionar tus centros y solicitudes de sedes.</p>
+        <p id="account-status" role="status" aria-live="polite"></p>
+        <div class="account-actions">
+          <a id="account-sign-in" class="solid" target="_blank" rel="noopener" href="https://api.generosity.global/auth/sign-in?client=web&amp;locale=es" hidden data-i18n="auth.signIn">Iniciar sesión ↗</a>
+          <button id="account-sign-out" class="ghost" type="button" hidden data-i18n="auth.signOut">Cerrar sesión</button>
+          <button id="account-retry" class="ghost" type="button" data-i18n="auth.retry">Comprobar conexión</button>
+        </div>
+        <noscript>Para iniciar sesión necesitas JavaScript. / JavaScript is required to sign in.</noscript>
+        <p id="destino-previsto"></p>
+
+      </div>
+    </section>
+
+    <section class="workspace" id="center-workspace" hidden aria-labelledby="workspace-title">
+      <h2 id="workspace-title" data-i18n="staff.title">Portal de centros</h2>
+      <p data-i18n="staff.scope">Solo puedes gestionar los centros que tienes asignados.</p>
+      <p id="staff-status" role="status" aria-live="polite"></p>
+      <button type="button" id="staff-reload" data-i18n="staff.reload">Actualizar centros</button>
+      <button type="button" id="staff-retry" hidden data-i18n="staff.retry">Reintentar cambio pendiente</button>
+      <label for="staff-center" data-i18n="staff.center">Centro autorizado</label>
+      <select id="staff-center"></select>
+      <div id="staff-content" hidden>
+        <h3 data-i18n="staff.needs">Necesidades del centro</h3>
+        <div id="staff-needs" class="workspace-list"></div>
+        <div class="account-actions">
+          <button type="button" id="needs-prev" data-i18n="staff.prev">Anterior</button>
+          <button type="button" id="needs-next" data-i18n="staff.next">Siguiente</button>
+          <button type="button" id="need-new" data-i18n="staff.new">Nueva necesidad</button>
+        </div>
+        <form id="staff-need-form">
+          <fieldset id="staff-fields">
+            <legend data-i18n="staff.editor">Editar necesidad</legend>
+            <p data-i18n="staff.translations">Escribe al menos un título y una descripción en español o inglés. No incluyas datos privados de beneficiarios.</p>
+            <label for="need-title-es">Título (español)</label><input id="need-title-es" maxlength="4000">
+            <label for="need-title-en">Title (English)</label><input id="need-title-en" maxlength="4000">
+            <label for="need-description-es">Descripción (español)</label><textarea id="need-description-es" maxlength="4000"></textarea>
+            <label for="need-description-en">Description (English)</label><textarea id="need-description-en" maxlength="4000"></textarea>
+            <label><input id="need-goods" type="checkbox" checked> <span data-i18n="staff.goods">Bienes</span></label>
+            <label><input id="need-time" type="checkbox"> <span data-i18n="staff.time">Tiempo</span></label>
+            <label><input id="need-urgent" type="checkbox"> <span data-i18n="staff.urgent">Urgente</span></label>
+            <label for="need-quantity" data-i18n="staff.quantity">Cantidad requerida (opcional)</label><input id="need-quantity" type="number" min="1" max="1000000" step="1">
+            <label for="need-unit" data-i18n="staff.unit">Unidad (p. ej., paquetes)</label><input id="need-unit" maxlength="60" aria-describedby="need-partial-hint">
+            <p id="need-partial-hint" data-i18n="staff.partialHint">Cada persona puede aportar una parte. Para 10 cajas de 10 piezas, escribe cantidad 10 y unidad «cajas de 10 piezas». Si aceptas piezas sueltas, usa cantidad 100 y unidad «piezas».</p>
+            <label for="need-expires" data-i18n="staff.expires">Último día (opcional, UTC)</label><input id="need-expires" type="date">
+            <label for="need-status" data-i18n="staff.status">Estado</label>
+            <select id="need-status"><option value="draft" data-i18n="staff.draft">Borrador</option><option value="published" data-i18n="staff.published">Publicada</option><option value="closed" data-i18n="staff.closed">Cerrada</option></select>
+            <button type="submit" data-i18n="staff.save">Guardar cambios</button>
+          </fieldset>
+        </form>
+        <h3 data-i18n="staff.contributions">Aportaciones</h3>
+        <div id="staff-contributions" class="workspace-list"></div>
+        <div class="account-actions"><button type="button" id="contributions-prev" data-i18n="staff.prev">Anterior</button><button type="button" id="contributions-next" data-i18n="staff.next">Siguiente</button></div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <a class="brand" href="/#inicio">
+      <img src="/assets/logo.png" alt="generosity" width="1046" height="585">
+    </a>
+    <p data-i18n="footer.tag">Pequeñas acciones, gran impacto. Una iniciativa del Instituto de Deberes y Derechos Humanos.</p>
+    <nav data-i18n-aria="footer.nav" aria-label="Pie">
+      <a href="https://api.generosity.global/legal/privacy?locale=es" data-legal="privacy" data-i18n="footer.privacy">Aviso de privacidad</a>
+      <a href="https://api.generosity.global/legal/terms?locale=es" data-legal="terms" data-i18n="footer.terms">Términos y condiciones</a>
+      <a href="/#contacto" data-i18n="footer.contact">Instituto y contacto</a>
+    </nav>
+  </footer>
+
+  <script src="/portal.js?v=ff9d9d18178d"></script>
+</body>
+</html>

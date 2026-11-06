@@ -1,4 +1,4 @@
-const { test, expect } = require('@playwright/test');
+const { test, expect } = require('./browser');
 const { readFileSync } = require('fs');
 
 const api = 'https://api.generosity.global';
@@ -21,8 +21,7 @@ function center() {
     address: { es: 'Calle publicada 12', en: 'Published street 12' },
     categories: ['alimentos', '<script>bad</script>'],
     contact: { phone: '+52 55 1200 4400', email: 'centro@example.org', website: 'https://example.org/centro', map: 'javascript:alert(1)' },
-    latitude: 19.432601,
-    longitude: -99.133201,
+    coordinates: { latitude: 19.432601, longitude: -99.133201 },
     verificationStatus: 'government-certified',
     household: secret,
     roster: ['SECRET-ROSTER'],
@@ -72,6 +71,10 @@ async function install(page, options) {
     const path = url.pathname;
     if (path === '/auth/session') return route.fulfill({ json: { user: state.user, csrf_token: 'csrf-test' } });
     if (route.request().method() === 'GET' && (path.startsWith('/api/v1/centers') || path.startsWith('/api/v1/needs') || path === '/api/v1/me/contributions')) state.gets.push(route.request().method() + ' ' + path + url.search);
+    if (path === '/api/v1/sync/catalog') {
+      state.gets.push('GET ' + path + url.search);
+      return state.centerStatus === 200 && state.needStatus === 200 ? route.fulfill({ json: { catalog: { schemaVersion: 1, centers: state.centers.data.map(c => ({ ...c, needs: state.needs.data.filter(n => n.centerId === c.id).map(n => ({ ...n, status: 'active' })) })) } } }) : route.fulfill({ status: 503 });
+    }
     if (path === '/api/v1/centers') return state.centerStatus === 200 ? route.fulfill({ json: state.centers }) : route.fulfill({ status: state.centerStatus, body: 'unavailable' });
     if (path === '/api/v1/needs') return state.needStatus === 200 ? route.fulfill({ json: state.needs }) : route.fulfill({ status: state.needStatus, body: 'unavailable' });
     if (path === '/api/v1/centers/' + centerId) return route.fulfill({ json: center() });
@@ -93,10 +96,10 @@ async function install(page, options) {
 async function openDiscovery(page) {
   await page.goto('/');
   await page.locator('#idioma').selectOption('es');
-  const help = page.locator('a[href="#descubrir"]:visible', { hasText: 'Cómo ayudar' });
+  const help = page.locator('a[href="/ayudar/"]:visible', { hasText: 'Cómo ayudar' });
   if (await help.count() === 0) await page.locator('.menu').click();
-  await page.locator('a[href="#descubrir"]:visible', { hasText: 'Cómo ayudar' }).first().click();
-  await expect(page).toHaveURL(/#descubrir$/);
+  await page.locator('a[href="/ayudar/"]:visible', { hasText: 'Cómo ayudar' }).first().click();
+  await expect(page).toHaveURL(/\/ayudar\/$/);
   await expect(page.locator('#center-workspace')).toBeHidden();
 }
 
@@ -104,45 +107,46 @@ test('help opens the published catalog and does not submit or open the staff pat
   const state = await install(page);
   await page.setViewportSize({ width: 390, height: 800 });
   await openDiscovery(page);
-  await expect(page.locator('#necesidades .illustration-label').first()).toHaveText('Ilustración, no es el catálogo');
+  await expect(page.locator('#necesidades')).toHaveCount(0);
   await expect(page.locator('#discovery-results .need, #discovery-results .illustration-label')).toHaveCount(0);
   await expect(page.locator('#discovery-results')).toContainText('Centro Norte');
   await expect(page.locator('#discovery-results img, #discovery-results script')).toHaveCount(0);
   await expect(page.locator('#discovery-results')).not.toContainText(secret);
   await expect(page.locator('#discovery-results')).not.toContainText('government-certified');
   await expect(page.locator('#discovery-results')).not.toContainText(coordinate);
-  await expect(page.locator('a[href*="kindness-center"]')).toHaveCount(0);
+  await expect(page.locator('#staff-need-form')).toHaveCount(0);
   await expect(page.locator('#center-workspace')).toBeHidden();
   expect(state.posts).toEqual([]);
   expect(state.gets.some(item => item.indexOf('page=2') !== -1 || item.indexOf('page=3') !== -1)).toBe(false);
   const before = state.gets.length;
   await page.locator('#discovery-query').fill('zzzz');
-  await expect(page.locator('#discovery-results')).toContainText('Nada en esta página coincide');
+  await expect(page.locator('#discovery-results')).toContainText('No encontramos coincidencias');
   expect(state.gets.length).toBe(before);
   await page.locator('#idioma').selectOption('en');
-  await expect(page.locator('#discovery-title')).toHaveText('Help with what is published');
+  await expect(page.locator('#discovery-title')).toHaveText('Find a place to help');
 });
 
 test('home does not fetch the catalog', async ({ page }) => {
   const state = await install(page);
   await page.goto('/');
   await page.locator('#idioma').selectOption('es');
-  await expect(page.locator('#account-status')).toContainText('invitado');
+  await expect(page.locator('#account-status')).toHaveCount(0);
   expect(state.gets).toEqual([]);
 });
 
 test('catalog failure keeps the search and does not present illustration cards as current needs', async ({ page }) => {
   const state = await install(page);
   await openDiscovery(page);
+  await page.locator('#discovery-needs-tab').click();
   await expect(page.locator('#discovery-results')).toContainText('Mantas de invierno');
   await page.locator('#discovery-query').fill('Norte');
   state.centerStatus = 503;
-  await page.locator('#discovery-centers-next').click();
-  await expect(page.locator('#discovery-status')).toContainText('El catálogo no está disponible');
+  await page.locator('#discovery-refresh').click();
+  await expect(page.locator('#discovery-status')).toContainText('No pudimos cargar el directorio');
   await expect(page.locator('#discovery-query')).toHaveValue('Norte');
   await expect(page.locator('#discovery-results')).toHaveText('');
   await expect(page.locator('#discovery-results .need, #discovery-results .illustration-label')).toHaveCount(0);
-  await expect(page.locator('#necesidades .illustration-label').first()).toHaveText('Ilustración, no es el catálogo');
+  await expect(page.locator('#necesidades')).toHaveCount(0);
   expect(state.gets.filter(item => item.startsWith('GET /api/v1/centers?page=3'))).toEqual([]);
 });
 
@@ -236,7 +240,7 @@ test('signing in restores the draft and does not submit it', async ({ page }) =>
   await page.addInitScript(id => sessionStorage.setItem('generosity.discovery.intent', JSON.stringify({
     needId: id, method: 'goods', quantity: '2', minutes: '', activity: '', availability: '', notes: 'Borrador privado'
   })), needId);
-  await page.goto('/');
+  await page.goto('/ayudar/');
   await page.locator('#idioma').selectOption('es');
   await expect(page).toHaveURL(new RegExp('#necesidad/' + needId + '$'));
   await expect(page.locator('#discovery-quantity')).toHaveValue('2');
@@ -315,7 +319,8 @@ test('discovery does not overflow at 320 and keeps controls tappable', async ({ 
   await expect(page.locator('#discovery-results')).toContainText('Centro Norte');
   const overflow = await page.evaluate(() => Math.max(document.documentElement.scrollWidth, document.body.scrollWidth) - document.documentElement.clientWidth);
   expect(overflow).toBeLessThanOrEqual(1);
-  const box = await page.locator('#discovery-submit').boundingBox();
+  await expect(page.locator('#discovery-offer')).toBeHidden();
+  const box = await page.locator('#discovery-locate').boundingBox();
   expect(box.height).toBeGreaterThanOrEqual(44);
   expect(box.width).toBeGreaterThanOrEqual(44);
 });
@@ -339,4 +344,110 @@ test('a remote pause blocks new offers but preserves cancellation and recovers o
   await expect(page.locator('#discovery-history-list')).toContainText('Cancelada');
   expect(state.posts).toHaveLength(1);
   expect(state.posts[0].body.action).toBe('cancel');
+});
+
+test('location is opt-in, sorts the complete catalog and keeps coordinates out of storage and API requests', async ({ page }) => {
+  await page.addInitScript(() => {
+    window.locationRequests = 0;
+    Object.defineProperty(navigator, 'geolocation', { value: { getCurrentPosition(success) {
+      window.locationRequests++;
+      success({ coords: { latitude: 21.88, longitude: -102.29 } });
+    } } });
+  });
+  const near = { ...center(), id: 'aguascalientes', name: { es: 'Centro Águilas', en: 'Eagles center' }, address: { es: 'Colonia Jardín, Aguascalientes' }, coordinates: { latitude: 21.881, longitude: -102.291 } };
+  const missing = { ...center(), id: 'sin-ubicacion', name: { es: 'Sin coordenadas' }, coordinates: null };
+  const invalid = { ...center(), id: 'invalid-location', coordinates: { latitude: 99, longitude: -99 } };
+  const rows = Array.from({ length: 24 }, (_, i) => ({ ...center(), id: 'centro-' + i }));
+  const state = await install(page, { centers: pageOf([...rows, near, missing, invalid]) });
+  await page.goto('/ayudar/');
+  await page.locator('#idioma').selectOption('es');
+  await expect(page.locator('#discovery-count')).toHaveText('27 resultados');
+  expect(await page.evaluate(() => window.locationRequests)).toBe(0);
+  await expect(page.locator('.center-pin')).toHaveCount(25);
+  await expect(page.locator('#discovery-offer')).toBeHidden();
+  await expect(page.locator('#discovery-sign-in')).toBeHidden();
+  await page.locator('.center-pin[title="Centro Águilas"]').click();
+  await expect(page.locator('#discovery-results article[aria-current=true]')).toContainText('Centro Águilas');
+  await page.locator('#discovery-locate').click();
+  await expect(page.locator('#discovery-results article').first()).toContainText('Centro Águilas');
+  await expect(page.locator('#discovery-results article').first()).toContainText('km');
+  await expect(page.locator('#discovery-location-status')).toContainText('ordenados por cercanía');
+  expect(await page.evaluate(() => window.locationRequests)).toBe(1);
+  await page.locator('#discovery-query').fill('jardin');
+  await expect(page.locator('#discovery-count')).toHaveText('1 resultado');
+  await expect(page.locator('.center-pin')).toHaveCount(1);
+  expect(state.gets.filter(p => p.includes('sync/catalog'))).toHaveLength(1);
+  expect(state.gets.join(' ')).not.toMatch(/21\.88|102\.29/);
+  expect(await page.evaluate(() => JSON.stringify(localStorage) + JSON.stringify(sessionStorage))).not.toMatch(/21\.88|102\.29/);
+  await page.locator('#discovery-results button').click();
+  await expect(page.locator('.leaflet-popup')).toHaveCount(1);
+  await expect(page.locator('.leaflet-popup')).toContainText('Centro Águilas');
+  await expect(page.locator('#discovery-results article')).toHaveAttribute('aria-current', 'true');
+  await page.locator('#discovery-location-clear').click();
+  await expect(page.locator('#discovery-results')).not.toContainText('km');
+});
+
+test('denied location and unavailable map leave public search and hosted login usable', async ({ page }) => {
+  await page.addInitScript(() => {
+    Object.defineProperty(navigator, 'geolocation', { value: { getCurrentPosition(_, fail) { fail({ code: 1 }); } } });
+  });
+  await install(page);
+  await page.route(api + '/auth/session', route => route.fulfill({ status: 503 }));
+  await page.route('**/assets/vendor/leaflet/leaflet.js', route => route.abort());
+  await page.goto('/ayudar/');
+  await page.locator('#idioma').selectOption('es');
+  await page.locator('#discovery-locate').click();
+  await expect(page.locator('#discovery-location-status')).toContainText('No se permitió');
+  await expect(page.locator('#discovery-map-status')).toContainText('seguir usando la lista');
+  await expect(page.locator('#account-sign-in')).toBeVisible();
+  await expect(page.locator('#account-sign-in')).toHaveAttribute('target', '_blank');
+  await expect(page.locator('#discovery-results')).toContainText('Centro Norte');
+  await page.locator('#discovery-query').fill('Calle publicada');
+  await expect(page.locator('#discovery-results')).toContainText('Centro Norte');
+});
+
+test('a location timeout can be retried and never invents a position', async ({ page }) => {
+  await page.addInitScript(() => {
+    window.locationRequests = 0;
+    Object.defineProperty(navigator, 'geolocation', { value: { getCurrentPosition(_, fail, options) {
+      window.locationRequests++; window.locationTimeout = options.timeout; fail({ code: 3 });
+    } } });
+  });
+  await install(page);
+  await page.goto('/ayudar/');
+  await page.locator('#idioma').selectOption('es');
+  await page.locator('#discovery-locate').click();
+  await expect(page.locator('#discovery-location-status')).toContainText('No pudimos obtener');
+  await expect(page.locator('#discovery-location-clear')).toBeHidden();
+  await expect(page.locator('#discovery-results')).not.toContainText('km');
+  await page.locator('#discovery-locate').click();
+  expect(await page.evaluate(() => [window.locationRequests, window.locationTimeout])).toEqual([2, 10000]);
+});
+
+test('a center opens its published needs, with the offer hidden until a need is selected', async ({ page }) => {
+  const state = await install(page);
+  await page.goto('/ayudar/#centro/' + centerId);
+  await page.locator('#idioma').selectOption('es');
+  await expect(page.locator('#discovery-offer')).toBeHidden();
+  await page.locator('.related-need', { hasText: 'Mantas de invierno' }).click();
+  await expect(page.locator('#discovery-offer')).toBeVisible();
+  await page.locator('#discovery-quantity').fill('2');
+  await expect(page.locator('#discovery-sign-in')).toHaveAttribute('target', '_blank');
+  expect(state.posts).toEqual([]);
+});
+
+test('local live preview reads only the public relay and never checks or proxies a private session', async ({ page }) => {
+  const privateRequests = [];
+  page.on('request', request => { if (request.url().startsWith(api)) privateRequests.push(request.url()); });
+  const html = readFileSync(require('path').join(__dirname, '../ayudar/index.html'), 'utf8')
+    .replace('<head>', '<head><meta name="generosity-public-api-origin" content="/__public">');
+  await page.route('**/ayudar/', route => route.fulfill({ contentType: 'text/html', body: html }));
+  await page.route('**/__public/api/v1/sync/catalog?**', route => route.fulfill({ json: { catalog: { schemaVersion: 1, centers: [] } } }));
+  await page.goto('/ayudar/');
+  await page.locator('#idioma').selectOption('es');
+  await expect(page.locator('#account-status')).toContainText('sitio publicado');
+  await expect(page.locator('#account-sign-in')).toBeVisible();
+  await expect(page.locator('#account-retry')).toBeHidden();
+  await expect(page.locator('#discovery-count')).toHaveText('0 resultados');
+  expect(privateRequests).toEqual([]);
 });

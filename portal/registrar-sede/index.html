@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta name="generosity-api-origin" content="https://api.generosity.global">
+  <meta name="generosity-channel" content="production">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Registra tu sede · Generosity</title>
+  <meta name="description" content="Generosity, una iniciativa del Instituto de Deberes y Derechos Humanos para conectar personas, organizaciones y causas. Registra tu sede y coordina la ayuda de tu comunidad.">
+  <link rel="icon" href="/assets/favicon.png?v=f175327256ea" type="image/png" sizes="192x192">
+  <link rel="apple-touch-icon" href="/assets/apple-touch-icon.png?v=9416dc4d1257">
+  <link rel="stylesheet" href="/styles.css?v=464ef25fdd65">
+</head>
+<body data-page="registration">
+  <a class="skip" href="#contenido" data-i18n="skip">Saltar al contenido</a>
+
+  <header class="topbar">
+    <a class="brand" href="/#inicio">
+      <img src="/assets/logo.png" alt="generosity" width="1046" height="585">
+    </a>
+    <nav class="topnav" aria-label="Secciones" data-i18n-aria="nav.sections">
+      <a href="/#como-funciona" data-i18n="nav.how">Cómo funciona</a>
+      <a href="/app/" data-i18n="nav.app">Explora la app</a>
+      <a href="/kindness-center/" data-i18n="nav.centers">Para centros</a>
+    </nav>
+    <div class="topactions">
+      <a class="ghost" href="/ayudar/" data-i18n="nav.donate">Cómo ayudar</a>
+      <a class="solid" href="/registrar-sede/" data-i18n="application.nav">Registrar una sede</a>
+    </div>
+    <button class="menu" type="button" aria-expanded="false" aria-controls="movil" data-i18n="menu.label">Menú</button>
+    <label class="lang">
+      <span class="visually-hidden" id="idioma-label" data-i18n="lang.label">Idioma</span>
+      <select id="idioma" aria-labelledby="idioma-label">
+        <option value="system" data-i18n="lang.system">Automático</option>
+        <option value="es">Español</option>
+        <option value="en">English</option>
+      </select>
+    </label>
+  </header>
+
+  <nav class="drawer" id="movil" hidden aria-label="Secciones" data-i18n-aria="nav.sections">
+    <a href="/#como-funciona" data-i18n="nav.how">Cómo funciona</a>
+    <a href="/app/" data-i18n="nav.app">Explora la app</a>
+    <a href="/kindness-center/" data-i18n="nav.centers">Para centros</a>
+    <a href="/ayudar/" data-i18n="nav.donate">Cómo ayudar</a>
+    <a href="/registrar-sede/" data-i18n="application.nav">Registrar una sede</a>
+    <button class="ghost close-menu" type="button" data-i18n="menu.close">Cerrar menú</button>
+  </nav>
+  <p class="visually-hidden" id="menu-estado" role="status"></p>
+
+  <main id="contenido" tabindex="-1">
+    <header class="route-intro">
+      <h1 data-i18n="page.registration.title">Registra tu sede</h1>
+      <p class="lead" data-i18n="page.registration.lead">Comparte los datos de tu organización y consulta el avance de tu solicitud.</p>
+      <nav class="route-links" aria-label="Opciones" data-i18n-aria="nav.sections">
+        <a href="/" data-i18n="nav.home">Inicio</a>
+        <a href="/ayudar/" data-i18n="nav.donate">Cómo ayudar</a>
+        <a href="/kindness-center/" data-i18n="centers.access">Ir al acceso de centros</a>
+      </nav>
+    </header>
+    <section class="registration" id="registrar-sede" tabindex="-1" aria-labelledby="registration-title">
+      <div class="registration-copy">
+        <p class="where" data-i18n="application.eyebrow">Para organizaciones</p>
+        <h2 id="registration-title" data-i18n="application.title">Tu organización ayuda. Hagamos que más personas la encuentren.</h2>
+        <p class="lead" data-i18n="application.lead">Solicita el registro de una sede. Si tienen varias, envía una solicitud por cada ubicación.</p>
+        <ol class="registration-steps">
+          <li data-i18n="application.step1">Cuéntanos quiénes son y qué apoyo ofrecen.</li>
+          <li data-i18n="application.step2">Envía la solicitud desde tu cuenta Generosity con correo verificado.</li>
+          <li data-i18n="application.step3">Recibe un folio y consulta tu solicitud pendiente de revisión.</li>
+        </ol>
+        <p class="fine" data-i18n="application.private">Los datos de esta solicitud son privados. No publiques datos de personas beneficiarias ni domicilios protegidos. El envío no publica la sede, no la verifica ni concede permisos para administrarla.</p>
+        <p><a class="ghost" href="/kindness-center/" data-i18n="application.existing">Ya tengo un centro asignado</a></p>
+      </div>
+      <div>
+        <p><a href="https://api.generosity.global/legal/privacy?locale=es" data-legal="privacy" data-i18n="footer.privacy">Aviso de privacidad</a></p>
+        <form class="registration-form" id="site-registration" novalidate>
+          <h3 data-i18n="application.formTitle">Registrar una sede</h3>
+          <p class="fine" data-i18n="application.required">Los campos marcados con * son obligatorios. Puedes preparar el formulario antes de iniciar sesión; conserva esta pestaña abierta.</p>
+          <fieldset id="registration-fields">
+            <legend data-i18n="application.organization">1. Tu organización</legend>
+            <label for="application-organization_name" data-i18n="application.organization_name">Nombre de la organización *</label>
+            <input id="application-organization_name" name="organization_name" autocomplete="organization" maxlength="200" required>
+            <label for="application-activities" data-i18n="application.activities">Tipo de centro y actividades *</label>
+            <textarea id="application-activities" name="activities" rows="3" maxlength="2000" required aria-describedby="application-activities-hint"></textarea>
+            <p id="application-activities-hint" class="fine" data-i18n="application.activitiesHint">Por ejemplo: comedor comunitario, albergue, atención de salud o capacitación. Describe a quiénes apoyan.</p>
+            <h4 data-i18n="application.location">2. La sede</h4>
+            <label for="application-site_name" data-i18n="application.site_name">Nombre de la sede *</label>
+            <input id="application-site_name" name="site_name" maxlength="200" required>
+            <div class="pair">
+              <label for="application-country"><span data-i18n="application.country">País *</span><input id="application-country" name="country" autocomplete="country-name" maxlength="100" required></label>
+              <label for="application-city"><span data-i18n="application.city">Ciudad o localidad *</span><input id="application-city" name="city" autocomplete="address-level2" maxlength="100" required></label>
+            </div>
+            <label for="application-address" data-i18n="application.address">Dirección de atención al público (omite ubicaciones protegidas)</label>
+            <textarea id="application-address" name="address" rows="2" autocomplete="street-address" maxlength="500" aria-describedby="application-location-hint"></textarea>
+            <label for="application-google_maps_url" data-i18n="application.google_maps_url">Enlace de Google Maps</label>
+            <input id="application-google_maps_url" name="google_maps_url" type="url" maxlength="2048" placeholder="https://maps.app.goo.gl/…" pattern="https://.+" aria-describedby="application-location-hint">
+            <div class="pair">
+              <label for="application-latitude"><span data-i18n="application.latitude">Latitud</span><input id="application-latitude" name="latitude" type="number" min="-90" max="90" step="any" placeholder="19.350000" aria-describedby="application-location-hint"></label>
+              <label for="application-longitude"><span data-i18n="application.longitude">Longitud</span><input id="application-longitude" name="longitude" type="number" min="-180" max="180" step="any" placeholder="-99.160000" aria-describedby="application-location-hint"></label>
+            </div>
+            <p id="application-location-hint" class="fine" data-i18n="application.locationHint">Comparte la ficha del lugar en Google Maps. Para las coordenadas, selecciona el punto exacto de entrada y copia primero la latitud y después la longitud; no uses las del centro de la pantalla. Si no las conoces o la ubicación es protegida, deja estos datos vacíos. Si indicas coordenadas, escribe ambas.</p>
+            <label for="application-claimed_center_id" data-i18n="application.claimed_center_id">Identificador de un centro ya publicado (opcional)</label>
+            <input id="application-claimed_center_id" name="claimed_center_id" maxlength="100" pattern="[a-z0-9][a-z0-9-]*" autocomplete="off" spellcheck="false" aria-describedby="application-claim-hint">
+            <p id="application-claim-hint" class="fine" data-i18n="application.claimHint">Solo si pides representar un centro que ya está en el catálogo. Escribe su identificador, por ejemplo comedor-centro. Enviar la solicitud no modifica esa ficha, no la publica y no concede acceso para administrarla.</p>
+            <h4 data-i18n="application.contact">3. Contacto de la organización</h4>
+            <label for="application-contact_name" data-i18n="application.contact_name">Tu nombre *</label>
+            <input id="application-contact_name" name="contact_name" autocomplete="name" maxlength="160" required>
+            <label for="application-contact_role" data-i18n="application.contact_role">Cargo o relación con la organización *</label>
+            <input id="application-contact_role" name="contact_role" autocomplete="organization-title" maxlength="160" required>
+            <p class="fine" data-i18n="application.emailHint">Usaremos el correo verificado de tu cuenta para contactarte sobre esta solicitud.</p>
+            <details class="registration-optional">
+              <summary data-i18n="application.optional">Agregar datos opcionales</summary>
+              <label for="application-legal_name" data-i18n="application.legal_name">Nombre legal</label><input id="application-legal_name" name="legal_name" maxlength="200">
+              <label for="application-region" data-i18n="application.region">Estado, provincia o región</label><input id="application-region" name="region" autocomplete="address-level1" maxlength="100">
+              <label for="application-postal_code" data-i18n="application.postal_code">Código postal</label><input id="application-postal_code" name="postal_code" autocomplete="postal-code" maxlength="20">
+              <label for="application-phone" data-i18n="application.phone">Teléfono con código de país</label><input id="application-phone" name="phone" type="tel" autocomplete="tel" maxlength="40">
+              <label for="application-website" data-i18n="application.website">Sitio web oficial</label><input id="application-website" name="website" type="url" autocomplete="url" maxlength="2048" placeholder="https://" pattern="https?://.+">
+            </details>
+            <label class="choice"><input name="representation_confirmed" type="checkbox" required><span data-i18n="application.representation">Declaro que represento a esta organización. *</span></label>
+            <label class="choice"><input name="contact_consent" type="checkbox" required><span data-i18n="application.consent">Autorizo que Generosity guarde estos datos para revisar la solicitud y contactarme sobre ella. *</span></label>
+          </fieldset>
+          <p id="registration-session" class="fine"></p>
+          <div class="account-actions" id="registration-access">
+            <a class="ghost" id="registration-sign-in" target="_blank" rel="noopener" href="https://api.generosity.global/auth/sign-in?client=web&amp;locale=es" data-i18n="application.signIn">Iniciar sesión ↗</a>
+            <a class="ghost" id="registration-create" target="_blank" rel="noopener" href="https://api.generosity.global/auth/sign-in?client=web&amp;locale=es&amp;screen=register" data-i18n="application.create">Crear cuenta ↗</a>
+          </div>
+          <p id="registration-errors" class="field-error" role="alert" tabindex="-1"></p>
+          <button id="registration-submit" class="solid" type="submit" disabled data-i18n="application.submit">Enviar solicitud</button>
+          <p id="registration-result" class="result" role="status" tabindex="-1"></p>
+          <noscript>Activa JavaScript para enviar la solicitud. / Enable JavaScript to submit your application.</noscript>
+        </form>
+        <div id="registration-history" hidden>
+          <h3 data-i18n="application.history">Mis solicitudes de sedes</h3>
+          <p class="fine" data-i18n="application.historyNote">Esta lista muestra el estado que devuelve el servidor. No hay un plazo de respuesta publicado y esta página no envía un aviso. Retirar una solicitud conserva el folio y las notas ya registradas; no hay un plazo de conservación publicado.</p>
+          <button type="button" id="registration-refresh" class="ghost" data-i18n="application.refresh">Actualizar solicitudes</button>
+          <p id="registration-history-status" role="status"></p>
+          <p id="registration-action-status" role="status" tabindex="-1"></p>
+          <button type="button" id="registration-action-retry" class="ghost" hidden data-i18n="application.retry_action">Reintentar la misma acción</button>
+          <ul id="registration-list"></ul>
+          <div class="account-actions"><button type="button" id="registration-prev" data-i18n="staff.prev">Anterior</button><button type="button" id="registration-next" data-i18n="staff.next">Siguiente</button></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="access" id="acceso" tabindex="-1">
+      <div class="access-card">
+        <p class="pending-flag" data-i18n="access.flag">Cuenta Generosity</p>
+        <h2 data-i18n="account.title">Acceso de centros</h2>
+        <p class="lead" data-i18n="account.lead">Inicia sesión con tu cuenta Generosity para gestionar tus centros y solicitudes de sedes.</p>
+        <p id="account-status" role="status" aria-live="polite"></p>
+        <div class="account-actions">
+          <a id="account-sign-in" class="solid" target="_blank" rel="noopener" href="https://api.generosity.global/auth/sign-in?client=web&amp;locale=es" hidden data-i18n="auth.signIn">Iniciar sesión ↗</a>
+          <button id="account-sign-out" class="ghost" type="button" hidden data-i18n="auth.signOut">Cerrar sesión</button>
+          <button id="account-retry" class="ghost" type="button" data-i18n="auth.retry">Comprobar conexión</button>
+        </div>
+        <noscript>Para iniciar sesión necesitas JavaScript. / JavaScript is required to sign in.</noscript>
+        <p id="destino-previsto"></p>
+
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <a class="brand" href="/#inicio">
+      <img src="/assets/logo.png" alt="generosity" width="1046" height="585">
+    </a>
+    <p data-i18n="footer.tag">Pequeñas acciones, gran impacto. Una iniciativa del Instituto de Deberes y Derechos Humanos.</p>
+    <nav data-i18n-aria="footer.nav" aria-label="Pie">
+      <a href="https://api.generosity.global/legal/privacy?locale=es" data-legal="privacy" data-i18n="footer.privacy">Aviso de privacidad</a>
+      <a href="https://api.generosity.global/legal/terms?locale=es" data-legal="terms" data-i18n="footer.terms">Términos y condiciones</a>
+      <a href="/#contacto" data-i18n="footer.contact">Instituto y contacto</a>
+    </nav>
+  </footer>
+
+  <script src="/portal.js?v=ff9d9d18178d"></script>
+</body>
+</html>

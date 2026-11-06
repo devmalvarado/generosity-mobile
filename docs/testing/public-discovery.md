@@ -1,29 +1,45 @@
 # Public center and need discovery
 
-A partial landing slice was exercised locally on 2026-11-03. It is not deployed
-and it does not complete any task in
-`openspec/changes/add-web-participation-and-sharing`. Browser fixtures are not
-a production HTTPS/CORS round trip.
+The center/need slice was first exercised on 2026-11-03 and revised into the
+map-based `/ayudar/` route on 2026-11-05. It is not deployed. The focused tasks
+in section 7 of `add-web-participation-and-sharing` have local evidence; broader
+participation and real HTTPS/session acceptance remain pending.
 
 ## What the page does
 
-The help action and the cause-card actions open `#descubrir`. That hash reads
-existing `GET /api/v1/centers` and `GET /api/v1/needs`. Direct records use
-`#centro/{id}` and `#necesidad/{id}`. The API origin and channel come from the
-page meta tags. Public reads use credentials and `cache: no-store`, and they do
-not mutate.
+The help action opens `/ayudar/`; legacy hashes redirect there. Direct records
+use `#centro/{id}` and `#necesidad/{id}`. The directory reads the existing bounded
+`GET /api/v1/sync/catalog?category_version=2&progress_version=1` snapshot, with
+credential-free public requests. Record details still use `GET /api/v1/centers/{id}`
+and `GET /api/v1/needs/{id}`. A center links to its published needs, and an offer
+form is shown only after opening a need. Server capacity validation remains final.
 
-Home does not fetch the catalog. An invalid `#centro/` or `#necesidad/` prefix
-does not fetch. A direct 404 stays missing and does not open another record.
-If either list request fails, the results are cleared, the search text is kept,
-and the illustration cards in `#necesidades` are not presented as current needs.
-Those cards remain labeled "Illustration, not the published catalog" /
-"Ilustración, no es el catálogo". An empty published page is stated as empty.
+Home does not fetch the catalog. Invalid record ids do not fetch. A direct 404
+stays missing. Catalog failure clears results/markers, preserves search and offers
+Refresh; illustrative landing cards are never substituted. List pagination is
+local (12 records) and search covers the entire snapshot, including addresses.
+The API bounds snapshots to 2,000 centers / 10,000 needs; its 503 limit is handled
+as unavailable, not as a silently truncated result.
 
-Rendering uses text, not HTML. It allowlists localized name, title, description
-and address; string categories; a validated phone, email and HTTPS website;
-quantities; expiry; and `updatedAt`. It does not render coordinates, household
-or roster fields, recipient or user ids, or a verification badge.
+Leaflet 1.9.4 and OSM tiles show only valid finite center coordinate pairs.
+Invalid/missing locations remain accessible in the list. Pins open safe DOM
+popups; list actions select the corresponding marker. The list has a keyboard
+shortcut so users need not tab through every marker. Location is requested only
+on a button press, uses a 10-second timeout, sorts all centers by straight-line
+distance and never sends visitor coordinates to the API or browser storage.
+OSM receives tile-region requests and connection metadata. Denial, timeout, missing
+Leaflet and tile failure leave manual search and center links available.
+
+Rendering uses text, not HTML, and allowlists localized public text/contact data.
+Household, roster, recipient and user ids are not rendered. Coordinates drive
+markers but are not printed in cards or share exports. Only `officially_verified`
+produces the verification mark; a different arbitrary status cannot mint a badge.
+
+Hosted sign-in remains reachable when session checks fail, opens a separate tab
+and retains the draft. It never submits automatically. The loopback preview relay
+reads only public catalog/detail paths, never sessions or writes. Local previews
+state that account access happens on the published site; real HTTPS cookie/CORS
+acceptance remains a release check.
 
 A goods or time offer is prepared only against the open published need. Submit
 requires a verified session, CSRF, a UUID `Idempotency-Key`, and
@@ -96,3 +112,24 @@ attribution, analytics, QR images, native app links and reviewer selection are
 not part of this browser slice. The subsequent [participation API increment](participation-api.md)
 records partial local work for sections 4–6 on 2026-11-04; it does not supply the
 missing browser/native journeys or deployment. No complete task was checked.
+
+## Map and access follow-up — 2026-11-05
+
+Added Chromium/WebKit cases for optional location and distance sorting across more
+than one page; accent-insensitive address search; missing/invalid coordinates;
+pin/list selection; denied/timed-out location; unavailable renderer; hosted access
+after a session failure; center → need → draft; and public-only local preview.
+Existing CSRF, idempotency, capacity, account-switch, history/cancellation and
+private-field assertions are retained. Automated tests stub OSM tiles.
+
+Manual local review loaded all **171 public centers** through the relay and real
+OSM cartography for Aguascalientes. No account was created, no live offer was sent,
+and the user's physical location was not requested. No hosting changes were made.
+
+Final automated result: **135 passed, 1 skipped** (the existing duplicate WebKit
+screenshot). The later cross-page marker-selection assertion also passes in both
+browsers after waiting for the popup fade transition. Strict validation passes
+for both affected OpenSpec changes; the generated-brand check and preview package
+self-check pass. The local relay returns 404 for private API/file paths and rejects
+POST requests. The real hosted sign-in link opens the published page with its
+login/register controls; no credentials, consent or live submission was used.

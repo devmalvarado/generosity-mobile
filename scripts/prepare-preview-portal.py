@@ -49,14 +49,19 @@ if __name__ == '__main__':
         print('Preview portal configuration checks passed.')
     else:
         source = ROOT / 'portal'
-        html = configure((source / 'index.html').read_text(), args.api_origin)
+        # Validate the API even if the inventory later contains only showcase pages.
+        configure((source / 'index.html').read_text(), args.api_origin)
         output = source / 'build/preview'
-        output.mkdir(parents=True, exist_ok=True)
-        for name in ['styles.css', 'portal.js']:
-            shutil.copyfile(source / name, output / name)
-        shutil.copytree(source / 'assets', output / 'assets', dirs_exist_ok=True)
-        for page in source.glob('*.html'):
-            if page.name != 'index.html':
-                shutil.copyfile(page, output / page.name)
-        (output / 'index.html').write_text(html)
+        if output.exists():
+            shutil.rmtree(output)  # Generated package must not retain files from an older inventory.
+        for name in (source / 'public-files.txt').read_text().splitlines():
+            path = Path(name)
+            if path.is_absolute() or '..' in path.parts:
+                raise ValueError('Public file must stay inside the portal: ' + name)
+            destination = output / path
+            destination.parent.mkdir(parents=True, exist_ok=True)
+            if path.suffix == '.html' and 'name="generosity-api-origin"' in (source / path).read_text():
+                destination.write_text(configure((source / path).read_text(), args.api_origin))
+            else:
+                shutil.copyfile(source / path, destination)
         print(output)
