@@ -3,6 +3,7 @@ import io
 import os
 import secrets
 from pathlib import Path
+from urllib.error import HTTPError
 from urllib.request import Request, urlopen
 
 from publish_api import connect, require_env, delete_if_present
@@ -82,28 +83,38 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST' || !hash_equals('__DEPLOY_VALUE__', $_
 $private = dirname(__DIR__) . '/private';
 $cache = $private . '/bootstrap/cache/config.php';
 $backup = $private . '/.deployments/portal-cors-RELEASE/config.php';
+$step = 'backup';
 try {
     if (is_file($cache) && (!copy($cache, $backup) || !chmod($backup, 0600))) { throw new RuntimeException(); }
-    require $private . '/vendor/autoload.php';
-    $app = require $private . '/bootstrap/app.php';
-    $app->make(Illuminate\\Contracts\\Console\\Kernel::class)->bootstrap();
-    if (Illuminate\\Support\\Facades\\Artisan::call('config:cache') !== 0 || !chmod($cache, 0600)) { throw new RuntimeException(); }
+    $step = 'config-cache';
+    $command = 'cd ' . escapeshellarg($private) . ' && /opt/alt/php84/usr/bin/php artisan config:cache 2>&1';
+    exec($command, $output, $code);
+    if ($code !== 0 || !chmod($cache, 0600)) { throw new RuntimeException(); }
+    $step = 'verify';
+    if (function_exists('opcache_invalidate')) { opcache_invalidate($cache, true); opcache_invalidate($private . '/config/cors.php', true); }
     $configuration = require $cache;
     if (!in_array('X-Generosity-Channel', $configuration['cors']['allowed_headers'], true)) { throw new RuntimeException(); }
     echo 'portal_cors_ready';
 } catch (Throwable $error) {
     if (is_file($backup)) { copy($backup, $cache); chmod($cache, 0600); }
     http_response_code(500);
-    echo 'portal_cors_failed';
+    echo 'portal_cors_failed:' . $step . ':' . get_class($error);
 } finally { unlink(__FILE__); }
 '''.replace('__DEPLOY_VALUE__', token).replace('RELEASE', release)
     try:
         replace(ftp, target, Path('backend/config/cors.php').read_bytes())
         ftp.storbinary('STOR /public_html/' + helper, io.BytesIO(script.encode()))
         request = Request('https://api.generosity.global/' + helper, method='POST', data=b'', headers={'X-Deploy-Token': token})
-        with urlopen(request, timeout=60) as response:
-            if response.read() != b'portal_cors_ready':
-                raise RuntimeError('CORS cache refresh did not confirm success')
+        try:
+            with urlopen(request, timeout=60) as response:
+                if response.read() != b'portal_cors_ready':
+                    raise RuntimeError('CORS cache refresh did not confirm success')
+        except HTTPError as error:
+            body = error.read(200).decode('utf-8', errors='replace')
+            # Only the helper's fixed stage/class diagnostic is safe for action logs.
+            if body.startswith('portal_cors_failed:') and all(c.isalnum() or c in ':_\\' for c in body):
+                print(body)
+            raise
     finally:
         delete_if_present(ftp, '/public_html/' + helper)
     print('Updated portal CORS configuration; backup: ' + backup)
