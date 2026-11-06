@@ -47,12 +47,6 @@ The landing SHALL present entry links instead of embedding forms or account cont
 ### Requirement: Public Interactive App Tour
 The public `/app/` tour SHALL present all 34 reference screens in Spanish/English, light/dark appearance and mobile navigation with shared branding. It SHALL explain current and planned capabilities without specification names, task IDs or repository-document links. Tour actions SHALL remain in memory without authentication, API mutations, location requests or payments. The tour SHALL distinguish exploration from operational actions and link back to real participation routes.
 
-The production host SHALL serve the tour entry module and its imports with a JavaScript MIME type accepted by browsers. Release acceptance SHALL verify their HTTP content types and actual rendered navigation on the published domain; file existence and a 200 response alone are insufficient. Module references SHALL use current asset versions.
-
-#### Scenario: Public hosting executes the tour modules
-- **WHEN** a visitor opens `/app/` on the published domain
-- **THEN** the map, navigation and screen inventory render and changing screens works without a module MIME error
-
 #### Scenario: Visitor explores a capability
 - **WHEN** a visitor selects a screen, changes language or opens a simulated action
 - **THEN** the tour renders the corresponding localized screen without an API mutation, credential request or technical specification link
@@ -60,6 +54,13 @@ The production host SHALL serve the tour entry module and its imports with a Jav
 #### Scenario: Static release includes dedicated routes
 - **WHEN** the portal is packaged for production or the isolated preview environment
 - **THEN** its explicit public-file inventory includes every route and required asset, excludes repository/private files, and preview API metadata is applied to every operational route
+
+### Requirement: Public Tour Module Delivery
+The production host SHALL serve the tour entry module and its imports with a JavaScript MIME type accepted by browsers. Release acceptance SHALL verify their HTTP content types and actual rendered navigation on the published domain; file existence and a 200 response alone are insufficient. Module references SHALL use current asset versions.
+
+#### Scenario: Public hosting executes the tour modules
+- **WHEN** a visitor opens `/app/` on the published domain
+- **THEN** the map, navigation and screen inventory render and changing screens works without a module MIME error
 
 ### Requirement: Center-Scoped Workspace
 Only authenticated staff with an active backend-issued center assignment SHALL access that center's private workspace. The workspace SHALL show the active center and allow switching only among assigned centers. Missing or revoked access SHALL block reads and writes. Sign-out SHALL clear private views and account-scoped browser state; account registration SHALL NOT grant a center role.

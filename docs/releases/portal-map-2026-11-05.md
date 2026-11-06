@@ -81,3 +81,24 @@ New local web/API work appeared during publication and was not included in the
 tagged revision. It remains in the working tree for its own validation/release.
 Future `main` releases must include these route changes before publishing older
 portal sources again; the explicit release tags do not merge the branch.
+
+## Interactive tour hosting fix
+
+The initial `/app/` publication returned HTTP 200 for `.mjs` files but served them
+as `text/plain`. Browser module execution was blocked; the earlier route check
+did not establish that the tour rendered. This was a delivery configuration
+issue, not a server capacity limitation.
+
+Release `portal-release-2026-11-05.3` (`61e1976`) renames the three modules to
+`.js`, updates imports/versioned references and the publication manifest, and
+adds a deployment check for browser-compatible JavaScript content types.
+[The corrected deployment succeeded](https://github.com/devmalvarado/generosity-mobile/actions/runs/42148851690).
+The independent in-memory tour behavior is unchanged.
+
+Four targeted Chromium/WebKit tests passed (inventory plus all 34 screens in
+both languages, responsive views and isolated interactions). After publication,
+all 34 screens were opened on the live domain; blood filtering reduced the map
+to one matching center, and language/appearance controls worked. The final map
+and navigation rendered correctly. Physical phones were not retested for this fix.
+
+![Working published interactive tour](portal-tour-live-2026-11-05.png)
