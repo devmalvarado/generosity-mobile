@@ -1,10 +1,11 @@
 # Release channel and feature-control verification
 
-This is a dated evidence log on branch `codex/backend-php-mysql`. The initial local
+This is a dated evidence log, initially on branch `codex/backend-php-mysql`. The initial local
 checks below ran on 2026-11-03 without hosting deployment, real-user flag changes,
 physical-device updates or provider credentials. Later sections record preview
-deployment and catalog import on November 6 and reconciliation on November 8.
-The initial unavailable-API observations are historical, not current preview status.
+deployment and catalog import on November 6, reconciliation on November 8 and
+the subsequent main integration/production publication. The unavailable-API
+observations below are historical; see the final section for the current release.
 
 ## Backend
 
@@ -188,3 +189,26 @@ Validation: `openspec validate --all --strict --no-interactive` passed all 18
 items; local file links in the 14 updated documents and whitespace checks passed.
 The task inventory now has 11 active changes, 161 checked tasks and 388 unchecked
 tasks. This is a checklist count, not a percentage of product functionality.
+
+## Main integration and production publication — 2026-11-08
+
+The owner authorized integration and publication after the reconciliation above.
+Main now includes the preview development work with environment separation intact.
+Production API/migrations and portal are published. `/api/v1/features` returns 200
+with channel `production`; the five connected design groups are enabled, while
+the other five design groups and all nine participation flags remain off.
+The three foundation controls remain on. The production administrator allowlist
+has no entries; assigning one still requires an approved account.
+
+The private backup and post-deployment comparison verified unchanged accounts,
+catalog, needs, contributions, memberships, social identity and `.env`. No preview
+accounts, activity or credentials were copied to production. The local suite and
+isolated hosted-preview lifecycle passed, including partial progress, staff-only
+confirmation/receipt, history, idempotent replay and cancellation. Production web
+checks were read-only and covered the published routes, live map/catalog, auth
+entry, legal pages and tour.
+
+See [integration evidence](../releases/integration-2026-11-08.md) for pipeline runs,
+backup location, test counts, native checks and remaining distribution limits.
+This supersedes the earlier production 404/undeployed observations, without
+closing provider setup, physical-device acceptance or the real-center pilot.

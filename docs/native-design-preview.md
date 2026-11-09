@@ -2,7 +2,7 @@
 
 The 34 routes committed on `codex/visual-design-map` (`5a5bd63`) are rebuilt as **SwiftUI and Jetpack Compose**, with shared Kotlin fixture/session logic. No WebView, bundled HTML or external prototype site is used.
 
-The design area now uses the existing mobile backend connection for supported destinations. Unsupported destinations remain session-only design fixtures. The screen inventory labels each destination **Connected / Conectado** or **Design / Diseño**; it does not imply that every roadmap feature is implemented.
+The design area now uses the existing mobile backend connection for supported destinations. Unsupported destinations remain session-only design fixtures. Preview labels each inventory destination **Connected / Conectado** or **Design / Diseño**. Production lists only connected routes and omits those technical labels; it does not expose fixture destinations.
 
 ## Connected destinations
 
@@ -26,11 +26,11 @@ iPad, and validated in the Android emulator. The preview catalog copy retained
 test data and yielded 172 centers and three needs. See
 [release evidence](testing/release-controls.md) and [device evidence](testing/native-design-preview.md).
 
-Read-only probes on 2026-11-08 returned 200 for preview `/api/v1/features`,
-`/api/v1/campaigns`, `/api/v1/occurrences` and `/api/v1/meals`; participation lists
-were empty. Equivalent production endpoints returned 404. Production navigation
-still requires feature API rollout/activation. No permission is inferred from a
-missing endpoint, and available empty lists do not certify working participation.
+The November 8 integration published the production API/migrations and portal,
+superseding the earlier 404 probes. Production enables discovery, contributions,
+impact, communication and account design groups. Other design groups and all
+participation flags remain off. See [release evidence](releases/integration-2026-11-08.md).
+Available endpoints or empty lists do not certify a complete participation flow.
 
 ## Controls and coverage
 
@@ -51,7 +51,7 @@ In `/admin/features`, an allowlisted verified operator can select Off, Test acco
 | `preview.account` | profile, settings; phone and sample deletion confirmations |
 | `preview.payments` | donate, tax (checkout and issuance always disabled) |
 
-In the **iOS and Android Preview channels**, the connected design is the main interface after the existing welcome/sign-in/guest entry. There is no exploration button or exit to the old layout, including after relaunch. With no effective groups, the app shows a loading/unavailable state with retry instead of granting routes or restoring the old layout. Production variants retain **Explore design preview / Explorar diseño de prueba** when a group is enabled. The inventory shows only enabled routes. Cross-group navigation requires its target flag. Connected discovery also requires the contributions preview group before showing enabled offer controls; domain contribution permissions remain authoritative. Connected welcome uses the real registration/sign-in flow. Enabling all groups makes the entire 34-route tour available.
+In **iOS and Android, both production and Preview**, the connected design is the main interface after the existing welcome/sign-in/guest entry. There is no exploration button or exit to the old layout, including after relaunch. With no effective groups, the app shows a loading/unavailable state with retry instead of granting routes or restoring the old layout. Production additionally restricts inventory and direct navigation to connected routes, even if every design group is enabled. The inventory shows only enabled routes. Cross-group navigation requires its target flag. Connected discovery also requires the contributions preview group before showing enabled offer controls; domain contribution permissions remain authoritative. Connected welcome uses the real registration/sign-in flow. Enabling all groups makes the entire 34-route tour available only in Preview or the isolated debug harness.
 
 ## Remaining fixture interactions
 

@@ -125,11 +125,15 @@ context: |
   API/site, isolated database, migrations, administrator and cron/queue were
   deployed on 2026-11-06. Mail stays isolated and push is off. Preview Maps has a
   dedicated restricted Android key; preview OAuth/Firebase/APNs remain pending.
-  Production feature/participation endpoints still returned 404 on 2026-11-08;
-  the equivalent preview reads returned 200. Production rollout and full
+  Production API/migrations and portal were integrated into main and published on
+  2026-11-08, preserving private configuration and existing business records.
+  Feature reads return 200; only discovery, contributions, impact, communication
+  and account design groups are enabled. Payments/participation remain disabled.
+  Production administrator assignment, physical/store distribution and full
   cross-platform account/flag/provider acceptance remain open.
   add-native-design-preview implements 34 SwiftUI/Compose routes behind those
-  flags and is the default interface in both Preview variants after welcome.
+  flags and is the default interface after welcome in both channels. Production
+  restricts navigation to connected routes; Preview retains the full prototype.
   Updated builds were installed on the physical iPhone 14 Pro, iPhone 17 and iPad,
   and Android was validated in an emulator. Independent iPad layout, physical
   Android, accessibility and provider acceptance remain open. Preview received
@@ -139,8 +143,8 @@ context: |
   state; unsupported destinations retain isolated fixtures. Neither fixtures nor
   a successful build complete their underlying product specs. Public-web
   discovery and the interactive tour are published. Broader participation has
-  partial API/browser work with migrations deployed only to preview; production
-  rollout, operational configuration, mobile contracts and end-to-end acceptance
+  partial API/browser work with migrations now deployed to both environments;
+  activation, operational configuration, mobile contracts and end-to-end acceptance
   remain pending. Consult dated evidence in docs/testing/release-controls.md and
   docs/testing/native-design-preview.md instead of earlier undeployed snapshots.
 

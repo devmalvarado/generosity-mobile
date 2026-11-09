@@ -148,8 +148,10 @@ Preview application deployment on 2026-11-06 used revision `ffe94f8`:
   passed nine emulator checks and live map/detail/progress inspection. iPad launch
   was user-confirmed; independent tablet layout acceptance is still open. See
   [native distribution and signing limits](testing/native-design-preview.md).
-- Equivalent production feature/participation reads still returned 404 on
-  November 8. Preview deployment does not establish production rollout.
+- The initial November 8 production 404 observations were superseded by the
+  subsequent API/migration and portal deployment. Five connected design groups
+  are enabled in production; payments/participation remain off. See the
+  [integration evidence](releases/integration-2026-11-08.md).
 
 Update by publishing a new `public/` plus `private/` tree, keeping this `APP_KEY`
 and database, then `migrate --force` and rebuilding the config/route/view caches.
@@ -171,14 +173,16 @@ Firebase/APNs remain unconfigured. A preview physical-device sign-in was not run
    remains off until an isolated project/keys are configured. No credential files
    belong in Git or public_html. Additional Maps signing certificates require
    their own approved restrictions.
-4. For production release, migrate/deploy the backend before updated clients so
-   flag endpoints exist. Publish clients after the backend checks pass. Configure
-   approved administrators separately. Existing apps still receive write rejection
+4. The production API/migrations and portal were published on November 8 after
+   a private backup and preservation checks. The portal workflow waits for the
+   feature API before upload. Integrated native builds and simulator checks are
+   recorded in the release report; physical/store distribution is pending.
+   Configure approved production administrators separately. Existing apps still receive write rejection
    when a flag is off even though their old UI cannot display the new flag state.
 5. Preview API journeys and native distribution were checked on 2026-11-06.
    Remaining provider setup, a preview physical-device
-   sign-in and production publication are still open. Do not archive the change yet.
+   sign-in and integrated physical/store distribution are still open. Do not archive the change yet.
 
 ## Native design exploration
 
-The additional `preview.*` flags control ten groups of session-only native design views. All start off and do not grant real account or center permissions. See [native design preview](native-design-preview.md) for the 34-route inventory, activation and isolation rules.
+The additional `preview.*` flags control ten native design groups. They start off and do not grant account or center permissions. Five connected groups are enabled in production after the November 8 release; unsupported fixture routes stay inaccessible there. Preview retains the full prototype under its own grants. See [native design preview](native-design-preview.md) for the 34-route inventory, activation and isolation rules.

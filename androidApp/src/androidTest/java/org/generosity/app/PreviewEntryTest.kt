@@ -2,16 +2,14 @@ package org.generosity.app
 
 import androidx.compose.ui.test.*
 import androidx.compose.ui.test.junit4.v2.createAndroidComposeRule
-import org.junit.Assume.assumeTrue
 import org.junit.Rule
 import org.junit.Test
 
 class PreviewEntryTest {
     @get:Rule val ui = createAndroidComposeRule<MainActivity>()
 
-    @Test fun previewLaunchAndRecreationKeepConnectedDesign() {
-        assumeTrue(BuildConfig.CHANNEL == "preview")
-        // Read-only acceptance against the preview API; discovery must be enabled for guests.
+    @Test fun launchAndRecreationKeepConnectedDesign() {
+        // Read-only acceptance against the configured API; discovery must be enabled for guests.
         val guest = hasText("Continue as a guest") or hasText("Continuar como invitado")
         ui.waitUntil(30_000) {
             ui.onAllNodes(guest).fetchSemanticsNodes().isNotEmpty() ||
@@ -25,6 +23,11 @@ class PreviewEntryTest {
             ui.onNodeWithTag("preview-pin-c1").assertDoesNotExist()
             ui.onNodeWithTag("preview-screens").performClick()
             ui.onNodeWithText("Exit design preview").assertDoesNotExist()
+            if (BuildConfig.CHANNEL != "preview") {
+                listOf("saved", "reviews", "achievements", "events", "donate").forEach {
+                    ui.onNodeWithTag("preview-route-$it").assertDoesNotExist()
+                }
+            }
             ui.onNodeWithText("Salir del diseño").assertDoesNotExist()
             ui.onNodeWithTag("preview-route-map").performScrollTo().performClick()
             if (pass == 0) ui.activityRule.scenario.recreate()

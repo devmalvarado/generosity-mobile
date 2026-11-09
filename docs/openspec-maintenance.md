@@ -161,3 +161,21 @@ credit, concrete support cards and four standalone legal pages built from canoni
 ES/EN notices. Browser regression: 71 passed, one intentional duplicate-screenshot
 skip in Chromium/WebKit; all pages include no-JavaScript coverage. This does not
 complete real-catalog onboarding, live contribution pilots or native/store acceptance.
+
+
+## 2026-11-08 integration and production publication
+
+Integrated main and preview development after checkpoint `9c6c578`. Production
+now defaults to connected native routes, while Preview retains the complete
+prototype. Updated the native-design delta and recorded task 6.12 with shared
+route/revocation checks. Split release-controls task 4.3 into evidenced API/portal
+publication and still-open production administrator/physical/store distribution.
+Foundation task 16.13c now reflects deployed flags while retaining real authenticated
+production workspace acceptance. Updated the project context, foundation audit,
+channel/design documentation and dated evidence without rewriting earlier runs.
+
+The API/migrations and portal were published after preservation checks; local,
+preview HTTPS, browser and simulator evidence is recorded in
+[the integration report](releases/integration-2026-11-08.md). No incomplete change
+was archived. Provider setup, a real-center pilot and full device/accessibility
+acceptance remain pending rather than being implied by a successful deployment.

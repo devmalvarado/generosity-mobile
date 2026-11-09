@@ -143,3 +143,33 @@ Installed **Generosity Pruebas 0.1.0 (3)** on the user's **iPad (6th generation)
 - The user initially reported an opening error, then confirmed the app works after accepting the developer trust prompt on the iPad. This is user-confirmed launch acceptance, not independent visual acceptance.
 
 Device Hub reports screen sharing requires iOS 27 or later, and QuickTime's UI inspection timed out. No iPad screenshots, portrait/landscape layout acceptance, GPS, account or push checks are claimed. The existing native material fallback applies on iPadOS 17; no product source changes or production deployment were needed.
+
+
+## 2026-11-08: Main integration and production default
+
+The integrated production apps now enter the connected design after welcome,
+without the optional exploration button. Production inventory/direct navigation
+are restricted to service-connected routes even if every preview group is granted.
+Preview retains the 34-screen prototype and its separate identity/API/storage.
+
+- Shared: 94 JVM cases passed, including production route and revocation checks.
+- Android API 34: four isolated design and two connected-design UI cases passed.
+  The latter verify entered partial offers, real need IDs, durable offline retry,
+  history and group revocation. Live production and Preview entry/recreation cases
+  also passed (two additional tests). An initial live failure was emulator DNS;
+  cold boot with the Mac's DNS resolved it without changing application behavior.
+- iOS 27: 19 unit/bridge/localization/map/push-signal cases and four design UI
+  cases passed, including all 34 isolated routes. Normal production entry/relaunch
+  passed against the published API with mock destinations absent. Preview entry/
+  relaunch and missing-grant behavior also passed (three additional entry cases).
+- Both Android APKs and both iOS simulator configurations built. The live maps
+  were inspected with the published catalog: [Android](screenshots/integration-2026-11-08/android-production-map.png)
+  and [iOS](screenshots/integration-2026-11-08/ios-production-map.png). iOS had no
+  recent simulator GPS fix and displayed retry/address-search guidance.
+- Backend and portal were published with only the five connected production
+  groups enabled. See [integration evidence](../releases/integration-2026-11-08.md)
+  for backups, preserved records, lifecycle checks and APK artifacts.
+
+The iPhone 14 Pro, iPhone 17 and iPad were unavailable to `devicectl` during this
+run. They were not updated. No new physical GPS/provider/push or assistive-technology
+acceptance is claimed; store builds and remaining provider configuration stay open.

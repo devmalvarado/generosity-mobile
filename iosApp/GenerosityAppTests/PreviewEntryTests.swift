@@ -1,9 +1,8 @@
 import XCTest
 
-#if PREVIEW_APP_TESTS
 final class PreviewEntryTests: XCTestCase {
-    // Read-only acceptance against the preview API with discovery enabled.
-    func testPreviewStartsInConnectedDesignAndKeepsItAfterRelaunch() {
+    // Read-only acceptance against the configured API with discovery enabled.
+    func testConnectedDesignStartsDirectlyAndKeepsItAfterRelaunch() {
         continueAfterFailure = false
         let app = XCUIApplication()
         app.launchArguments = ["-generosity.entered", "YES", "-AppleLanguages", "(en-US)", "-generosity.languageMode", "system"]
@@ -15,12 +14,18 @@ final class PreviewEntryTests: XCTestCase {
             app.buttons["preview-screens"].tap()
             XCTAssertTrue(app.buttons["preview-route-map"].waitForExistence(timeout: 5))
             XCTAssertFalse(app.buttons["Exit design preview"].exists)
+            #if !PREVIEW_APP_TESTS
+            for route in ["saved", "reviews", "achievements", "events", "donate"] {
+                XCTAssertFalse(app.buttons["preview-route-" + route].exists)
+            }
+            #endif
             app.buttons["Close"].tap()
             XCTAssertTrue(app.tabBars.buttons["Map"].exists)
             app.terminate()
         }
     }
 
+    #if PREVIEW_APP_TESTS
     func testMissingGroupsCannotRestoreOldLayoutOrGrantSections() {
         continueAfterFailure = false
         let app = XCUIApplication()
@@ -35,5 +40,5 @@ final class PreviewEntryTests: XCTestCase {
         XCTAssertFalse(app.textFields["connected-query"].exists)
         XCTAssertFalse(app.buttons["preview-screens"].exists)
     }
+    #endif
 }
-#endif
