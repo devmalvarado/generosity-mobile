@@ -1,9 +1,14 @@
 # Participation API
 
-Local PHPUnit evidence from 2026-11-04. It is not a production round trip,
-and it does not complete any task in
+Local PHPUnit evidence from 2026-11-04. It is not a production round trip and does
+not complete the broad participation tasks in
 `openspec/changes/add-web-participation-and-sharing`. Migration
-`2026_11_03_000003_create_participation_tables` has not been deployed.
+`2026_11_03_000003_create_participation_tables` was subsequently included in the
+November 6 preview deployment; it is not recorded as deployed to production.
+November 8 probes returned empty campaign/occurrence/meal lists with HTTP 200 in
+preview and 404 in production. This establishes preview read availability, not
+operational configuration or end-to-end participation acceptance. See
+[deployment evidence](release-controls.md).
 
 `ParticipationContractTest` and the OpenAPI route-coverage assertion passed
 on the isolated `generosity_test` database: 12 tests, 314 assertions. The
@@ -62,8 +67,11 @@ no row exists.
 
 ## Not verified
 
-The landing does not call these routes. No browser, Android, or iOS journey
-was run. No last-seat race was run. No production database was migrated.
+On 2026-11-05, intercepted browser fixtures called the public campaign,
+occurrence, meal and need-progress reads, plus owner inbox and preference
+reads. They did not call opportunity preview, outcome updates, or any gated
+write. Those fixtures are not a deployed browser, Android, or iOS journey.
+No last-seat race was run. No production database was migrated.
 Payments, provider login, QR images, native app links, mail, push delivery,
 points, retention purges, and reviewer selection remain unavailable.
 

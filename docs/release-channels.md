@@ -19,8 +19,9 @@ implementation and checks; adding a database row alone cannot enable new behavio
 
 Set `FEATURE_ADMIN_IDS` to a comma-separated deployment-approved user-ID allowlist,
 refresh Laravel configuration, sign in and visit `/admin/features?locale=es`.
-A center membership does not make someone a feature administrator. No real account
-has been assigned this permission by this code change. The panel requires a reason,
+A center membership does not make someone a feature administrator. The preview
+deployment assigned its synthetic tester as administrator (see below); production
+administrator assignment remains a separate rollout step. The panel requires a reason,
 uses optimistic versions and records `feature.changed` in `operator_audits`.
 
 Clients read `/api/v1/features` (anonymous) or `/api/v1/me/features` (verified
@@ -42,7 +43,8 @@ Paused native outbox entries keep their original key/body and retry on later syn
 | iOS auth client | `ios` | `ios-preview` |
 | Native callback prefix | `org.generosity.app.{android,ios}` | `org.generosity.app.preview.{android,ios}` |
 
-The new preview URLs are targets to provision, not currently deployed endpoints.
+The preview origins were provisioned on 2026-11-06. The preview API and portal
+were deployed the same day from revision `ffe94f8`. Production was not changed.
 Distinct native IDs isolate preferences, caches, queued operations and iOS keychain
 service. Production retains its existing ID/service, so its persisted data stays
 in place. There is no in-app toggle to reuse a session against another environment.
@@ -87,26 +89,95 @@ continues to target production.
 
 ## Backend deployment sequence
 
-1. Provision preview HTTPS API and web origins, a separate `*_preview` database and
-   user, separate application storage, APP_KEY and cron/queue context. Start from
-   `backend/.env.preview.example`; never copy production user or beneficiary data.
-2. Run migrations on that database. Preview startup rejects a production database
+### Hosting provisioned on 2026-11-06
+
+- Separate sites: `api-preview.generosity.global` and `preview.generosity.global`.
+  Their authoritative DNS records resolve to the hosting account, and HTTPS
+  certificate validation passed for both origins. Existing production DNS records
+  were not edited.
+- PHP 8.4 is selected for the preview API site. The CLI binary
+  `/opt/alt/php84/usr/bin/php` reports 8.4.27.
+- Database: `u643005321_gen_preview`; exclusive user: `u643005321_genpreview`.
+  The owner created and saved its password privately. hPanel shows no remote
+  MySQL access rules; `Cualquier host` is not enabled. Configure `DB_HOST=localhost`.
+  Application authentication succeeded on 2026-11-06. The password is not recorded here.
+- SSH key `generosity-preview-deploy-2026-11-06` was added and tested against
+  `u643005321@145.223.77.153:65002`, with strict host-key verification. Its public
+  fingerprint is `SHA256:k2fykIcGcv6K+pwJ9KqRAxoIkeLlM0PGtF18Ba+W9Jk`.
+  The durable local key is `~/.ssh/id_ed25519_generosity_preview`, outside Git.
+  Hostinger SSH access belongs to the whole hosting account, including production;
+  the owner explicitly authorized that scope. This is not a preview-only OS user.
+
+Preview application deployment on 2026-11-06 used revision `ffe94f8`:
+
+- Private tree `domains/api-preview.generosity.global/private`, web root
+  `public_html` only. `APP_KEY` was generated once and is not recorded here.
+- Database login as `u643005321_genpreview` on `u643005321_gen_preview` at
+  `localhost` succeeded. Migrations ran with `migrate --force`; none are pending.
+  `migrate:fresh` was not used.
+- Cached config: channel `preview`, session domain null, mail `log`,
+  `LOG_LEVEL=debug`, push off. `auth:check-portal`, route cache and view cache passed.
+- Both preview cron scripts run every minute. After `.env` existed they drained an
+  empty queue and found no due scheduled commands. They do not send external mail.
+  Their private logs are mode 600 and capped at 200k on this server only.
+- At initial provisioning, synthetic tester `preview.tester@generosity.global` (user id 1) was the only
+  feature administrator. Center `preview-center` and need `preview-need-kits`
+  are preview-only. The ten `preview.*` groups are `testers` for that id.
+  `contributions.create`, `needs.publish` and `needs.progress` stay `all`.
+  Checkout and fiscal issuance stay disabled.
+- No production data, SMTP settings or provider credentials were copied during
+  initial provisioning. The later explicitly authorized public catalog copy is
+  recorded below; production accounts and private activity were not copied.
+
+### Reconciled preview status — 2026-11-08
+
+- The one-time public catalog copy on November 6 added 171 production centers and
+  one need, leaving **172 centers and three needs** in preview. Existing test rows,
+  users, contributions and other tables were preserved. Backup and verification:
+  [catalog merge evidence](testing/release-controls.md#public-production-catalog-merged-into-preview--2026-11-06).
+- Public probes on November 8 returned 200 for preview features/campaigns/
+  occurrences/meals. All ten design groups and the returned participation flags
+  were effective for that anonymous preview request; this supersedes the initial
+  tester-only group snapshot above. It grants neither account/staff permissions nor
+  missing service/provider prerequisites. The participation lists were empty.
+- A dedicated **Generosity Android Preview Maps** key is configured for the
+  preview package and tested debug signer. Live Google cartography passed in the
+  emulator. Preview OAuth and Firebase/APNs remain unconfigured; push is off.
+- The connected design is the default after welcome on both Preview platforms.
+  Updated builds reached the physical iPhone 14 Pro/17 and iPad; Android Preview
+  passed nine emulator checks and live map/detail/progress inspection. iPad launch
+  was user-confirmed; independent tablet layout acceptance is still open. See
+  [native distribution and signing limits](testing/native-design-preview.md).
+- Equivalent production feature/participation reads still returned 404 on
+  November 8. Preview deployment does not establish production rollout.
+
+Update by publishing a new `public/` plus `private/` tree, keeping this `APP_KEY`
+and database, then `migrate --force` and rebuilding the config/route/view caches.
+Roll back by restoring the previous private tree and `public_html`, not by
+regenerating `APP_KEY` or running `migrate:fresh`. Preview Google/Apple sign-in and
+Firebase/APNs remain unconfigured. A preview physical-device sign-in was not run.
+
+### Remaining deployment steps
+
+1. Done on 2026-11-06 for preview. Later deploys still start from
+   `backend/.env.preview.example` and must not copy production user or beneficiary data.
+2. Done on the preview database. Preview startup still rejects a production database
    name/host, parent-domain cookies, production push project or external outgoing
-   mail. Preview mail defaults to the private `log` mailer; verification/recovery
-   links can be inspected in the preview application log. `array` (discarded) or
-   a local SMTP sink are also allowed. This is deliberate isolation,
-   not real external email delivery. Database users/network isolation remain hosting
-   configuration responsibilities; the application cannot provision them.
-3. Supply separately scoped OAuth/Maps/Firebase credentials as needed. Register
+   mail. Verification and recovery links stay in the private log. This is isolation,
+   not real email delivery.
+3. Supply separately scoped OAuth/Firebase/APNs credentials as needed; the tested
+   Android Preview Maps key is already configured. Register
    provider callbacks against the preview API, not the production callback. Push
    remains off until an isolated project/keys are configured. No credential files
-   belong in Git or public_html. No new provider credentials were created here.
+   belong in Git or public_html. Additional Maps signing certificates require
+   their own approved restrictions.
 4. For production release, migrate/deploy the backend before updated clients so
    flag endpoints exist. Publish clients after the backend checks pass. Configure
    approved administrators separately. Existing apps still receive write rejection
    when a flag is off even though their old UI cannot display the new flag state.
-5. Verify the isolated/live journeys and record evidence before archiving the
-   OpenSpec change. This increment does not authorize a hosting deployment.
+5. Preview API journeys and native distribution were checked on 2026-11-06.
+   Remaining provider setup, a preview physical-device
+   sign-in and production publication are still open. Do not archive the change yet.
 
 ## Native design exploration
 

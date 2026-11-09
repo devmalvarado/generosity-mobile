@@ -61,6 +61,7 @@
     <string name="map_load_delayed">El mapa está tardando en cargar. Puedes seguir consultando la lista de centros.</string>
     <string name="map_unavailable">El mapa no está disponible. Puedes seguir consultando la lista de centros.</string>
     <string name="retry">Reintentar</string>
+    <string name="design_unavailable">Las secciones no están disponibles en este momento. Vuelve a intentarlo.</string>
     <string name="offer_time">Quiero ofrecer mi tiempo</string>
     <string name="sign_in">Iniciar sesión</string>
     <string name="continue_anonymously">Continuar como invitado</string>

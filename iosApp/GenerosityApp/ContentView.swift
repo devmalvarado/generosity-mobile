@@ -4,6 +4,7 @@ import SharedBridge
 import Shared
 
 struct ContentView: View {
+    private static let usesNewDesign = Bundle.main.object(forInfoDictionaryKey: "GenerosityChannel") as? String == "preview"
     private static var demoCatalog: Bool {
         #if DEBUG
         return ProcessInfo.processInfo.arguments.contains("--demo-catalog") || Self.previewHarness
@@ -52,6 +53,28 @@ struct ContentView: View {
             connectedPreview(groups: PreviewSession.companion.groupNames)
         } else if !entered && !store.state.profile.isRegistered {
             WelcomeView(locale: locale, account: account, store: store, onGuest: { entered = true })
+        } else if Self.usesNewDesign {
+            if store.state.features.previewGroups.isEmpty {
+                VStack(spacing: GenSpace.lg) {
+                    BrandWordmark()
+                    if store.state.syncing {
+                        ProgressView(L10n.resource("sync_busy", locale: locale))
+                    } else {
+                        Text(L10n.resource("design_unavailable", locale: locale))
+                            .accessibilityIdentifier("preview-unavailable")
+                        Button(L10n.resource("retry", locale: locale)) { store.onResume() }
+                            .frame(minHeight: GenSize.iosTouch)
+                        if !store.state.profile.isRegistered {
+                            Button(L10n.resource("auth_sign_in", locale: locale)) { account.signIn(store: store) }
+                                .frame(minHeight: GenSize.iosTouch).disabled(account.busy)
+                            if account.failed { Text(L10n.resource("auth_failed", locale: locale)) }
+                        }
+                    }
+                }.padding(GenSpace.lg).frame(maxWidth: .infinity, maxHeight: .infinity)
+                    .background(GenPalette.background)
+            } else {
+                connectedPreview(groups: store.state.features.previewGroups)
+            }
         } else {
         TabView(selection: $tab) {
             discovery(showMap: true)
@@ -75,7 +98,7 @@ struct ContentView: View {
         }
         }
         .fullScreenCover(isPresented: $showPreview) {
-            connectedPreview(groups: store.state.features.previewGroups)
+            connectedPreview(groups: store.state.features.previewGroups, onClose: { showPreview = false })
                 .id(store.state.profile.id)
         }
         .onChange(of: store.state.profile.id) { _ in showPreview = false }
@@ -96,7 +119,7 @@ struct ContentView: View {
             }
         }
         .safeAreaInset(edge: .top) {
-            if !Self.previewHarness && !Self.connectedHarness && !store.state.features.previewGroups.isEmpty {
+            if !Self.usesNewDesign && !Self.previewHarness && !Self.connectedHarness && !store.state.features.previewGroups.isEmpty {
                 Button(locale.rawValue == "es" ? "Explorar diseño de prueba" : "Explore design preview") { showPreview = true }
                     .frame(minHeight: 44).accessibilityIdentifier("open-native-preview")
             }
@@ -107,7 +130,7 @@ struct ContentView: View {
                 }.padding(GenSpace.sm).background(GenPalette.surface)
             }
         }
-        .onChange(of: store.state.noticeDestinationId) { id in if id != nil && !showPreview && !Self.connectedHarness { showInbox = false; tab = 1 } }
+        .onChange(of: store.state.noticeDestinationId) { id in if id != nil && !Self.usesNewDesign && !showPreview && !Self.connectedHarness { showInbox = false; tab = 1 } }
         .onChange(of: store.state.profile.id) { _ in updatePush(); consumePush() }
         .onChange(of: store.state.preferences.urgentNeedsEnabled) { _ in updatePush() }
         .onChange(of: permissions.notificationsAuthorized) { _ in updatePush() }
@@ -144,13 +167,13 @@ struct ContentView: View {
         }
     }
 
-    private func connectedPreview(groups: [String]) -> some View {
+    private func connectedPreview(groups: [String], onClose: (() -> Void)? = nil) -> some View {
         NativePreview(groups: groups, language: locale.rawValue, connectedContent: { route, navigate in
             AnyView(ConnectedDesignScreen(route: route, navigate: navigate, groups: groups, store: store, account: account,
                 permissions: permissions, hasDeviceOrigin: hasDeviceOrigin, onSelectArea: { area in
                     hasDeviceOrigin = false; permissions.useManualArea(); store.setDiscoveryArea(area)
                 }).id(route))
-        }, onClose: { showPreview = false }).id(store.state.profile.id)
+        }, onClose: onClose).id(store.state.profile.id)
     }
 
     private func updatePush() { if !Self.demoCatalog { Task { await push.update(store: store) } } }

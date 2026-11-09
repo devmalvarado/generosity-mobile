@@ -1,10 +1,14 @@
 # Foundation implementation status
 
-## Current reconciliation — 2026-11-04
+## Current reconciliation — 2026-11-08
 
 This section and [tasks.md](tasks.md) are the current status. The dated snapshots
 below are historical evidence and can contain superseded implementation claims.
-See [this reconciliation's checks and task decisions](../../../docs/testing/openspec-closeout-2026-11-04.md).
+See the [November 4 closeout](../../../docs/testing/openspec-closeout-2026-11-04.md),
+[preview deployment/catalog evidence](../../../docs/testing/release-controls.md)
+and [native distribution evidence](../../../docs/testing/native-design-preview.md).
+This update reconciles those records and November 8 public endpoint probes; it
+does not claim a new functional or device acceptance run.
 Checked tasks certify only their stated scope; unchecked tasks can contain working
 code while retaining missing behavior or acceptance. Do not infer completion from
 artifact presence, a screen, a build or strict structural validation.
@@ -12,24 +16,32 @@ artifact presence, a screen, a build or strict structural validation.
 | Area | Implemented and evidenced | Remaining foundation work |
 | --- | --- | --- |
 | Shared/native integration | Both native roots use SharedBridge/shared Kotlin, real clocks, PHP catalog/account snapshots, protected account-bound storage and durable outbox. The new design reuses these connections. | Full sync cursors/tombstones, store migration/failure recovery, profile updates, rejected-draft correction and complete cross-device acceptance. |
-| Catalog and maps | Imported catalog and blood category, current/manual origins, Google Maps/MapKit, synchronized card/pin/detail selection and external map actions. Latest recorded release has 171 centers. | Import ownership/removals, Google failure/recovery acceptance, iOS lookup error cases, contact-handler acceptance and full directory rendering/editing. |
-| Contributions | Entered goods/time/personal forms, authoritative lifecycle, atomic reservation, cancellation, center fulfillment and self-reported provenance. Partial-goods progress is tested locally. | Native lifecycle/empty-state/unit-display coverage, editable rejected drafts, and deployment/device acceptance for progress. Monetary goals are separately gated. |
+| Catalog and maps | Imported catalog and blood category, current/manual origins, Google Maps/MapKit, synchronized card/pin/detail selection and external map actions. The November 6 copy verified 171 production centers and 172 preview centers with three needs, preserving test data. Android Preview has its restricted Maps key. | Import ownership/removals, Google failure/recovery acceptance, iOS lookup error cases, contact-handler acceptance and full directory rendering/editing. The public copy is not continuous synchronization. |
+| Contributions | Entered goods/time/personal forms, authoritative lifecycle, atomic reservation, cancellation, center fulfillment and self-reported provenance. Preview HTTP acceptance includes partial offers, center receipt and progress; Android Preview displayed current needs/progress. | Native lifecycle/empty-state/unit-display coverage, editable rejected drafts, production progress rollout and the complete native-to-center receipt/refresh journey. Monetary goals are separately gated. |
 | Identity and legal | Hosted registration/recovery/verification, native PKCE, protected sessions, Google web/physical-iOS checkpoints, published adult-only terms/privacy and operator access closure. | Remaining Android/native email/provider cases, Apple activation, Facebook, verified mobile contact, self-service deletion/erasure, unlinking and independent policy review. |
 | Notifications and visits | Owned urgent inbox, durable reads/preferences/visits, server outbox and actual Android emulator FCM receipt. | Reminder CRUD/scheduling, proximity alerts, explicit pending/received visit UI, signed iOS APNs and physical locked/terminated delivery. |
 | Center portal | Canonical static source and published assigned-center workspace with needs/contribution operations; public intake/tracker. | Session-expiry draft recovery, complete authoring/preview/audit/conflict UX, import authority, browser route, accessibility and full native-to-center acceptance. |
-| Design and localization | Central brand/tokens, ES/EN system/override settings, native themes, 34 native design routes and supported service bindings. | Complete language/error/date/form matrix, welcome illustration/legal actions and full screen-reader/size/device acceptance. Unsupported design destinations remain fixtures. |
+| Design and localization | Central brand/tokens, ES/EN system/override settings, native themes, 34 native design routes and supported service bindings. Preview defaults to the connected design; updated iPhone 14 Pro/17 builds were visually checked, iPad launch was user-confirmed and Android emulator checks passed. | Complete language/error/date/form matrix, welcome illustration/legal actions and full screen-reader/size/device acceptance, including independent iPad layout and physical Android checks. Unsupported design destinations remain fixtures. |
 
 ## Local work versus release
 
 - The API, center workspace, Google entry, SMTP/cron and urgent Android messaging
   have dated release evidence. The catalog count above is a recorded checkpoint,
   not a new production query.
-- Feature controls, isolated preview builds, connected design activation and
-  partial-progress distribution retain open deployment tasks. A separate preview
-  API/database/credentials has not been provisioned. The last recorded public
-  `/api/v1/features` probe returned 404 on 2026-11-04.
-- Public web discovery and participation APIs are partial local increments;
-  event/meal/campaign/assisted services are not a deployed, accepted product flow.
+- Preview API/site, isolated database, migrations, feature administrator and
+  cron/queue were deployed on November 6 from `ffe94f8`. Its feature API responds
+  and the new default native design is distributed to the requested Apple devices
+  and Android emulator. Preview mail remains isolated; push remains off. Dedicated
+  preview OAuth/Firebase/APNs setup and full account/flag/coexistence acceptance
+  remain open. Maps configuration is complete for the tested Android debug signer.
+- November 8 public probes returned 200 for preview features/campaigns/occurrences/
+  meals, with empty participation lists, and 404 for those production endpoints.
+  Production feature rollout remains pending; enabled preview layout/action flags
+  do not establish provider readiness, staff authority or a completed product flow.
+- Public web discovery, dedicated center/intake routes and the interactive tour
+  were published on November 5. Broader participation migrations exist in preview;
+  operational configuration, production rollout, mobile contracts and full
+  event/meal/campaign/assisted acceptance remain pending.
 - Apple membership/signing, phone delivery, authorized reviewers and a real-center
   pilot remain external inputs. The owner-authorized DEMO center is not that pilot.
 - The initial account access-block flag satisfies the owner's temporary scope;

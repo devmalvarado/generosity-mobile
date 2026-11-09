@@ -1,6 +1,13 @@
 # Native design preview validation
 
-Date: 2026-11-03. Source prototype: `codex/visual-design-map` at `5a5bd63`.
+Initial evidence: 2026-11-03. Source prototype: `codex/visual-design-map` at `5a5bd63`.
+This is a chronological log: each section's limits apply to that particular run.
+November 6 follow-ups below supersede initial claims of no preview activation or
+physical installation. Preview now defaults to the connected design on both
+platforms; iPhone 14 Pro/17 were inspected, iPad launch was user-confirmed and
+Android was checked in an emulator. Full device/accessibility/provider acceptance
+is still incomplete. Current hosting/catalog evidence is in
+[release-controls.md](release-controls.md).
 
 ## Automated cases
 
@@ -80,3 +87,59 @@ Manual public-catalog inspection uses **production debug builds** with the conne
 Screenshots are in `screenshots/connected-native-design-2026-11-04/`. API read probes returned 200 for health/centers/needs and 404 for features/campaigns/occurrences/meals. Normal feature activation and distribution remain pending; DEBUG launch visibility does not grant API permissions. Physical phones, real provider login, real push delivery and the full 34-screen tour were not repeated for this binding change.
 
 Final manual appearance checks: light/dark native controls are readable on both simulators; iOS MapKit also changes its cartography. The existing Android Google Maps adapter still uses daytime base tiles in dark appearance. Both simulators are left open in connected mode, with light appearance restored.
+
+## 2026-11-06: Refresh the installed Preview app
+
+The iPhone 16 Pro simulator still had an older compiled Preview app displaying the removed session banner, technical map footer and old navigation. Commit `1dd3498` is already an ancestor of `ffe94f8` on `codex/backend-php-mysql`; no merge or mobile source change was required. The preview API returned enabled design groups, so feature flags were not the cause of the stale UI.
+
+- Regenerated the shared bridge and Xcode project, then built `GenerosityPreview` / `Preview` in a fresh DerivedData directory. Verified bundle `org.generosity.app.preview`, channel `preview`, API `https://api-preview.generosity.global`, and absence of the production Firebase plist.
+- Installed the build on iPhone 16 Pro / iOS 18.6 and iPhone 17 / iOS 27.0 without uninstalling existing app data.
+- `NativePreviewTests.testFloatingMapSearchAndToolbarActions` and `testNativeTabBarWithoutSessionBanner` passed under the Preview configuration on iOS 27: 2 tests, zero failures. These focused cases use isolated fixtures.
+- Separately opened the normal app as a guest and selected **Explore design preview** on both simulators. Verified the preview API's `Preview center` on real MapKit cartography, centered wordmark, toolbar actions, floating search, native tabs and absence of the old session banner/footer. iOS 18.6 uses the material fallback; iOS 27 uses Liquid Glass. The new design remains a separate entry from the ordinary map.
+- Evidence: [iOS 18.6 connected design](screenshots/preview-refresh-2026-11-06/ios18-connected.png) and [iOS 27 connected design](screenshots/preview-refresh-2026-11-06/ios27-connected.png). The iOS 27 simulator is left open in the connected design.
+
+No physical-phone installation, Android rebuild, provider authentication, push delivery or full 34-screen tour was repeated. The iOS 27 welcome screen showed a generic request error before guest access; authenticated access was not validated in this refresh. No production deployment or backend mutation was performed.
+
+### Physical iPhone 14 Pro follow-up
+
+Later on 2026-11-06, rebuilt `GenerosityPreview` / `Preview` for the connected iPhone 14 Pro running iOS 27.2, using its existing development provisioning profile. Build/signing and installation of `org.generosity.app.preview` succeeded; bundle metadata still targets the preview API and excludes the production Firebase configuration. Existing app data and the separate production app were preserved.
+
+Observed the app opening and loading `Preview center` on MapKit in dark appearance. The user confirmed opening the new design, but Device Hub continued showing the ordinary map with the preview entry overlapping its wordmark; this follow-up does not claim independent visual acceptance of the new design on the phone. No account, push, location-permission or full navigation acceptance was repeated. The development profile expires on 2026-11-13 at 02:02 UTC.
+
+### Default design in iOS Preview
+
+The iOS Preview channel now enters the connected design directly after welcome, including subsequent launches. Its entry button and exit-to-old-layout action are absent. Effective backend groups and account isolation still apply. Missing groups show a localized unavailable/retry state and guest sign-in, without granting fixture screens or restoring the old layout. Production iOS and Android entry behavior is unchanged.
+
+- iOS 27 simulator: `PreviewEntryTests.testPreviewStartsInConnectedDesignAndKeepsItAfterRelaunch`, `testMissingGroupsCannotRestoreOldLayoutOrGrantSections`, and `NativePreviewTests.testConnectedDesignUsesSharedCatalogAndAccountScreens` passed (3 tests, zero failures). Direct-entry acceptance reads the preview API; the missing-group and connected-navigation harnesses remain isolated. The missing-group case passed again after adding its guest sign-in assertion.
+- Result bundles: `/private/tmp/GenerosityDefaultDesign-2026-11-06.xcresult` and `/private/tmp/GenerosityDefaultDesignUnavailable-2026-11-06.xcresult`.
+- Localization parity/UTF-8 checks, generated design-system verification, OpenSpec strict validation and whitespace checks passed.
+- Built and signed `GenerosityPreview` / `Preview`, verified its signature and preview-only configuration, then updated `org.generosity.app.preview` on the physical iPhone 14 Pro / iOS 27.2 without uninstalling app data.
+- Opened the updated app from its home-screen icon and independently observed the connected MapKit design, `Preview center`, centered wordmark, floating search, list/filter/bell/inventory controls, five native tabs, and no optional entry button. Evidence: [iPhone 14 Pro default design](screenshots/preview-refresh-2026-11-06/iphone14-default-design.png).
+
+This check does not repeat provider authentication, push delivery, location-permission prompts, accessibility acceptance or the full 34-screen tour. No production deployment, backend mutation or Android installation occurred.
+
+### iPhone 17 and Android Preview follow-up
+
+Updated the physical iPhone 17 / iOS 27.2 with the same signed Preview artifact validated above, preserving its app data. Opened its home-screen icon and verified direct connected-map startup in light appearance, real MapKit cartography, the centered wordmark, floating search, native tabs and the preview API's center. Evidence: [iPhone 17](screenshots/preview-refresh-2026-11-06/iphone17-default-design.png). The existing development profile expires on 2026-11-13 at 02:02 UTC.
+
+Android Preview now also enters the connected design directly after welcome and activity recreation. Its inventory has no exit to the old layout. Missing or revoked design groups show unavailable/retry and guest sign-in; production Android retains its existing entry behavior.
+
+- Both Android production and preview debug APKs compile.
+- Five focused Preview tests pass on Google APIs ARM64 / Android 14 (API 34): `PreviewEntryTest`, both `ConnectedDesignTest` cases, `NativePreviewTest.nativeNavigationSelectsEachTabWithoutSessionBanner` and `floatingMapSearchAndToolbarActionsRespectFlags`. They cover direct entry/recreation, missing grants, guest sign-in, entered partial offers, durable offline retry/history, native navigation and toolbar/group boundaries. Only direct-entry acceptance reads the preview API; other probes use isolated data.
+- Four production regression tests pass: `CurrentLocationTest`, `AccountEntryTest` and `MapDiscoveryTest.everyCardSelectsItsPinAndOpensItsOwnDetail`. No production API records were created.
+- With explicit user approval, created **Generosity Android Preview Maps** in `generosity-v01`, restricted to **Maps SDK for Android**, package `org.generosity.app.preview` and development SHA-1 `71:E3:02:05:BB:33:A7:9C:39:D6:5D:01:E2:D2:97:C0:7E:65:F2:1B`. Stored its value only as `MAPS_PREVIEW_API_KEY` in ignored `local.properties`. Production Maps/Firebase credentials and billing were not changed.
+- Rebuilt and installed the final Preview APK with that key, then manually verified real Google tiles and the center pin, direct guest entry, center detail and current needs with progress from the preview API. The app is left open on the map. Evidence: [Android map](screenshots/preview-refresh-2026-11-06/android-default-design.png), [center detail](screenshots/preview-refresh-2026-11-06/android-connected-detail.png), [needs](screenshots/preview-refresh-2026-11-06/android-connected-needs.png).
+- Localization, generated design resources, strict OpenSpec validation and whitespace checks pass.
+
+Android was tested in the emulator, not a physical phone. This follow-up does not repeat real GPS/permission acceptance, provider login, push delivery, dark/large-text accessibility or the full 34-screen tour. Maps is configured for this development certificate; another signing certificate needs its own authorized restriction. Preview Firebase/push configuration remains separate and pending.
+
+### Physical iPad installation — 2026-11-06
+
+Installed **Generosity Pruebas 0.1.0 (3)** on the user's **iPad (6th generation), model A1954, iPadOS 17.7.5**. The user completed computer trust, enabled Developer Mode, and explicitly authorized registering the device in the existing Personal Team and updating the development provisioning profile.
+
+- `GenerosityPreview` / `Preview` built successfully after Xcode completed the device's first development preparation. Verified universal device families `[1, 2]`, bundle `org.generosity.app.preview`, API `https://api-preview.generosity.global`, absence of production Firebase configuration and inclusion of the iPad in the profile.
+- The incremental build updated `Assets.car` and the provisioning profile without refreshing the existing resource seal. Re-signed the compiled bundle with the existing development identity and Xcode-generated Preview entitlements. `codesign --verify --deep --strict` passed before installation.
+- `devicectl device install app` confirmed installation. The new profile expires **2026-11-14 03:34:37 UTC** (**2026-11-13 21:34:37 America/Mexico_City**); this installation must be renewed afterward.
+- The user initially reported an opening error, then confirmed the app works after accepting the developer trust prompt on the iPad. This is user-confirmed launch acceptance, not independent visual acceptance.
+
+Device Hub reports screen sharing requires iOS 27 or later, and QuickTime's UI inspection timed out. No iPad screenshots, portrait/landscape layout acceptance, GPS, account or push checks are claimed. The existing native material fallback applies on iPadOS 17; no product source changes or production deployment were needed.

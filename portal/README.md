@@ -69,7 +69,9 @@ not claim a local authenticated session; real cookie acceptance requires the
 published HTTPS site. The relay is excluded from the deployment inventory.
 
 Public discovery reads the existing bounded `/api/v1/sync/catalog` snapshot with
-category v2 and progress v1. Search covers names, addresses and descriptions
+category v2 and progress v1. The same relay also allowlists published
+campaign, occurrence and meal list and detail GETs, plus need progress. It does
+not relay inbox, preferences, sessions or writes. Search covers names, addresses and descriptions
 across the snapshot, with accent-insensitive matching; it is **not a geocoder**.
 Optional geolocation sorts by straight-line distance and fits nearby markers,
 including results beyond the first 12-card page. Coordinates stay in memory.

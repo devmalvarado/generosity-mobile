@@ -1,7 +1,9 @@
 # Partial need contributions and progress
 
-Verified locally on 2026-11-02 (America/Monterrey), on `codex/backend-php-mysql`.
-This record does not represent a production deployment or a physical-device update.
+Initial local verification: 2026-11-02 (America/Monterrey), on
+`codex/backend-php-mysql`. The local results below are retained with their original
+scope; subsequent preview deployment/distribution is recorded near the end.
+No production progress rollout is certified by this record.
 
 ## Behavior and authority
 
@@ -77,10 +79,17 @@ and `portal/test-results/`; the debug artifact is
 
 ## Remaining boundaries
 
-Production publication, native distribution and the live offer → center receipt →
-refresh journey remain open in foundation task 21.5. Android physical/emulator
-acceptance, native enlarged-text/dark-mode and manual screen-reader acceptance for
-this new component have not been performed.
+Preview API/portal deployment on November 6 included partial progress. Its HTTP
+journey verified offer, center confirmation/receipt and history; Android Preview
+subsequently displayed needs/progress from that API. Updated native builds reached
+the iPhone 14 Pro/17, iPad and Android emulator. The public catalog merge preserved
+the test need's committed/received two of ten kits. See
+[preview evidence](release-controls.md) and [native distribution](native-design-preview.md).
+
+Production publication and the full native offer → center receipt → refreshed
+native history/progress journey remain open in foundation task 21.5. Emulator
+component/connected-offer checks do not close physical Android, native
+enlarged-text/dark-mode or manual screen-reader acceptance for this component.
 
 Money is specified separately in external-donations task 10.12 and is not enabled:
 MXN 10,000 against a gross MXN 200,000 goal is 5%, but only confirmed allocated

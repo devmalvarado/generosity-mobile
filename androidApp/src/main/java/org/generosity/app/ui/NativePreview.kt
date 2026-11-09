@@ -33,7 +33,7 @@ import org.generosity.app.R
 @OptIn(ExperimentalMaterial3Api::class)
 fun NativePreview(groups: List<String>, language: String, owner: String,
     connectedContent: (@Composable (String, (String) -> Unit) -> Unit)? = null,
-    onClose: () -> Unit) {
+    onClose: (() -> Unit)? = null) {
     val session = remember(owner) { PreviewSession(groups, language) }
     var revision by remember { mutableIntStateOf(0) }
     var inventory by remember { mutableStateOf(false) }
@@ -41,7 +41,7 @@ fun NativePreview(groups: List<String>, language: String, owner: String,
     var filters by remember { mutableStateOf(false) }
     val focusManager = LocalFocusManager.current
     fun update(action: () -> Unit) { action(); revision++ }
-    LaunchedEffect(groups) { update { session.updateAccess(groups) }; if(groups.isEmpty()) onClose() }
+    LaunchedEffect(groups) { update { session.updateAccess(groups) }; if(groups.isEmpty()) onClose?.invoke() }
     LaunchedEffect(language) { update { session.updateLanguage(language) } }
     BackHandler { update { session.back() } }
     // Fixture state remains isolated; connected destinations observe the existing app state.
@@ -160,7 +160,7 @@ fun NativePreview(groups: List<String>, language: String, owner: String,
                 else -> items.filter { it.id in listOf("category","funding","scenario","locate","reset") }.forEach { PreviewControl(it,session) { update(it) } }
             }
         }},confirmButton={TextButton(onClick={inventory=false;list=false;filters=false}){Text(session.text("Cerrar","Close"))}},
-        dismissButton={if(inventory) TextButton(onClick=onClose){Text(session.text("Salir del diseño","Exit design preview"))}})
+        dismissButton={if(inventory && onClose != null) TextButton(onClick=onClose){Text(session.text("Salir del diseño","Exit design preview"))}})
 }
 
 @Composable

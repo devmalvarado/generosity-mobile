@@ -27,10 +27,12 @@
 
 ## 4. Deployment and acceptance
 
-- [ ] 4.1 Provision the separate HTTPS preview API/site, database/user, APP_KEY, storage and cron/queue; keep outgoing mail isolated.
-- [ ] 4.2 Configure dedicated preview OAuth, Maps and Firebase/APNs credentials before testing those providers.
-- [ ] 4.3 Deploy the migration/backend first, assign approved feature administrators and then release updated web/native clients.
-- [ ] 4.4 Verify real accounts in both environments, live flag changes across platforms and physical-device coexistence.
+- [x] 4.1 Provision the separate HTTPS preview API/site, database/user, APP_KEY, storage and cron/queue; keep outgoing mail isolated.
+  - [x] 4.1.1 Create both preview sites/DNS with valid HTTPS, PHP 8.4 on the API site and an exclusive `*_preview` database/user without remote MySQL access; verify the explicitly authorized account-wide SSH key (2026-11-06).
+  - [x] 4.1.2 Configure the private preview environment, separate APP_KEY, application storage and cron/queue, verify database login and retain isolated outgoing mail before deploying the application (2026-11-06).
+- [ ] 4.2 Complete dedicated preview OAuth and Firebase/APNs configuration and provider acceptance. Android Preview Maps is configured for its package/development certificate and live cartography passed on 2026-11-06; other signers need authorized restrictions. The remaining providers are not completed by Maps setup.
+- [ ] 4.3 Complete the production backend-first rollout, approved administrator assignment and updated web/native release. The equivalent preview API/migrations, administrator and portal were deployed on 2026-11-06; updated Preview builds reached iPhone 14 Pro/17/iPad and the Android emulator. Production `/api/v1/features` still returned 404 on 2026-11-08. Preview evidence does not close the production rollout.
+- [ ] 4.4 Verify real accounts in both environments, live flag changes across platforms and physical-device coexistence. Preview API account/lifecycle and an administrator flag toggle passed; native direct startup and preserved separate app data are recorded. The complete account-switch/provider/coexistence matrix, physical Android and cross-client live flag acceptance remain open.
 - [ ] 4.5 Archive only after deployment and acceptance evidence is recorded; builds alone do not complete these gates.
 
 Evidence: `docs/testing/release-controls.md`; operational setup: `docs/release-channels.md`.

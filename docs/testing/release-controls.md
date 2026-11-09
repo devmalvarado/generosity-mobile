@@ -1,7 +1,10 @@
 # Release channel and feature-control verification
 
-Local checks on 2026-11-03, branch `codex/backend-php-mysql`. No hosting deployment,
-real user flag changes, physical-device update or provider credential creation.
+This is a dated evidence log on branch `codex/backend-php-mysql`. The initial local
+checks below ran on 2026-11-03 without hosting deployment, real-user flag changes,
+physical-device updates or provider credentials. Later sections record preview
+deployment and catalog import on November 6 and reconciliation on November 8.
+The initial unavailable-API observations are historical, not current preview status.
 
 ## Backend
 
@@ -78,6 +81,110 @@ sh scripts/check-localization.sh --self-test
 openspec validate add-release-channels-and-feature-controls --strict --no-interactive
 ```
 
-Do not archive the change yet. Preview hosting/database/credentials, approved
-administrator assignment, backend-first publication, live flag journeys and
-physical-device acceptance are listed separately in its deployment tasks.
+## Preview infrastructure verification — 2026-11-06
+
+- hPanel lists `api-preview.generosity.global` and `preview.generosity.global` as
+  separate sites, with PHP 8.4 selected for the API site.
+- Authoritative DNS at `lunar.dns-parking.com` returns A `145.223.77.153` for both
+  names, plus their individual AAAA records. The local resolver still had a
+  negative cache during the initial checks.
+- HTTPS requests using `curl --resolve` against that IP returned 200 for both
+  preview names with certificate validation enabled and successful. These are
+  empty Hostinger site responses, not evidence of a running Laravel API.
+- Production `/` and API `/up` still returned 200 with valid HTTPS. Existing
+  production DNS records and site files were not changed by this provisioning.
+- SSH authenticated with the new preview deployment key using
+  `StrictHostKeyChecking=yes`; both domain directories exist. PHP 8.4 CLI reports
+  8.4.27. The key's actual scope is the whole hosting account, as explicitly
+  authorized by the owner; it is not limited to the preview directories.
+- hPanel confirms database `u643005321_gen_preview` and exclusive user
+  `u643005321_genpreview`. Its remote MySQL page lists no access rules, and
+  `Cualquier host` remains unchecked. The owner entered/submitted the password;
+  no application DB login, migrations or preview application deployment were run.
+
+## Preview application verification — 2026-11-06
+
+Revision `ffe94f8` on `https://api-preview.generosity.global`. Production health
+stayed 200 and production files were not changed.
+
+- Health `ready`, payments `disabled`. Features channel `preview`. A production
+  channel header returned 409. Catalog included `preview-center`.
+- `/.env`, logs and `../private/.env` were not public. CORS allowed only the
+  preview portal, with credentials. The session cookie was host-only.
+- Register, log-mail verify, login, partial contribution, center confirm/receive,
+  progress and history passed. Recovery used the private log, then logout returned 401.
+  No external mail or production push project appeared in the queue drain.
+- The tester admin turned `preview.discovery` off and back to testers. Refresh
+  followed the change. The other nine preview groups stayed testers-only for user 1.
+
+Later on November 6, updated Preview builds were installed on iPhone 14 Pro/17,
+iPad and the Android emulator, and the restricted Android Preview Maps key was
+configured. See [native evidence](native-design-preview.md). Do not archive the
+change: preview OAuth/Firebase/APNs, production rollout and complete account,
+physical-device/coexistence and accessibility acceptance remain open.
+
+## Public production catalog merged into preview — 2026-11-06
+
+At the owner's request, copied the public production catalog into the existing
+preview database using `CatalogImport`, without replacing the database or deleting
+test records. The source was the paginated public `/api/v1/centers` and
+`/api/v1/needs` endpoints; no production account or private-activity export was used.
+
+- Source: 171 centers and one published need. Preview previously had one center
+  and two published needs. There were no overlapping center or need IDs.
+- Result: **172 centers and three needs**. The original test center and both
+  needs remained byte-for-byte unchanged, including the fulfilled partial offer
+  of two out of ten kits. Existing users, permissions, contributions, feature
+  controls and all 36 other tables had unchanged fingerprints within the import
+  transaction. Only the imported rows and one operator audit were added.
+- Public fields were compared with the source after import: coordinates,
+  addresses, Google Maps URLs, contacts, categories, verification, funding origin,
+  administration type and directory evidence were preserved. Source versions and
+  update timestamps are environment-local; production contribution progress is
+  not imported. The source need had zero committed units.
+- A rollback-only rehearsal passed before the actual transaction was committed.
+  The operation asserted the preview channel, exact preview API origin and
+  `u643005321_gen_preview` database. New centers required `expectedVersion: 0`.
+- Private backup, payload and transaction reports are retained outside the web
+  root under `private/storage/app/catalog-merge-2026-11-06/` on the preview API site.
+  Payload SHA-256:
+  `5e16c8db2b1a36fe3446fb948b18efa4438593d5840960cb0cac2e475f122350`.
+  Commit time: `2026-11-07T03:47:55Z` (November 6 in Mexico City).
+- Public API verification passed for the union of source and test IDs, all source
+  public fields and unchanged test records. Mobile
+  `/api/v1/sync/catalog?category_version=2&progress_version=1` returned 172 centers,
+  three needs and all 39 blood-donation centers with the correct category.
+  The production public catalog still matched the pre-import snapshot exactly.
+
+This was a one-time catalog copy, not continuous synchronization. No staff access
+to copied centers was granted, and no physical-device refresh was checked during
+this operation. No application-code deployment or provider configuration changed.
+
+## Documentation reconciliation and public probes — 2026-11-08
+
+Read-only HTTPS GETs with JSON responses returned:
+
+| Endpoint | Production API | Preview API |
+| --- | --- | --- |
+| `/api/v1/features` | 404 | 200, channel `preview` |
+| `/api/v1/campaigns` | 404 | 200, empty paginated list |
+| `/api/v1/occurrences` | 404 | 200, empty paginated list |
+| `/api/v1/meals` | 404 | 200, empty paginated list |
+
+All ten `preview.*` groups, the three foundation controls and the nine returned
+participation flags were effective for the anonymous preview read. This supersedes
+the initial tester-only snapshot; no flag was changed by this review. Effective
+flags do not grant identity/staff privileges or complete unconfigured services.
+
+Reconciled the current OpenSpec context/status and operational documentation with
+the November 5 portal publication and November 6 preview provisioning, Maps setup,
+native distribution and public catalog copy. Native-design task 5.1 is complete
+for preview. Production rollout and all remaining provider/accessibility/device
+acceptance gates stay open. Earlier dated test runs retain their original scope.
+No new authenticated writes, migrations, functional/device tests or deployment
+were performed during this documentation reconciliation.
+
+Validation: `openspec validate --all --strict --no-interactive` passed all 18
+items; local file links in the 14 updated documents and whitespace checks passed.
+The task inventory now has 11 active changes, 161 checked tasks and 388 unchecked
+tasks. This is a checklist count, not a percentage of product functionality.

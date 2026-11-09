@@ -75,7 +75,7 @@ open class MainActivity : ComponentActivity() {
                 onSignIn = { account.signIn() }, onSignOut = account::signOut, onCreate = { account.signIn(register = true) },
                 authBusy = account.busy, authFailed = account.failed,
                 locationSource = if (usesDemoCatalog) null else remember { AndroidDeviceLocationSource(applicationContext) },
-                designHarness = usesConnectedDesign)
+                designHarness = usesConnectedDesign, defaultDesign = BuildConfig.CHANNEL == "preview")
         }
     }
 

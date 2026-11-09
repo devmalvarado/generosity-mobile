@@ -51,6 +51,9 @@ test('legacy links retain the intended record and query, including navigation fr
     ['#center-workspace', 'kindness-center', '#account-sign-in'],
     ['#centro/centro-norte', 'ayudar', '#discovery-status'],
     ['#necesidad/need-123', 'ayudar', '#discovery-status'],
+    ['#campana/44444444-4444-4444-8444-444444444444', 'ayudar', '#discovery-status'],
+    ['#evento/55555555-5555-4555-8555-555555555555', 'ayudar', '#discovery-status'],
+    ['#comida/66666666-6666-4666-8666-666666666666', 'ayudar', '#discovery-status'],
     ['#descubrir', 'ayudar', '#discovery-search']
   ]) {
     await page.goto('/?source=invitation' + hash);

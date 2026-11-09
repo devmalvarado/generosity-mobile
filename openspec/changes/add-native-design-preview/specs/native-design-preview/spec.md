@@ -80,6 +80,14 @@ The map SHALL display the shared brand wordmark centered in the navigation heade
 ### Requirement: Connected mobile destinations
 Supported destinations SHALL reuse the existing mobile state, account, backend repository, cache, outbox, forms and map adapters. The inventory SHALL distinguish connected and fixture routes. Supported flows SHALL include discovery, center/contact/visits, current needs, goods/time and personal offers, history/impact, account/welcome/settings, and inbox.
 
+#### Scenario: Default design in mobile Preview
+- **GIVEN** the iOS or Android app uses the Preview release channel
+- **WHEN** the user enters as a guest, signs in or relaunches after entering
+- **THEN** the connected design is the main interface without an exploration button or exit to the old layout
+- **AND** the existing welcome, account isolation and effective group restrictions remain in force
+- **AND** missing or revoked groups show loading/unavailability with retry rather than granting fixture access or restoring the old layout
+- **AND** production variants retain their existing optional design entry
+
 #### Scenario: Partial offer and retry
 - **GIVEN** the account and feature controls permit contributions
 - **WHEN** the user offers part of a real need from the new layout

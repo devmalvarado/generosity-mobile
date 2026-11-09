@@ -1,7 +1,8 @@
 # Tasks
 
-Broad participation tasks remain pending; the scoped directory-map work below is locally complete. Dependencies are planned capabilities, not verified
-services. Test with synthetic participants; production communication requires
+Broad participation tasks remain pending; the scoped directory-map work below
+was published on 2026-11-05, with public/guest acceptance. Dependencies are planned
+capabilities, not verified services. Test with synthetic participants; production communication requires
 separate channel and consent configuration.
 
 A partial landing slice was exercised with intercepted browser fixtures on
@@ -9,9 +10,16 @@ A partial landing slice was exercised with intercepted browser fixtures on
 [public discovery verification](../../../docs/testing/public-discovery.md).
 
 Local participation API tests passed on `generosity_test` on 2026-11-04.
-The migration is not deployed, empty configuration keeps the gated actions
-unavailable, and no task below is complete. See
+The participation migration was later deployed to preview on 2026-11-06, with
+empty public lists returning 200 on November 8; production lists still returned
+404. Missing operational configuration keeps affected actions unavailable even
+when preview flags are effective. Deployment does not close the broad tasks below. See
 [participation API verification](../../../docs/testing/participation-api.md).
+
+Intercepted browser fixtures on 2026-11-05 read published campaign, occurrence
+and meal lists, direct records, need progress, and a verified session's inbox
+and preferences. Gated writes stayed closed. This does not complete any task
+below and is not a production round trip.
 
 ## 1. Contracts and Prerequisites
 
@@ -20,16 +28,16 @@ unavailable, and no task below is complete. See
 
 ## 2. Public Web Participation
 
-- [ ] 2.1 Add public center/need/campaign/occurrence/meal browser routes; verify direct entry, unknown/removed records, sanitized metadata and map-free low-bandwidth browsing. The dedicated `/ayudar/` route reads the public sync snapshot and center/need detail endpoints; legacy fragments redirect to it. A direct 404 or invalid prefix does not open another record or fetch. Rendering allowlists localized public text and validated contact fields. The landing still has no campaign, occurrence, or meal route. The additional campaign/occurrence/meal APIs are not wired into this page, so this broad task is not complete.
+- [ ] 2.1 Add public center/need/campaign/occurrence/meal browser routes; verify direct entry, unknown/removed records, sanitized metadata and map-free low-bandwidth browsing. The dedicated `/ayudar/` route reads the public sync snapshot and center/need detail endpoints; legacy fragments redirect to it. A direct 404 or invalid prefix does not open another record or fetch. Rendering allowlists localized public text and validated contact fields. On 2026-11-05, intercepted fixtures opened `#campana/{id}`, `#evento/{id}` and `#comida/{id}`, rendered published titles, kept a direct 404 and an invalid prefix from opening another record, and left a cancelled occurrence cancelled without rendering alternatives. Campaign page 2 was requested only after Next. Map-free low-bandwidth browsing was not verified, and the fixtures are not a production round trip, so this task is not complete.
 - [ ] 2.6 Open the landing help action into public discovery without an account; verify demonstration cards stay labeled, catalog failure does not present them as current needs, and the action does not submit or open `/kindness-center`. The help action and cause-card actions open `#descubrir` without an account, without a POST and without `/kindness-center`. Illustration cards stay labeled in `#necesidades`. A catalog failure keeps the search and does not present those cards as current needs. Browser fixtures are not a production round trip, so this task is not complete.
 - [ ] 2.2 Add provider-backed browser entry with preserved intent and session/CSRF protection; verify cancelled login, embedded-browser fallback, expired session and no automatic submission.
 - [ ] 2.3 Implement browser goods/time/event/meal/personal-help forms against existing endpoints; verify concurrent native/web capacity, stale availability, lost-response retry and gated monetary actions. The landing can prepare goods or time against a published, unexpired need and submits only with a verified session, CSRF, a UUID `Idempotency-Key` and `contributions.create`. Fixtures verified a goods lost-response retry and `capacity_exceeded`. They did not submit time, events, meals or personal help, and they did not race a native client. Money stays disabled. This task is not complete.
-- [ ] 2.4 Add owned history/cancellation/inbox/preferences; verify account switching, back navigation, ES/EN browser defaults and no private cache leakage. A verified session can read `GET /api/v1/me/contributions` and cancel its own offered row with `POST /api/v1/contributions/{id}/transition` and `{ action: "cancel", version }`. An account switch clears owner-scoped drafts. `GET /api/v1/me/notifications` and `GET /api/v1/me/notification-preferences` exist. The landing does not read them, and account-switch, back-navigation, and private-cache coverage are absent, so this task is not complete.
+- [ ] 2.4 Add owned history/cancellation/inbox/preferences; verify account switching, back navigation, ES/EN browser defaults and no private cache leakage. A verified session can read `GET /api/v1/me/contributions` and cancel its own offered row with `POST /api/v1/contributions/{id}/transition` and `{ action: "cancel", version }`. An account switch clears owner-scoped drafts. On 2026-11-05, intercepted fixtures read `GET /api/v1/me/notifications` and `GET /api/v1/me/notification-preferences` for a verified session, showed the public title and unsaved preferences, and cleared the notice when the account changed. They did not POST. Back navigation, ES/EN defaults and private-cache leakage were not covered, so this task is not complete.
 - [ ] 2.5 Add optional PWA manifest/service worker with public-only caching; verify offline stale states, no acknowledged offline reservation, private-route exclusions and upgrade/rollback without losing forms; document browser limits.
 
 ## 3. Invitations and QR Entry
 
-- [ ] 3.1 Implement canonical opportunity URLs, safe preview projections and bounded QR/text export; verify no recipient/household/roster data, no GET mutations and current cancelled-target resolution; document link ownership. The visible link is the current origin plus `#centro/{id}` or `#necesidad/{id}`. A text download names the record and states that it is not a scannable image and does not show remaining places. No QR image is generated, and the landing does not mint a server-owned short link. The API preview ignores `channel` and a cancelled occurrence stays cancelled with empty alternatives. The landing does not use that preview, so this task is not complete.
+- [ ] 3.1 Implement canonical opportunity URLs, safe preview projections and bounded QR/text export; verify no recipient/household/roster data, no GET mutations and current cancelled-target resolution; document link ownership. The visible link is the current origin plus `#centro/{id}` or `#necesidad/{id}`. A text download names the record and states that it is not a scannable image and does not show remaining places. No QR image is generated, and the landing does not mint a server-owned short link. The API preview ignores `channel` and a cancelled occurrence stays cancelled with empty alternatives. The landing still does not call that preview. Intercepted fixtures keep a cancelled occurrence cancelled and do not render alternatives. Share-link contents for the new hashes were not asserted, so this task is not complete.
 - [ ] 3.2 Add web share/copy/download controls and optional opaque channel attribution; verify cancelled sharing records no send/award, declined analytics leaves participation usable and redirects are allowlisted. Copy, share and download controls exist. Closing the share sheet records no send. The fixture link has no channel code. The API records no attribution when `channel` is present. Analytics and native share handling are absent, so this task is not complete.
 - [ ] 3.3 Add shared route validation and Android app-link/share handling; verify matching destination, safe web fallback and no tokens/private fields in URLs.
 - [ ] 3.4 Add equivalent SwiftUI universal-link/share behavior; verify installed/uninstalled entry, malformed links, ES/EN labels and unchanged central plus action.
@@ -63,4 +71,4 @@ unavailable, and no task below is complete. See
 - [x] 7.4 Keep hosted sign-in reachable when session checks fail; retain drafts and add an explicitly public-only loopback relay for live catalog preview.
 - [x] 7.5 Verify Chromium/WebKit regression and focused map/access tests with intercepted tiles; manually inspect real OSM cartography and the public catalog locally.
 - [x] 7.6a Publish the routes and OpenStreetMap privacy disclosure; verify origin files, public catalog, hosted account entry and guest session after the CORS repair. See [release evidence](../../../docs/releases/portal-map-2026-11-05.md).
-- [ ] 7.6b Deploy the missing feature-flag API before enabling dependent writes, then verify authenticated HTTPS login/return and physical Safari/Chrome location permissions. Public publication and guest-session checks do not complete this acceptance.
+- [ ] 7.6b Deploy the missing production feature-flag API before enabling dependent writes, then verify authenticated HTTPS login/return and physical Safari/Chrome location permissions. Preview already has the feature API; public production publication, guest-session checks and preview HTTP journeys do not complete this acceptance.

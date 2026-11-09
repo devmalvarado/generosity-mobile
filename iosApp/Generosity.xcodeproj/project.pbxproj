@@ -24,6 +24,7 @@
 		B723172F142B7836773577DD /* FirebaseMessaging in Frameworks */ = {isa = PBXBuildFile; productRef = D4D5C8382F4DE465302CB696 /* FirebaseMessaging */; };
 		BA8DD7E4456D4050D2C0E39F /* AccountSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = 985FFFE5BD68ED75796DEF66 /* AccountSession.swift */; };
 		BC1277BCCE4090E9A418C12A /* ContributionForm.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEDFF89F0D86E16CCDFF1221 /* ContributionForm.swift */; };
+		BFE7D10D73288C18068EFF48 /* PreviewEntryTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A90AF30990B8634AFCE3AD4E /* PreviewEntryTests.swift */; };
 		C636C3B927045689B84B2905 /* PermissionService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E481E322B0BB9A78995FE75 /* PermissionService.swift */; };
 		C72D9ED021713CDAB29553DB /* AccountSessionTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 240C698EB5B5AE811FAA4D18 /* AccountSessionTests.swift */; };
 		C9BDA57E9349BA6A200A36F4 /* NativePreview.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3FE670992F894C5644EABB4 /* NativePreview.swift */; };
@@ -75,6 +76,7 @@
 		985FFFE5BD68ED75796DEF66 /* AccountSession.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountSession.swift; sourceTree = "<group>"; };
 		995F7EEEA65A1828B5DDA566 /* AreaSearchView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AreaSearchView.swift; sourceTree = "<group>"; };
 		A329E8A62A3E8AF8AC06A055 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		A90AF30990B8634AFCE3AD4E /* PreviewEntryTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PreviewEntryTests.swift; sourceTree = "<group>"; };
 		B4FE93304ED7A88E85D158AD /* GenerosityLocalizationTests.xctest */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.cfbundle; path = GenerosityLocalizationTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		C3FE670992F894C5644EABB4 /* NativePreview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NativePreview.swift; sourceTree = "<group>"; };
 		CEDFF89F0D86E16CCDFF1221 /* ContributionForm.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContributionForm.swift; sourceTree = "<group>"; };
@@ -172,6 +174,7 @@
 				553F5D8AAA7C55879E0C5371 /* GenerosityUiChecklistTests.swift */,
 				0F7611EC10D04F452C208FB6 /* GenerosityVisualTests.swift */,
 				F59D18C20782EDB1D860E24B /* NativePreviewTests.swift */,
+				A90AF30990B8634AFCE3AD4E /* PreviewEntryTests.swift */,
 			);
 			path = GenerosityAppTests;
 			sourceTree = "<group>";
@@ -393,6 +396,7 @@
 				839697680DBDE2594D00A52B /* GenerosityUiChecklistTests.swift in Sources */,
 				2AB417C210F7DDDAA36848A5 /* GenerosityVisualTests.swift in Sources */,
 				85CFD80FA964BE4E2C128936 /* NativePreviewTests.swift in Sources */,
+				BFE7D10D73288C18068EFF48 /* PreviewEntryTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -814,6 +818,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = org.generosity.app.uitests;
 				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited) PREVIEW_APP_TESTS";
 				TARGETED_DEVICE_FAMILY = "1,2";
 				TEST_TARGET_NAME = Generosity;
 			};

@@ -1,14 +1,18 @@
 # Public center and need discovery
 
-The center/need slice was first exercised on 2026-11-03 and revised into the
-map-based `/ayudar/` route on 2026-11-05. It is not deployed. The focused tasks
-in section 7 of `add-web-participation-and-sharing` have local evidence; broader
-participation and real HTTPS/session acceptance remain pending.
+The center/need slice was first exercised on 2026-11-03, revised into the
+map-based `/ayudar/` route and published to production on 2026-11-05. Dedicated
+routes, public catalog/map, hosted account entry and guest session were verified;
+see [publication evidence](../releases/portal-map-2026-11-05.md). The isolated
+preview API/portal followed on November 6. Broader participation, authenticated
+production writes and physical-browser acceptance remain pending. Production
+feature reads still returned 404 on November 8; preview feature reads returned 200.
 
 ## What the page does
 
 The help action opens `/ayudar/`; legacy hashes redirect there. Direct records
-use `#centro/{id}` and `#necesidad/{id}`. The directory reads the existing bounded
+use `#centro/{id}`, `#necesidad/{id}`, `#campana/{id}`, `#evento/{id}` and
+`#comida/{id}`. The directory reads the existing bounded
 `GET /api/v1/sync/catalog?category_version=2&progress_version=1` snapshot, with
 credential-free public requests. Record details still use `GET /api/v1/centers/{id}`
 and `GET /api/v1/needs/{id}`. A center links to its published needs, and an offer
@@ -36,8 +40,9 @@ markers but are not printed in cards or share exports. Only `officially_verified
 produces the verification mark; a different arbitrary status cannot mint a badge.
 
 Hosted sign-in remains reachable when session checks fail, opens a separate tab
-and retains the draft. It never submits automatically. The loopback preview relay
-reads only public catalog/detail paths, never sessions or writes. Local previews
+and retains the draft. It never submits automatically. The loopback preview relay allowlists the public catalog, center and need
+details, need progress, and published campaign, occurrence and meal list and
+detail GETs. It does not relay sessions, inbox, preferences or writes. Local previews
 state that account access happens on the published site; real HTTPS cookie/CORS
 acceptance remains a release check.
 
@@ -106,10 +111,12 @@ client raced the same seat.
 
 ## Still unavailable
 
-Provider login, payments, campaigns, meals, events, personal help, PWA/service
-worker, assisted participation, inbox, preferences, outcome metrics, channel
-attribution, analytics, QR images, native app links and reviewer selection are
-not part of this browser slice. The subsequent [participation API increment](participation-api.md)
+Provider login, payments, personal help, PWA/service worker, assisted
+participation, outcome metrics, channel attribution, analytics, QR images,
+native app links and reviewer selection are not part of this browser slice.
+Published campaign, occurrence and meal reads, need progress, and owner inbox
+and preference reads were added later as intercepted fixtures; their writes stay
+closed. The subsequent [participation API increment](participation-api.md)
 records partial local work for sections 4–6 on 2026-11-04; it does not supply the
 missing browser/native journeys or deployment. No complete task was checked.
 
@@ -133,3 +140,28 @@ for both affected OpenSpec changes; the generated-brand check and preview packag
 self-check pass. The local relay returns 404 for private API/file paths and rejects
 POST requests. The real hosted sign-in link opens the published page with its
 login/register controls; no credentials, consent or live submission was used.
+
+## Published participation reads — 2026-11-05
+
+Intercepted Chromium and WebKit fixtures, not a deployed API:
+
+- published campaign, event and meal titles render; `private_plan`,
+  `private_details`, a partnership-rejected center id, roster and recipient do not;
+- campaign page 2 is fetched only after Next, not on first load;
+- a direct campaign 404 and `#campana/NOT_VALID` do not open another record or fetch the invalid id;
+- a cancelled occurrence stays cancelled, alternatives are not rendered, and no POST is sent;
+- campaign, occurrence and meal details have no button, input or textarea, and the closed publish, enrollment, meal, follow and money notices stay text;
+- need progress shows known committed and validated integers, does not show an unknown reported value, and does not claim fulfillment;
+- a verified inbox shows the public title and unsaved preferences, hides a private body and address, sends no POST, and clears the notice when the account changes;
+- the local-preview fixture fulfills the three public list GETs on `/__public` and records no request to `https://api.generosity.global`.
+
+`tests/public-discovery.spec.js` reported 48 passed. `tests/routes.spec.js`
+reported 12 passed, including the legacy `#campana`, `#evento` and `#comida`
+redirects and no horizontal overflow at 320px with 200% text.
+`tests/portal.spec.js` reported 33 passed and 1 skipped. The design-token check
+passed. Asset queries were `portal.js?v=25ed18ff272c` and
+`styles.css?v=12c71c61e35d`. The loopback relay self-test allowlists those public
+GETs and still rejects inbox, preferences, preview, outcome updates and writes.
+The full `npm test` suite was not rerun for that fixture increment. No task was
+checked and migration `2026_11_03_000003` was not deployed by that run. The later
+November 6 preview migration does not convert these fixtures into live acceptance.

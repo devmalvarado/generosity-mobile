@@ -2,7 +2,7 @@
   function redirectLegacyRoute() {
     if (document.body.dataset.page !== 'landing') return false;
     var hash = location.hash;
-    var path = /^#(descubrir|centro\/|necesidad\/)/.test(hash) ? '/ayudar/'
+    var path = /^#(descubrir|centro\/|necesidad\/|campana\/|evento\/|comida\/)/.test(hash) ? '/ayudar/'
       : /^#registrar-sede(?:$|\?)/.test(hash) ? '/registrar-sede/'
       : /^#(acceso(?:$|\?)|center-workspace$)/.test(hash) ? '/kindness-center/' : '';
     if (!path) return false;
@@ -178,8 +178,8 @@
     "discovery.verified": "Centro verificado",
     "discovery.yourLocation": "Tu ubicación",
     "discovery.needsAtCenter": "Necesidades del centro",
-    "discovery.lead": "Conoce los centros y descubre qué necesitan.",
-    "discovery.searchLabel": "Buscar centros y necesidades",
+    "discovery.lead": "Conoce centros, necesidades, campañas, eventos y comidas publicadas.",
+    "discovery.searchLabel": "Buscar en el directorio publicado",
     "discovery.searchPlaceholder": "Centro, colonia o ciudad",
     "discovery.searchHint": "Busca en el directorio o usa tu ubicación para ordenar por cercanía.",
     "discovery.prevCenters": "Centros, página anterior",
@@ -262,7 +262,51 @@
     "discovery.status_fulfilled": "Marcada como realizada por el centro",
     "discovery.status_cancelled": "Cancelada",
     "discovery.status_other": "Estado no reconocido. Actualiza la lista.",
-    "discovery.contact": "Contacto publicado"
+    "discovery.contact": "Contacto publicado",
+    "discovery.campaigns": "Campañas",
+    "discovery.occurrences": "Eventos",
+    "discovery.meals": "Comidas",
+    "discovery.emptyCampaigns": "Aún no hay campañas publicadas.",
+    "discovery.emptyOccurrences": "Aún no hay eventos publicados.",
+    "discovery.emptyMeals": "Aún no hay comidas publicadas.",
+    "discovery.campaignDetails": "Ver campaña",
+    "discovery.occurrenceDetails": "Ver evento",
+    "discovery.mealDetails": "Ver comida",
+    "discovery.listLoading": "Cargando la lista publicada…",
+    "discovery.listUnavailable": "No pudimos cargar esta lista. Los centros y las necesidades no cambiaron.",
+    "discovery.cancelledTarget": "El servidor marcó este registro como cancelado.",
+    "discovery.noAlternative": "No hay otra opción publicada. No se abrió otro registro.",
+    "discovery.publishClosed": "Publicar una campaña no se envía desde esta página.",
+    "discovery.enrollClosed": "Reservar un lugar no se envía desde esta página.",
+    "discovery.mealClosed": "Comprometer una comida no se envía desde esta página.",
+    "discovery.followClosed": "Los avisos por correo no se activan desde esta página.",
+    "discovery.reportedUnknown": "Lo reportado no está confirmado.",
+    "discovery.notFulfilled": "Esto no indica que la necesidad esté cubierta.",
+    "discovery.progressRequested": "Solicitado según el servidor: ",
+    "discovery.progressCommitted": "Comprometido según el servidor: ",
+    "discovery.progressValidated": "Validado según el servidor: ",
+    "discovery.serverAvailable": "Disponible según el servidor: ",
+    "discovery.serverReserved": "Reservado según el servidor: ",
+    "discovery.serverCapacity": "Cupo según el servidor: ",
+    "discovery.when": "Horario publicado: ",
+    "discovery.publishedArea": "Zona publicada: ",
+    "discovery.inboxTitle": "Avisos",
+    "discovery.inboxNote": "Esta lista es la que devolvió el servidor. Abrirla no marca un envío ni una entrega.",
+    "discovery.inboxEmpty": "No hay avisos en esta cuenta.",
+    "discovery.inboxFailed": "No se pudieron cargar los avisos.",
+    "discovery.inboxLoading": "Cargando avisos…",
+    "discovery.inboxUnread": "Sin leer según el servidor: ",
+    "discovery.inboxMore": "Hay más avisos de los que muestra esta página.",
+    "discovery.preferencesTitle": "Preferencias de avisos",
+    "discovery.preferencesUnsaved": "No hay preferencias guardadas. Esta página no las crea.",
+    "discovery.preferencesFailed": "No se pudieron cargar las preferencias.",
+    "discovery.preferencesUrgent": "Solo urgentes: ",
+    "discovery.preferencesAll": "Todas las categorías: ",
+    "discovery.yes": "sí",
+    "discovery.no": "no",
+    "discovery.partnership": "El centro asociado está publicado.",
+    "discovery.noticeRead": "Leído",
+    "discovery.noticeUnread": "Sin leer"
   },
   "en": {
     "auth.signIn": "Sign in ↗",
@@ -426,8 +470,8 @@
     "discovery.verified": "Verified center",
     "discovery.yourLocation": "Your location",
     "discovery.needsAtCenter": "This center’s needs",
-    "discovery.lead": "Explore centers and discover what they need.",
-    "discovery.searchLabel": "Search centers and needs",
+    "discovery.lead": "Explore published centers, needs, campaigns, events and meals.",
+    "discovery.searchLabel": "Search the published directory",
     "discovery.searchPlaceholder": "Center, neighborhood or city",
     "discovery.searchHint": "Search the directory or use your location to see the nearest centers first.",
     "discovery.prevCenters": "Centers, previous page",
@@ -510,7 +554,51 @@
     "discovery.status_fulfilled": "Marked completed by the center",
     "discovery.status_cancelled": "Cancelled",
     "discovery.status_other": "Unrecognized state. Refresh the list.",
-    "discovery.contact": "Published contact"
+    "discovery.contact": "Published contact",
+    "discovery.campaigns": "Campaigns",
+    "discovery.occurrences": "Events",
+    "discovery.meals": "Meals",
+    "discovery.emptyCampaigns": "No campaigns have been published yet.",
+    "discovery.emptyOccurrences": "No events have been published yet.",
+    "discovery.emptyMeals": "No meals have been published yet.",
+    "discovery.campaignDetails": "View campaign",
+    "discovery.occurrenceDetails": "View event",
+    "discovery.mealDetails": "View meal",
+    "discovery.listLoading": "Loading the published list…",
+    "discovery.listUnavailable": "This list could not be loaded. Centers and needs are unchanged.",
+    "discovery.cancelledTarget": "The server marked this record as cancelled.",
+    "discovery.noAlternative": "No other option was published. Another record was not opened.",
+    "discovery.publishClosed": "Publishing a campaign is not sent from this page.",
+    "discovery.enrollClosed": "Reserving a place is not sent from this page.",
+    "discovery.mealClosed": "Committing to a meal is not sent from this page.",
+    "discovery.followClosed": "Email notices are not turned on from this page.",
+    "discovery.reportedUnknown": "What was reported is not confirmed.",
+    "discovery.notFulfilled": "This does not mean the need has been fulfilled.",
+    "discovery.progressRequested": "Requested according to the server: ",
+    "discovery.progressCommitted": "Committed according to the server: ",
+    "discovery.progressValidated": "Validated according to the server: ",
+    "discovery.serverAvailable": "Available according to the server: ",
+    "discovery.serverReserved": "Reserved according to the server: ",
+    "discovery.serverCapacity": "Capacity according to the server: ",
+    "discovery.when": "Published time: ",
+    "discovery.publishedArea": "Published area: ",
+    "discovery.inboxTitle": "Notices",
+    "discovery.inboxNote": "This list is what the server returned. Opening it does not record a send or a delivery.",
+    "discovery.inboxEmpty": "There are no notices on this account.",
+    "discovery.inboxFailed": "Notices could not be loaded.",
+    "discovery.inboxLoading": "Loading notices…",
+    "discovery.inboxUnread": "Unread according to the server: ",
+    "discovery.inboxMore": "There are more notices than this page shows.",
+    "discovery.preferencesTitle": "Notice preferences",
+    "discovery.preferencesUnsaved": "No preferences are saved. This page does not create them.",
+    "discovery.preferencesFailed": "Preferences could not be loaded.",
+    "discovery.preferencesUrgent": "Urgent only: ",
+    "discovery.preferencesAll": "All categories: ",
+    "discovery.yes": "yes",
+    "discovery.no": "no",
+    "discovery.partnership": "The associated center is published.",
+    "discovery.noticeRead": "Read",
+    "discovery.noticeUnread": "Unread"
   }
 };
 
@@ -1263,9 +1351,19 @@
   var discovery = {
     view: 'centers', origin: null, locationStatus: '', locating: false, selected: '',
     generation: 0, busy: false, status: '', centers: [], needs: [], centerPage: 1, needPage: 1, centerLast: 1, needLast: 1,
+    campaigns: [], occurrences: [], meals: [], campaignPage: 1, occurrencePage: 1, mealPage: 1, campaignLast: 1, occurrenceLast: 1, mealLast: 1,
+    campaignStatus: '', occurrenceStatus: '', mealStatus: '', participationGeneration: 0, participationBusy: false, progress: null,
     record: null, relatedNeeds: null, owner: null, offerStatus: '', offerBusy: false, offerPending: null, offerGeneration: 0,
-    history: [], historyPage: 1, historyLast: 1, historyStatus: '', historyBusy: false, historyGeneration: 0, cancelPending: null, cancelGeneration: 0, shareStatus: ''
+    history: [], historyPage: 1, historyLast: 1, historyStatus: '', historyBusy: false, historyGeneration: 0, cancelPending: null, cancelGeneration: 0, shareStatus: '',
+    inbox: [], inboxUnread: null, inboxMore: false, inboxStatus: '', inboxGeneration: 0, preferences: null, preferencesStatus: ''
   };
+
+  var participationLists = {
+    campaigns: { path: '/api/v1/campaigns', page: 'campaignPage', last: 'campaignLast', status: 'campaignStatus' },
+    occurrences: { path: '/api/v1/occurrences', page: 'occurrencePage', last: 'occurrenceLast', status: 'occurrenceStatus' },
+    meals: { path: '/api/v1/meals', page: 'mealPage', last: 'mealLast', status: 'mealStatus' }
+  };
+  var recordHashes = { center: '#centro/', need: '#necesidad/', campaign: '#campana/', occurrence: '#evento/', meal: '#comida/' };
 
   function discoveryRoute() {
     if (!el('descubrir')) return null;
@@ -1275,12 +1373,18 @@
     if (center) return { view: 'center', id: center[1] };
     var need = hash.match(/^#necesidad\/([A-Za-z0-9][A-Za-z0-9-]{0,99})$/);
     if (need) return { view: 'need', id: need[1] };
-    if (hash.indexOf('#centro/') === 0 || hash.indexOf('#necesidad/') === 0) return { view: 'invalid' };
+    var campaign = hash.match(/^#campana\/([A-Za-z0-9][A-Za-z0-9-]{0,99})$/);
+    if (campaign) return { view: 'campaign', id: campaign[1] };
+    var occurrence = hash.match(/^#evento\/([A-Za-z0-9][A-Za-z0-9-]{0,99})$/);
+    if (occurrence) return { view: 'occurrence', id: occurrence[1] };
+    var meal = hash.match(/^#comida\/([A-Za-z0-9][A-Za-z0-9-]{0,99})$/);
+    if (meal) return { view: 'meal', id: meal[1] };
+    if (/^#(centro|necesidad|campana|evento|comida)\//.test(hash)) return { view: 'invalid' };
     return null;
   }
 
   function recordUrl(kind, id) {
-    return location.origin + location.pathname + location.search + (kind === 'center' ? '#centro/' : '#necesidad/') + id;
+    return location.origin + location.pathname + location.search + (recordHashes[kind] || '#descubrir') + id;
   }
 
   function publicText(value) {
@@ -1392,6 +1496,13 @@
     discovery.offerStatus = '';
     discovery.history = [];
     discovery.historyStatus = '';
+    discovery.inboxGeneration += 1;
+    discovery.inbox = [];
+    discovery.inboxUnread = null;
+    discovery.inboxMore = false;
+    discovery.inboxStatus = '';
+    discovery.preferences = null;
+    discovery.preferencesStatus = '';
     ['discovery-quantity', 'discovery-minutes', 'discovery-activity', 'discovery-availability', 'discovery-notes'].forEach(function (id) {
       if (el(id)) el(id).value = '';
     });
@@ -1437,7 +1548,7 @@
     var arrived = !discovery.owner && owner;
     discovery.owner = owner;
     if (owner && arrived) loadStoredPending();
-    if (discoveryRoute() && verifiedUser()) loadHistory();
+    if (discoveryRoute() && verifiedUser()) { loadHistory(); loadInbox(); }
     renderDiscovery();
   }
 
@@ -1452,8 +1563,8 @@
       return;
     }
     if (route.view === 'list') loadCatalog();
-    else loadRecord(route.view === 'center' ? 'center' : 'need', route.id);
-    if (verifiedUser()) loadHistory();
+    else loadRecord(route.view, route.id);
+    if (verifiedUser()) { loadHistory(); loadInbox(); }
   }
 
   function consumeIntentHash() {
@@ -1468,6 +1579,35 @@
     var data = null;
     try { data = await response.json(); } catch (_) { data = null; }
     return { ok: response.ok, status: response.status, data: data };
+  }
+
+  async function accountGet(path) {
+    var response = await fetch(apiOrigin + path, { credentials: 'include', cache: 'no-store', signal: AbortSignal.timeout(15000), headers: { Accept: 'application/json', 'X-Generosity-Channel': appChannel } });
+    var data = null;
+    try { data = await response.json(); } catch (_) { data = null; }
+    return { ok: response.ok, status: response.status, data: data };
+  }
+
+  function safeText(value, max) {
+    return typeof value === 'string' && value.length > 0 && value.length <= max ? value : '';
+  }
+
+  function publicCount(value) {
+    return Number.isInteger(value) && value >= 0 && value <= 1000000 ? value : null;
+  }
+
+  function publicClock(value) {
+    return typeof value === 'string' && /^([01]\d|2[0-3]):[0-5]\d(?::[0-5]\d)?$/.test(value) ? value.slice(0, 5) : '';
+  }
+
+  function publicZone(value) {
+    return typeof value === 'string' && /^[A-Za-z0-9_+/-]{1,64}$/.test(value) ? value : '';
+  }
+
+  function opportunityStatus(kind, status) {
+    if (kind === 'meal') return status === 'open' || status === 'cancelled';
+    if (kind === 'campaign' || kind === 'occurrence') return status === 'published' || status === 'cancelled';
+    return false;
   }
 
   function readCatalog(data) {
@@ -1488,6 +1628,7 @@
     discovery.busy = true;
     discovery.status = 'loading';
     discovery.record = null;
+    var participation = loadParticipation();
     renderDiscovery();
     try {
       var result = await publicGet('/api/v1/sync/catalog?category_version=2&progress_version=1');
@@ -1504,12 +1645,63 @@
     } finally {
       if (generation === discovery.generation) { discovery.busy = false; renderDiscovery(); }
     }
+    await participation;
+  }
+
+  function readParticipation(kind, result) {
+    if (!result.ok || !result.data || !Array.isArray(result.data.data)) return null;
+    return {
+      rows: result.data.data.filter(function (row) {
+        return row && publicId(row.id) && publicText(row.title) && opportunityStatus(kind, row.status);
+      }),
+      last: pageCount(result.data)
+    };
+  }
+
+  async function fetchParticipationKind(name, generation) {
+    var spec = participationLists[name];
+    var kind = name === 'occurrences' ? 'occurrence' : name === 'meals' ? 'meal' : 'campaign';
+    try {
+      var result = await publicGet(spec.path + '?page=' + discovery[spec.page]);
+      if (generation !== discovery.participationGeneration) return;
+      var page = readParticipation(kind, result);
+      if (!page) { discovery[name] = []; discovery[spec.status] = 'unavailable'; return; }
+      discovery[name] = page.rows;
+      discovery[spec.last] = page.last;
+      discovery[spec.page] = Math.min(discovery[spec.page], page.last);
+      discovery[spec.status] = '';
+    } catch (_) {
+      if (generation !== discovery.participationGeneration) return;
+      discovery[name] = [];
+      discovery[spec.status] = 'unavailable';
+    }
+  }
+
+  function loadParticipation(only) {
+    var generation = ++discovery.participationGeneration;
+    var names = only ? [only] : Object.keys(participationLists);
+    names.forEach(function (name) {
+      discovery[participationLists[name].status] = 'loading';
+      discovery[name] = [];
+    });
+    discovery.participationBusy = true;
+    return Promise.all(names.map(function (name) { return fetchParticipationKind(name, generation); })).finally(function () {
+      if (generation !== discovery.participationGeneration) return;
+      discovery.participationBusy = false;
+      renderDiscovery();
+    });
   }
 
   function acceptableRecord(kind, data, id) {
     if (!data || data.id !== id) return false;
     if (kind === 'need') return data.status === 'published' && publicText(data.title);
-    return publicText(data.name);
+    if (kind === 'center') return publicText(data.name);
+    return opportunityStatus(kind, data.status) && publicText(data.title);
+  }
+
+  function recordPath(kind, id) {
+    var paths = { center: '/api/v1/centers/', need: '/api/v1/needs/', campaign: '/api/v1/campaigns/', occurrence: '/api/v1/occurrences/', meal: '/api/v1/meals/' };
+    return paths[kind] ? paths[kind] + encodeURIComponent(id) : '';
   }
 
   async function loadRecord(kind, id) {
@@ -1517,9 +1709,11 @@
     discovery.busy = true;
     discovery.record = null;
     discovery.relatedNeeds = null;
+    discovery.progress = null;
     discovery.status = 'loading';
     renderDiscovery();
-    var path = kind === 'center' ? '/api/v1/centers/' + encodeURIComponent(id) : '/api/v1/needs/' + encodeURIComponent(id);
+    var path = recordPath(kind, id);
+    if (!path) { discovery.status = 'missing'; discovery.busy = false; renderDiscovery(); return; }
     try {
       var result = await publicGet(path);
       if (generation !== discovery.generation) return;
@@ -1534,6 +1728,13 @@
           } catch (_) { /* Center details remain usable if the needs request fails. */ }
           if (generation !== discovery.generation) return;
           discovery.relatedNeeds = relatedNeeds;
+        }
+        if (kind === 'need') {
+          try {
+            var progress = await publicGet('/api/v1/needs/' + encodeURIComponent(id) + '/progress');
+            if (generation !== discovery.generation) return;
+            if (progress.ok && progress.data && progress.data.needId === id) discovery.progress = progress.data;
+          } catch (_) { /* The need remains visible. A missing projection is not treated as fulfillment. */ }
         }
         discovery.record = { kind: kind, data: result.data };
         discovery.status = '';
@@ -1550,6 +1751,25 @@
   function appendText(parent, tag, text) {
     if (!text) return;
     parent.append(node(tag, text));
+  }
+
+  function appendNote(parent, text) {
+    if (!text) return;
+    var note = node('p', text);
+    note.className = 'fine';
+    parent.append(note);
+  }
+
+  function countText(label, value) {
+    var count = publicCount(value);
+    return count === null ? '' : t(label) + new Intl.NumberFormat(effective()).format(count);
+  }
+
+  function closedNotice(kind) {
+    if (kind === 'campaign') return 'discovery.publishClosed';
+    if (kind === 'occurrence') return 'discovery.enrollClosed';
+    if (kind === 'meal') return 'discovery.mealClosed';
+    return '';
   }
 
   function contactLines(contact) {
@@ -1571,12 +1791,67 @@
     return t('discovery.committed') + format.format(need.quantityCommitted) + ' / ' + format.format(need.quantityRequired) + (unit ? ' ' + unit : '') + '. ' + t('discovery.available') + format.format(need.quantityRequired - need.quantityCommitted);
   }
 
+  function renderProgress(parent, id) {
+    var progress = discovery.progress;
+    if (progress && progress.needId === id) {
+      appendText(parent, 'p', countText('discovery.progressRequested', progress.requestedKnown === true ? progress.requested : null));
+      appendText(parent, 'p', countText('discovery.progressCommitted', progress.committedKnown === true ? progress.committed : null));
+      appendText(parent, 'p', countText('discovery.progressValidated', progress.validatedKnown === true ? progress.validated : null));
+      var unit = safeText(progress.unit, 60);
+      if (unit) appendText(parent, 'p', unit);
+    }
+    appendNote(parent, t('discovery.reportedUnknown'));
+    appendNote(parent, t('discovery.notFulfilled'));
+  }
+
+  function renderOpportunity(parent, kind, data) {
+    appendText(parent, 'p', publicText(data.purpose) || publicText(data.description));
+    if (data.status === 'cancelled') {
+      appendNote(parent, t('discovery.cancelledTarget'));
+      appendNote(parent, t('discovery.noAlternative'));
+    }
+    appendText(parent, 'p', safeText(data.area, 200) ? t('discovery.publishedArea') + safeText(data.area, 200) : '');
+    appendText(parent, 'p', safeText(data.venue, 200) ? t('discovery.address') + safeText(data.venue, 200) : '');
+    var when = [isoDate(data.localDate), publicClock(data.windowStart), publicClock(data.windowEnd)].filter(Boolean);
+    if (!when.length && isoStamp(data.startsAt)) when = [isoStamp(data.startsAt), isoStamp(data.endsAt), publicZone(data.timezone)].filter(Boolean);
+    else if (publicZone(data.timezone)) when.push(publicZone(data.timezone));
+    appendText(parent, 'p', when.length ? t('discovery.when') + when.join(' ') : '');
+    appendText(parent, 'p', countText('discovery.serverCapacity', data.capacity));
+    appendText(parent, 'p', countText('discovery.serverReserved', data.reserved));
+    appendText(parent, 'p', countText('discovery.serverAvailable', data.available));
+    appendText(parent, 'p', countText('discovery.progressRequested', data.quantityRequired));
+    appendText(parent, 'p', countText('discovery.progressCommitted', data.quantityCommitted));
+    var unit = safeText(data.portionUnit, 60);
+    if (unit) appendText(parent, 'p', unit);
+    if (kind === 'campaign' && data.partnershipAccepted === true && slugId(data.centerId)) {
+      appendNote(parent, t('discovery.partnership'));
+      var partner = node('a', t('discovery.details'));
+      partner.href = '#centro/' + data.centerId;
+      parent.append(partner);
+    } else if (kind === 'occurrence' && slugId(data.centerId)) {
+      var centerLink = node('a', t('discovery.details'));
+      centerLink.href = '#centro/' + data.centerId;
+      parent.append(centerLink);
+    }
+    appendText(parent, 'p', safeText(data.activity, 200));
+    if (kind === 'occurrence' && publicId(data.campaignId)) {
+      var campaignLink = node('a', t('discovery.campaignDetails'));
+      campaignLink.href = '#campana/' + data.campaignId;
+      parent.append(campaignLink);
+    }
+    appendNote(parent, t(closedNotice(kind)));
+    appendNote(parent, t('discovery.followClosed'));
+    appendNote(parent, t('discovery.money'));
+  }
+
   function renderRecord(parent, kind, data) {
     var title = kind === 'center' ? publicText(data.name) : publicText(data.title);
     var heading = node('h3', title);
     parent.append(heading);
-    appendText(parent, 'p', kind === 'center' ? publicText(data.description) : publicText(data.description));
-    if (kind === 'center') {
+    if (kind === 'campaign' || kind === 'occurrence' || kind === 'meal') {
+      renderOpportunity(parent, kind, data);
+    } else if (kind === 'center') {
+      appendText(parent, 'p', publicText(data.description));
       appendText(parent, 'p', publicText(data.address) ? t('discovery.address') + publicText(data.address) : '');
       if (Array.isArray(data.categories)) {
         var categories = data.categories.filter(function (item) { return typeof item === 'string' && item.length <= 80; }).slice(0, 12);
@@ -1590,6 +1865,7 @@
         var link = node('a', publicText(need.title)); link.className = 'related-need'; link.href = '#necesidad/' + need.id; parent.append(link);
       });
     } else {
+      appendText(parent, 'p', publicText(data.description));
       var methods = needMethods(data);
       if (data.urgent === true) appendText(parent, 'p', t('discovery.urgent'));
       var expires = isoDate(data.expiresOnIsoDate);
@@ -1599,6 +1875,8 @@
       if (Number.isInteger(data.quantityReceived) && data.quantityReceived >= 0) appendText(parent, 'p', t('discovery.received') + new Intl.NumberFormat(effective()).format(data.quantityReceived));
       if (methods.money) appendText(parent, 'p', t('discovery.money'));
       if (!methods.goods && !methods.time) appendText(parent, 'p', t('discovery.noMethods'));
+      renderProgress(parent, data.id);
+      appendNote(parent, t('discovery.followClosed'));
       if (slugId(data.centerId)) {
         var centerLink = node('a', data.centerId);
         centerLink.href = '#centro/' + data.centerId;
@@ -1699,10 +1977,26 @@
     }, { enableHighAccuracy: false, timeout: 10000, maximumAge: 60000 });
   }
 
+  function filteredParticipation(kind) {
+    return (discovery[kind] || []).filter(function (row) {
+      return matchesQuery([publicText(row.title), publicText(row.purpose), publicText(row.description), safeText(row.area, 200), safeText(row.venue, 200), safeText(row.activity, 200)].join(' '));
+    });
+  }
+
+  function listStatusText(kind) {
+    var spec = participationLists[kind];
+    if (!spec) return discovery.status ? t('discovery.' + discovery.status) : '';
+    var key = discovery[spec.status];
+    if (key === 'loading') return t('discovery.listLoading');
+    if (key === 'unavailable') return t('discovery.listUnavailable');
+    return key ? t('discovery.' + key) : '';
+  }
+
   function renderDiscovery() {
     if (!el('discovery-status')) return;
-    el('discovery-status').textContent = discovery.status ? t('discovery.' + discovery.status) : '';
     var listRoute = discoveryRoute() && discoveryRoute().view === 'list';
+    var participation = participationLists[discovery.view];
+    el('discovery-status').textContent = listRoute ? listStatusText(discovery.view) : (discovery.status ? t('discovery.' + discovery.status) : '');
     el('discovery-browse').hidden = !listRoute;
     // Keep missing-record feedback reachable when the list is hidden.
     if (!listRoute) el('discovery-detail').before(el('discovery-status'));
@@ -1713,28 +2007,56 @@
       return matchesQuery(publicText(need.title) + ' ' + publicText(need.description) + ' ' + publicText(center?.name) + ' ' + publicText(center?.address));
     });
     if (discovery.origin) needs.sort(function (a, b) { return centerDistance(discovery.centers.find(function (c) { return c.id === a.centerId; })) - centerDistance(discovery.centers.find(function (c) { return c.id === b.centerId; })); });
-    var rows = discovery.view === 'centers' ? centers : needs;
-    ['centers', 'needs'].forEach(function (kind) {
-      var pageKey = kind === 'centers' ? 'centerPage' : 'needPage';
-      var lastKey = kind === 'centers' ? 'centerLast' : 'needLast';
-      discovery[lastKey] = Math.max(1, Math.ceil((kind === 'centers' ? centers : needs).length / 12));
-      discovery[pageKey] = Math.min(discovery[pageKey], discovery[lastKey]);
-      el('discovery-' + kind + '-tab').setAttribute('aria-pressed', String(discovery.view === kind));
+    var rows = discovery.view === 'centers' ? centers : discovery.view === 'needs' ? needs : filteredParticipation(discovery.view);
+    var activeStatus = participation ? discovery[participation.status] : discovery.status;
+    ['centers', 'needs', 'campaigns', 'occurrences', 'meals'].forEach(function (kind) {
+      var tab = el('discovery-' + kind + '-tab');
+      if (tab) tab.setAttribute('aria-pressed', String(discovery.view === kind));
+      var spec = participationLists[kind];
+      var pageKey = spec ? spec.page : (kind === 'centers' ? 'centerPage' : 'needPage');
+      var lastKey = spec ? spec.last : (kind === 'centers' ? 'centerLast' : 'needLast');
+      if (!spec) {
+        var source = kind === 'centers' ? centers : needs;
+        discovery[lastKey] = Math.max(1, Math.ceil(source.length / 12));
+        discovery[pageKey] = Math.min(discovery[pageKey], discovery[lastKey]);
+      }
       ['prev', 'next'].forEach(function (direction) {
         var button = el('discovery-' + kind + '-' + direction);
-        button.hidden = !listRoute || discovery.view !== kind || discovery[lastKey] === 1 || !!discovery.status;
-        button.disabled = discovery.busy || (direction === 'prev' ? discovery[pageKey] <= 1 : discovery[pageKey] >= discovery[lastKey]);
+        if (!button) return;
+        var blocked = spec ? discovery[spec.status] : discovery.status;
+        button.hidden = !listRoute || discovery.view !== kind || discovery[lastKey] === 1 || !!blocked;
+        button.disabled = (spec ? discovery.participationBusy : discovery.busy) || (direction === 'prev' ? discovery[pageKey] <= 1 : discovery[pageKey] >= discovery[lastKey]);
       });
     });
-    el('discovery-count').textContent = !discovery.status ? rows.length + ' ' + t('discovery.' + (rows.length === 1 ? 'result' : 'results')) : '';
+    el('discovery-count').textContent = !activeStatus ? rows.length + ' ' + t('discovery.' + (rows.length === 1 ? 'result' : 'results')) : '';
     el('discovery-refresh').disabled = discovery.busy;
     el('discovery-locate').disabled = discovery.locating;
     el('discovery-location-clear').hidden = !discovery.origin;
     el('discovery-location-status').textContent = t('discovery.' + (discovery.locationStatus || 'searchHint'));
     var results = el('discovery-results');
     results.replaceChildren();
-    if (listRoute && !discovery.status) {
-      if (!rows.length) results.append(node('p', t('discovery.' + (searchText() ? 'noMatch' : discovery.view === 'centers' ? 'emptyCenters' : 'emptyNeeds'))));
+    var emptyKeys = { centers: 'emptyCenters', needs: 'emptyNeeds', campaigns: 'emptyCampaigns', occurrences: 'emptyOccurrences', meals: 'emptyMeals' };
+    var detailLabels = { centers: 'details', needs: 'needDetails', campaigns: 'campaignDetails', occurrences: 'occurrenceDetails', meals: 'mealDetails' };
+    var detailHashes = { centers: '#centro/', needs: '#necesidad/', campaigns: '#campana/', occurrences: '#evento/', meals: '#comida/' };
+    if (listRoute && participation && !activeStatus) {
+      if (!rows.length) results.append(node('p', t('discovery.' + (searchText() ? 'noMatch' : emptyKeys[discovery.view]))));
+      rows.forEach(function (row) {
+        var card = node('article', '');
+        card.className = 'catalog-card';
+        card.dataset.id = row.id;
+        card.append(node('h3', publicText(row.title)));
+        if (row.status === 'cancelled') appendNote(card, t('discovery.cancelledTarget'));
+        appendText(card, 'p', countText('discovery.serverAvailable', row.available));
+        var actions = node('div', ''); actions.className = 'catalog-actions';
+        var open = node('a', t('discovery.' + detailLabels[discovery.view]));
+        open.className = 'text-button';
+        open.href = detailHashes[discovery.view] + row.id;
+        actions.append(open);
+        card.append(actions);
+        results.append(card);
+      });
+    } else if (listRoute && !discovery.status) {
+      if (!rows.length) results.append(node('p', t('discovery.' + (searchText() ? 'noMatch' : emptyKeys[discovery.view]))));
       var page = discovery.view === 'centers' ? discovery.centerPage : discovery.needPage;
       rows.slice((page - 1) * 12, page * 12).forEach(function (row) {
         var card = node('article', '');
@@ -1753,9 +2075,9 @@
           appendText(card, 'p', quantityLine(row));
         }
         var actions = node('div', ''); actions.className = 'catalog-actions';
-        var open = node('a', t('discovery.' + (discovery.view === 'centers' ? 'details' : 'needDetails')));
+        var open = node('a', t('discovery.' + detailLabels[discovery.view]));
         open.className = 'text-button';
-        open.href = (discovery.view === 'centers' ? '#centro/' : '#necesidad/') + row.id;
+        open.href = detailHashes[discovery.view] + row.id;
         actions.append(open);
         if (discovery.view === 'centers' && centerCoordinates(row)) {
           var show = node('button', t('discovery.onMap')); show.type = 'button'; show.className = 'text-button';
@@ -1764,7 +2086,7 @@
         card.append(actions); results.append(card);
       });
     }
-    var mapCenters = discovery.view === 'centers' ? centers : discovery.centers.filter(function (center) { return needs.some(function (need) { return need.centerId === center.id; }); });
+    var mapCenters = discovery.view === 'needs' ? discovery.centers.filter(function (center) { return needs.some(function (need) { return need.centerId === center.id; }); }) : centers;
     if (listRoute) renderDiscoveryMap(discovery.status ? [] : mapCenters);
     var detail = el('discovery-detail');
     detail.replaceChildren();
@@ -1779,6 +2101,7 @@
     renderOffer();
     renderShare();
     renderHistory();
+    renderInbox();
   }
 
   function renderOffer() {
@@ -1820,7 +2143,7 @@
   function renderShare() {
     var share = el('discovery-share');
     var record = discovery.record;
-    var id = record && (record.kind === 'center' ? (slugId(record.data.id) ? record.data.id : '') : (publicId(record.data.id) ? record.data.id : ''));
+    var id = record && recordHashes[record.kind] && (record.kind === 'center' ? (slugId(record.data.id) ? record.data.id : '') : (publicId(record.data.id) ? record.data.id : ''));
     share.hidden = !id;
     if (!id) return;
     el('discovery-link').value = recordUrl(record.kind, id);
@@ -1832,6 +2155,84 @@
   function offerStatusLabel(status) {
     if (status === 'offered' || status === 'confirmed' || status === 'fulfilled' || status === 'cancelled') return t('discovery.status_' + status);
     return t('discovery.status_other');
+  }
+
+  function renderInbox() {
+    var box = el('discovery-inbox');
+    if (!box) return;
+    box.hidden = !verifiedUser() || !discoveryRoute();
+    var status = el('discovery-inbox-status');
+    if (status) status.textContent = discovery.inboxStatus ? t('discovery.' + discovery.inboxStatus) : '';
+    var list = el('discovery-inbox-list');
+    if (list) {
+      list.replaceChildren();
+      if (!box.hidden && !discovery.inbox.length && !discovery.inboxStatus) list.append(node('p', t('discovery.inboxEmpty')));
+      if (!box.hidden && discovery.inboxUnread !== null && !discovery.inboxStatus) list.append(node('p', t('discovery.inboxUnread') + new Intl.NumberFormat(effective()).format(discovery.inboxUnread)));
+      discovery.inbox.forEach(function (item) {
+        if (!uuid(item.id) || !publicText(item.title)) return;
+        var card = document.createElement('article');
+        card.className = 'catalog-card';
+        card.append(node('h4', publicText(item.title)));
+        card.append(node('p', t(item.read === true ? 'discovery.noticeRead' : 'discovery.noticeUnread')));
+        if (publicId(item.needId)) {
+          var link = node('a', t('discovery.needDetails'));
+          link.href = '#necesidad/' + item.needId;
+          card.append(link);
+        }
+        list.append(card);
+      });
+      if (!box.hidden && discovery.inboxMore === true) list.append(node('p', t('discovery.inboxMore')));
+    }
+    var prefs = el('discovery-preferences');
+    if (!prefs) return;
+    if (box.hidden) { prefs.textContent = ''; return; }
+    if (discovery.preferencesStatus === 'failed') { prefs.textContent = t('discovery.preferencesFailed'); return; }
+    if (!discovery.preferences || discovery.preferences.saved !== true) { prefs.textContent = t('discovery.preferencesUnsaved'); return; }
+    var lines = [];
+    if (discovery.preferences.urgent === true || discovery.preferences.urgent === false) lines.push(t('discovery.preferencesUrgent') + t(discovery.preferences.urgent ? 'discovery.yes' : 'discovery.no'));
+    if (discovery.preferences.all === true || discovery.preferences.all === false) lines.push(t('discovery.preferencesAll') + t(discovery.preferences.all ? 'discovery.yes' : 'discovery.no'));
+    if (Array.isArray(discovery.preferences.categories)) {
+      discovery.preferences.categories.filter(function (item) { return typeof item === 'string' && /^[a-z_]{1,60}$/.test(item); }).slice(0, 30).forEach(function (item) { lines.push(item); });
+    }
+    prefs.textContent = lines.join('. ');
+  }
+
+  async function loadInbox() {
+    if (!verifiedUser() || localCatalogPreview || discovery.inboxStatus === 'inboxLoading') return;
+    var generation = ++discovery.inboxGeneration;
+    var owner = discovery.owner;
+    discovery.inboxStatus = 'inboxLoading';
+    renderInbox();
+    try {
+      var notes = await accountGet('/api/v1/me/notifications');
+      var prefs = await accountGet('/api/v1/me/notification-preferences');
+      if (generation !== discovery.inboxGeneration || discovery.owner !== owner) return;
+      if (!notes.ok || !notes.data || !Array.isArray(notes.data.items)) {
+        discovery.inbox = [];
+        discovery.inboxUnread = null;
+        discovery.inboxMore = false;
+        discovery.inboxStatus = 'inboxFailed';
+      } else {
+        discovery.inbox = notes.data.items.filter(function (item) { return item && uuid(item.id) && publicText(item.title); });
+        discovery.inboxUnread = publicCount(notes.data.unread);
+        discovery.inboxMore = notes.data.hasMore === true;
+        discovery.inboxStatus = '';
+      }
+      if (prefs.ok && prefs.data && prefs.data.saved === false) {
+        discovery.preferences = { saved: false };
+        discovery.preferencesStatus = '';
+      } else if (prefs.ok && prefs.data && prefs.data.saved === true) {
+        discovery.preferences = prefs.data;
+        discovery.preferencesStatus = '';
+      } else {
+        discovery.preferences = null;
+        discovery.preferencesStatus = 'failed';
+      }
+    } catch (_) {
+      if (generation === discovery.inboxGeneration) discovery.inboxStatus = 'inboxFailed';
+    } finally {
+      if (generation === discovery.inboxGeneration && discovery.owner === owner) renderInbox();
+    }
   }
 
   function renderHistory() {
@@ -2042,7 +2443,25 @@
   el('discovery-list-focus').addEventListener('click', function () { el('discovery-results').focus(); });
   el('discovery-locate').addEventListener('click', locateDiscovery);
   el('discovery-location-clear').addEventListener('click', function () { discovery.origin = null; discovery.locationStatus = ''; mapSignature = ''; renderDiscovery(); });
-  ['centers', 'needs'].forEach(function (kind) { el('discovery-' + kind + '-tab').addEventListener('click', function () { discovery.view = kind; renderDiscovery(); }); });
+  ['centers', 'needs', 'campaigns', 'occurrences', 'meals'].forEach(function (kind) {
+    var tab = el('discovery-' + kind + '-tab');
+    if (tab) tab.addEventListener('click', function () { discovery.view = kind; renderDiscovery(); });
+  });
+  Object.keys(participationLists).forEach(function (kind) {
+    var spec = participationLists[kind];
+    var prev = el('discovery-' + kind + '-prev');
+    var next = el('discovery-' + kind + '-next');
+    if (prev) prev.addEventListener('click', function () {
+      if (discovery.participationBusy || discovery[spec.page] <= 1) return;
+      discovery[spec.page] -= 1;
+      loadParticipation(kind);
+    });
+    if (next) next.addEventListener('click', function () {
+      if (discovery.participationBusy || discovery[spec.page] >= discovery[spec.last]) return;
+      discovery[spec.page] += 1;
+      loadParticipation(kind);
+    });
+  });
   el('discovery-sign-in').addEventListener('click', saveIntent);
   el('discovery-centers-prev').addEventListener('click', function () { if (discovery.busy || discovery.centerPage <= 1) return; discovery.centerPage -= 1; renderDiscovery(); });
   el('discovery-centers-next').addEventListener('click', function () { if (discovery.busy || discovery.centerPage >= discovery.centerLast) return; discovery.centerPage += 1; renderDiscovery(); });

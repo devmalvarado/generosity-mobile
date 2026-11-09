@@ -674,9 +674,9 @@ body[data-page="help"] .topbar { position: relative; }
 #discovery-map-status:empty { display: none; }
 #discovery-map-status { margin: .5rem 0; }
 .help-list-panel { min-width: 0; }
-.help-list-toolbar { display: flex; flex-wrap: wrap; gap: .4rem; justify-content: space-between; align-items: center; }
-.help-tabs { display: inline-flex; flex-wrap: wrap; gap: .2rem; padding: .2rem; border-radius: var(--gen-radius-pill); background: var(--card); border: 1px solid var(--line); }
-.help-tabs button { font: inherit; font-size: .95rem; padding: .4rem .8rem; border: 0; border-radius: var(--gen-radius-pill); background: transparent; color: var(--ink-soft); cursor: pointer; }
+.help-list-toolbar { display: flex; flex-wrap: wrap; gap: .4rem; justify-content: space-between; align-items: center; min-width: 0; }
+.help-tabs { display: flex; flex-wrap: wrap; max-width: 100%; min-width: 0; gap: .2rem; padding: .2rem; border-radius: var(--gen-radius-pill); background: var(--card); border: 1px solid var(--line); }
+.help-tabs button { font: inherit; font-size: .95rem; min-height: 44px; padding: .4rem .8rem; border: 0; border-radius: var(--gen-radius-pill); background: transparent; color: var(--ink-soft); cursor: pointer; }
 .help-tabs [aria-pressed="true"] { color: var(--card); background: var(--pin-deep); }
 #discovery-count { margin: .5rem 0; font-size: .85rem; }
 .help-discovery .catalog-card { margin: 0 0 .75rem; background: var(--card); padding: 1rem; gap: .55rem; }

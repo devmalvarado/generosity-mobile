@@ -61,6 +61,7 @@
 "map_load_delayed" = "El mapa está tardando en cargar. Puedes seguir consultando la lista de centros.";
 "map_unavailable" = "El mapa no está disponible. Puedes seguir consultando la lista de centros.";
 "retry" = "Reintentar";
+"design_unavailable" = "Las secciones no están disponibles en este momento. Vuelve a intentarlo.";
 "offer_time" = "Quiero ofrecer mi tiempo";
 "sign_in" = "Iniciar sesión";
 "continue_anonymously" = "Continuar como invitado";

@@ -10,7 +10,7 @@
   <link rel="icon" href="/assets/favicon.png?v=f175327256ea" type="image/png" sizes="192x192">
   <link rel="apple-touch-icon" href="/assets/apple-touch-icon.png?v=9416dc4d1257">
   <link rel="stylesheet" href="/assets/vendor/leaflet/leaflet.css">
-  <link rel="stylesheet" href="/styles.css?v=464ef25fdd65">
+  <link rel="stylesheet" href="/styles.css?v=12c71c61e35d">
 </head>
 <body data-page="help">
   <a class="skip" href="#contenido" data-i18n="skip">Saltar al contenido</a>
@@ -55,7 +55,7 @@
         <div>
           <p class="where" data-i18n="discovery.eyebrow">Cerca de ti</p>
           <h1 id="discovery-title" data-i18n="discovery.title">Encuentra dónde ayudar</h1>
-          <p class="lead" data-i18n="discovery.lead">Conoce los centros y descubre qué necesitan.</p>
+          <p class="lead" data-i18n="discovery.lead">Conoce centros, necesidades, campañas, eventos y comidas publicadas.</p>
         </div>
         <section id="acceso" class="help-account" aria-label="Tu cuenta" data-i18n-aria="discovery.account">
           <div class="account-actions">
@@ -70,7 +70,7 @@
       <div id="discovery-browse">
         <form id="discovery-search" class="help-search" role="search">
           <div>
-            <label for="discovery-query" class="visually-hidden" data-i18n="discovery.searchLabel">Buscar centros y necesidades</label>
+            <label for="discovery-query" class="visually-hidden" data-i18n="discovery.searchLabel">Buscar en el directorio publicado</label>
             <input id="discovery-query" name="query" type="search" maxlength="200" autocomplete="off" spellcheck="false" data-i18n-placeholder="discovery.searchPlaceholder" placeholder="Centro, colonia o ciudad">
           </div>
           <button id="discovery-locate" type="button" class="solid" data-i18n="discovery.locate">Usar mi ubicación</button>
@@ -89,6 +89,9 @@
               <div class="help-tabs" role="group" aria-label="Mostrar" data-i18n-aria="discovery.show">
                 <button id="discovery-centers-tab" type="button" aria-pressed="true" data-i18n="discovery.centers">Centros</button>
                 <button id="discovery-needs-tab" type="button" aria-pressed="false" data-i18n="discovery.needs">Necesidades</button>
+                <button id="discovery-campaigns-tab" type="button" aria-pressed="false" data-i18n="discovery.campaigns">Campañas</button>
+                <button id="discovery-occurrences-tab" type="button" aria-pressed="false" data-i18n="discovery.occurrences">Eventos</button>
+                <button id="discovery-meals-tab" type="button" aria-pressed="false" data-i18n="discovery.meals">Comidas</button>
               </div>
               <button id="discovery-refresh" class="text-button" type="button" data-i18n="discovery.refresh">Actualizar</button>
             </div>
@@ -100,6 +103,12 @@
               <button type="button" id="discovery-centers-next" class="ghost" data-i18n="discovery.next">Siguiente</button>
               <button type="button" id="discovery-needs-prev" class="ghost" data-i18n="discovery.prev">Anterior</button>
               <button type="button" id="discovery-needs-next" class="ghost" data-i18n="discovery.next">Siguiente</button>
+              <button type="button" id="discovery-campaigns-prev" class="ghost" data-i18n="discovery.prev">Anterior</button>
+              <button type="button" id="discovery-campaigns-next" class="ghost" data-i18n="discovery.next">Siguiente</button>
+              <button type="button" id="discovery-occurrences-prev" class="ghost" data-i18n="discovery.prev">Anterior</button>
+              <button type="button" id="discovery-occurrences-next" class="ghost" data-i18n="discovery.next">Siguiente</button>
+              <button type="button" id="discovery-meals-prev" class="ghost" data-i18n="discovery.prev">Anterior</button>
+              <button type="button" id="discovery-meals-next" class="ghost" data-i18n="discovery.next">Siguiente</button>
             </div>
           </div>
         </div>
@@ -140,6 +149,14 @@
           <button type="button" id="discovery-history-retry" class="ghost" hidden data-i18n="discovery.cancelRetry">Reintentar la misma cancelación</button>
         </div>
       </div>
+      <section id="discovery-inbox" hidden>
+        <h3 data-i18n="discovery.inboxTitle">Avisos</h3>
+        <p class="fine" data-i18n="discovery.inboxNote">Esta lista es la que devolvió el servidor. Abrirla no marca un envío ni una entrega.</p>
+        <p id="discovery-inbox-status" class="result" role="status"></p>
+        <div id="discovery-inbox-list"></div>
+        <h3 data-i18n="discovery.preferencesTitle">Preferencias de avisos</h3>
+        <p id="discovery-preferences" class="fine" role="status"></p>
+      </section>
       <form id="discovery-share" hidden>
         <label for="discovery-link" data-i18n="discovery.linkLabel">Enlace de este registro</label>
         <input id="discovery-link" readonly spellcheck="false">
@@ -168,6 +185,6 @@
   </footer>
 
   <script src="/assets/vendor/leaflet/leaflet.js"></script>
-  <script src="/portal.js?v=ff9d9d18178d"></script>
+  <script src="/portal.js?v=25ed18ff272c"></script>
 </body>
 </html>

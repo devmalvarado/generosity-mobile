@@ -19,7 +19,17 @@ def public_path(path):
     query = parse_qs(url.query, keep_blank_values=True)
     if url.path == '/api/v1/sync/catalog':
         return query == {'category_version': ['2'], 'progress_version': ['1']}
-    return bool(re.fullmatch(r'/api/v1/(centers|needs)/[a-zA-Z0-9][a-zA-Z0-9-]{0,99}', url.path) and not url.query)
+    record = r'[a-zA-Z0-9][a-zA-Z0-9-]{0,99}'
+    if re.fullmatch(rf'/api/v1/(centers|needs)/{record}', url.path):
+        return not url.query
+    if re.fullmatch(rf'/api/v1/needs/{record}/progress', url.path):
+        return not url.query
+    if re.fullmatch(r'/api/v1/(campaigns|occurrences|meals)', url.path):
+        page = query.get('page')
+        return list(query) == ['page'] and len(page) == 1 and bool(re.fullmatch(r'[1-9][0-9]{0,3}', page[0]))
+    if re.fullmatch(rf'/api/v1/(campaigns|occurrences|meals)/{record}', url.path):
+        return not url.query
+    return False
 
 
 class NoRedirect(HTTPRedirectHandler):
@@ -82,10 +92,24 @@ def self_test():
     assert public_path('/api/v1/sync/catalog?category_version=2&progress_version=1')
     assert public_path('/api/v1/centers/centro-norte')
     assert public_path('/api/v1/needs/1234-abcd')
-    for path in ['/auth/session', '/api/v1/me/contributions', '/api/v1/staff/centers',
+    assert public_path('/api/v1/needs/1234-abcd/progress')
+    assert public_path('/api/v1/campaigns?page=1')
+    assert public_path('/api/v1/occurrences?page=2')
+    assert public_path('/api/v1/meals?page=25')
+    assert public_path('/api/v1/campaigns/44444444-4444-4444-8444-444444444444')
+    assert public_path('/api/v1/occurrences/55555555-5555-4555-8555-555555555555')
+    assert public_path('/api/v1/meals/66666666-6666-4666-8666-666666666666')
+    for path in ['/auth/session', '/api/v1/me/contributions', '/api/v1/me/notifications',
+                 '/api/v1/me/notification-preferences', '/api/v1/staff/centers',
+                 '/api/v1/opportunities/campaign/44444444-4444-4444-8444-444444444444',
+                 '/api/v1/outcome-updates/77777777-7777-4777-8777-777777777777',
                  '//other.test/api/v1/centers/a', '/api/v1/centers/../users',
                  '/api/v1/centers/a?include=private', '/api/v1/sync/catalog?category_version=2&progress_version=1&token=secret',
-                 '/api/v1/centers/%2e%2e', '/api/v1/centers/a#fragment']:
+                 '/api/v1/centers/%2e%2e', '/api/v1/centers/a#fragment',
+                 '/api/v1/campaigns', '/api/v1/campaigns?page=0', '/api/v1/campaigns?page=01',
+                 '/api/v1/campaigns?page=1&token=secret', '/api/v1/campaigns?page=1&page=2',
+                 '/api/v1/needs/1234-abcd/progress?fulfilled=true',
+                 '/api/v1/meals/66666666-6666-4666-8666-666666666666/commit']:
         assert not public_path(path), path
     assert not hasattr(PortalHandler, 'do_POST')
 

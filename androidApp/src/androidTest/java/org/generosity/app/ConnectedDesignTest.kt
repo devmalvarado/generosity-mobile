@@ -47,13 +47,13 @@ class ConnectedDesignTest {
             }
         }
         val app = GenerosityAppState(scope, backend = BackendStore(connection), clock = { "2026-11-01T00:00:00Z" })
-        ui.setContent { GenerosityApp(app, GoogleCenterMapRenderer, placeSearch = { query, _ ->
+        ui.setContent { GenerosityApp(app, GoogleCenterMapRenderer, defaultDesign = true, placeSearch = { query, _ ->
             assertEquals("Neighborhood", query)
             listOf(DiscoveryArea("Neighborhood", BundledKindnessCatalog.centers().first { it.id == "kc-children-001" }.coordinates))
         }) }
         ui.runOnIdle { app.signIn("1", "María", remoteAccount = true) }
         ui.waitUntil(5000) { app.state.value.centers.isNotEmpty() }
-        ui.onNodeWithTag("open-native-preview").performClick()
+        ui.onNodeWithTag("open-native-preview").assertDoesNotExist()
         ui.onNodeWithTag("preview-pin-c1").assertDoesNotExist()
         ui.onNodeWithTag("preview-list").performClick()
         ui.onNodeWithTag("connected-center-kc-children-001").performScrollTo().performClick()
@@ -77,6 +77,7 @@ class ConnectedDesignTest {
         ui.runOnIdle { accept = true; app.onResume() }
         ui.waitUntil(5000) { app.state.value.contributions.size == 1 }
         ui.onNodeWithTag("preview-screens").performClick()
+        ui.onNodeWithText("Exit design preview").assertDoesNotExist()
         ui.onNodeWithTag("preview-route-history").performScrollTo().performClick()
         ui.onNodeWithText("School supplies").performScrollTo().assertIsDisplayed()
         assertTrue(app.state.value.pendingOperations.isEmpty())
@@ -95,6 +96,21 @@ class ConnectedDesignTest {
         ui.runOnIdle { previewAccess = false; app.onResume() }
         ui.waitUntil(5000) { app.state.value.features.previewGroups.isEmpty() }
         ui.onNodeWithTag("preview-screens").assertDoesNotExist()
-        ui.onNodeWithTag("tab-map").assertExists()
+        ui.onNodeWithTag("tab-map").assertDoesNotExist()
+        ui.onNodeWithTag("preview-unavailable").assertIsDisplayed()
+        ui.onNodeWithText("Try again").assertIsDisplayed()
+    }
+
+    @Test fun missingGroupsKeepGuestSignInWithoutGrantingRoutes() {
+        val app = GenerosityAppState(scope)
+        var signIn = false
+        ui.setContent { GenerosityApp(app, GoogleCenterMapRenderer, defaultDesign = true, onSignIn = { signIn = true }) }
+        ui.onNodeWithTag("preview-unavailable").assertIsDisplayed()
+        ui.onNodeWithTag("open-native-preview").assertDoesNotExist()
+        ui.onNodeWithTag("preview-screens").assertDoesNotExist()
+        ui.onNodeWithTag("tab-map").assertDoesNotExist()
+        ui.onNodeWithTag("connected-query").assertDoesNotExist()
+        ui.onNodeWithText("Sign in").performClick()
+        ui.runOnIdle { assertTrue(signIn) }
     }
 }

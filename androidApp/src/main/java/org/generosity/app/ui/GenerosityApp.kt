@@ -69,7 +69,8 @@ fun GenerosityApp(
     authBusy: Boolean = false, authFailed: Boolean = false,
     placeSearch: (suspend (String, SupportedLocale) -> List<DiscoveryArea>)? = null,
     locationSource: DeviceLocationSource? = null,
-    designHarness: Boolean = false
+    designHarness: Boolean = false,
+    defaultDesign: Boolean = false
 ) {
     val context = LocalContext.current
     val search: suspend (String, SupportedLocale) -> List<DiscoveryArea> = placeSearch ?: { query, locale -> searchPlaces(context, query, locale) }
@@ -89,9 +90,28 @@ fun GenerosityApp(
         LayoutDirection.Rtl else LayoutDirection.Ltr
     CompositionLocalProvider(LocalLayoutDirection provides direction) {
         GenerosityTheme {
-            if (showPreview && previewGroups.isNotEmpty()) {
+            if (defaultDesign && previewGroups.isEmpty()) {
+                Column(Modifier.fillMaxSize().safeDrawingPadding().verticalScroll(rememberScrollState()).padding(GenSpace.lg),
+                    horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.spacedBy(GenSpace.lg, Alignment.CenterVertically)) {
+                    BrandWordmark()
+                    if (state.syncing) {
+                        CircularProgressIndicator()
+                        Text(localizedString(R.string.sync_busy, locale))
+                    } else {
+                        Text(localizedString(R.string.design_unavailable, locale), Modifier.testTag("preview-unavailable"))
+                        TextButton(onClick = appState::onResume) { Text(localizedString(R.string.retry, locale)) }
+                        if (!state.profile.isRegistered) {
+                            TextButton(onClick = onSignIn, enabled = !authBusy) { Text(localizedString(R.string.auth_sign_in, locale)) }
+                            if (authFailed) Text(localizedString(R.string.auth_failed, locale), color = MaterialTheme.colorScheme.error)
+                        }
+                    }
+                }
+                return@GenerosityTheme
+            }
+            if ((defaultDesign || showPreview) && previewGroups.isNotEmpty()) {
                 ConnectedDesign(state, appState, previewGroups, mapRenderer, mapState, search, location, locationSource,
-                    onLanguageSelected, savingLanguage, languageSaveFailed, onSignIn, onSignOut, onCreate, authBusy, authFailed) { showPreview = false }
+                    onLanguageSelected, savingLanguage, languageSaveFailed, onSignIn, onSignOut, onCreate, authBusy, authFailed,
+                    onClose = if (defaultDesign) null else { { showPreview = false } })
                 return@GenerosityTheme
             }
             if (showInbox) AlertDialog(onDismissRequest = { showInbox = false },
@@ -191,7 +211,7 @@ private fun ConnectedDesign(
     location: DiscoveryLocation?, source: DeviceLocationSource?,
     onLanguage: (SupportedLocale?) -> Unit, savingLanguage: Boolean, languageFailed: Boolean,
     onSignIn: () -> Unit, onSignOut: () -> Unit, onCreate: () -> Unit, authBusy: Boolean, authFailed: Boolean,
-    onClose: () -> Unit
+    onClose: (() -> Unit)?
 ) {
     val canOffer = state.canRecordContributions && "contributions" in groups
     val mapCenter = state.selectedCenter ?: state.centers.firstOrNull()

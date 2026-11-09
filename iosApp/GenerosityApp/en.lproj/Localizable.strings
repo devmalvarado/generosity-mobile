@@ -61,6 +61,7 @@
 "map_load_delayed" = "The map is taking longer to load. You can still browse the list of centers.";
 "map_unavailable" = "The map is unavailable. You can still browse the list of centers.";
 "retry" = "Try again";
+"design_unavailable" = "Sections are currently unavailable. Please try again.";
 "offer_time" = "I can volunteer";
 "sign_in" = "Sign in";
 "continue_anonymously" = "Continue as a guest";

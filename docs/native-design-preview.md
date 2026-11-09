@@ -20,11 +20,23 @@ The same `GenerosityAppState` / `GenerosityStore` instance backs old and new lay
 
 `preview.*` controls access to layouts; contribution business flags, authentication and server authorization still apply separately. The connected map exposes only filters supported by the mobile model (category/search/location); fictional resource-funding controls are not sent to the server. History and impact are separate views of authoritative state, not demo totals.
 
-Public read-only checks on 2026-11-04 returned 200 for health, centers and needs. `/api/v1/features`, `/campaigns`, `/occurrences` and `/meals` returned 404 on the production host. Consequently ordinary production navigation still requires deployment/activation of the feature API. No permission is inferred from a missing endpoint, and this change does not deploy it.
+Preview migration/API activation and native distribution were completed on
+2026-11-06. The connected design is installed on the physical iPhone 14 Pro/17 and
+iPad, and validated in the Android emulator. The preview catalog copy retained
+test data and yielded 172 centers and three needs. See
+[release evidence](testing/release-controls.md) and [device evidence](testing/native-design-preview.md).
+
+Read-only probes on 2026-11-08 returned 200 for preview `/api/v1/features`,
+`/api/v1/campaigns`, `/api/v1/occurrences` and `/api/v1/meals`; participation lists
+were empty. Equivalent production endpoints returned 404. Production navigation
+still requires feature API rollout/activation. No permission is inferred from a
+missing endpoint, and available empty lists do not certify working participation.
 
 ## Controls and coverage
 
-All controls are off by default. In `/admin/features`, an allowlisted verified operator can select Off, Test accounts only (verified numeric user IDs), or Everyone. Prefer targeted test accounts when validating. Reasons, optimistic versions and audit records use the existing feature-control flow.
+Migration defaults for the design controls are off. The deployed preview has
+enabled groups; all ten were effective for an anonymous read on 2026-11-08.
+In `/admin/features`, an allowlisted verified operator can select Off, Test accounts only (verified numeric user IDs), or Everyone. Prefer targeted test accounts when validating. Reasons, optimistic versions and audit records use the existing feature-control flow.
 
 | Backend key | Native routes |
 | --- | --- |
@@ -39,7 +51,7 @@ All controls are off by default. In `/admin/features`, an allowlisted verified o
 | `preview.account` | profile, settings; phone and sample deletion confirmations |
 | `preview.payments` | donate, tax (checkout and issuance always disabled) |
 
-When any group is enabled for the current account, **Explore design preview / Explorar diseño de prueba** appears in the app. The inventory shows only enabled routes. Cross-group navigation requires its target flag. Connected discovery also requires the contributions preview group before showing enabled offer controls; domain contribution permissions remain authoritative. Connected welcome uses the real registration/sign-in flow. Enabling all groups makes the entire 34-route tour available.
+In the **iOS and Android Preview channels**, the connected design is the main interface after the existing welcome/sign-in/guest entry. There is no exploration button or exit to the old layout, including after relaunch. With no effective groups, the app shows a loading/unavailable state with retry instead of granting routes or restoring the old layout. Production variants retain **Explore design preview / Explorar diseño de prueba** when a group is enabled. The inventory shows only enabled routes. Cross-group navigation requires its target flag. Connected discovery also requires the contributions preview group before showing enabled offer controls; domain contribution permissions remain authoritative. Connected welcome uses the real registration/sign-in flow. Enabling all groups makes the entire 34-route tour available.
 
 ## Remaining fixture interactions
 
@@ -66,8 +78,8 @@ The map header uses a compact, centered version of the same wordmark, with list/
 
 1. Deploy the migration `2026_11_03_000002_add_native_preview_flags.php` and API registry together after an explicit deployment request.
 2. Distribute a new native build (both production and preview variants contain the gated design area).
-3. Enable selected groups for verified test account IDs; refresh/reopen the app and use its design entry.
-4. Disable the groups to remove the entry on the next effective-feature refresh.
+3. Enable selected groups for the intended viewers; refresh/reopen the app. iOS and Android Preview open the design directly after welcome; other variants retain their design entry.
+4. Disable groups to remove their routes on the next effective-feature refresh. With all groups disabled, both Preview variants show their unavailable/retry state; other variants remove the optional entry.
 
 No hosting change is made by the native test harness. In an **iOS DEBUG build only**, launch with `--native-preview` to use an isolated all-groups fixture without credentials or a server. Release builds ignore it. Android instrumentation directly constructs `NativePreview` with fixture flags. For manual exploration, Android debug builds also include `NativePreviewActivity`, which stays open without instrumentation and has no account or backend connection. Neither mechanism is a production feature-access fallback; the activity and its manifest entry are absent from release builds.
 
@@ -79,7 +91,7 @@ adb shell am start -n org.generosity.app.preview/org.generosity.app.NativePrevie
 
 Omit the `language` extra to follow the device language. Use the screen inventory to exit.
 
-See [test evidence](testing/native-design-preview.md) and [OpenSpec tasks](../openspec/changes/add-native-design-preview/tasks.md). Activation and real service implementation remain separate work.
+See [test evidence](testing/native-design-preview.md) and [OpenSpec tasks](../openspec/changes/add-native-design-preview/tasks.md). Preview activation is complete; production activation, full device/accessibility acceptance and the remaining real services are separate work.
 
 For manual **connected** inspection in a DEBUG build, use `--connected-design` on iOS or:
 

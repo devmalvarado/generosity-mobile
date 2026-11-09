@@ -61,6 +61,7 @@
     <string name="map_load_delayed">The map is taking longer to load. You can still browse the list of centers.</string>
     <string name="map_unavailable">The map is unavailable. You can still browse the list of centers.</string>
     <string name="retry">Try again</string>
+    <string name="design_unavailable">Sections are currently unavailable. Please try again.</string>
     <string name="offer_time">I can volunteer</string>
     <string name="sign_in">Sign in</string>
     <string name="continue_anonymously">Continue as a guest</string>

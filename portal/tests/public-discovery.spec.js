@@ -64,7 +64,7 @@ function receipt(status) {
 }
 
 async function install(page, options) {
-  const state = Object.assign({ user: null, centers: pageOf([center()], 3), needs: pageOf([need(['goods', 'time'])]), centerStatus: 200, needStatus: 200, posts: [], gets: [] }, options || {});
+  const state = Object.assign({ user: null, centers: pageOf([center()], 3), needs: pageOf([need(['goods', 'time'])]), campaigns: pageOf([]), occurrences: pageOf([]), meals: pageOf([]), centerStatus: 200, needStatus: 200, posts: [], gets: [], participationGets: [] }, options || {});
   await page.route(api + '/**', route => {
     const url = new URL(route.request().url());
     if (/\/api\/v1\/(me\/)?features$/.test(url.pathname)) return route.fulfill({json:{channel:'production',features:state.features || {'contributions.create':true,'needs.publish':true,'needs.progress':true}}});
@@ -80,6 +80,30 @@ async function install(page, options) {
     if (path === '/api/v1/centers/' + centerId) return route.fulfill({ json: center() });
     if (path === '/api/v1/needs/' + needId) return state.needStatus === 200 ? route.fulfill({ json: state.needs.data[0] || need(['goods', 'time']) }) : route.fulfill({ status: state.needStatus, body: 'missing' });
     if (path === '/api/v1/me/contributions') return route.fulfill({ json: state.history || pageOf([]) });
+    if (path === '/api/v1/campaigns' || path === '/api/v1/occurrences' || path === '/api/v1/meals') {
+      state.participationGets.push('GET ' + path + url.search);
+      const rows = path.endsWith('/campaigns') ? state.campaigns : path.endsWith('/occurrences') ? state.occurrences : state.meals;
+      return route.fulfill({ json: rows || pageOf([]) });
+    }
+    if (path.startsWith('/api/v1/campaigns/') || path.startsWith('/api/v1/occurrences/') || path.startsWith('/api/v1/meals/')) {
+      state.participationGets.push('GET ' + path);
+      const record = path.startsWith('/api/v1/campaigns/') ? state.campaign : path.startsWith('/api/v1/occurrences/') ? state.occurrence : state.meal;
+      const status = path.startsWith('/api/v1/campaigns/') ? state.campaignStatus : path.startsWith('/api/v1/occurrences/') ? state.occurrenceStatus : state.mealStatus;
+      return record && status !== 404 && path.endsWith('/' + record.id) ? route.fulfill({ json: record }) : route.fulfill({ status: status || 404, body: 'missing' });
+    }
+    if (/^\/api\/v1\/needs\/[^/]+\/progress$/.test(path)) {
+      state.participationGets.push('GET ' + path);
+      if (state.progressStatus) return route.fulfill({ status: state.progressStatus, body: 'unavailable' });
+      return route.fulfill({ json: state.progress || { needId: path.split('/')[4], requested: null, requestedKnown: false, committed: null, committedKnown: false, reported: null, reportedKnown: false, validated: null, validatedKnown: false, unit: null, updatedAt: '2026-11-04T15:00:00Z', fulfilled: false } });
+    }
+    if (path === '/api/v1/me/notifications' && route.request().method() === 'GET') {
+      state.participationGets.push('GET ' + path);
+      return route.fulfill({ json: state.inbox || { items: [], unread: 0, hasMore: false } });
+    }
+    if (path === '/api/v1/me/notification-preferences' && route.request().method() === 'GET') {
+      state.participationGets.push('GET ' + path);
+      return route.fulfill({ json: state.preferences || { saved: false } });
+    }
     if (path === '/api/v1/contributions' && route.request().method() === 'POST') {
       state.posts.push({ key: route.request().headers()['idempotency-key'], csrf: route.request().headers()['x-csrf-token'], body: route.request().postDataJSON() });
       return state.offer(route);
@@ -443,6 +467,9 @@ test('local live preview reads only the public relay and never checks or proxies
     .replace('<head>', '<head><meta name="generosity-public-api-origin" content="/__public">');
   await page.route('**/ayudar/', route => route.fulfill({ contentType: 'text/html', body: html }));
   await page.route('**/__public/api/v1/sync/catalog?**', route => route.fulfill({ json: { catalog: { schemaVersion: 1, centers: [] } } }));
+  await page.route('**/__public/api/v1/campaigns?**', route => route.fulfill({ json: pageOf([]) }));
+  await page.route('**/__public/api/v1/occurrences?**', route => route.fulfill({ json: pageOf([]) }));
+  await page.route('**/__public/api/v1/meals?**', route => route.fulfill({ json: pageOf([]) }));
   await page.goto('/ayudar/');
   await page.locator('#idioma').selectOption('es');
   await expect(page.locator('#account-status')).toContainText('sitio publicado');
@@ -450,4 +477,149 @@ test('local live preview reads only the public relay and never checks or proxies
   await expect(page.locator('#account-retry')).toBeHidden();
   await expect(page.locator('#discovery-count')).toHaveText('0 resultados');
   expect(privateRequests).toEqual([]);
+});
+
+const campaignId = '44444444-4444-4444-8444-444444444444';
+const eventId = '55555555-5555-4555-8555-555555555555';
+const mealId = '66666666-6666-4666-8666-666666666666';
+const noticeId = '77777777-7777-4777-8777-777777777777';
+
+function campaign() {
+  return {
+    id: campaignId, status: 'published', type: 'drive',
+    title: { es: 'Campaña de invierno', en: 'Winter campaign' },
+    purpose: { es: 'Mantas publicadas', en: 'Published blankets' },
+    area: 'Centro publicado', partnershipAccepted: false, centerId: 'comedor-secreto',
+    alternatives: [], updatedAt: '2026-11-04T15:00:00Z',
+    private_plan: 'PLAN-SECRETO-441', household: secret
+  };
+}
+
+function occurrence(status) {
+  return {
+    id: eventId, status: status || 'published', version: 3,
+    title: { es: status === 'cancelled' ? 'Jornada cancelada' : 'Jornada del sábado', en: 'Saturday session' },
+    description: { es: 'Apoyo publicado', en: 'Published support' },
+    activity: 'acomodo', startsAt: '2099-12-31T15:00:00Z', endsAt: '2099-12-31T18:00:00Z',
+    timezone: 'America/Mexico_City', venue: 'Salón publicado',
+    capacity: 10, reserved: 10, available: 0, ownerType: 'center', centerId: centerId,
+    alternatives: [], updatedAt: '2026-11-04T15:00:00Z', roster: ['SECRET-ROSTER']
+  };
+}
+
+function meal() {
+  return {
+    id: mealId, status: 'open',
+    title: { es: 'Comida del jueves', en: 'Thursday meal' },
+    localDate: '2099-12-31', windowStart: '12:00:00', windowEnd: '14:00:00',
+    timezone: 'America/Mexico_City', portionUnit: 'raciones',
+    quantityRequired: 20, quantityCommitted: 4, available: 16,
+    alternatives: [], updatedAt: '2026-11-04T15:00:00Z',
+    private_details: 'DETALLE-PRIVADO-882', recipient: 'SECRET-RECIPIENT'
+  };
+}
+
+test('published campaigns, events and meals show public text and do not prefetch the next page', async ({ page }) => {
+  const state = await install(page, { campaigns: pageOf([campaign()], 2), occurrences: pageOf([occurrence()]), meals: pageOf([meal()]) });
+  await page.goto('/ayudar/');
+  await page.locator('#idioma').selectOption('es');
+  await page.locator('#discovery-campaigns-tab').click();
+  await expect(page.locator('#discovery-results')).toContainText('Campaña de invierno');
+  await expect(page.locator('#discovery-results')).not.toContainText('PLAN-SECRETO-441');
+  await expect(page.locator('#discovery-results')).not.toContainText('comedor-secreto');
+  expect(state.participationGets.some(item => item.includes('page=2'))).toBe(false);
+  await expect(page.locator('#discovery-campaigns-next')).toBeVisible();
+  await page.locator('#discovery-campaigns-next').click();
+  await expect.poll(() => state.participationGets.filter(item => item.includes('/campaigns?page=2')).length).toBe(1);
+  expect(state.participationGets.some(item => item.includes('page=3'))).toBe(false);
+  await page.locator('#discovery-occurrences-tab').click();
+  await expect(page.locator('#discovery-results')).toContainText('Jornada del sábado');
+  await expect(page.locator('#discovery-results')).not.toContainText('SECRET-ROSTER');
+  await page.locator('#discovery-meals-tab').click();
+  await expect(page.locator('#discovery-results')).toContainText('Comida del jueves');
+  await expect(page.locator('#discovery-results')).toContainText('Disponible según el servidor: 16');
+  await expect(page.locator('#discovery-results')).not.toContainText('DETALLE-PRIVADO-882');
+  await expect(page.locator('#discovery-results')).not.toContainText('SECRET-RECIPIENT');
+  expect(state.posts).toEqual([]);
+});
+
+test('a missing or invalid campaign does not open another record', async ({ page }) => {
+  const missing = '88888888-8888-4888-8888-888888888888';
+  const state = await install(page, { campaigns: pageOf([campaign()]), campaignStatus: 404 });
+  await page.goto('/ayudar/#campana/' + missing);
+  await page.locator('#idioma').selectOption('es');
+  await expect(page.locator('#discovery-status')).toContainText('No se abrió otro');
+  await expect(page.locator('#discovery-detail')).toBeHidden();
+  await expect(page.locator('body')).not.toContainText('Campaña de invierno');
+  expect(state.participationGets.filter(item => item.includes(campaignId))).toEqual([]);
+  expect(state.gets.some(item => item.includes('/api/v1/centers'))).toBe(false);
+  await page.goto('/ayudar/#campana/NOT_VALID');
+  await expect(page.locator('#discovery-status')).toContainText('No se abrió otro');
+  expect(state.participationGets.filter(item => item.includes('NOT_VALID'))).toEqual([]);
+  expect(state.posts).toEqual([]);
+});
+
+test('a cancelled event stays cancelled and closed actions are not submitted', async ({ page }) => {
+  const cancelled = occurrence('cancelled');
+  cancelled.alternatives = [{ id: 'otro', title: 'OTRA-OPCION-SECRETA' }];
+  const state = await install(page, { user: user(7), campaign: campaign(), occurrence: cancelled, meal: meal() });
+  await page.goto('/ayudar/#evento/' + eventId);
+  await page.locator('#idioma').selectOption('es');
+  await expect(page.locator('#discovery-detail')).toContainText('Jornada cancelada');
+  await expect(page.locator('#discovery-detail')).toContainText('cancelado');
+  await expect(page.locator('#discovery-detail')).toContainText('No se abrió otro');
+  await expect(page.locator('body')).not.toContainText('OTRA-OPCION-SECRETA');
+  await expect(page.locator('#discovery-detail button, #discovery-detail input, #discovery-detail textarea')).toHaveCount(0);
+  for (const [hash, text] of [['#campana/' + campaignId, 'Campaña de invierno'], ['#comida/' + mealId, 'Comida del jueves']]) {
+    await page.goto('/ayudar/' + hash);
+    await page.locator('#idioma').selectOption('es');
+    await expect(page.locator('#discovery-detail')).toContainText(text);
+    await expect(page.locator('#discovery-detail')).toContainText('no se envía desde esta página');
+    await expect(page.locator('#discovery-detail')).toContainText('no se activan desde esta página');
+    await expect(page.locator('#discovery-detail')).toContainText('El dinero no se puede aportar');
+  }
+  await expect(page.locator('#descubrir input[type=email], #descubrir input[autocomplete=cc-number], #descubrir input[name=card]')).toHaveCount(0);
+  expect(state.posts).toEqual([]);
+});
+
+test('need progress does not claim fulfillment', async ({ page }) => {
+  const state = await install(page, { progress: {
+    needId: needId, requested: 20, requestedKnown: true, committed: 4, committedKnown: true,
+    reported: 909091, reportedKnown: false, validated: 1, validatedKnown: true, unit: 'mantas',
+    updatedAt: '2026-11-04T15:00:00Z', fulfilled: true, claim: 'CUBIERTA-INVENTADA'
+  } });
+  await page.goto('/ayudar/#necesidad/' + needId);
+  await page.locator('#idioma').selectOption('es');
+  await expect(page.locator('#discovery-detail')).toContainText('Comprometido según el servidor: 4');
+  await expect(page.locator('#discovery-detail')).toContainText('Validado según el servidor: 1');
+  await expect(page.locator('#discovery-detail')).toContainText('no está confirmado');
+  await expect(page.locator('#discovery-detail')).toContainText('no indica que la necesidad esté cubierta');
+  await expect(page.locator('#discovery-detail')).not.toContainText('CUBIERTA-INVENTADA');
+  await expect(page.locator('#discovery-detail')).not.toContainText('909091');
+  expect(state.posts).toEqual([]);
+});
+
+test('inbox and preferences are read without a write and clear when the account changes', async ({ page }) => {
+  let current = user(7);
+  const state = await install(page, {
+    user: current,
+    inbox: { items: [{ id: noticeId, title: { es: 'Aviso público', en: 'Public notice' }, read: false, household: secret, body: 'CUERPO-PRIVADO-773' }], unread: 1, hasMore: false },
+    preferences: { saved: false, email: 'secret@example.org' }
+  });
+  await page.goto('/ayudar/');
+  await page.locator('#idioma').selectOption('es');
+  await expect(page.locator('#discovery-inbox')).toContainText('Aviso público');
+  await expect(page.locator('#discovery-inbox')).toContainText('Sin leer según el servidor: 1');
+  await expect(page.locator('#discovery-inbox')).toContainText('No hay preferencias guardadas');
+  await expect(page.locator('#discovery-inbox')).not.toContainText('CUERPO-PRIVADO-773');
+  await expect(page.locator('#discovery-inbox')).not.toContainText(secret);
+  await expect(page.locator('#discovery-inbox')).not.toContainText('secret@example.org');
+  await expect(page.locator('#discovery-inbox input, #discovery-inbox button, #discovery-inbox textarea')).toHaveCount(0);
+  expect(state.posts).toEqual([]);
+  current = user(8);
+  state.user = current;
+  state.inbox = { items: [], unread: 0, hasMore: false };
+  await page.locator('#account-retry').click();
+  await expect(page.locator('#discovery-inbox')).not.toContainText('Aviso público');
+  expect(state.posts).toEqual([]);
 });
