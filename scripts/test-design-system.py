@@ -22,7 +22,8 @@ class DesignTest(unittest.TestCase):
             root = Path(folder)
             for name in ['scripts/generate-design-system.py', 'scripts/generate-brand-assets.py',
                          'design/tokens.json', 'assets/brand/README.md',
-                         'assets/brand/master/symbol.svg', 'assets/brand/master/wordmark.svg']:
+                         'assets/brand/master/symbol.svg', 'assets/brand/master/wordmark.svg',
+                         'assets/brand/source/published-favicon.png', 'assets/brand/source/published-apple-touch-icon.png']:
                 (root / name).parent.mkdir(parents=True, exist_ok=True)
                 shutil.copyfile(design.ROOT / name, root / name)
             source = root / 'design/tokens.json'
@@ -43,12 +44,16 @@ class DesignTest(unittest.TestCase):
             self.assertEqual(original, (root / 'design/generated.json').read_bytes())
             subprocess.run(command + ['--check'], check=True, capture_output=True)
 
-    def test_one_action_color_changes_all_four_surfaces(self):
+    def test_one_action_color_changes_all_consumers(self):
         data = design.load_tokens()
         original = design.render(data)
         data["colors"]["accent"][0] = "#184C70"
         updated = design.render(data)
-        self.assertEqual(len(updated), 4)
+        self.assertEqual(set(updated), {
+            "androidApp/src/main/java/org/generosity/app/ui/DesignTokens.kt",
+            "iosApp/GenerosityApp/DesignTokens.swift", "portal/assets/design-tokens.css",
+            "portal/assets/app-tokens.json", "backend/public/auth-assets/design-tokens.css",
+        })
         for path, content in updated.items():
             self.assertNotEqual(content, original[path], path)
             self.assertIn("184C70", content, path)
@@ -60,7 +65,12 @@ class DesignTest(unittest.TestCase):
         data["typography"]["web"]["body"] = "Georgia, serif"
         data["radii"]["card"] = 18
         outputs = design.render(data)
-        android, ios, web, auth = outputs.values()
+        android = outputs["androidApp/src/main/java/org/generosity/app/ui/DesignTokens.kt"]
+        ios = outputs["iosApp/GenerosityApp/DesignTokens.swift"]
+        web = outputs["portal/assets/design-tokens.css"]
+        auth = outputs["backend/public/auth-assets/design-tokens.css"]
+        tour = json.loads(outputs["portal/assets/app-tokens.json"])
+        self.assertEqual(tour["radii"]["card"], 18)
         self.assertIn('const val body = "serif"', android)
         self.assertIn('static let body = "Georgia"', ios)
         self.assertIn('val card = 18.dp', android)
@@ -93,7 +103,8 @@ class DesignTest(unittest.TestCase):
         paths = set(manifest['files']) | set(design.render(design.load_tokens())) | {
             'scripts/generate-design-system.py', 'scripts/generate-brand-assets.py',
             'design/tokens.json', 'design/generated.json', 'assets/brand/README.md',
-            'assets/brand/master/symbol.svg', 'assets/brand/master/wordmark.svg'
+            'assets/brand/master/symbol.svg', 'assets/brand/master/wordmark.svg',
+                         'assets/brand/source/published-favicon.png', 'assets/brand/source/published-apple-touch-icon.png'
         }
         with tempfile.TemporaryDirectory() as folder:
             root = Path(folder)

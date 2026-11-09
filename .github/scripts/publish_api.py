@@ -221,6 +221,8 @@ if (!$zip->extractTo($root)) {{
     exit;
 }}
 $zip->close();
+// New service providers must boot with the released config, not a prior cached schema.
+@unlink($root . '/private/bootstrap/cache/config.php');
 echo "extracted\\n";
 @chmod($root . '/private/.env', 0600);
 foreach (array($root . '/private/storage', $root . '/private/bootstrap/cache') as $dir) {{
