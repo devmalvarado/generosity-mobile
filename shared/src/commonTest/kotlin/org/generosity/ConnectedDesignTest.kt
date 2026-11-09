@@ -18,6 +18,23 @@ class ConnectedDesignTest {
         assertTrue(state.copy(centers = emptyList(), selectedCenterDetails = center).discoveredNeeds.isEmpty())
     }
 
+    @Test fun productionNavigationNeverOpensFixturesEvenWhenEveryGroupIsEnabled() {
+        val session = PreviewSession(PreviewSession.groupNames, "es", connectedOnly = true)
+        assertEquals(PreviewSession.routes.filter { it.id in PreviewSession.connectedRoutes }, session.availableRoutes())
+        for (id in listOf("saved", "reviews", "events", "achievements", "donate", "phone", "editor", "certificate")) {
+            assertFalse(session.canOpen(id), id)
+            session.navigate(id)
+            assertEquals("map", session.route)
+        }
+        assertTrue(session.canOpen("personal"))
+        session.navigate("history")
+        session.updateAccess(listOf("discovery"))
+        assertEquals("map", session.route)
+        assertFalse(session.canOpen("history"))
+        session.updateAccess(emptyList())
+        assertTrue(session.availableRoutes().isEmpty())
+    }
+
     @Test fun connectedNavigationKeepsFlagsAndFollowsPersistedLanguage() {
         val session = PreviewSession(listOf("discovery"), "en")
         session.updateLanguage("es-MX")

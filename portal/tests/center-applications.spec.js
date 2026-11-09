@@ -174,6 +174,7 @@ test('optional center reference is omitted when empty and is not treated as reco
   expect(state.posts).toHaveLength(0);
   await page.locator('#application-claimed_center_id').fill('');
   await page.locator('#registration-submit').click();
+  await expect.poll(() => state.posts.length).toBe(1);
   expect(state.posts[0].postDataJSON()).not.toHaveProperty('claimed_center_id');
   expect(state.posts[0].postDataJSON()).not.toHaveProperty('roles');
   await fill(page);

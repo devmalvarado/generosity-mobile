@@ -33,8 +33,8 @@ import org.generosity.app.R
 @OptIn(ExperimentalMaterial3Api::class)
 fun NativePreview(groups: List<String>, language: String, owner: String,
     connectedContent: (@Composable (String, (String) -> Unit) -> Unit)? = null,
-    onClose: (() -> Unit)? = null) {
-    val session = remember(owner) { PreviewSession(groups, language) }
+    connectedOnly: Boolean = false, onClose: (() -> Unit)? = null) {
+    val session = remember(owner, connectedOnly) { PreviewSession(groups, language, connectedOnly) }
     var revision by remember { mutableIntStateOf(0) }
     var inventory by remember { mutableStateOf(false) }
     var list by remember { mutableStateOf(false) }
@@ -153,7 +153,7 @@ fun NativePreview(groups: List<String>, language: String, owner: String,
         text={ Column(Modifier.verticalScroll(rememberScrollState()),verticalArrangement=Arrangement.spacedBy(GenSpace.sm)) {
             when {
                 inventory -> session.availableRoutes().forEach { route -> TextButton(onClick={update{session.navigate(route.id)};inventory=false},modifier=Modifier.testTag("preview-route-${route.id}")) {
-                    Text(route.title(session.language) + if (connectedContent == null) "" else if (route.id in PreviewSession.connectedRoutes) session.text(" · Conectado", " · Connected") else session.text(" · Diseño", " · Design"))
+                    Text(route.title(session.language) + if (connectedContent == null || connectedOnly) "" else if (route.id in PreviewSession.connectedRoutes) session.text(" · Conectado", " · Connected") else session.text(" · Diseño", " · Design"))
                 } }
                 connectedContent != null -> connectedContent(if (list) "list" else "filters") { route -> update { session.navigate(route) }; list=false; filters=false }
                 list -> session.visibleCenters().forEach { c -> TextButton(onClick={update{session.selectCenter(c.id)};list=false},modifier=Modifier.testTag("preview-list-${c.id}")) { Text(c.title(session.language)) } }

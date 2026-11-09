@@ -363,6 +363,8 @@ origin and revoked-session staff writes, and verify domain data is unchanged.
 Existing tests cover cross-center denial, public/private separation and escaped
 rendering. See [closeout evidence](../../../docs/testing/openspec-closeout-2026-11-04.md).
 
+- [x] 16.18 Align landing header/content/footer margins and need-card actions; keep institute attribution to a compact footer credit; provide standalone ES/EN legal pages from canonical notices and localize their links. Validate narrow screens, enlarged text, keyboard use, no-JavaScript legal access and an explicit public deployment allowlist. Do not represent placeholder counters or invented centers as operational data.
+
 ## 17. Native Visual Alignment
 
 - [x] 17.1 Finalize the reference-aligned native color/type/spacing/icon roles and approved brand assets; record contrast checks and deliberate omissions without adding new destinations, domain fields or a separate design-system framework.

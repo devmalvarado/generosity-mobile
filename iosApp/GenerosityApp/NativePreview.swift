@@ -4,12 +4,13 @@ import Shared
 private final class NativePreviewModel: ObservableObject {
     let session: PreviewSession
     @Published var revision = 0
-    init(groups: [String], language: String) { session = PreviewSession(groups: groups, language: language) }
+    init(groups: [String], language: String, connectedOnly: Bool) { session = PreviewSession(groups: groups, language: language, connectedOnly: connectedOnly) }
     func update(_ action: () -> Void) { action(); revision += 1 }
 }
 
 struct NativePreview: View {
     let groups: [String]
+    let connectedOnly: Bool
     let onClose: (() -> Void)?
     let connectedContent: ((String, @escaping (String) -> Void) -> AnyView)?
     @StateObject private var model: NativePreviewModel
@@ -17,10 +18,10 @@ struct NativePreview: View {
     @FocusState private var searchFocused: Bool
     @Environment(\.dynamicTypeSize) private var textSize
     let language: String
-    init(groups: [String], language: String, connectedContent: ((String, @escaping (String) -> Void) -> AnyView)? = nil, onClose: (() -> Void)? = nil) {
-        self.groups = groups; self.onClose = onClose
+    init(groups: [String], language: String, connectedOnly: Bool = false, connectedContent: ((String, @escaping (String) -> Void) -> AnyView)? = nil, onClose: (() -> Void)? = nil) {
+        self.groups = groups; self.onClose = onClose; self.connectedOnly = connectedOnly
         self.language = language; self.connectedContent = connectedContent
-        _model = StateObject(wrappedValue: NativePreviewModel(groups: groups, language: language))
+        _model = StateObject(wrappedValue: NativePreviewModel(groups: groups, language: language, connectedOnly: connectedOnly))
     }
     private var session: PreviewSession { model.session }
     var body: some View {
@@ -44,7 +45,7 @@ struct NativePreview: View {
                     VStack(alignment: .leading, spacing: GenSpace.md) {
                         if sheet == "screens" {
                             ForEach(session.availableRoutes(), id: \.id) { route in
-                                Button(route.title(language: session.language) + (connectedContent == nil ? "" : PreviewSession.companion.connectedRoutes.contains(route.id) ? session.text(es: " · Conectado", en: " · Connected") : session.text(es: " · Diseño", en: " · Design"))) { model.update { session.navigate(id: route.id) }; sheet = "" }
+                                Button(route.title(language: session.language) + (connectedContent == nil || connectedOnly ? "" : PreviewSession.companion.connectedRoutes.contains(route.id) ? session.text(es: " · Conectado", en: " · Connected") : session.text(es: " · Diseño", en: " · Design"))) { model.update { session.navigate(id: route.id) }; sheet = "" }
                                     .frame(maxWidth: .infinity, minHeight: 44, alignment: .leading).accessibilityIdentifier("preview-route-\(route.id)")
                             }
                             if let onClose {

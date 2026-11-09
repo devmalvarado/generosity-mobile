@@ -5,7 +5,7 @@ on:
     branches: [main]
     tags: ['portal-release-*']
     paths:
-      - portal/index.html
+      - portal/*.html
       - portal/styles.css
       - portal/portal.js
       - portal/assets/**
@@ -46,14 +46,15 @@ jobs:
           API_FTP_PASSWORD: ${{ secrets.API_FTP_PASSWORD }}
         run: python3 .github/scripts/publish_privacy.py
 
-      - name: Wait for the account and location-intake API release
+      - name: Wait for the account, feature-control and location-intake API release
         run: |
           set -euo pipefail
           for attempt in $(seq 1 90); do
+            features=$(curl --silent --show-error --connect-timeout 5 --max-time 10 -o /dev/null -w '%{http_code}' https://api.generosity.global/api/v1/features || true)
             intake=$(curl --silent --show-error --connect-timeout 5 --max-time 10 -o /dev/null -w '%{http_code}' https://api.generosity.global/api/v1/me/center-applications || true)
             reset=$(curl --fail --silent --show-error --connect-timeout 5 --max-time 10 'https://api.generosity.global/reset-password/release-check?email=probe%40example.invalid&locale=es' || true)
             legal=$(curl --fail --silent --show-error --connect-timeout 5 --max-time 10 'https://api.generosity.global/legal/privacy?locale=es' || true)
-            if [ "$intake" = "401" ] && printf '%s' "$reset" | grep -q 'Nueva contraseña' && printf '%s' "$legal" | grep -q 'OpenStreetMap'; then
+            if [ "$features" = "200" ] && [ "$intake" = "401" ] && printf '%s' "$reset" | grep -q 'Nueva contraseña' && printf '%s' "$legal" | grep -q 'OpenStreetMap'; then
               exit 0
             fi
             sleep 10

@@ -4,7 +4,8 @@ import SharedBridge
 import Shared
 
 struct ContentView: View {
-    private static let usesNewDesign = Bundle.main.object(forInfoDictionaryKey: "GenerosityChannel") as? String == "preview"
+    private static let usesNewDesign = isPreview || !demoCatalog
+    private static let isPreview = Bundle.main.object(forInfoDictionaryKey: "GenerosityChannel") as? String == "preview"
     private static var demoCatalog: Bool {
         #if DEBUG
         return ProcessInfo.processInfo.arguments.contains("--demo-catalog") || Self.previewHarness
@@ -168,7 +169,7 @@ struct ContentView: View {
     }
 
     private func connectedPreview(groups: [String], onClose: (() -> Void)? = nil) -> some View {
-        NativePreview(groups: groups, language: locale.rawValue, connectedContent: { route, navigate in
+        NativePreview(groups: groups, language: locale.rawValue, connectedOnly: !Self.isPreview && !Self.connectedHarness, connectedContent: { route, navigate in
             AnyView(ConnectedDesignScreen(route: route, navigate: navigate, groups: groups, store: store, account: account,
                 permissions: permissions, hasDeviceOrigin: hasDeviceOrigin, onSelectArea: { area in
                     hasDeviceOrigin = false; permissions.useManualArea(); store.setDiscoveryArea(area)

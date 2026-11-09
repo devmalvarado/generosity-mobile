@@ -39,3 +39,5 @@
 - [x] 6.9 Update the physical iPhone 17 and verify its direct connected-map startup.
 - [x] 6.10 Validate Android Preview startup/recreation, connected interactions, map availability and visual layout; record device and credential limits (9 emulator tests passed; restricted Preview Maps key configured and live tiles/detail/needs inspected; physical Android and push remain untested).
 - [x] 6.11 Install Preview on the physical iPad (6th generation) / iPadOS 17.7.5 with an authorized development profile; record successful installation and user-confirmed launch after trusting the developer. Independent iPad visual/layout acceptance remains pending.
+
+- [x] 6.12 Make connected navigation the default in production, restrict inventory and direct navigation to supported routes even when every group is granted, and preserve preview fixtures. Shared production route/revocation tests pass; hosted rollout and device distribution are tracked in release controls 4.3.

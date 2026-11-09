@@ -6,10 +6,10 @@ calls to action lead to the location intake and center sign-in. The former dummy
 search, donation and publication forms, fictional centers and sample figures are
 removed. The authenticated workspace at `/kindness-center/` uses the PHP API.
 
-`#contacto` identifies the institute, RFC and fiscal address and names support,
-legal and privacy requests handled by institute staff at the owner-approved temporary
-contact `notificaciones@generosity.global`. Separate mailbox creation remains
-deferred. Intake and footer links point to the full ES/EN backend legal pages.
+The institute credit is a small footer line. Detailed identity/contact information
+lives in the standalone ES/EN legal pages on `generosity.global`; the footer and
+intake link to them in the current language. The temporary staff-handled contact
+is `notificaciones@generosity.global`. The API legal URLs remain available.
 
 ## Initial location applications
 

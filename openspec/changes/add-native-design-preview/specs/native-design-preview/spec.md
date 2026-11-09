@@ -86,7 +86,13 @@ Supported destinations SHALL reuse the existing mobile state, account, backend r
 - **THEN** the connected design is the main interface without an exploration button or exit to the old layout
 - **AND** the existing welcome, account isolation and effective group restrictions remain in force
 - **AND** missing or revoked groups show loading/unavailability with retry rather than granting fixture access or restoring the old layout
-- **AND** production variants retain their existing optional design entry
+- **AND** production variants also enter the connected design directly, but only expose supported connected destinations; granting a preview group does not expose its fixture routes in production
+
+#### Scenario: Production route restriction
+- **GIVEN** a production build with every group enabled
+- **THEN** its screen inventory and direct navigation allow only connected routes
+- **AND** fixture destinations such as reviews, certificates, events, phone verification and payments remain inaccessible
+- **AND** missing or revoked groups preserve the existing loading/unavailability and retry behavior without displaying mock data
 
 #### Scenario: Partial offer and retry
 - **GIVEN** the account and feature controls permit contributions

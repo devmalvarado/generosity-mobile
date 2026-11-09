@@ -1,7 +1,7 @@
 # Generosity web portal
 
 Static HTML/CSS/JavaScript with a PHP-backed account and authorized-center workspace.
-The public cards explain causes and ways to help. Registration and center-access
+The public cards show concrete types of support: food parcels, school supplies and companionship. Registration and center-access
 links lead to the location intake and authorized workspace; fictional centers,
 figures and disconnected search/donation/publication forms have been removed.
 The staff workspace reads assigned centers and manages API needs/contributions.
@@ -17,8 +17,13 @@ real iOS delivery still requires the pending APNs configuration.
 Spanish/English content identifies the institute, its RFC, fiscal address and
 staff responsibility for support, legal and privacy requests. The working temporary
 contact is `notificaciones@generosity.global`; the three separate mailboxes remain
-deferred. Intake/footer links open `/legal/privacy` and `/legal/terms` on the API
-in the selected language. The full notices live in `backend/resources/legal/`.
+deferred. Intake/footer links open standalone pages on the main website:
+`aviso-de-privacidad.html`, `terminos-y-condiciones.html`, `privacy-notice.html`
+and `terms-and-conditions.html`. They work without JavaScript or API requests.
+The canonical notices remain in `backend/resources/legal/`; with the existing
+backend Docker service running, run `python3 scripts/build-portal-legal.py` from
+the repository root after changing them. `--check` detects stale generated pages.
+The API legal URLs remain available for the hosted authentication flow.
 
 `/registrar-sede/` contains the initial organization/location application in Spanish
 and English. Visitors can prepare the form; submission requires a verified
@@ -96,16 +101,14 @@ requires the center, responsible account and actual need.
 The main-branch deployment stages only the files explicitly listed in
 `public-files.txt`, including the four directory routes and their public assets. It does not deploy the backend,
 upload the repository or delete the rest of the site. Keep dependencies, tests,
-screenshots and server secrets out of the web root. Published legal destinations
-are hosted by the API.
+screenshots and server secrets out of the web root. Public legal pages are generated from the same notices as the hosted API.
 
 An explicit `portal-release-*` Git tag also publishes that exact revision without
 merging unrelated mobile/backend work into `main`. The workflow updates only the
 two hosted privacy notices before the map, verifies and privately backs up their
 previous contents, and repairs an outdated portal CORS configuration/cache when
 needed. It does not publish API controllers, credentials or data. It then
-uploads the public inventory. Old legal-page URLs redirect to the canonical API
-documents. Do not move or reuse a published release tag.
+uploads the public inventory. The four standalone legal pages remain readable without JavaScript or API availability. Do not move or reuse a published release tag.
 
 The new intake additionally needs its PHP routes/controller and
 `2026_11_01_000003_create_center_applications.php` migration released before the

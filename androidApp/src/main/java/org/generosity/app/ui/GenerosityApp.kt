@@ -111,7 +111,8 @@ fun GenerosityApp(
             if ((defaultDesign || showPreview) && previewGroups.isNotEmpty()) {
                 ConnectedDesign(state, appState, previewGroups, mapRenderer, mapState, search, location, locationSource,
                     onLanguageSelected, savingLanguage, languageSaveFailed, onSignIn, onSignOut, onCreate, authBusy, authFailed,
-                    onClose = if (defaultDesign) null else { { showPreview = false } })
+                    onClose = if (defaultDesign) null else { { showPreview = false } },
+                    connectedOnly = org.generosity.app.BuildConfig.CHANNEL != "preview" && !designHarness)
                 return@GenerosityTheme
             }
             if (showInbox) AlertDialog(onDismissRequest = { showInbox = false },
@@ -211,7 +212,7 @@ private fun ConnectedDesign(
     location: DiscoveryLocation?, source: DeviceLocationSource?,
     onLanguage: (SupportedLocale?) -> Unit, savingLanguage: Boolean, languageFailed: Boolean,
     onSignIn: () -> Unit, onSignOut: () -> Unit, onCreate: () -> Unit, authBusy: Boolean, authFailed: Boolean,
-    onClose: (() -> Unit)?
+    onClose: (() -> Unit)?, connectedOnly: Boolean
 ) {
     val canOffer = state.canRecordContributions && "contributions" in groups
     val mapCenter = state.selectedCenter ?: state.centers.firstOrNull()
@@ -227,7 +228,7 @@ private fun ConnectedDesign(
         location?.useManualOrigin(); app.setSearchText(""); app.setDiscoveryArea(it); areaSearch = false
     }, { areaSearch = false }, initialQuery = state.searchText)
     offer?.let { (need, method) -> OfferDialog(state, app, need, method) { offer = null } }
-    NativePreview(groups, locale.code, state.profile.id.orEmpty(), connectedContent = { route, navigate ->
+    NativePreview(groups, locale.code, state.profile.id.orEmpty(), connectedOnly = connectedOnly, connectedContent = { route, navigate ->
         LaunchedEffect(state.noticeDestinationId) {
             if (state.noticeDestinationId != null) { navigate("center"); app.clearNoticeDestination() }
         }

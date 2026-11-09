@@ -16,7 +16,7 @@ data class PreviewCenter(val id: String, val spanish: String, val english: Strin
     fun title(language: String) = if (language == "es") spanish else english
 }
 
-class PreviewSession(groups: List<String>, language: String) {
+class PreviewSession(groups: List<String>, language: String, private val connectedOnly: Boolean = false) {
     companion object {
         val routes = listOf(
             PreviewRoute("map", "discovery", "Mapa", "Map"),
@@ -84,8 +84,9 @@ class PreviewSession(groups: List<String>, language: String) {
         private set
     fun text(es: String, en: String) = if (language == "es") es else en
     fun updateLanguage(code: String) { language = if (code.startsWith("es")) "es" else "en" }
-    fun availableRoutes() = routes.filter { it.group in allowed }
-    fun canOpen(id: String) = (routes.firstOrNull { it.id == id }?.group ?: extraRoutes[id]) in allowed
+    fun availableRoutes() = routes.filter { canOpen(it.id) }
+    fun canOpen(id: String) = (!connectedOnly || id in connectedRoutes) &&
+        (routes.firstOrNull { it.id == id }?.group ?: extraRoutes[id]) in allowed
     fun navigationTabs() = listOf("map", "needs", "help", "impact", "profile").filter { canOpen(it) }
     fun navigationTab(): String {
         val tabs = navigationTabs()

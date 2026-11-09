@@ -9,14 +9,14 @@
   <meta name="description" content="Generosity, una iniciativa del Instituto de Deberes y Derechos Humanos para conectar personas, organizaciones y causas. Registra tu sede y coordina la ayuda de tu comunidad.">
   <link rel="icon" href="/assets/favicon.png?v=f175327256ea" type="image/png" sizes="192x192">
   <link rel="apple-touch-icon" href="/assets/apple-touch-icon.png?v=9416dc4d1257">
-  <link rel="stylesheet" href="/styles.css?v=12c71c61e35d">
+  <link rel="stylesheet" href="/styles.css?v=791a01ff65e8">
 </head>
 <body data-page="landing">
   <a class="skip" href="#contenido" data-i18n="skip">Saltar al contenido</a>
 
   <header class="topbar">
     <a class="brand" href="#inicio">
-      <img src="/assets/logo.png" alt="generosity" width="1046" height="585">
+      <img src="/assets/wordmark.svg" alt="Generosity" width="1037" height="206">
     </a>
     <nav class="topnav" aria-label="Secciones" data-i18n-aria="nav.sections">
       <a href="#como-funciona" data-i18n="nav.how">Cómo funciona</a>
@@ -53,7 +53,7 @@
       <div class="hero-copy">
         <p class="where" data-i18n="hero.where">Encuentra. Conecta. Ayuda.</p>
         <h1 data-i18n="hero.title">La ayuda llega cuando sabes exactamente quién la necesita.</h1>
-        <p class="lead" data-i18n="hero.lead">Una iniciativa del Instituto de Deberes y Derechos Humanos para acercar a personas y organizaciones a las causas de su comunidad. Tu tiempo, tus conocimientos y lo que compartes pueden hacer la diferencia.</p>
+        <p class="lead" data-i18n="hero.lead">Conecta con las necesidades de tu comunidad y encuentra una forma de ayudar. Tu tiempo, tus conocimientos y lo que compartes pueden hacer la diferencia.</p>
         <div class="hero-actions">
           <a class="solid" href="/registrar-sede/" data-i18n="hero.register">Registra tu organización</a>
           <a class="ghost" href="/app/" data-i18n="nav.app">Explora la app</a>
@@ -203,39 +203,39 @@
 
       <div class="board">
         <article class="need featured" id="comedor" data-cause="comedores" tabindex="-1">
-
           <header>
             <span class="cause" data-i18n="card.food.cause">Comedor comunitario</span>
             <span class="illustration-label" data-i18n="card.illustration">Ilustración, no es el catálogo</span>
 
           </header>
-          <h3 data-i18n="card.food.title">Alimentación que une</h3>
-          <p data-i18n="card.food.body">Alimentos, preparación de comidas y apoyo a comedores comunitarios. Compartir una mesa también construye comunidad.</p>
+          <h3 data-i18n="card.food.title">Despensas para compartir</h3>
+          <p data-i18n="card.food.body">Arroz, frijol, aceite y lentejas para apoyar la alimentación de las familias.</p>
 
+          <ul class="need-details"><li data-i18n="card.food.item1">Alimentos no perecederos</li><li data-i18n="card.food.item2">Despensas</li></ul>
           <a class="solid" href="/ayudar/" data-i18n="card.food.action">Ver el catálogo publicado</a>
         </article>
 
         <article class="need" id="hogar" data-cause="infancia" tabindex="-1">
-
           <header>
             <span class="cause" data-i18n="card.kids.cause">Infancia y educación</span>
             <span class="illustration-label" data-i18n="card.illustration">Ilustración, no es el catálogo</span>
           </header>
-          <h3 data-i18n="card.kids.title">Oportunidades para crecer</h3>
-          <p data-i18n="card.kids.body">Materiales escolares, tutorías y acompañamiento educativo para fortalecer el aprendizaje y el desarrollo.</p>
+          <h3 data-i18n="card.kids.title">Útiles escolares para el nuevo ciclo</h3>
+          <p data-i18n="card.kids.body">Cuadernos, lápices y mochilas para acompañar el regreso a clases.</p>
 
+          <ul class="need-details"><li data-i18n="card.kids.item1">Material escolar</li><li data-i18n="card.kids.item2">Mochilas</li></ul>
           <a class="solid" href="/ayudar/" data-i18n="card.kids.action">Ver el catálogo publicado</a>
         </article>
 
         <article class="need" id="puente" data-cause="salud" tabindex="-1">
-
           <header>
             <span class="cause" data-i18n="card.health.cause">Salud</span>
             <span class="illustration-label" data-i18n="card.illustration">Ilustración, no es el catálogo</span>
           </header>
-          <h3 data-i18n="card.health.title">Cuidado y acompañamiento</h3>
-          <p data-i18n="card.health.body">Apoyo a centros de atención, insumos solicitados por sus responsables y tiempo para acompañar a quienes lo necesitan.</p>
+          <h3 data-i18n="card.health.title">Acompañamiento a citas médicas</h3>
+          <p data-i18n="card.health.body">Comparte tu tiempo para acompañar a una persona a su consulta y ayudarle durante el traslado.</p>
 
+          <ul class="need-details"><li data-i18n="card.health.item1">Acompañamiento</li><li data-i18n="card.health.item2">Traslados</li></ul>
           <a class="solid" href="/ayudar/" data-i18n="card.health.action">Ver el catálogo publicado</a>
         </article>
       </div>
@@ -293,49 +293,20 @@
 
 
 
-    <section class="principles" id="privacidad" tabindex="-1">
-      <h2 data-i18n="privacy.title">Cuidamos la información que compartes.</h2>
-      <p><a href="https://api.generosity.global/legal/privacy?locale=es" data-legal="privacy" data-i18n="footer.privacy">Aviso de privacidad</a></p>
-      <div>
-        <p><strong data-i18n="privacy.purpose.title">Una finalidad concreta.</strong> <span data-i18n="privacy.purpose.body">Los datos de tu solicitud de sede se utilizan para revisarla y contactarte sobre ella.</span></p>
-        <p><strong data-i18n="privacy.access.title">Acceso según responsabilidades.</strong> <span data-i18n="privacy.access.body">Tu cuenta permite consultar tus solicitudes. La gestión de necesidades corresponde al personal autorizado de cada centro.</span></p>
-        <p><strong data-i18n="privacy.care.title">Ayudar con dignidad.</strong> <span data-i18n="privacy.care.body">Comparte información de la organización y omite datos de personas beneficiarias, expedientes médicos y domicilios protegidos.</span></p>
-      </div>
-    </section>
-
-    <section class="institute" id="contacto" tabindex="-1" aria-labelledby="contact-title">
-      <h2 id="contact-title" data-i18n="contact.title">Una iniciativa del Instituto.</h2>
-      <p class="lead" data-i18n="contact.lead">Generosity es una herramienta del Instituto de Deberes y Derechos Humanos, constituido como asociación civil.</p>
-      <div class="institute-details">
-        <div>
-          <h3 data-i18n="contact.fiscal">RFC y domicilio fiscal</h3>
-          <p>INSTITUTO DE DEBERES Y DERECHOS HUMANOS<br>RFC: IDD190329L69</p>
-          <address>Temixco 7, acceso 1er callejón, colonia Pedregal de Santo Domingo, Coyoacán, Ciudad de México, C.P. 04369, México.</address>
-        </div>
-        <div>
-          <p data-i18n="contact.team">Personal del Instituto atiende soporte, asuntos legales y privacidad en este correo.</p>
-          <dl class="contact-channels">
-            <div><dt data-i18n="contact.support">Soporte</dt><dd><a class="contact-email" href="mailto:notificaciones@generosity.global?subject=Generosity%20soporte">notificaciones@generosity.global</a></dd></div>
-            <div><dt data-i18n="contact.legal">Asuntos legales</dt><dd><a class="contact-email" href="mailto:notificaciones@generosity.global?subject=Generosity%20legales">notificaciones@generosity.global</a></dd></div>
-            <div><dt data-i18n="contact.privacy">Privacidad y datos personales</dt><dd><a class="contact-email" href="mailto:notificaciones@generosity.global?subject=Generosity%20privacidad">notificaciones@generosity.global</a></dd></div>
-          </dl>
-        </div>
-      </div>
-    </section>
   </main>
 
   <footer>
     <a class="brand" href="#inicio">
-      <img src="/assets/logo.png" alt="generosity" width="1046" height="585">
+      <img src="/assets/wordmark.svg" alt="Generosity" width="1037" height="206">
     </a>
-    <p data-i18n="footer.tag">Pequeñas acciones, gran impacto. Una iniciativa del Instituto de Deberes y Derechos Humanos.</p>
+    <p class="institute-credit" data-i18n="footer.tag">Una iniciativa del Instituto de Deberes y Derechos Humanos.</p>
     <nav data-i18n-aria="footer.nav" aria-label="Pie">
-      <a href="https://api.generosity.global/legal/privacy?locale=es" data-legal="privacy" data-i18n="footer.privacy">Aviso de privacidad</a>
-      <a href="https://api.generosity.global/legal/terms?locale=es" data-legal="terms" data-i18n="footer.terms">Términos y condiciones</a>
-      <a href="#contacto" data-i18n="footer.contact">Instituto y contacto</a>
+      <a href="aviso-de-privacidad.html" data-legal="privacy" data-i18n="footer.privacy">Aviso de privacidad</a>
+      <a href="terminos-y-condiciones.html" data-legal="terms" data-i18n="footer.terms">Términos y condiciones</a>
+      <a href="mailto:notificaciones@generosity.global" data-i18n="footer.contact">Contacto</a>
     </nav>
   </footer>
 
-  <script src="/portal.js?v=25ed18ff272c"></script>
+  <script src="/portal.js?v=facc404d5ca6"></script>
 </body>
 </html>
