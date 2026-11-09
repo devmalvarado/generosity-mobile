@@ -6,6 +6,7 @@
 - [x] 1.4 Separate preview native auth clients and reject mismatched request channels.
 - [x] 1.5 Validate preview configuration and provide a secret-free environment template.
 - [x] 1.6 Verify permissions, CSRF, stale edits, isolated configuration and existing backend regressions.
+- [x] 1.7 Harden and verify API publication: prevalidate authentication assets including generated CSS, reject unexpected executables, exclude private/runtime files, and clear stale Laravel configuration before incremental migration/cache rebuild. Publisher checks and the production deployment passed; see `docs/releases/integration-2026-11-08.md`.
 
 ## 2. Shared and native apps
 
@@ -36,6 +37,7 @@
   - [x] 4.3.2 Publish the portal after the API gate and verify dedicated routes, live map/catalog, hosted sign-in, standalone ES/EN legal pages and the interactive tour without production writes (2026-11-08).
   - [ ] 4.3.3 Assign an explicitly approved production feature administrator. The allowlist is currently empty; preview administrator privileges were not copied.
   - [ ] 4.3.4 Distribute the integrated native release to physical devices/stores. Builds and simulator acceptance are recorded separately; earlier Preview phone installations do not include this integration.
+  - [x] 4.3.5 Build both native channels and verify default entry against their live APIs without production writes. Android production/Preview and iOS production/Preview simulator entry checks passed; iOS missing-grant behavior also passed. APK artifacts and separate iOS identities are recorded in the integration report, not treated as store distribution.
 - [ ] 4.4 Verify real accounts in both environments, live flag changes across platforms and physical-device coexistence. Preview API account/lifecycle and an administrator flag toggle passed; native direct startup and preserved separate app data are recorded. The complete account-switch/provider/coexistence matrix, physical Android and cross-client live flag acceptance remain open.
 - [ ] 4.5 Archive only after deployment and acceptance evidence is recorded; builds alone do not complete these gates.
 

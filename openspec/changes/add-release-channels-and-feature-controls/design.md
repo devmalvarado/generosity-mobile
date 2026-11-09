@@ -8,9 +8,9 @@ adds a P badge generated from the central brand source. Production keeps its
 existing identifier, signing and storage namespace.
 
 Preview defaults to `https://api-preview.generosity.global`; its web origin is
-`https://preview.generosity.global`. These are configuration targets, not a claim
-that the sites are provisioned. Separate database credentials, APP_KEY, storage,
-cron/queue execution, OAuth clients and Firebase projects must be supplied. Preview
+`https://preview.generosity.global`. Both sites, the isolated database, APP_KEY,
+storage and cron/queue were provisioned on November 6. Separate OAuth clients and
+Firebase/APNs configuration remain pending. Preview
 boot validation requires a `*_preview` database, separate HTTPS origins, host-only
 cookies and a local mail sink. Preview push is off until its own project and
 credentials exist. Native builds reject known production preview Firebase/API
@@ -51,12 +51,37 @@ cancellation/center fulfillment. Already-published needs may be edited or closed
 republishing a draft/closed need is a new publication and is gated.
 
 `needs.progress` is presentation-only: quantities remain authoritative and visible
-in API data. Hiding the bar is not a privacy mechanism. No toggle enables money,
-Facebook, campaigns or other unfinished capabilities. Each future feature needs
-its own implementation, server boundary and tests before it joins the registry.
+in API data. Hiding the bar is not a privacy mechanism. These three foundation
+controls do not enable money, Facebook, campaigns or other unfinished capabilities.
+Additional registry keys require their own implementation, server boundary and
+tests; enabled design routes do not imply a completed real feature.
+
+## Production publication
+
+The API publisher validates its public authentication inventory before changing
+the server. Generated CSS, PNG and WOFF2 assets and TXT/MD notices are allowed;
+unexpected files such as PHP are rejected. Private release archives exclude `.env`,
+runtime provider credentials and backups. Initial catalog import requires explicit
+opt-in; ordinary code publication does not import preview records or reset a database.
+
+After extracting the release, remove the old Laravel configuration cache before
+bootstrapping its new providers. Run incremental migrations, rebuild configuration,
+validate portal authentication configuration, and rebuild route/view caches. The
+portal workflow waits for the feature API plus account/intake/legal prerequisites
+before staging/uploading its public files. This avoids publishing clients against
+missing API routes; it is not an atomic rollback mechanism across both sites.
+
+The November 8 promotion retained a private application/database recovery point
+and compared production business-record and `.env` fingerprints afterward.
+Production enabled only five connected design groups. Its other design and
+participation/payment groups remain off, and the feature-admin allowlist is empty.
+Preview keeps its own grants, users, credentials and data. See
+[integration evidence](../../../docs/releases/integration-2026-11-08.md).
 
 ## Validation and release
 
 See `docs/testing/release-controls.md` for executed checks and
-`docs/release-channels.md` for setup and build commands. Keep this change active
-until the separate preview infrastructure and live acceptance are completed.
+`docs/release-channels.md` for setup and build commands. Infrastructure and API/
+portal publication are evidenced; keep this change active until the approved
+production administrator, integrated physical/store distribution and remaining
+account/provider/flag/coexistence acceptance are completed.

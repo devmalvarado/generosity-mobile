@@ -42,3 +42,25 @@ without editing each API caller or changing the production landing deployment.
 - **WHEN** the preview packaging command is run with a valid separate HTTPS origin
 - **THEN** it writes an isolated build artifact containing that origin and preview channel
 - **AND** production source configuration and published hosting are not changed
+
+### Requirement: API-first publication with preserved environment state
+Coordinated API and portal releases SHALL publish required API routes before
+uploading the dependent portal files. API release packages SHALL exclude private
+environment files, runtime credentials and backups; normal code publication SHALL
+retain existing environment data and SHALL NOT import a preview database or reset
+production. An initial catalog import SHALL require explicit opt-in.
+
+#### Scenario: Required API is unavailable
+- **WHEN** the feature API or configured account/intake/legal prerequisite checks fail
+- **THEN** the portal workflow waits for the API release
+- **AND** it fails without uploading portal files if those checks do not recover
+
+#### Scenario: Release changes the configuration schema
+- **WHEN** the new API files are extracted
+- **THEN** the publisher removes the previous Laravel configuration cache before bootstrapping providers
+- **AND** it applies incremental migrations and rebuilds configuration/route/view caches using the retained private environment
+
+#### Scenario: Authentication asset inventory is invalid
+- **WHEN** the public authentication assets contain a directory or an unsupported file type
+- **THEN** the publisher rejects that inventory before any remote mutation
+- **AND** generated CSS, PNG, WOFF2 and TXT/MD notices remain supported

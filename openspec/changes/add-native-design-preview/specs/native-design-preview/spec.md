@@ -1,10 +1,10 @@
 ## ADDED Requirements
 
 ### Requirement: Complete native design inventory
-The application SHALL provide native SwiftUI and Compose counterparts for all 34 committed source prototype routes, using the existing centralized design tokens and branding, without embedding HTML or a WebView.
+Preview builds SHALL provide native SwiftUI and Compose counterparts for all 34 committed source prototype routes, using the existing centralized design tokens and branding, without embedding HTML or a WebView. Production SHALL restrict those renderers to connected destinations as specified below.
 
 #### Scenario: Explore the inventory
-- **GIVEN** the server enables all native preview groups for the current viewer
+- **GIVEN** a Preview build and the server enabling all native preview groups for the current viewer
 - **WHEN** the viewer opens design exploration
 - **THEN** all 34 routes and their relevant auxiliary forms are navigable with native controls
 - **AND** Spanish and English content, device appearance and scalable text are supported
@@ -13,7 +13,7 @@ The application SHALL provide native SwiftUI and Compose counterparts for all 34
 The server SHALL initialize every `preview.*` group to off and expose only effective booleans through the existing account-aware feature API. Existing administrator authorization, version checking and auditing SHALL apply.
 
 #### Scenario: Limited tester access
-- **GIVEN** only `preview.community` is enabled for a verified tester
+- **GIVEN** a Preview build with only `preview.community` enabled for a verified tester
 - **WHEN** that tester opens the design inventory
 - **THEN** only the community routes are listed
 - **AND** cross-group links are absent unless their target group is also enabled
@@ -59,7 +59,7 @@ iOS SHALL use system TabView and NavigationStack toolbars, inheriting Liquid Gla
 - **AND** no persistent fictional-session banner or technical map footer reduces the content area
 
 #### Scenario: No enabled primary tabs
-- **GIVEN** only an auxiliary feature group such as community is enabled
+- **GIVEN** a Preview build with only an auxiliary feature group such as community enabled
 - **THEN** the allowed content and inventory remain accessible without an empty tab bar
 
 ### Requirement: Map-first discovery header
@@ -78,15 +78,15 @@ The map SHALL display the shared brand wordmark centered in the navigation heade
 - **AND** Android uses Material 3 controls and an elevated capsule
 
 ### Requirement: Connected mobile destinations
-Supported destinations SHALL reuse the existing mobile state, account, backend repository, cache, outbox, forms and map adapters. The inventory SHALL distinguish connected and fixture routes. Supported flows SHALL include discovery, center/contact/visits, current needs, goods/time and personal offers, history/impact, account/welcome/settings, and inbox.
+Supported destinations SHALL reuse the existing mobile state, account, backend repository, cache, outbox, forms and map adapters. Preview inventories SHALL distinguish connected and fixture routes. Production inventories SHALL contain only connected routes, without connected/design labels. Supported flows SHALL include discovery, center/contact/visits, current needs, goods/time and personal offers, history/impact, account/welcome/settings, and inbox.
 
-#### Scenario: Default design in mobile Preview
-- **GIVEN** the iOS or Android app uses the Preview release channel
+#### Scenario: Default design in both mobile channels
+- **GIVEN** the iOS or Android app uses the production or Preview release channel
 - **WHEN** the user enters as a guest, signs in or relaunches after entering
 - **THEN** the connected design is the main interface without an exploration button or exit to the old layout
 - **AND** the existing welcome, account isolation and effective group restrictions remain in force
 - **AND** missing or revoked groups show loading/unavailability with retry rather than granting fixture access or restoring the old layout
-- **AND** production variants also enter the connected design directly, but only expose supported connected destinations; granting a preview group does not expose its fixture routes in production
+- **AND** production exposes only supported connected destinations; granting a preview group does not expose its fixture routes in production
 
 #### Scenario: Production route restriction
 - **GIVEN** a production build with every group enabled
@@ -108,6 +108,7 @@ Supported destinations SHALL reuse the existing mobile state, account, backend r
 - **AND** missing feature endpoints remain fail-closed
 
 #### Scenario: Fixture boundaries
+- **GIVEN** a Preview build or the isolated debug harness
 - **WHEN** a user explores a route without a deployed mobile integration
 - **THEN** its fields remain isolated in memory
 - **AND** fixture center IDs cannot open or mutate unrelated real centers

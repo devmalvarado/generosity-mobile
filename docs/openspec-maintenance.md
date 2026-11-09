@@ -179,3 +179,22 @@ preview HTTPS, browser and simulator evidence is recorded in
 [the integration report](releases/integration-2026-11-08.md). No incomplete change
 was archived. Provider setup, a real-center pilot and full device/accessibility
 acceptance remain pending rather than being implied by a successful deployment.
+
+### Post-integration specification reconciliation
+
+Reconciled the native-design proposal, design and requirements with default entry
+in both channels. The 34-route inventory and fixture-only interactions now
+explicitly apply to Preview; production exposes only connected routes and omits
+connected/design inventory labels. Removed superseded optional-entry and
+undeployed-production wording from the active design artifacts.
+
+Release-channel artifacts now specify the implemented API-first portal gate,
+authentication-asset prevalidation, private-file exclusions and configuration-cache
+refresh before migration. Recorded the already-executed publisher and native-entry
+acceptance as explicit tasks, linked to the integration evidence. No new app code,
+deployment or physical-device validation was performed by this documentation update.
+
+All 18 OpenSpec items passed strict validation, changed Markdown links resolve,
+and whitespace checks passed. The current 11 active changes contain 168 checked
+and 390 unchecked task entries (including parent/subtasks, not a product-completion
+percentage). No incomplete change was archived.

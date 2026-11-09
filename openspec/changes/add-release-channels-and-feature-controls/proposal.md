@@ -17,6 +17,9 @@ controlled feature availability, using the existing PHP/MySQL backend.
   confirmation/fulfillment and editing/closing published needs remain available.
 - Refresh effective flags in shared KMP and the mobile-first portal. Unknown or
   unavailable configuration cannot enable new actions. Preserve queued operations.
+- Publish API/migrations before the dependent portal, validate authentication
+  assets before upload, and preserve private configuration, runtime credentials
+  and existing records when promoting the shared source to production.
 
 ## Capabilities
 
@@ -37,3 +40,6 @@ shared/native state and UI, platform build configuration, portal configuration,
 tests and deployment documentation. No additional runtime service or dependency.
 Preview provisioning, credentials, administrator assignment and production
 publication remain explicit deployment tasks, not accomplished by compilation.
+Preview infrastructure was deployed on November 6 and the production API/portal
+on November 8. Provider setup, the production feature-admin allowlist and
+integrated physical/store distribution are still open; see the dated release evidence.
