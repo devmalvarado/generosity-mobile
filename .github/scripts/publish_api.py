@@ -149,7 +149,15 @@ def delete_if_present(ftp, path):
         say(f"absent {path}")
 
 
+def auth_assets():
+    assets = sorted((BACKEND / "public" / "auth-assets").iterdir())
+    if any(not asset.is_file() or asset.suffix not in {".png", ".woff2", ".txt", ".md", ".css"} for asset in assets):
+        raise SystemExit("unexpected authentication asset")
+    return assets
+
+
 def main():
+    assets = auth_assets()  # Validate the public inventory before changing the server.
     host = require_env("API_FTP_SERVER")
     user = require_env("API_FTP_USERNAME")
     password = require_env("API_FTP_PASSWORD")
@@ -313,9 +321,7 @@ echo "cleaned\\n";
         except error_perm:
             ftp.cwd("/public_html/auth-assets")
             ftp.cwd("/")
-        for asset in sorted((BACKEND / "public" / "auth-assets").iterdir()):
-            if not asset.is_file() or asset.suffix not in {".png", ".woff2", ".txt", ".md"}:
-                raise SystemExit("unexpected authentication asset")
+        for asset in assets:
             with asset.open("rb") as handle:
                 ftp.storbinary(f"STOR /public_html/auth-assets/{asset.name}", handle)
         delete_if_present(ftp, "/public_html/default.php")

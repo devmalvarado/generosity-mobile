@@ -11,6 +11,17 @@ import publish_api
 
 
 class InitialCatalogReleaseTest(unittest.TestCase):
+    def test_auth_inventory_accepts_generated_css_and_rejects_executables(self):
+        with tempfile.TemporaryDirectory() as directory, patch.object(publish_api, 'BACKEND', Path(directory)):
+            assets = Path(directory) / 'public/auth-assets'
+            assets.mkdir(parents=True)
+            for name in ['design-tokens.css', 'google.png', 'font.woff2']:
+                (assets / name).write_text('fixture')
+            self.assertEqual({p.name for p in publish_api.auth_assets()}, {'design-tokens.css', 'google.png', 'font.woff2'})
+            (assets / 'unexpected.php').write_text('<?php')
+            with self.assertRaises(SystemExit):
+                publish_api.auth_assets()
+
     def test_runtime_push_credentials_and_backups_never_enter_release(self):
         with tempfile.TemporaryDirectory() as directory, patch.object(publish_api, 'BACKEND', Path(directory)):
             root = Path(directory)
